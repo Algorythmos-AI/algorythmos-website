@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ChevronDown, Menu, X, ArrowRight, Star, Users, Zap, Shield, CheckCircle, Play, MousePointer2, Sparkles, Globe, Rocket, Brain, Eye } from 'lucide-react';
 import PartnersCarousel from './PartnersCarousel.jsx';
 import HeroIllustration from './HeroIllustration.jsx';
+import ServicesShowcase from './ServicesShowcase.jsx'; // Added import for ServicesShowcase
 
 const AdvancedBusinessWebsite = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -284,11 +285,16 @@ const AdvancedBusinessWebsite = () => {
                   <span className="relative flex items-center justify-center"><Play className="mr-3 w-5 h-5" />Explore Our Services</span>
                 </Link>
               </div>
+
+              {/* Services Showcase - Mobile */}
+              <div className="mt-12 md:hidden">
+                <ServicesShowcase />
+              </div>
             </div>
 
-            {/* Right: Illustration placeholder (desktop) */}
+            {/* Right: Services Showcase (desktop) */}
             <div className="hidden md:block">
-              <HeroIllustration />
+              <ServicesShowcase />
             </div>
           </div>
 
