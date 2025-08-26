@@ -40,14 +40,15 @@ const Navbar = () => {
             <Link to="/about" className="relative px-6 py-3 rounded-xl font-medium transition-all duration-300 text-gray-300 hover:text-white">
               About
             </Link>
-            <Link to="/contact" className="relative px-6 py-3 rounded-xl font-medium transition-all duration-300 text-gray-300 hover:text-white">
-              Contact
+            <Link to="/blog" className="relative px-6 py-3 rounded-xl font-medium transition-all duration-300 text-gray-300 hover:text-white">
+              Blog
             </Link>
             <Link to="/case-studies" className="relative px-6 py-3 rounded-xl font-medium transition-all duration-300 text-gray-300 hover:text-white">
               Case Studies
             </Link>
-            <Link to="/blog" className="relative px-6 py-3 rounded-xl font-medium transition-all duration-300 text-gray-300 hover:text-white">
-              Blog
+            
+            <Link to="/contact" className="relative px-6 py-3 rounded-xl font-medium transition-all duration-300 text-gray-300 hover:text-white">
+              Contact
             </Link>
           </div>
 
