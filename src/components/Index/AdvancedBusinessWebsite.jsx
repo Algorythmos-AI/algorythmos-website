@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronDown, Menu, X, ArrowRight, Star, Users, Zap, Shield, CheckCircle, Play, MousePointer2, Sparkles, Globe, Rocket, Brain, Eye } from 'lucide-react';
+import PartnersCarousel from './PartnersCarousel.jsx';
+import HeroIllustration from './HeroIllustration.jsx';
 
 const AdvancedBusinessWebsite = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -125,38 +127,38 @@ const AdvancedBusinessWebsite = () => {
   const features = [
     {
       icon: <Brain className="w-8 h-8" />,
-      title: "AI-Powered Analytics",
-      description: "Advanced machine learning algorithms that predict trends and optimize performance in real-time.",
+      title: "Agentic Automation 🤖",
+      description: "Deploy AI agents that handle repetitive workflows, integrate APIs, and streamline operations to increase productivity.",
       gradient: "from-purple-500 to-pink-500"
     },
     {
       icon: <Rocket className="w-8 h-8" />,
-      title: "Quantum Performance",
-      description: "Lightning-fast processing with quantum-inspired algorithms that scale infinitely.",
+      title: "Document Intelligence 📄",
+      description: "Extract insights from contracts, invoices, and business documents with next-gen OCR (Optical Character Recognition) and NLP (Natural Language Processing).",
       gradient: "from-blue-500 to-cyan-500"
     },
     {
       icon: <Eye className="w-8 h-8" />,
-      title: "Predictive Vision",
-      description: "See the future of your business with advanced forecasting and trend analysis.",
+      title: "SQL-Based Dashboards 📊",
+      description: "Transform raw data into clear, actionable dashboards so leaders can make faster, smarter decisions.",
       gradient: "from-green-500 to-teal-500"
     },
     {
       icon: <Globe className="w-8 h-8" />,
-      title: "Global Integration",
-      description: "Connect with any system, anywhere in the world, with our universal API platform.",
+      title: "MLOps & CI/CD ⚙️",
+      description: "Streamline AI model deployment with CI/CD pipelines, Docker, Kubernetes, and GitHub Actions—reducing errors and lowering recurring costs.",
       gradient: "from-orange-500 to-red-500"
     },
     {
       icon: <Shield className="w-8 h-8" />,
-      title: "Quantum Encryption",
-      description: "Military-grade security with quantum-resistant encryption protocols.",
+      title: "AI Security & Compliance 🔐",
+      description: "Ensure your AI systems are safe, compliant, and trustworthy with AppSec, OWASP Top 10 for LLMs, and LLMSecOps integration.",
       gradient: "from-indigo-500 to-purple-500"
     },
     {
       icon: <Sparkles className="w-8 h-8" />,
-      title: "Magic Automation",
-      description: "Automate complex workflows with AI that learns and adapts to your business.",
+      title: "AI Strategy & Roadmapping 🚀",
+      description: "From prototypes to enterprise rollouts, we guide you with a clear AI roadmap aligned with measurable ROI and long-term goals.",
       gradient: "from-pink-500 to-rose-500"
     }
   ];
@@ -164,22 +166,22 @@ const AdvancedBusinessWebsite = () => {
   const testimonials = [
     {
       name: "Dr. Sarah Chen",
-      role: "Chief Innovation Officer at QuantumTech",
-      content: "This platform didn't just transform our business—it revolutionized our entire industry. The AI insights are otherworldly.",
+      role: "Chief Data Officer – Financial Services",
+      content: "Algorythmos helped us automate reporting and streamline compliance. What used to take days is now done in minutes, with complete accuracy.",
       rating: 5,
       avatar: "🧬"
     },
     {
       name: "Marcus Rodriguez",
-      role: "CEO of FutureScale Dynamics",
-      content: "I've never seen anything like this. It's like having a crystal ball for business intelligence. Absolutely mind-blowing.",
+      role: "Head of Operations – Manufacturing Group",
+      content: "Their Document Intelligence solution transformed how we process contracts and invoices. We reduced manual effort by over 40% while improving data quality.",
       rating: 5,
       avatar: "🚀"
     },
     {
       name: "Dr. Emma Nakamura",
-      role: "Head of Digital Transformation",
-      content: "The quantum performance capabilities are beyond anything we imagined possible. This is the future, today.",
+      role: "CTO – Healthcare Startup",
+      content: "Thanks to Algorythmos, we deployed AI models into production securely with MLOps and CI/CD pipelines. Downtime dropped, and our time-to-market was cut in half",
       rating: 5,
       avatar: "⚡"
     }
@@ -211,39 +213,7 @@ const AdvancedBusinessWebsite = () => {
         }}
       />
 
-      {/* Advanced Navigation */}
-      <nav className={`fixed top-0 w-full z-40 transition-all duration-500 ${
-        scrollY > 50 
-          ? 'bg-black/20 backdrop-blur-2xl border-b border-white/10 shadow-2xl' 
-          : 'bg-transparent'
-      }`}>
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div className="text-3xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-pulse">
-              Ωalgorithmic
-            </div>
-            <div className="hidden md:flex space-x-1">
-              <a href="/" className="relative px-6 py-3 rounded-xl font-medium transition-all duration-300 group text-gray-300 hover:text-white">Home</a>
-              <a href="/features" className="relative px-6 py-3 rounded-xl font-medium transition-all duration-300 group text-gray-300 hover:text-white">Features</a>
-              <a href="/about" className="relative px-6 py-3 rounded-xl font-medium transition-all duration-300 group text-white">About</a>
-              <a href="/contact" className="relative px-6 py-3 rounded-xl font-medium transition-all duration-300 group text-gray-300 hover:text-white">Contact</a>
-            </div>
-            {/* Mobile navbar toggle */}
-            <button className="md:hidden flex items-center px-3 py-2 border-2 border-white rounded text-white bg-transparent" onClick={() => setIsMenuOpen(v => !v)} aria-label="Toggle navigation">
-              <svg className="h-6 w-6" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" stroke="white" strokeWidth="2" /></svg>
-            </button>
-          </div>
-          {/* Mobile nav menu */}
-          {isMenuOpen && (
-            <div className="md:hidden flex flex-col space-y-2 mt-2 bg-black/90 rounded-xl p-4 border border-white/10">
-              <a href="/" className="px-4 py-2 rounded-xl font-medium text-gray-300 hover:text-white">Home</a>
-              <a href="/features" className="px-4 py-2 rounded-xl font-medium text-gray-300 hover:text-white">Features</a>
-              <a href="/about" className="px-4 py-2 rounded-xl font-medium text-white">About</a>
-              <a href="/contact" className="px-4 py-2 rounded-xl font-medium text-gray-300 hover:text-white">Contact</a>
-            </div>
-          )}
-        </div>
-      </nav>
+      {/* Global Navbar is rendered by App.jsx */}
 
       {/* Revolutionary Hero Section */}
       <section 
@@ -291,82 +261,69 @@ const AdvancedBusinessWebsite = () => {
           ))}
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 text-center">
-          <div className={`transform transition-all duration-1000 ${
-            isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'
-          }`}>
-            {/* Animated Badge */}
-            <div className="inline-flex items-center px-4 py-2 mb-8 bg-gradient-to-r from-blue-600/20 to-purple-600/20 backdrop-blur-sm border border-white/20 rounded-full text-sm font-medium animate-bounce">
-              <Sparkles className="w-4 h-4 mr-2" />
-              Revolutionary Technology • Just Launched
+        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8">
+          <div className={`grid md:grid-cols-2 gap-12 items-center ${isLoaded ? 'opacity-100' : 'opacity-0 translate-y-6'} transition-all duration-700`}>
+            {/* Left: Copy */}
+            <div className="text-left">
+              <div className="inline-flex items-center px-4 py-2 mb-6 bg-gradient-to-r from-blue-600/20 to-purple-600/20 backdrop-blur-sm border border-white/10 rounded-full text-xs md:text-sm font-medium">
+                <Sparkles className="w-4 h-4 mr-2" />
+                Practical • Secure • ROI-Driven AI
+              </div>
+
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-black leading-tight mb-6">
+                <span className="block">Unlock the Real Value</span>
+                <span className="block bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">Of Your Data</span>
+              </h1>
+
+              <p className="text-lg md:text-xl text-gray-300 leading-relaxed mb-8 max-w-xl">
+                Algorythmos helps enterprises move beyond experimentation to deliver secure, measurable AI outcomes.
+                Strategy, automation, and analytics—built for production and scale.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Link to="/contact" className="group relative inline-flex items-center justify-center px-8 py-4 rounded-2xl font-semibold text-lg bg-gradient-to-r from-blue-600 to-purple-600 hover:scale-105 hover:shadow-lg transition">
+                  <span className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+                  <span className="relative flex items-center">Start Your AI Journey <ArrowRight className="ml-3 w-5 h-5" /></span>
+                </Link>
+                <Link to="/services" className="relative inline-flex items-center justify-center px-8 py-4 rounded-2xl font-semibold text-lg border-2 border-gray-600 hover:border-white hover:scale-105 hover:shadow-lg transition backdrop-blur-sm">
+                  <span className="relative flex items-center"><Play className="mr-3 w-5 h-5" />Explore Our Services</span>
+                </Link>
+              </div>
             </div>
 
-            <h1 className="text-6xl md:text-8xl font-black mb-8 leading-tight">
-              <span className="block animate-slide-in-left">Transcend</span>
-              <span className="block bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-slide-in-right">
-                Reality
-              </span>
-              <span className="block text-4xl md:text-6xl font-light text-gray-300 animate-fade-in-up">
-                with Quantum Business
-              </span>
-            </h1>
-            
-            <p className="text-xl md:text-3xl text-gray-300 mb-12 max-w-4xl mx-auto leading-relaxed animate-fade-in-up opacity-0"
-               style={{ animationDelay: '0.5s', animationFillMode: 'forwards' }}>
-              Experience the next evolution of business intelligence. 
-              Where artificial intelligence meets quantum computing to create
-              <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent font-semibold"> impossible possibilities</span>.
-            </p>
-
-            {/* Advanced CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16 animate-fade-in-up opacity-0"
-                 style={{ animationDelay: '0.8s', animationFillMode: 'forwards' }}>
-              <button className="group relative px-10 py-5 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl font-bold text-xl overflow-hidden transform hover:scale-105 transition-all duration-300">
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
-                <div className="relative flex items-center">
-                  Enter the Future
-                  <ArrowRight className="ml-3 w-6 h-6 group-hover:translate-x-2 transition-transform duration-300" />
-                </div>
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 blur-xl opacity-50 group-hover:opacity-75 transition-opacity duration-300" />
-              </button>
-              
-              <button className="group relative px-10 py-5 border-2 border-gray-600 rounded-2xl font-bold text-xl hover:border-white transition-all duration-300 backdrop-blur-sm overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
-                <div className="relative flex items-center">
-                  <Play className="mr-3 w-6 h-6" />
-                  Experience Demo
-                </div>
-              </button>
-            </div>
-
-            {/* Animated Stats with Hover Effects */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto animate-fade-in-up opacity-0"
-                 style={{ animationDelay: '1s', animationFillMode: 'forwards' }}>
-              {stats.map((stat, index) => (
-                <div 
-                  key={index} 
-                  className="group text-center p-6 rounded-2xl backdrop-blur-sm border border-white/10 hover:border-white/30 hover:bg-gradient-to-br hover:from-blue-600/10 hover:to-purple-600/10 transform hover:scale-110 hover:-translate-y-2 transition-all duration-500 cursor-pointer"
-                  style={{ transitionDelay: `${index * 100}ms` }}
-                >
-                  <div className="text-4xl md:text-6xl font-black bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-3 group-hover:animate-pulse">
-                    {stat.number}{stat.suffix}
-                  </div>
-                  <div className="text-gray-400 text-lg group-hover:text-white transition-colors">
-                    {stat.label}
-                  </div>
-                </div>
-              ))}
+            {/* Right: Illustration placeholder (desktop) */}
+            <div className="hidden md:block">
+              <HeroIllustration />
             </div>
           </div>
+
+          {/* Metrics Grid */}
+          <div className="mt-14 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
+            {stats.map((stat, index) => (
+              <div
+                key={index}
+                className="w-48 h-32 mx-auto rounded-2xl border border-white/10 backdrop-blur-sm bg-gradient-to-br from-gray-900/40 to-black/40 hover:border-white/30 hover:from-blue-600/10 hover:to-purple-600/10 transform hover:scale-105 transition duration-300 cursor-pointer flex flex-col items-center justify-center"
+                style={{ transitionDelay: `${index * 100}ms` }}
+              >
+                <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-1">
+                  {stat.number}{stat.suffix}
+                </div>
+                <div className="text-sm text-gray-400">
+                  {stat.label}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Partners Carousel */}
+          <PartnersCarousel />
         </div>
 
-        {/* Enhanced Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
-          <div className="animate-bounce">
-            <div className="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center">
-              <div className="w-1 h-3 bg-white rounded-full mt-2 animate-pulse" />
-            </div>
-          </div>
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-gray-400 animate-bounce">
+          <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M6 9l6 6 6-6" />
+          </svg>
         </div>
       </section>
 
@@ -375,14 +332,15 @@ const AdvancedBusinessWebsite = () => {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="text-center mb-20 animate-fade-in-up">
             <h2 className="text-5xl md:text-7xl font-black mb-8">
-              Superhuman
+              Our
               <span className="block bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                 Capabilities
               </span>
             </h2>
             <p className="text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
-              Unlock powers that transcend conventional business limitations. 
-              These aren't just features—they're evolutionary leaps.
+              Unlock AI solutions that reduce costs, save time, and create measurable business impact. 
+              These aren’t just features—they’re the foundation for smarter, safer, and faster decisions.
+
             </p>
           </div>
 
@@ -431,13 +389,14 @@ const AdvancedBusinessWebsite = () => {
         <div className="max-w-7xl mx-auto px-6 lg:px-8 relative">
           <div className="text-center mb-20 animate-fade-in-up">
             <h2 className="text-5xl md:text-7xl font-black mb-8">
-              Voices from
+              What Our
               <span className="block bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                Tomorrow
+                Clients Say
               </span>
             </h2>
             <p className="text-2xl text-gray-300 max-w-3xl mx-auto">
-              Leaders who've transcended the impossible
+              Trusted by forward-thinking leaders who turned AI into measurable business results.
+
             </p>
           </div>
 
@@ -505,139 +464,54 @@ const AdvancedBusinessWebsite = () => {
         <div className="relative max-w-5xl mx-auto text-center px-6 lg:px-8">
           <div className="animate-fade-in-up">
             <h2 className="text-6xl md:text-8xl font-black mb-8 leading-tight">
-              Ready to
+              Ready to Start
               <span className="block bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                Evolve?
+                Your AI Journey?
               </span>
             </h2>
             
             <p className="text-2xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">
-              Join the quantum revolution. Transform impossibility into inevitability.
-              <span className="block mt-2 text-blue-400">The future doesn't wait.</span>
+              Unlock secure, ROI-driven AI solutions that reduce costs, save time, and empower smarter decisions.
+              <span className="block mt-2 text-blue-400">Move beyond experimentation.</span>
             </p>
             
             <div className="flex flex-col sm:flex-row gap-6 justify-center mb-12">
-              <button className="group relative px-12 py-6 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl font-bold text-2xl overflow-hidden transform hover:scale-105 transition-all duration-500">
+              <Link to="/contact" className="group relative px-12 py-6 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl font-bold text-2xl overflow-hidden transform hover:scale-105 transition-all duration-500">
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-left" />
                 <div className="relative flex items-center justify-center">
                   Begin Evolution
                   <Rocket className="ml-3 w-7 h-7 group-hover:translate-x-2 group-hover:-translate-y-1 transition-transform duration-300" />
                 </div>
                 <div className="absolute -inset-2 rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 blur-2xl opacity-50 group-hover:opacity-100 transition-opacity duration-500" />
-              </button>
+              </Link>
               
-              <button className="group relative px-12 py-6 border-2 border-gray-600 rounded-2xl font-bold text-2xl hover:border-white transition-all duration-500 backdrop-blur-sm overflow-hidden">
+              <Link to="/services" className="group relative px-12 py-6 border-2 border-gray-600 rounded-2xl font-bold text-2xl hover:border-white transition-all duration-500 backdrop-blur-sm overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-left" />
                 <div className="relative flex items-center justify-center">
                   <MousePointer2 className="mr-3 w-7 h-7 group-hover:rotate-12 transition-transform duration-300" />
                   Interactive Tour
                 </div>
-              </button>
+              </Link>
             </div>
 
             <div className="flex items-center justify-center text-gray-400 space-x-8">
               <div className="flex items-center">
                 <CheckCircle className="w-6 h-6 mr-3 text-green-400 animate-pulse" />
-                Quantum-secured • Zero commitment
+                Secure & Compliant (GDPR + EU AI Act) • Rapid Prototyping to Scalable Rollouts
               </div>
               <div className="hidden sm:flex items-center">
                 <Sparkles className="w-6 h-6 mr-3 text-purple-400 animate-spin" />
-                AI-powered onboarding
+                AI-powered Automation
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Ultra-Modern Footer */}
-      <footer className="relative border-t border-gray-800/50 py-16 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-t from-gray-900/50 to-transparent" />
-        
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 relative">
-          <div className="grid md:grid-cols-5 gap-12 mb-16">
-            {/* Brand Section */}
-            <div className="md:col-span-2">
-              <div className="text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-6 animate-pulse">
-                ΩNexus
-              </div>
-              <p className="text-gray-300 text-lg leading-relaxed mb-6 max-w-md">
-                Transcending the boundaries of possibility through quantum business intelligence and AI-powered innovation.
-              </p>
-              
-              {/* Social Links with Hover Effects */}
-              <div className="flex space-x-4">
-                {['Twitter', 'LinkedIn', 'GitHub', 'Discord'].map((social, index) => (
-                  <button 
-                    key={social}
-                    className="group w-12 h-12 bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl border border-gray-700 hover:border-white/30 transition-all duration-300 hover:scale-110 hover:-translate-y-1 flex items-center justify-center"
-                    style={{ transitionDelay: `${index * 100}ms` }}
-                  >
-                    <div className="w-6 h-6 bg-gradient-to-r from-blue-400 to-purple-400 rounded group-hover:from-purple-400 group-hover:to-pink-400 transition-all duration-300" />
-                  </button>
-                ))}
-              </div>
-            </div>
-            
-            {/* Navigation Columns */}
-            {[
-              {
-                title: 'Quantum Solutions',
-                links: ['AI Analytics', 'Quantum Computing', 'Neural Networks', 'Predictive Intelligence', 'Autonomous Systems']
-              },
-              {
-                title: 'Enterprise',
-                links: ['Enterprise AI', 'Global Integration', 'Security Protocols', 'Scalability Matrix', 'Custom Solutions']
-              },
-              {
-                title: 'Resources',
-                links: ['Quantum Docs', 'API Universe', 'Developer Portal', 'Community Hub', 'Learning Center']
-              }
-            ].map((column, columnIndex) => (
-              <div key={column.title}>
-                <h4 className="font-bold mb-6 text-lg bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                  {column.title}
-                </h4>
-                <div className="space-y-3">
-                  {column.links.map((link, linkIndex) => (
-                    <button
-                      key={link}
-                      className="block text-gray-400 transition-all duration-300 hover:translate-x-2 hover:bg-gradient-to-r hover:from-blue-400 hover:to-purple-400 hover:bg-clip-text hover:text-transparent"
-                      style={{ transitionDelay: `${linkIndex * 50}ms` }}
-                    >
-                      {link}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-          
-          {/* Enhanced Footer Bottom */}
-          <div className="border-t border-gray-800/50 pt-8">
-            <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-              <div className="text-gray-400 text-center md:text-left">
-                <p>&copy; 2025 ΩNexus Corporation. Transcending Reality.</p>
-                <p className="text-sm mt-1">Quantum-powered • AI-driven • Future-ready</p>
-              </div>
-              
-              <div className="flex items-center space-x-6 text-sm text-gray-400">
-                <button className="transition-colors duration-300 hover:bg-gradient-to-r hover:from-blue-400 hover:to-purple-400 hover:bg-clip-text hover:text-transparent">
-                  Privacy Matrix
-                </button>
-                <button className="transition-colors duration-300 hover:bg-gradient-to-r hover:from-blue-400 hover:to-purple-400 hover:bg-clip-text hover:text-transparent">
-                  Quantum Terms
-                </button>
-                <button className="transition-colors duration-300 hover:bg-gradient-to-r hover:from-blue-400 hover:to-purple-400 hover:bg-clip-text hover:text-transparent">
-                  Neural Cookies
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
+      {/* Global Footer is rendered by App.jsx */}
 
       {/* Advanced CSS Animations */}
-      <style jsx>{`
+      <style>{`
         @keyframes fadeInUp {
           from {
             opacity: 0;
