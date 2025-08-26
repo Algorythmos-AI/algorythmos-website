@@ -1,6 +1,19 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { Youtube, Linkedin, Twitter, Github, CalendarDays, PenLine } from "lucide-react";
 import logo from "../../assets/Algorythmos.png";
+
+// X Icon Component
+const XIcon = ({ className = "h-5 w-5" }) => (
+  <svg
+    className={className}
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+  </svg>
+);
 
 const Footer = () => {
   const [email, setEmail] = useState("");
@@ -62,6 +75,45 @@ const Footer = () => {
       setIsSubmitting(false);
     }
   };
+
+  const socialLinks = [
+    {
+      name: "YouTube",
+      url: "https://youtube.com/@AlgorythmosAI",
+      icon: Youtube,
+      ariaLabel: "Follow us on YouTube"
+    },
+    {
+      name: "LinkedIn",
+      url: "https://www.linkedin.com/company/algorythmos",
+      icon: Linkedin,
+      ariaLabel: "Follow us on LinkedIn"
+    },
+    {
+      name: "X",
+      url: "https://x.com/algorythmos",
+      icon: XIcon,
+      ariaLabel: "Follow us on X"
+    },
+    {
+      name: "GitHub",
+      url: "https://github.com/algorythmos",
+      icon: Github,
+      ariaLabel: "Follow us on GitHub"
+    },
+    {
+      name: "Medium",
+      url: "https://medium.com/@algorythmos",
+      icon: PenLine,
+      ariaLabel: "Follow us on Medium"
+    },
+    {
+      name: "Calendly",
+      url: "https://calendly.com/algorythmos-france/30min",
+      icon: CalendarDays,
+      ariaLabel: "Book a meeting on Calendly"
+    }
+  ];
 
   return (
     <footer 
@@ -177,50 +229,45 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Column 4: Socials + Contact Button */}
+          {/* Column 4: Follow Us + Contact Button */}
           <div>
-            <h3 className="text-white font-semibold mb-4">Socials</h3>
-            <ul className="space-y-3 mb-6">
-              <li>
-                <a
-                  href="https://www.linkedin.com/company/algorythmos"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-white transition-colors duration-300"
-                >
-                  LinkedIn
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://github.com/algorythmos"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-white transition-colors duration-300"
-                >
-                  GitHub
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://twitter.com/algorythmos"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-white transition-colors duration-300"
-                >
-                  Twitter/X
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://instagram.com/algorythmos"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-white transition-colors duration-300"
-                >
-                  Instagram
-                </a>
-              </li>
+            <h3 className="text-white font-semibold mb-4">Follow Us</h3>
+            
+            {/* Icon Buttons Row */}
+            <div className="flex flex-wrap gap-2 mb-4">
+              {socialLinks.map((social) => {
+                const Icon = social.icon;
+                return (
+                  <a
+                    key={social.name}
+                    href={social.url}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    aria-label={social.ariaLabel}
+                    title={social.name}
+                    className="group inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/0 hover:bg-white/5 px-3 py-2 text-white/85 hover:text-white transition-all duration-300 hover:shadow-[0_0_20px_rgba(6,182,212,0.3)]"
+                  >
+                    <Icon className="h-5 w-5 opacity-90 group-hover:opacity-100 transition-opacity duration-300" />
+                  </a>
+                );
+              })}
+            </div>
+
+            {/* Text Links for Mobile/SEO */}
+            <ul className="space-y-2 mb-6 md:hidden">
+              {socialLinks.map((social) => (
+                <li key={social.name}>
+                  <a
+                    href={social.url}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="text-gray-400 hover:text-white transition-colors duration-300 text-sm"
+                    aria-label={social.ariaLabel}
+                  >
+                    {social.name}
+                  </a>
+                </li>
+              ))}
             </ul>
             
             {/* Contact Button */}
