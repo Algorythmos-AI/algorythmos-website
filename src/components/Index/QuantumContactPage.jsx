@@ -74,10 +74,10 @@ const QuantumContactPage = () => {
     try {
       setSending(true);
       await emailjs.send(
-        SERVICE_ID,
-        TEMPLATE_ID,
+        service_m5jcw4i,
+        template_r1yfz0r,
         { name: form.name, email: form.email, message: form.message },
-        { publicKey: PUBLIC_KEY }
+        { publicKey: FtkTJ5DgfHW4fImxo }
       );
       setForm({ name: "", email: "", message: "", website: "" });
       setShowSnackbar(true);

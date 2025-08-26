@@ -265,10 +265,10 @@ const AdvancedBusinessWebsite = () => {
           <div className={`grid md:grid-cols-2 gap-12 items-center ${isLoaded ? 'opacity-100' : 'opacity-0 translate-y-6'} transition-all duration-700`}>
             {/* Left: Copy */}
             <div className="text-left">
-              <div className="inline-flex items-center px-4 py-2 mb-6 bg-gradient-to-r from-blue-600/20 to-purple-600/20 backdrop-blur-sm border border-white/10 rounded-full text-xs md:text-sm font-medium">
+              {/* <div className="inline-flex items-center px-4 py-2 mb-6 bg-gradient-to-r from-blue-600/20 to-purple-600/20 backdrop-blur-sm border border-white/10 rounded-full text-xs md:text-sm font-medium">
                 <Sparkles className="w-4 h-4 mr-2" />
                 Practical • Secure • ROI-Driven AI
-              </div>
+              </div> */}
 
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-black leading-tight mb-6">
                 <span className="block">Unlock the Real Value</span>
