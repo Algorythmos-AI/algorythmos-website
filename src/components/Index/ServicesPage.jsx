@@ -47,11 +47,11 @@ const ServicesPage = () => {
       {/* Global Navbar is rendered by App.jsx */}
 
       {/* Hero Section */}
-      <main className="pt-40 pb-20 px-6 max-w-5xl mx-auto text-center flex-grow">
-        <h1 className="text-6xl font-black mb-6 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+      <main className="pt-32 md:pt-40 pb-20 px-4 sm:px-6 md:px-12 max-w-5xl mx-auto text-center flex-grow">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-6 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
           Our Services
         </h1>
-        <p className="text-2xl text-gray-300 mb-16 leading-relaxed">
+        <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 mb-16 leading-relaxed">
           Algorythmos is a boutique AI & Data Science consultancy helping
           enterprises unlock the real value of their data. We specialize in
           secure, ROI-driven AI solutions that reduce costs, save time, and
@@ -59,14 +59,14 @@ const ServicesPage = () => {
         </p>
 
         {/* Services Grid */}
-        <div className="grid md:grid-cols-2 gap-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8 lg:gap-12">
           {services.map((service, index) => (
             <Link
               key={service.title}
               to={`/services/${service.slug}`}
-              className="group relative p-10 bg-gradient-to-br from-gray-900/60 to-black/60 rounded-3xl 
+              className="group relative p-6 sm:p-8 md:p-10 bg-gradient-to-br from-gray-900/60 to-black/60 rounded-3xl 
               border border-gray-800/50 hover:border-white/20 backdrop-blur-xl transition-all duration-700 
-              transform hover:scale-105 hover:-translate-y-4 overflow-hidden block"
+              transform hover:scale-105 hover:-translate-y-4 overflow-hidden block shadow-lg"
               style={{ transitionDelay: `${index * 150}ms` }}
               aria-label={`${service.title} details`}
             >
@@ -79,8 +79,8 @@ const ServicesPage = () => {
                 >
                   {service.icon}
                 </div>
-                <h3 className="text-3xl font-bold mb-4">{service.title}</h3>
-                <p className="text-lg text-gray-300 group-hover:text-white transition-colors duration-500">
+                <h3 className="text-2xl sm:text-3xl font-bold mb-4">{service.title}</h3>
+                <p className="text-base sm:text-lg text-gray-300 group-hover:text-white transition-colors duration-500">
                   {service.description}
                 </p>
               </div>
@@ -92,12 +92,12 @@ const ServicesPage = () => {
         <div className="mt-20">
           <Link
             to="/contact"
-            className="group relative px-12 py-6 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl font-bold text-2xl overflow-hidden transform hover:scale-105 transition-all duration-500 shadow-lg inline-flex"
+            className="group relative px-8 sm:px-12 py-4 sm:py-6 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl font-bold text-xl sm:text-2xl overflow-hidden transform hover:scale-105 transition-all duration-500 shadow-lg inline-flex"
             aria-label="Book a consultation"
           >
             <span className="relative flex items-center justify-center">
               Book a Consultation
-              <ArrowRight className="ml-3 w-7 h-7 group-hover:translate-x-2 transition-transform duration-300" />
+              <ArrowRight className="ml-3 w-5 h-5 sm:w-7 sm:h-7 group-hover:translate-x-2 transition-transform duration-300" />
             </span>
           </Link>
         </div>

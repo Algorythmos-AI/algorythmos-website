@@ -262,22 +262,22 @@ const QuantumAboutPage = () => {
       </div>
 
       {/* Hero */}
-      <section className="relative min-h-screen flex items-center justify-center z-10">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center">
+      <section className="relative min-h-screen flex items-center justify-center z-10 pt-20 md:pt-0">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="animate-fade-in-up">
-            <div className="inline-flex items-center px-6 py-3 mb-8 bg-gradient-to-r from-blue-600/20 to-purple-600/20 backdrop-blur-sm border border-white/20 rounded-full text-lg font-medium">
-              <Sparkles className="w-5 h-5 mr-3 animate-spin" />
+            <div className="inline-flex items-center px-4 sm:px-6 py-2 sm:py-3 mb-6 sm:mb-8 bg-gradient-to-r from-blue-600/20 to-purple-600/20 backdrop-blur-sm border border-white/20 rounded-full text-sm sm:text-lg font-medium">
+              <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3 animate-spin" />
               Driving AI Innovation Since 2019
             </div>
 
-            <h1 className="text-7xl md:text-9xl font-black mb-8 leading-tight">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-9xl font-black mb-6 sm:mb-8 leading-tight">
               <span className="block bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                 Beyond
               </span>
               <span className="block text-white">Business as Usual</span>
             </h1>
 
-            <p className="text-2xl md:text-4xl text-gray-300 mb-12 max-w-5xl mx-auto leading-relaxed">
+            <p className="text-lg sm:text-xl md:text-2xl lg:text-4xl text-gray-300 mb-8 sm:mb-12 max-w-5xl mx-auto leading-relaxed px-4">
               At Algorythmos, we transform complex data challenges into
               <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent font-bold"> practical AI solutions</span>.
               Our mission is clear: to deliver secure, ROI-driven innovation that helps businesses scale, adapt, and thrive.
@@ -287,15 +287,15 @@ const QuantumAboutPage = () => {
       </section>
 
       {/* Tabs */}
-      <section className="py-24 relative z-10">
-        <div className="max-w-6xl mx-auto px-6 lg:px-8">
-          <div className="flex justify-center mb-16">
-            <div className="flex bg-gray-900/50 backdrop-blur-xl rounded-2xl p-2 border border-gray-700/50">
+      <section className="py-16 sm:py-24 relative z-10">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-center mb-12 sm:mb-16">
+            <div className="flex flex-col sm:flex-row bg-gray-900/50 backdrop-blur-xl rounded-2xl p-2 border border-gray-700/50 w-full sm:w-auto">
               {Object.keys(TAB_CONTENT).map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`px-8 py-4 rounded-xl font-bold text-lg transition-all duration-500 relative ${
+                  className={`px-4 sm:px-8 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg transition-all duration-500 relative ${
                     activeTab === tab ? "text-white" : "text-gray-400 hover:text-white"
                   }`}
                   aria-pressed={activeTab === tab}
@@ -310,10 +310,10 @@ const QuantumAboutPage = () => {
           </div>
 
           <div className="text-center">
-            <h2 className="text-5xl md:text-6xl font-black mb-8 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-6 sm:mb-8 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
               {TAB_CONTENT[activeTab].title}
             </h2>
-            <p className="text-2xl text-gray-300 leading-relaxed max-w-4xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 leading-relaxed max-w-4xl mx-auto px-4">
               {TAB_CONTENT[activeTab].content}
             </p>
           </div>
@@ -321,22 +321,22 @@ const QuantumAboutPage = () => {
       </section>
 
       {/* Stats */}
-      <section className="py-24 relative z-10">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="grid md:grid-cols-4 gap-8">
+      <section className="py-16 sm:py-24 relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8">
             {STATS.map((stat, i) => (
               <div
                 key={i}
-                className="group text-center p-8 bg-gradient-to-br from-gray-900/80 to-black/80 rounded-3xl border border-gray-800/50 hover:border-white/20 backdrop-blur-xl transform hover:scale-110 hover:-translate-y-6 transition-all duration-700 cursor-pointer"
+                className="group text-center p-4 sm:p-8 bg-gradient-to-br from-gray-900/80 to-black/80 rounded-3xl border border-gray-800/50 hover:border-white/20 backdrop-blur-xl transform hover:scale-110 hover:-translate-y-6 transition-all duration-700 cursor-pointer shadow-lg"
                 style={{ transitionDelay: `${i * 120}ms` }}
               >
-                <div className="text-blue-400 mb-6 flex justify-center group-hover:scale-125 group-hover:rotate-12 transition-all duration-500">
+                <div className="text-blue-400 mb-4 sm:mb-6 flex justify-center group-hover:scale-125 group-hover:rotate-12 transition-all duration-500">
                   {stat.icon}
                 </div>
-                <div className="text-5xl font-black bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-4 group-hover:animate-pulse">
+                <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-2 sm:mb-4 group-hover:animate-pulse">
                   {stat.number}
                 </div>
-                <div className="text-xl text-gray-400 group-hover:text-white transition-colors duration-500">
+                <div className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-400 group-hover:text-white transition-colors duration-500">
                   {stat.label}
                 </div>
               </div>
@@ -346,36 +346,36 @@ const QuantumAboutPage = () => {
       </section>
 
       {/* Values */}
-      <section className="py-32 relative z-10">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="text-center mb-20">
-            <h2 className="text-6xl md:text-7xl font-black mb-8">
+      <section className="py-16 sm:py-32 relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12 sm:mb-20">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black mb-6 sm:mb-8">
               Our
               <span className="block bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                 Values
               </span>
             </h2>
-            <p className="text-2xl text-gray-300 max-w-4xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 max-w-4xl mx-auto px-4">
               These principles guide every solution we deliver — ensuring innovation, trust, and measurable business impact.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 md:gap-12">
             {VALUES.map((value, i) => (
               <div
                 key={i}
-                className="group relative p-10 bg-gradient-to-br from-gray-900/60 to-black/60 rounded-3xl border border-gray-800/50 hover:border-white/20 backdrop-blur-xl transition-all duration-700 transform hover:scale-105 hover:-translate-y-4 overflow-hidden"
+                className="group relative p-6 sm:p-8 md:p-10 bg-gradient-to-br from-gray-900/60 to-black/60 rounded-3xl border border-gray-800/50 hover:border-white/20 backdrop-blur-xl transition-all duration-700 transform hover:scale-105 hover:-translate-y-4 overflow-hidden shadow-lg"
                 style={{ transitionDelay: `${i * 120}ms` }}
               >
                 <div className={`absolute inset-0 bg-gradient-to-br ${value.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-700`} />
                 <div className="relative z-10">
-                  <div className={`inline-flex p-4 bg-gradient-to-br ${value.gradient} rounded-2xl mb-6 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500`}>
+                  <div className={`inline-flex p-4 bg-gradient-to-br ${value.gradient} rounded-2xl mb-4 sm:mb-6 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500`}>
                     {value.icon}
                   </div>
-                  <h3 className="text-3xl font-bold mb-6 group-hover:bg-gradient-to-r group-hover:from-blue-400 group-hover:to-purple-400 group-hover:bg-clip-text group-hover:text-transparent transition-all duration-500">
+                  <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6 group-hover:bg-gradient-to-r group-hover:from-blue-400 group-hover:to-purple-400 group-hover:bg-clip-text group-hover:text-transparent transition-all duration-500">
                     {value.title}
                   </h3>
-                  <p className="text-xl text-gray-300 leading-relaxed group-hover:text-white transition-colors duration-500">
+                  <p className="text-base sm:text-lg md:text-xl text-gray-300 leading-relaxed group-hover:text-white transition-colors duration-500">
                     {value.description}
                   </p>
                 </div>
@@ -388,17 +388,17 @@ const QuantumAboutPage = () => {
       </section>
 
       {/* Team */}
-      <section className="py-32 relative z-10 overflow-hidden">
+      <section className="py-16 sm:py-32 relative z-10 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-blue-900/5 via-purple-900/5 to-black" />
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 relative">
-          <div className="text-center mb-20">
-            <h2 className="text-6xl md:text-7xl font-black mb-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          <div className="text-center mb-12 sm:mb-20">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black mb-6 sm:mb-8">
               Our
               <span className="block bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                 Team
               </span>
             </h2>
-            <p className="text-2xl text-gray-300 max-w-4xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 max-w-4xl mx-auto px-4">
               A boutique group of AI and Data Science experts dedicated to secure, practical, and ROI‑driven outcomes.
             </p>
           </div>

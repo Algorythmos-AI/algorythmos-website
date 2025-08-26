@@ -218,7 +218,7 @@ const AdvancedBusinessWebsite = () => {
       {/* Revolutionary Hero Section */}
       <section 
         ref={heroRef}
-        className="relative min-h-screen flex items-center justify-center overflow-hidden"
+        className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 md:pt-0"
       >
         {/* Dynamic Background Effects */}
         <div className="absolute inset-0">
@@ -261,32 +261,27 @@ const AdvancedBusinessWebsite = () => {
           ))}
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8">
-          <div className={`grid md:grid-cols-2 gap-12 items-center ${isLoaded ? 'opacity-100' : 'opacity-0 translate-y-6'} transition-all duration-700`}>
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className={`grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center ${isLoaded ? 'opacity-100' : 'opacity-0 translate-y-6'} transition-all duration-700`}>
             {/* Left: Copy */}
-            <div className="text-left">
-              {/* <div className="inline-flex items-center px-4 py-2 mb-6 bg-gradient-to-r from-blue-600/20 to-purple-600/20 backdrop-blur-sm border border-white/10 rounded-full text-xs md:text-sm font-medium">
-                <Sparkles className="w-4 h-4 mr-2" />
-                Practical • Secure • ROI-Driven AI
-              </div> */}
-
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-black leading-tight mb-6">
+            <div className="text-center md:text-left">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black leading-tight mb-6">
                 <span className="block">Unlock the Real Value</span>
                 <span className="block bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">Of Your Data</span>
               </h1>
 
-              <p className="text-lg md:text-xl text-gray-300 leading-relaxed mb-8 max-w-xl">
+              <p className="text-base sm:text-lg md:text-xl text-gray-300 leading-relaxed mb-8 max-w-xl mx-auto md:mx-0">
                 Algorythmos helps enterprises move beyond experimentation to deliver secure, measurable AI outcomes.
                 Strategy, automation, and analytics—built for production and scale.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link to="/contact" className="group relative inline-flex items-center justify-center px-8 py-4 rounded-2xl font-semibold text-lg bg-gradient-to-r from-blue-600 to-purple-600 hover:scale-105 hover:shadow-lg transition">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                <Link to="/contact" className="group relative inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 rounded-2xl font-semibold text-base sm:text-lg bg-gradient-to-r from-blue-600 to-purple-600 hover:scale-105 hover:shadow-lg transition w-full sm:w-auto">
                   <span className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
-                  <span className="relative flex items-center">Start Your AI Journey <ArrowRight className="ml-3 w-5 h-5" /></span>
+                  <span className="relative flex items-center justify-center">Start Your AI Journey <ArrowRight className="ml-3 w-5 h-5" /></span>
                 </Link>
-                <Link to="/services" className="relative inline-flex items-center justify-center px-8 py-4 rounded-2xl font-semibold text-lg border-2 border-gray-600 hover:border-white hover:scale-105 hover:shadow-lg transition backdrop-blur-sm">
-                  <span className="relative flex items-center"><Play className="mr-3 w-5 h-5" />Explore Our Services</span>
+                <Link to="/services" className="relative inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 rounded-2xl font-semibold text-base sm:text-lg border-2 border-gray-600 hover:border-white hover:scale-105 hover:shadow-lg transition backdrop-blur-sm w-full sm:w-auto">
+                  <span className="relative flex items-center justify-center"><Play className="mr-3 w-5 h-5" />Explore Our Services</span>
                 </Link>
               </div>
             </div>
@@ -298,17 +293,17 @@ const AdvancedBusinessWebsite = () => {
           </div>
 
           {/* Metrics Grid */}
-          <div className="mt-14 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
+          <div className="mt-14 grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 max-w-5xl mx-auto">
             {stats.map((stat, index) => (
               <div
                 key={index}
-                className="w-48 h-32 mx-auto rounded-2xl border border-white/10 backdrop-blur-sm bg-gradient-to-br from-gray-900/40 to-black/40 hover:border-white/30 hover:from-blue-600/10 hover:to-purple-600/10 transform hover:scale-105 transition duration-300 cursor-pointer flex flex-col items-center justify-center"
+                className="w-full h-24 md:h-32 mx-auto rounded-2xl border border-white/10 backdrop-blur-sm bg-gradient-to-br from-gray-900/40 to-black/40 hover:border-white/30 hover:from-blue-600/10 hover:to-purple-600/10 transform hover:scale-105 transition duration-300 cursor-pointer flex flex-col items-center justify-center shadow-lg"
                 style={{ transitionDelay: `${index * 100}ms` }}
               >
-                <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-1">
+                <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-1">
                   {stat.number}{stat.suffix}
                 </div>
-                <div className="text-sm text-gray-400">
+                <div className="text-xs sm:text-sm text-gray-400">
                   {stat.label}
                 </div>
               </div>

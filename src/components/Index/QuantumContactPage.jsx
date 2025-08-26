@@ -121,17 +121,17 @@ const QuantumContactPage = () => {
       </div>
 
       {/* Contact Content */}
-      <main className="pt-32 pb-32 px-6 max-w-5xl mx-auto text-center relative z-10">
-        <h1 className="text-6xl font-black mb-8 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+      <main className="pt-32 md:pt-32 pb-16 md:pb-32 px-4 sm:px-6 md:px-12 max-w-5xl mx-auto text-center relative z-10">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-6 sm:mb-8 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
           Contact
         </h1>
-        <p className="text-2xl text-gray-300 mb-12">
+        <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 mb-8 sm:mb-12 px-4">
           Get in touch with the team for collaboration, support, or inquiries.
         </p>
 
         <div className="flex justify-center">
           <form
-            className="w-full max-w-lg mx-auto bg-white/5 rounded-2xl p-8 shadow-lg border border-gray-800 flex flex-col gap-6 backdrop-blur-md"
+            className="w-full max-w-lg mx-auto bg-white/5 rounded-2xl p-6 sm:p-8 shadow-lg border border-gray-800 flex flex-col gap-4 sm:gap-6 backdrop-blur-md"
             onSubmit={sendEmail}
             autoComplete="off"
             noValidate
@@ -149,7 +149,7 @@ const QuantumContactPage = () => {
 
             {/* Name */}
             <div className="mb-2 text-left">
-              <label htmlFor="name" className="block mb-2 text-base font-medium text-gray-200">
+              <label htmlFor="name" className="block mb-2 text-sm sm:text-base font-medium text-gray-200">
                 Name
               </label>
               <input
@@ -172,7 +172,7 @@ const QuantumContactPage = () => {
 
             {/* Email */}
             <div className="mb-2 text-left">
-              <label htmlFor="email" className="block mb-2 text-base font-medium text-gray-200">
+              <label htmlFor="email" className="block mb-2 text-sm sm:text-base font-medium text-gray-200">
                 Email
               </label>
               <input
@@ -196,7 +196,7 @@ const QuantumContactPage = () => {
 
             {/* Message */}
             <div className="mb-2 text-left">
-              <label htmlFor="message" className="block mb-2 text-base font-medium text-gray-200">
+              <label htmlFor="message" className="block mb-2 text-sm sm:text-base font-medium text-gray-200">
                 Message
               </label>
               <textarea

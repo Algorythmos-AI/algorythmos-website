@@ -44,35 +44,35 @@ const caseStudies = [
 const CaseStudiesPage = () => {
   return (
     <div className="min-h-screen bg-black text-white overflow-hidden relative">
-      <main className="pt-40 pb-20 px-6 max-w-6xl mx-auto text-center">
-        <h1 className="text-6xl font-black mb-6 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+      <main className="pt-32 md:pt-40 pb-20 px-4 sm:px-6 md:px-12 max-w-6xl mx-auto text-center">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-6 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
           Case Studies
         </h1>
-        <p className="text-2xl text-gray-300 mb-16 leading-relaxed">
+        <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 mb-16 leading-relaxed">
           Discover how Algorythmos has helped enterprises unlock measurable ROI 
           with practical, secure AI solutions.
         </p>
 
-        <div className="grid md:grid-cols-2 gap-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8 lg:gap-12">
           {caseStudies.map((study, index) => {
             const Icon = study.icon;
             return (
               <Link
                 key={index}
                 to={study.link}
-                className="group relative p-10 bg-gradient-to-br from-gray-900/60 to-black/60 rounded-3xl 
+                className="group relative p-6 sm:p-8 md:p-10 bg-gradient-to-br from-gray-900/60 to-black/60 rounded-3xl 
                 border border-gray-800/50 hover:border-white/20 backdrop-blur-xl transition-all duration-700 
-                transform hover:scale-105 hover:-translate-y-4 overflow-hidden block text-left"
+                transform hover:scale-105 hover:-translate-y-4 overflow-hidden block text-left shadow-lg"
               >
                 <div className={`absolute inset-0 bg-gradient-to-br ${study.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-700`} />
                 <div className="relative z-10">
                   <div className={`inline-flex p-4 bg-gradient-to-br ${study.gradient} rounded-2xl mb-6`}>
-                    <Icon className="w-12 h-12" />
+                    <Icon className="w-10 h-10 sm:w-12 sm:h-12" />
                   </div>
-                  <h3 className="text-3xl font-bold mb-4">{study.title}</h3>
-                  <p className="text-lg text-gray-400"><strong>Challenge:</strong> {study.challenge}</p>
-                  <p className="text-lg text-gray-400"><strong>Solution:</strong> {study.solution}</p>
-                  <p className="text-lg text-gray-400"><strong>Result:</strong> {study.result}</p>
+                  <h3 className="text-2xl sm:text-3xl font-bold mb-4">{study.title}</h3>
+                  <p className="text-base sm:text-lg text-gray-400"><strong>Challenge:</strong> {study.challenge}</p>
+                  <p className="text-base sm:text-lg text-gray-400"><strong>Solution:</strong> {study.solution}</p>
+                  <p className="text-base sm:text-lg text-gray-400"><strong>Result:</strong> {study.result}</p>
                 </div>
               </Link>
             );
