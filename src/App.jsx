@@ -6,16 +6,17 @@ import QuantumAboutPage from './components/Index/QuantumAboutPage.jsx';
 import QuantumContactPage from './components/Index/QuantumContactPage.jsx';
 import CaseStudiesPage from './components/Index/CaseStudiesPage.jsx';
 import BlogPage from './components/Index/BlogPage.jsx';
-import Navbar from './components/Index/Navbar.jsx';
+import NavBar from './components/Index/NavBar.jsx';
 import Footer from './components/Index/Footer.jsx';
 import CaseStudyPage from './components/Index/CaseStudyPage.jsx';
 import BlogDetailPage from './components/Index/BlogDetailPage.jsx';
 import ServiceDetailPage from './components/Index/ServiceDetailPage.jsx';
+import PricingPage from './components/Index/PricingPage.jsx';
 
 function App() {
   return (
     <>
-      <Navbar />
+      <NavBar />
       <Routes>
         <Route path="/" element={<AdvancedBusinessWebsite />} />
         <Route path="/services" element={<ServicesPage />} />
@@ -26,6 +27,7 @@ function App() {
         <Route path="/case-studies/:slug" element={<CaseStudyPage />} />
         <Route path="/blog" element={<BlogPage />} />
         <Route path="/blog/:slug" element={<BlogDetailPage />} />
+        <Route path="/pricing" element={<PricingPage />} />
       </Routes>
       <Footer />
     </>

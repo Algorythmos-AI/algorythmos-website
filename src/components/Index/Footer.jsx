@@ -195,9 +195,14 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <a href="/contact" className="text-gray-400 hover:text-white transition-colors duration-300">
+                <Link to="/pricing" className="text-gray-400 hover:text-white transition-colors duration-300">
                   Pricing
-                </a>
+                </Link>
+              </li>
+              <li>
+                <Link to="/pricing#calculator" className="text-gray-400 hover:text-white transition-colors duration-300">
+                  ROI (Return On Investment) calculator
+                </Link>
               </li>
             </ul>
           </div>
