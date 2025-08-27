@@ -235,7 +235,7 @@ const QuantumAboutPage = () => {
           <div className="animate-fade-in-up">
             <div className="inline-flex items-center px-4 sm:px-6 py-2 sm:py-3 mb-6 sm:mb-8 bg-gradient-to-r from-blue-600/20 to-purple-600/20 backdrop-blur-sm border border-white/20 rounded-full text-sm sm:text-lg font-medium">
               <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3 animate-spin" />
-              Driving AI Innovation Since 2019
+              Driving AI Innovations
             </div>
 
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-9xl font-black mb-6 sm:mb-8 leading-tight">
