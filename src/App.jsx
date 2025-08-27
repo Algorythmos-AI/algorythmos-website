@@ -6,7 +6,7 @@ import QuantumAboutPage from './components/Index/QuantumAboutPage.jsx';
 import QuantumContactPage from './components/Index/QuantumContactPage.jsx';
 import CaseStudiesPage from './components/Index/CaseStudiesPage.jsx';
 import BlogPage from './components/Index/BlogPage.jsx';
-import NavBar from './components/Index/NavBar.jsx';
+import NavBar from './components/Index/Navigation.jsx';
 import Footer from './components/Index/Footer.jsx';
 import CaseStudyPage from './components/Index/CaseStudyPage.jsx';
 import BlogDetailPage from './components/Index/BlogDetailPage.jsx';
