@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy:prod": "vercel pull --yes --environment=production && vercel deploy --prod"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
