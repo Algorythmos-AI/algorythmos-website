@@ -191,7 +191,7 @@ const AdvancedBusinessWebsite = () => {
   const stats = [
     { number: "∞", label: "Scalability", suffix: "" },
     { number: "99.999%", label: "Uptime", suffix: "" },
-    { number: "1000+", label: "Integrations", suffix: "" },
+    { number: "100+", label: "Integrations", suffix: "" },
     { number: "<1ms", label: "Response Time", suffix: "" }
   ];
 

@@ -1,6 +1,7 @@
 // src/components/Index/QuantumAboutPage.jsx
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import TeamGrid from "./TeamGrid";
 
 import {
   Brain,
@@ -21,46 +22,13 @@ import {
 
 /* ----------------------------- static content ----------------------------- */
 const STATS = [
-  { number: "2025", label: "Founded", icon: <Rocket className="w-8 h-8" /> },
-  { number: "Suresnes, FR", label: "Headquarters", icon: <Globe className="w-8 h-8" /> },
-  { number: "2–10", label: "Team Size", icon: <Users className="w-8 h-8" /> },
-  { number: "GDPR • EU AI Act", label: "Compliance Ready", icon: <Shield className="w-8 h-8" /> },
+  { icon: Rocket, value: "2025", label: "Founded" },
+  { icon: Globe, value: "Suresnes, FR", label: "Headquarters" },
+  { icon: Users, value: "2–10", label: "Team Size" },
+  { icon: Shield, value: "GDPR • EU AI Act", label: "Compliance Ready" },
 ];
 
-const TEAM = [
-  {
-    name: "Sam Kalaliya",
-    role: "Founder & Chief Executive Officer",
-    specialty: "Data and AI",
-    avatar: "👨‍💻",
-    gradient: "from-blue-500 to-cyan-500",
-    description: "6+ years revolutionizing data and artificial intelligence.",
-  },
-  {
-    name: "Marcus Neural",
-    role: "Chief Technology Officer",
-    specialty: "AI Architecture Visionary",
-    avatar: "👨‍💻",
-    gradient: "from-purple-500 to-pink-500",
-    description: "Former NASA engineer specializing in neural network optimization.",
-  },
-  {
-    name: "Dr. Elena Fusion",
-    role: "Chief Innovation Officer",
-    specialty: "Data Science Luminary",
-    avatar: "👩‍🔬",
-    gradient: "from-green-500 to-teal-500",
-    description: "PhD in Advanced Mathematics, 20+ AI research publications.",
-  },
-  {
-    name: "Alex Velocity",
-    role: "Chief Product Officer",
-    specialty: "UX/UI Evolutionary",
-    avatar: "👨‍🎨",
-    gradient: "from-orange-500 to-red-500",
-    description: "Design thinking expert with 12+ years in human-computer interaction.",
-  },
-];
+
 
 const VALUES = [
   {
@@ -295,7 +263,7 @@ const QuantumAboutPage = () => {
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`px-4 sm:px-8 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg transition-all duration-500 relative ${
+                  className={`px-4 sm:px-8 py-3 sm:py-4 rounded-xl font-medium text-xs md:text-sm transition-all duration-500 relative ${
                     activeTab === tab ? "text-white" : "text-gray-400 hover:text-white"
                   }`}
                   aria-pressed={activeTab === tab}
@@ -310,10 +278,10 @@ const QuantumAboutPage = () => {
           </div>
 
           <div className="text-center">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-6 sm:mb-8 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+            <h2 id="mission" className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight text-white text-center">
               {TAB_CONTENT[activeTab].title}
             </h2>
-            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 leading-relaxed max-w-4xl mx-auto px-4">
+            <p className="mt-4 text-base md:text-lg text-slate-300/90 max-w-2xl mx-auto text-center">
               {TAB_CONTENT[activeTab].content}
             </p>
           </div>
@@ -321,23 +289,20 @@ const QuantumAboutPage = () => {
       </section>
 
       {/* Stats */}
-      <section className="py-16 sm:py-24 relative z-10">
+      <section aria-label="Company key facts" className="mt-10 md:mt-14">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8">
-            {STATS.map((stat, i) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+            {STATS.map(({ icon: Icon, value, label }) => (
               <div
-                key={i}
-                className="group text-center p-4 sm:p-8 bg-gradient-to-br from-gray-900/80 to-black/80 rounded-3xl border border-gray-800/50 hover:border-white/20 backdrop-blur-xl transform hover:scale-110 hover:-translate-y-6 transition-all duration-700 cursor-pointer shadow-lg"
-                style={{ transitionDelay: `${i * 120}ms` }}
+                key={label}
+                className="rounded-3xl bg-white/5 ring-1 ring-white/10 p-6 md:p-8 flex flex-col gap-3 hover:-translate-y-0.5 transition-transform duration-300"
               >
-                <div className="text-blue-400 mb-4 sm:mb-6 flex justify-center group-hover:scale-125 group-hover:rotate-12 transition-all duration-500">
-                  {stat.icon}
+                <Icon className="size-6 md:size-7 text-white/70" aria-hidden="true" />
+                <div className="text-3xl md:text-4xl lg:text-5xl font-bold leading-none tracking-tight text-white">
+                  {value}
                 </div>
-                <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-2 sm:mb-4 group-hover:animate-pulse">
-                  {stat.number}
-                </div>
-                <div className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-400 group-hover:text-white transition-colors duration-500">
-                  {stat.label}
+                <div className="text-xs md:text-sm uppercase tracking-wide text-slate-400/90">
+                  {label}
                 </div>
               </div>
             ))}
@@ -391,45 +356,8 @@ const QuantumAboutPage = () => {
       <section className="py-16 sm:py-32 relative z-10 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-blue-900/5 via-purple-900/5 to-black" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <div className="text-center mb-12 sm:mb-20">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black mb-6 sm:mb-8">
-              Our
-              <span className="block bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                Team
-              </span>
-            </h2>
-            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 max-w-4xl mx-auto px-4">
-              A boutique group of AI and Data Science experts dedicated to secure, practical, and ROI‑driven outcomes.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {TEAM.map((member, i) => (
-              <div
-                key={i}
-                className="group relative p-8 bg-gradient-to-br from-gray-900/80 to-black/80 rounded-3xl border border-gray-800/50 hover:border-white/20 backdrop-blur-xl transition-all duration-700 transform hover:scale-105 hover:-translate-y-6 overflow-hidden"
-                style={{ transitionDelay: `${i * 100}ms` }}
-              >
-                <div className={`absolute inset-0 rounded-3xl bg-gradient-to-r ${member.gradient} opacity-0 group-hover:opacity-20 transition-opacity duration-700 blur-xl`} />
-                <div className="relative z-10 text-center">
-                  <div className="text-6xl mb-6 transform group-hover:scale-125 transition-transform duration-500">
-                    {member.avatar}
-                  </div>
-                  <h3 className="text-2xl font-bold mb-2 group-hover:bg-gradient-to-r group-hover:from-blue-400 group-hover:to-purple-400 group-hover:bg-clip-text group-hover:text-transparent transition-all duration-500">
-                    {member.name}
-                  </h3>
-                  <div className={`text-lg font-semibold bg-gradient-to-r ${member.gradient} bg-clip-text text-transparent mb-2`}>
-                    {member.role}
-                  </div>
-                  <div className="text-gray-400 mb-4 text-sm font-medium">{member.specialty}</div>
-                  <p className="text-gray-300 text-sm leading-relaxed group-hover:text-white transition-colors duration-500">
-                    {member.description}
-                  </p>
-                </div>
-                <div className="absolute top-4 right-4 w-2 h-2 bg-blue-400 rounded-full opacity-0 group-hover:opacity-100 group-hover:animate-ping" />
-                <div className="absolute bottom-4 left-4 w-1.5 h-1.5 bg-purple-400 rounded-full opacity-0 group-hover:opacity-100 group-hover:animate-ping" style={{ animationDelay: "0.3s" }} />
-              </div>
-            ))}
+          <div className="mt-24 md:mt-28">
+            <TeamGrid />
           </div>
         </div>
       </section>
