@@ -17,6 +17,7 @@ const Check = (props) => (
 const CALENDLY_URL = "https://calendly.com/algorythmos-france/30min";
 
 function InfoTip() {
+  const tipId = "tmc-tip";
   const [open, setOpen] = useState(false);
 
   return (
@@ -25,8 +26,11 @@ function InfoTip() {
         type="button"
         aria-label="Compare to DIY and agency assumptions"
         aria-expanded={open}
+        aria-controls={tipId}
+        aria-describedby={open ? tipId : undefined}
         onMouseEnter={() => setOpen(true)}
         onMouseLeave={() => setOpen(false)}
+        onClick={() => setOpen((v) => !v)} // mobile tap support
         onFocus={() => setOpen(true)}
         onBlur={() => setOpen(false)}
         onKeyDown={(e) => e.key === "Escape" && setOpen(false)}
@@ -38,8 +42,8 @@ function InfoTip() {
 
       {open && (
         <div
-          role="dialog"
-          aria-label="DIY and agency comparison"
+          role="tooltip"
+          id={tipId}
           className="absolute z-50 mt-2 w-80 max-w-[80vw] right-0 rounded-2xl bg-slate-900/95 p-4 text-xs text-slate-200 ring-1 ring-white/10 shadow-xl"
           onMouseEnter={() => setOpen(true)}
           onMouseLeave={() => setOpen(false)}
@@ -50,7 +54,7 @@ function InfoTip() {
           <ul className="mt-2 space-y-1 leading-relaxed">
             <li>
               <span className="font-semibold">DIY (Internal build)</span>: 3 FTE
-              in Paris (ML/Full-stack/DevOps) incl. employer charges and tools —
+              in Paris (ML/Full-stack/DevOps) incl. employer charges & tools —
               <span className="font-semibold"> ≈ €24,500/mo</span>.
             </li>
             <li>
@@ -65,8 +69,7 @@ function InfoTip() {
             </li>
           </ul>
           <p className="mt-2 text-[11px] text-slate-400">
-            Illustrative only—use the <a href="#calculator" className="underline">calculator</a> for
-            ROI and payback.
+            Illustrative only — use the <a href="#calculator" className="underline">calculator</a> for ROI and payback.
           </p>
         </div>
       )}
@@ -319,11 +322,36 @@ export default function PricingPage(){
         <div className="grid gap-6 md:grid-cols-2">
           <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6">
             <h3 className="text-lg font-semibold">How do you measure accuracy?</h3>
-            <p className="mt-2 text-sm text-slate-300">We track exact-match and semantic-match metrics on sampled outputs. For regulated flows, we add human review until targets are consistently above the agreed KPI (Key Performance Indicator).</p>
+            <p className="mt-2 text-sm text-slate-300">
+              We track exact-match and semantic-match metrics on sampled outputs.
+              For regulated flows, we add human review until targets are consistently
+              above the agreed KPI (Key Performance Indicator).
+            </p>
           </div>
+
           <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6">
             <h3 className="text-lg font-semibold">Can you deploy in our cloud?</h3>
-            <p className="mt-2 text-sm text-slate-300">Yes — private VPC (Virtual Private Cloud) with customer-managed keys. We support SSO (Single Sign-On) via SAML (Security Assertion Markup Language) and granular RBAC (Role-Based Access Control).</p>
+            <p className="mt-2 text-sm text-slate-300">
+              Yes — private VPC (Virtual Private Cloud) with customer-managed keys.
+              We support SSO (Single Sign-On) via SAML (Security Assertion Markup Language)
+              and granular RBAC (Role-Based Access Control).
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6">
+            <h3 className="text-lg font-semibold">Do you mark up cloud/LLM costs?</h3>
+            <p className="mt-2 text-sm text-slate-300">
+              No. <span className="font-semibold">Run</span> is pass-through at provider rates
+              (LLM tokens, GPUs, vector DB). You pay exactly what the providers charge; no markup.
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6">
+            <h3 className="text-lg font-semibold">What is an "Item"?</h3>
+            <p className="mt-2 text-sm text-slate-300">
+              An <span className="font-semibold">Item</span> is one processed unit — for example, a
+              document, a chat message, or an API call — used to measure monthly volume.
+            </p>
           </div>
         </div>
       </section>
