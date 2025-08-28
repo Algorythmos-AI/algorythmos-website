@@ -279,7 +279,7 @@ export default function PricingPage(){
             },
             {
               name: "Custom",
-              price: "From €9,000",
+              price: "Custom",
               period: "/mo + run",
               highlight: "For regulated & high-volume",
               features: [
