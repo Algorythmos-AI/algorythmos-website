@@ -1,319 +1,388 @@
 import React, { useEffect, useMemo, useState } from "react";
+import {
+  computeOutputs,
+  computeBaselineM,
+  currencyFormatter,
+  pctFormatter,
+  sweepCoverageForRoiPct,
+  parseNumber,
+  clamp01,
+} from "../lib/roiMath";
+import { track } from "../lib/analytics";
+import {
+  ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ReferenceLine,
+} from "recharts";
 
-// ---------- utils ----------
-const fmtCurrency = (v) => {
-  if (!isFinite(v)) return "—";
-  try {
-    return new Intl.NumberFormat(undefined, { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(v);
-  } catch {
-    return `€${Math.round(v).toLocaleString()}`;
-  }
-};
-const fmtPerc = (v) => (v === Infinity ? "∞" : `${Math.round(v * 100)}%`);
-const clamp01 = (x) => Math.max(0, Math.min(1, x));
+const SegBtn = ({ active, children, onClick }) => (
+  <button
+    onClick={onClick}
+    className={
+      "rounded-xl px-3 py-1 text-xs font-semibold transition " +
+      (active
+        ? "bg-gradient-to-r from-[#6D00FF] via-[#7658E7] to-[#3715E0] text-white shadow-[0_8px_30px_-8px_rgba(55,21,224,0.55)]"
+        : "bg-slate-800/80 text-slate-200 ring-1 ring-white/10 hover:bg-slate-800")
+    }
+  >
+    {children}
+  </button>
+);
 
-// allow "100 000", "100,000", "100.000,50", etc.
-const toNumber = (raw, allowFloat = true) => {
-  if (raw == null) return 0;
-  const s = String(raw).replace(/[^\d.,\s-]/g, "").replace(/\s+/g, "");
-  // if both "," and "." exist, assume last delimiter is decimal mark
-  const lastComma = s.lastIndexOf(",");
-  const lastDot = s.lastIndexOf(".");
-  let normalized = s;
-  if (lastComma !== -1 && lastDot !== -1) {
-    if (lastComma > lastDot) normalized = s.replace(/\./g, "").replace(",", ".");
-    else normalized = s.replace(/,/g, "");
-  } else {
-    normalized = s.replace(/,/g, ".");
-  }
-  const n = allowFloat ? parseFloat(normalized) : parseInt(normalized, 10);
-  return isNaN(n) ? 0 : n;
-};
-
-function useQuerySync(state, setState) {
-  // read on mount
-  useEffect(() => {
-    const p = new URLSearchParams(window.location.search);
-    const next = { ...state };
-    if (p.has("vol")) next.volume = toNumber(p.get("vol"), false);
-    if (p.has("cost")) next.manualCost = toNumber(p.get("cost"));
-    if (p.has("cov")) next.coverage = clamp01(toNumber(p.get("cov")) / 100);
-    if (p.has("rev")) next.reviewMin = toNumber(p.get("rev"));
-    if (p.has("handle")) next.handleMin = toNumber(p.get("handle"));
-    if (p.has("hourly")) next.hourly = toNumber(p.get("hourly"));
-    if (p.has("ai")) next.aiCost = toNumber(p.get("ai"));
-    if (p.has("fee")) next.algFee = toNumber(p.get("fee"));
-    if (p.has("setup")) next.setup = toNumber(p.get("setup"));
-    const mode = p.get("mode");
-    if (mode === "advanced" || mode === "simple") next.mode = mode;
-    setState(next);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const copy = () => {
-    const u = new URL(window.location.href);
-    const p = u.searchParams;
-    p.set("vol", String(state.volume));
-    p.set("cost", String(state.manualCost));
-    p.set("cov", String(Math.round(state.coverage * 100)));
-    p.set("rev", String(state.reviewMin));
-    p.set("handle", String(state.handleMin));
-    p.set("hourly", String(state.hourly));
-    p.set("ai", String(state.aiCost));
-    p.set("fee", String(state.algFee));
-    p.set("setup", String(state.setup));
-    p.set("mode", state.mode);
-    u.search = p.toString();
-    navigator.clipboard?.writeText(u.toString());
-  };
-  return { copy };
-}
-
-// ---------- UI primitives ----------
-const Label = ({ children, hint, unit }) => (
+const Label = ({ children, hint }) => (
   <div className="mb-1 flex items-center gap-2 text-sm font-medium text-slate-200">
     <span>{children}</span>
-    {unit && <span className="text-xs text-slate-400">({unit})</span>}
-    {hint && <span className="text-xs text-slate-400">{hint}</span>}
+    {hint ? <span className="text-xs text-slate-400">{hint}</span> : null}
   </div>
 );
 
-const NumberBox = ({ value, onChange, step = 1, allowFloat = true, ...rest }) => (
+const NumberBox = ({ value, onChange, allowFloat = true, disabled = false, placeholder }) => (
   <input
     type="text"
     inputMode="decimal"
-    value={value}
-    onChange={(e) => onChange(toNumber(e.target.value, allowFloat))}
-    onBlur={(e) => onChange(toNumber(e.target.value, allowFloat))}
-    className="w-full rounded-xl bg-slate-900/60 px-3 py-2 text-slate-100 ring-1 ring-slate-700 focus:outline-none focus:ring-2 focus:ring-violet-500"
-    {...rest}
+    disabled={disabled}
+    value={String(value)}
+    placeholder={placeholder}
+    onChange={(e) => onChange(parseNumber(e.target.value, { allowFloat }))}
+    onBlur={(e) => onChange(parseNumber(e.target.value, { allowFloat }))}
+    className={
+      "w-full rounded-xl bg-slate-900/60 px-3 py-2 text-slate-100 ring-1 ring-slate-700 focus:outline-none focus:ring-2 focus:ring-violet-500 " +
+      (disabled ? "opacity-60" : "")
+    }
   />
 );
 
-const Range = ({ value, onChange, min = 0, max = 100, step = 1 }) => (
-  <input
-    type="range"
-    className="w-full accent-violet-500"
-    min={min}
-    max={max}
-    step={step}
+const Select = ({ value, onChange, options }) => (
+  <select
     value={value}
-    onChange={(e) => onChange(toNumber(e.target.value, true))}
-  />
+    onChange={(e) => onChange(e.target.value)}
+    className="rounded-xl bg-slate-900/60 px-3 py-2 text-sm text-slate-100 ring-1 ring-slate-700 focus:outline-none focus:ring-2 focus:ring-violet-500"
+  >
+    {options.map((o) => (
+      <option key={o.value} value={o.value}>{o.label}</option>
+    ))}
+  </select>
 );
 
-// ---------- Main ----------
 export default function AlgorythmosCalculator() {
   const [s, setS] = useState({
-    mode: "simple",
-    // Basic
-    volume: 100000,
-    manualCost: 5000,
+    // Modes
+    mode: "advanced", // "simple" | "advanced"
+    baselineMode: "manual", // "manual" | "computed"
+    currency: "EUR",
+    locale: typeof navigator !== "undefined" ? navigator.language : "en-US",
 
-    // Advanced
-    coverage: 0.6,
-    reviewMin: 0.5,
-    handleMin: 2.5,
-    hourly: 38,
-    aiCost: 0.006,
-    algFee: 3500,
-    setup: 8000,
+    // Inputs
+    volume: 100000,  // V
+    manualCost: 5000, // M (used in baselineMode=manual)
+
+    coverage: 0.6,   // c
+    reviewMin: 0.5,  // r
+    handleMin: 2.5,  // h
+    hourly: 38,      // w
+    aiCost: 0.006,   // a
+    algFee: 3500,    // F
+    setup: 8000,     // S
+
+    overheadPct: 0.18, // computed-baseline overhead
   });
 
-  const { copy } = useQuerySync(s, setS);
+  // URL + localStorage persistence
+  useEffect(() => {
+    const p = new URLSearchParams(window.location.search);
+    const draft = { ...s };
+    if (p.get("mode")) draft.mode = p.get("mode");
+    if (p.get("baseline")) draft.baselineMode = p.get("baseline");
+    if (p.get("currency")) draft.currency = p.get("currency");
 
-  const derived = useMemo(() => {
-    const V = Math.max(0, s.volume);
-    const M = Math.max(0, s.manualCost);
-    const c = clamp01(s.coverage);
-    const r = Math.max(0, s.reviewMin);
-    const h = Math.max(0, s.handleMin);
-    const w = Math.max(0, s.hourly);
-    const a = Math.max(0, s.aiCost);
-    const F = Math.max(0, s.algFee);
-    const S = Math.max(0, s.setup);
+    if (p.has("vol")) draft.volume = parseNumber(p.get("vol"), { allowFloat: false });
+    if (p.has("cost")) draft.manualCost = parseNumber(p.get("cost"));
+    if (p.has("cov")) draft.coverage = clamp01(parseNumber(p.get("cov")) / 100);
+    if (p.has("rev")) draft.reviewMin = parseNumber(p.get("rev"));
+    if (p.has("handle")) draft.handleMin = parseNumber(p.get("handle"));
+    if (p.has("hourly")) draft.hourly = parseNumber(p.get("hourly"));
+    if (p.has("ai")) draft.aiCost = parseNumber(p.get("ai"));
+    if (p.has("fee")) draft.algFee = parseNumber(p.get("fee"));
+    if (p.has("setup")) draft.setup = parseNumber(p.get("setup"));
+    if (p.has("overhead")) draft.overheadPct = Math.max(0, parseNumber(p.get("overhead")));
 
-    // Exact formulas as specified
-    const H_review = (V * c * r) / 60;
-    const H_residual = (V * (1 - c) * h) / 60;
-    const C_labor = (H_review + H_residual) * w;
-    const C_AI = V * c * a;
-    const C_proposed = C_labor + C_AI + F;
-    const Savings = Math.max(0, M - C_proposed);
-    const Invest = F + C_AI;
-    const ROI = Invest > 0 ? Savings / Invest : (Savings > 0 ? Infinity : 0);
-    const Payback = Savings > 0 ? S / Savings : Infinity;
+    const ls = localStorage.getItem("alg_calc_v1");
+    if (!Array.from(p.keys()).length && ls) {
+      try { Object.assign(draft, JSON.parse(ls)); } catch {}
+    }
+    setS(draft);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-    return { 
-      V, M, c, r, h, w, a, F, S,
-      H_review, H_residual, C_labor, C_AI, C_proposed, 
-      Savings, Invest, ROI, Payback 
-    };
+  useEffect(() => {
+    localStorage.setItem("alg_calc_v1", JSON.stringify(s));
   }, [s]);
 
-  // quick presets (inspired by quote calculators)
-  const presets = {
-    Starter: { coverage: 0.4, hourly: 32, aiCost: 0.005, algFee: 2000, setup: 6000 },
-    Growth:  { coverage: 0.6, hourly: 38, aiCost: 0.006, algFee: 4500, setup: 8000 },
-    Scale:   { coverage: 0.75, hourly: 45, aiCost: 0.0055, algFee: 0, setup: 12000 }, // fee negotiated/custom
+  const fmtC = useMemo(() => currencyFormatter(s.locale, s.currency), [s.locale, s.currency]);
+
+  // M (manual baseline) may be user-entered or computed
+  const baselineM = useMemo(() => {
+    if (s.baselineMode === "manual") return s.manualCost;
+    return computeBaselineM({ V: s.volume, h: s.handleMin, w: s.hourly, overheadPct: s.overheadPct });
+  }, [s.baselineMode, s.manualCost, s.volume, s.handleMin, s.hourly, s.overheadPct]);
+
+  // Core outputs
+  const out = useMemo(() => computeOutputs({
+    V: Math.max(0, s.volume),
+    M: Math.max(0, baselineM),
+    c: clamp01(s.coverage),
+    r: Math.max(0, s.reviewMin),
+    h: Math.max(0, s.handleMin),
+    w: Math.max(0, s.hourly),
+    a: Math.max(0, s.aiCost),
+    F: Math.max(0, s.algFee),
+    S: Math.max(0, s.setup),
+  }), [s, baselineM]);
+
+  const chartData = useMemo(() => sweepCoverageForRoiPct({
+    V: Math.max(0, s.volume),
+    M: Math.max(0, baselineM),
+    r: Math.max(0, s.reviewMin),
+    h: Math.max(0, s.handleMin),
+    w: Math.max(0, s.hourly),
+    a: Math.max(0, s.aiCost),
+    F: Math.max(0, s.algFee),
+    S: Math.max(0, s.setup),
+  }, 5), [s, baselineM]);
+
+  const applyPreset = (name) => {
+    const presets = {
+      Starter: { coverage: 0.4, hourly: 32, aiCost: 0.005, algFee: 2000, setup: 6000 },
+      Growth:  { coverage: 0.6, hourly: 38, aiCost: 0.006, algFee: 4500, setup: 8000 },
+      Scale:   { coverage: 0.75, hourly: 45, aiCost: 0.0055, algFee: 0, setup: 12000 },
+    };
+    setS((x) => ({ ...x, ...presets[name] }));
+    track("preset_applied", { name, state: { ...s, ...presets[name] } });
   };
 
-  const applyPreset = (p) => setS((x) => ({ ...x, ...p }));
+  const share = () => {
+    const u = new URL(window.location.href);
+    const p = u.searchParams;
+    p.set("mode", s.mode);
+    p.set("baseline", s.baselineMode);
+    p.set("currency", s.currency);
+    p.set("vol", String(s.volume));
+    p.set("cost", String(s.manualCost));
+    p.set("cov", String(Math.round(s.coverage * 100)));
+    p.set("rev", String(s.reviewMin));
+    p.set("handle", String(s.handleMin));
+    p.set("hourly", String(s.hourly));
+    p.set("ai", String(s.aiCost));
+    p.set("fee", String(s.algFee));
+    p.set("setup", String(s.setup));
+    p.set("overhead", String(s.overheadPct));
+    u.search = p.toString();
+    navigator.clipboard?.writeText(u.toString());
+    track("share_copied", { url: u.toString() });
+  };
+
+  const exportCSV = () => {
+    const rows = [
+      ["currency", s.currency],
+      ["volume (V)", s.volume],
+      ["manualCost (M)", baselineM],
+      ["coverage (c)", s.coverage],
+      ["reviewMin (r)", s.reviewMin],
+      ["handleMin (h)", s.handleMin],
+      ["hourly (w)", s.hourly],
+      ["aiCost (a)", s.aiCost],
+      ["algFee (F)", s.algFee],
+      ["setup (S)", s.setup],
+      ["overheadPct", s.overheadPct],
+      ["H_review (h)", out.H_review],
+      ["H_residual (h)", out.H_residual],
+      ["C_labor", out.C_labor],
+      ["C_AI", out.C_AI],
+      ["C_proposed", out.C_proposed],
+      ["Savings", out.Savings],
+      ["Invest", out.Invest],
+      ["ROI (ratio)", out.ROI],
+      ["ROI %", out.ROI * 100],
+      ["Payback (months)", out.Payback],
+    ];
+    const csv = "key,value\n" + rows.map(([k, v]) => `${k},${String(v).replace(/,/g, "")}`).join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "algorythmos-roi.csv";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    track("export_csv", { rows: rows.length });
+  };
 
   return (
     <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h3 className="text-base font-semibold">ROI (Return On Investment) Calculator</h3>
         <div className="flex items-center gap-2">
-          {/* Mode selector */}
-          <div className="flex items-center gap-1 rounded-xl bg-slate-800/80 p-1 ring-1 ring-white/10">
-            <button
-              onClick={() => setS((x) => ({ ...x, mode: "simple" }))}
-              className={`rounded-lg px-3 py-1 text-xs font-semibold transition-colors ${
-                s.mode === "simple" 
-                  ? "bg-gradient-to-r from-[#6D00FF] via-[#7658E7] to-[#3715E0] text-white shadow-[0_10px_40px_-10px_rgba(55,21,224,0.55)]" 
-                  : "text-slate-300 hover:text-white"
-              }`}
-            >
-              Simple
-            </button>
-            <button
-              onClick={() => setS((x) => ({ ...x, mode: "advanced" }))}
-              className={`rounded-lg px-3 py-1 text-xs font-semibold transition-colors ${
-                s.mode === "advanced" 
-                  ? "bg-gradient-to-r from-[#6D00FF] via-[#7658E7] to-[#3715E0] text-white shadow-[0_10px_40px_-10px_rgba(55,21,224,0.55)]" 
-                  : "text-slate-300 hover:text-white"
-              }`}
-            >
-              Advanced
-            </button>
-          </div>
-          
-          {Object.entries(presets).map(([k, v]) => (
-            <button key={k}
-              onClick={() => applyPreset(v)}
-              className="rounded-xl bg-slate-800/80 px-3 py-1 text-xs font-semibold ring-1 ring-white/10 hover:bg-slate-800"
-              aria-label={`Apply preset ${k}`}
-            >
-              {k}
-            </button>
-          ))}
-          <button
-            onClick={() => setS({ mode: "simple", volume: 100000, manualCost: 5000, coverage: 0.6, reviewMin: 0.5, handleMin: 2.5, hourly: 38, aiCost: 0.006, algFee: 3500, setup: 8000 })}
-            className="rounded-xl bg-slate-800/80 px-3 py-1 text-xs font-semibold ring-1 ring-white/10 hover:bg-slate-800"
-            aria-label="Reset to defaults"
-          >
-            Reset
-          </button>
-          <button
-            onClick={copy}
-            className="rounded-xl bg-gradient-to-r from-[#6D00FF] via-[#7658E7] to-[#3715E0] px-3 py-1 text-xs font-semibold text-white shadow-[0_10px_40px_-10px_rgba(55,21,224,0.55)]"
-            aria-label="Copy a shareable link with current values"
-            title="Copy shareable link"
-          >
-            Share
-          </button>
+          <SegBtn active={s.mode === "simple"} onClick={() => setS((x) => ({ ...x, mode: "simple" }))}>Simple</SegBtn>
+          <SegBtn active={s.mode === "advanced"} onClick={() => setS((x) => ({ ...x, mode: "advanced" }))}>Advanced</SegBtn>
+          <SegBtn active onClick={() => applyPreset("Starter")}>Starter</SegBtn>
+          <SegBtn active onClick={() => applyPreset("Growth")}>Growth</SegBtn>
+          <SegBtn active onClick={() => applyPreset("Scale")}>Scale</SegBtn>
+          <SegBtn onClick={() => setS({
+            ...s,
+            mode: "advanced",
+            baselineMode: "manual",
+            currency: "EUR",
+            volume: 100000, manualCost: 5000, coverage: 0.6, reviewMin: 0.5, handleMin: 2.5, hourly: 38, aiCost: 0.006, algFee: 3500, setup: 8000, overheadPct: 0.18,
+          })}>Reset</SegBtn>
+          <SegBtn onClick={share}>Share</SegBtn>
+          <SegBtn onClick={exportCSV}>Export CSV</SegBtn>
+          <Select
+            value={s.currency}
+            onChange={(val) => { setS((x) => ({ ...x, currency: val })); track("currency_changed", { to: val }); }}
+            options={[
+              { value: "EUR", label: "EUR €" },
+              { value: "USD", label: "USD $" },
+              { value: "GBP", label: "GBP £" },
+            ]}
+          />
         </div>
       </div>
 
-      {/* Basic inputs */}
+      {/* Inputs */}
       <div className="mt-4 grid gap-4 md:grid-cols-2">
         <div>
-          <Label unit="items/month">Monthly Processing Volume (V)</Label>
+          <Label>Monthly Processing Volume (items/month) — V</Label>
           <NumberBox value={s.volume} onChange={(v) => setS((x) => ({ ...x, volume: Math.max(0, Math.round(v)) }))} allowFloat={false} />
         </div>
-        <div>
-          <Label unit="€/month">Current Manual Cost (M)</Label>
-          <NumberBox value={s.manualCost} onChange={(v) => setS((x) => ({ ...x, manualCost: Math.max(0, v) }))} />
-        </div>
-      </div>
 
-      {/* Advanced inputs */}
-      {s.mode === "advanced" && (
-        <div className="mt-6 grid gap-4 md:grid-cols-2">
-          <div>
-            <Label unit="%">Automation coverage (c)</Label>
-            <div className="flex items-center gap-3">
-              <Range value={Math.round(s.coverage * 100)} onChange={(v) => setS((x) => ({ ...x, coverage: clamp01(v / 100) }))} />
-              <div className="w-12 text-right text-sm">{Math.round(s.coverage * 100)}%</div>
+        <div>
+          <div className="mb-1 flex items-center justify-between">
+            <Label>Current Manual Cost (€/month) — M</Label>
+            <div className="flex gap-2">
+              <SegBtn active={s.baselineMode === "manual"} onClick={() => { setS((x) => ({ ...x, baselineMode: "manual" })); track("baseline_switched", { to: "manual" }); }}>Manual</SegBtn>
+              <SegBtn active={s.baselineMode === "computed"} onClick={() => { setS((x) => ({ ...x, baselineMode: "computed" })); track("baseline_switched", { to: "computed" }); }}>Computed</SegBtn>
             </div>
           </div>
-          <div>
-            <Label unit="minutes">Review time per automated item (r)</Label>
-            <NumberBox value={s.reviewMin} onChange={(v) => setS((x) => ({ ...x, reviewMin: Math.max(0, v) }))} />
-          </div>
-          <div>
-            <Label unit="minutes">Handle time for non-automated items (h)</Label>
-            <NumberBox value={s.handleMin} onChange={(v) => setS((x) => ({ ...x, handleMin: Math.max(0, v) }))} />
-          </div>
-          <div>
-            <Label unit="€/hour">Hourly cost (w)</Label>
-            <NumberBox value={s.hourly} onChange={(v) => setS((x) => ({ ...x, hourly: Math.max(0, v) }))} />
-          </div>
-          <div>
-            <Label unit="€/item">AI run cost per item (a)</Label>
-            <NumberBox value={s.aiCost} step={0.001} onChange={(v) => setS((x) => ({ ...x, aiCost: Math.max(0, v) }))} />
-          </div>
-          <div>
-            <Label unit="€/month">Algorythmos fee (F)</Label>
-            <NumberBox value={s.algFee} onChange={(v) => setS((x) => ({ ...x, algFee: Math.max(0, v) }))} />
-          </div>
-          <div>
-            <Label unit="€">One-time setup cost (S)</Label>
-            <NumberBox value={s.setup} onChange={(v) => setS((x) => ({ ...x, setup: Math.max(0, v) }))} />
-          </div>
+          <NumberBox disabled={s.baselineMode === "computed"} value={s.manualCost} onChange={(v) => setS((x) => ({ ...x, manualCost: Math.max(0, v) }))} />
+          {s.baselineMode === "computed" && (
+            <p className="mt-1 text-xs text-slate-400">
+              Computed M = ((V × h) / 60) × w × (1 + overhead) = {fmtC(computeBaselineM({ V: s.volume, h: s.handleMin, w: s.hourly, overheadPct: s.overheadPct }))}
+            </p>
+          )}
         </div>
-      )}
+
+        {s.mode === "advanced" && (
+          <>
+            <div className="md:col-span-2 grid gap-4 md:grid-cols-2">
+              <div>
+                <Label>Automation coverage — c (%)</Label>
+                <input
+                  type="range"
+                  min={0}
+                  max={100}
+                  step={1}
+                  value={Math.round(s.coverage * 100)}
+                  onChange={(e) => setS((x) => ({ ...x, coverage: clamp01(parseNumber(e.target.value) / 100) }))}
+                  className="w-full accent-violet-500"
+                />
+                <div className="mt-1 text-xs text-slate-400">{Math.round(s.coverage * 100)}%</div>
+              </div>
+              <div>
+                <Label>Review time per automated item — r (minutes)</Label>
+                <NumberBox value={s.reviewMin} onChange={(v) => setS((x) => ({ ...x, reviewMin: Math.max(0, v) }))} />
+              </div>
+              <div>
+                <Label>Handle time for non-automated items — h (minutes)</Label>
+                <NumberBox value={s.handleMin} onChange={(v) => setS((x) => ({ ...x, handleMin: Math.max(0, v) }))} />
+              </div>
+              <div>
+                <Label>Hourly cost — w (€/hour)</Label>
+                <NumberBox value={s.hourly} onChange={(v) => setS((x) => ({ ...x, hourly: Math.max(0, v) }))} />
+              </div>
+              <div>
+                <Label>AI run cost per item — a (€/item)</Label>
+                <NumberBox value={s.aiCost} onChange={(v) => setS((x) => ({ ...x, aiCost: Math.max(0, v) }))} />
+              </div>
+              <div>
+                <Label>Algorythmos fee — F (€/month)</Label>
+                <NumberBox value={s.algFee} onChange={(v) => setS((x) => ({ ...x, algFee: Math.max(0, v) }))} />
+              </div>
+              <div>
+                <Label>One-time setup cost — S (€)</Label>
+                <NumberBox value={s.setup} onChange={(v) => setS((x) => ({ ...x, setup: Math.max(0, v) }))} />
+              </div>
+              <div>
+                <Label>Overhead applied in computed baseline (%)</Label>
+                <NumberBox value={Math.round(s.overheadPct * 100)} onChange={(v) => setS((x) => ({ ...x, overheadPct: Math.max(0, v) / 100 }))} allowFloat={false} />
+              </div>
+            </div>
+          </>
+        )}
+      </div>
 
       {/* KPIs */}
       <div className="mt-5 grid gap-4 md:grid-cols-3" aria-live="polite">
         <div className="rounded-xl border border-slate-800 bg-slate-900/70 p-4">
           <div className="text-sm text-slate-400">Estimated Monthly Savings</div>
-          <div className="mt-1 text-2xl font-bold text-emerald-400">{fmtCurrency(derived.Savings)}</div>
+          <div className="mt-1 text-2xl font-bold text-emerald-400">{fmtC(out.Savings)}</div>
         </div>
         <div className="rounded-xl border border-slate-800 bg-slate-900/70 p-4">
           <div className="text-sm text-slate-400">ROI (Return On Investment)</div>
-          <div className="mt-1 text-2xl font-bold text-violet-400">{fmtPerc(derived.ROI)}</div>
+          <div className="mt-1 text-2xl font-bold text-violet-400">{pctFormatter(out.ROI)}</div>
         </div>
         <div className="rounded-xl border border-slate-800 bg-slate-900/70 p-4">
           <div className="text-sm text-slate-400">Payback Period</div>
           <div className="mt-1 text-2xl font-bold text-sky-400">
-            {!isFinite(derived.Payback) ? "—" : `${derived.Payback.toFixed(1)} months`}
+            {!Number.isFinite(out.Payback) ? "—" : `${out.Payback.toFixed(1)} months`}
           </div>
         </div>
       </div>
 
-      {/* Equations Inspector */}
+      {/* Sensitivity chart (desktop) */}
+      <div className="mt-6 hidden md:block rounded-xl border border-slate-800 bg-slate-900/60 p-4">
+        <div className="mb-2 text-sm font-semibold text-slate-200">Sensitivity: ROI% vs coverage</div>
+        <div className="h-56 w-full">
+          <ResponsiveContainer>
+            <LineChart data={chartData} margin={{ top: 10, right: 20, bottom: 5, left: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
+              <XAxis dataKey="x" tick={{ fill: "#94a3b8", fontSize: 12 }} tickFormatter={(v) => `${v}%`} />
+              <YAxis tick={{ fill: "#94a3b8", fontSize: 12 }} />
+              <Tooltip
+                formatter={(v) => [`${Math.round(v)}%`, "ROI%"]}
+                labelFormatter={(l) => `Coverage ${l}%`}
+                contentStyle={{ background: "#0b1220", border: "1px solid #1f2937", color: "#E2E8F0" }}
+              />
+              <ReferenceLine x={Math.round(s.coverage * 100)} stroke="#7c3aed" strokeDasharray="3 3" />
+              <Line type="monotone" dataKey="y" stroke="#8b5cf6" dot={false} strokeWidth={2} />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      {/* Equations & breakdown */}
       <details className="mt-6 rounded-xl border border-slate-800 bg-slate-900/60 p-4">
         <summary className="cursor-pointer select-none text-sm font-semibold text-slate-200">Show equations</summary>
-        <div className="mt-4 space-y-2 font-mono text-xs text-slate-300">
-          <div>H_review = (V × c × r) / 60 = ({derived.V.toLocaleString()} × {derived.c.toFixed(2)} × {derived.r.toFixed(1)}) / 60 = {derived.H_review.toFixed(1)} h</div>
-          <div>H_residual = (V × (1 - c) × h) / 60 = ({derived.V.toLocaleString()} × {derived.h.toFixed(1)}) / 60 = {derived.H_residual.toFixed(1)} h</div>
-          <div>C_labor = (H_review + H_residual) × w = ({derived.H_review.toFixed(1)} + {derived.H_residual.toFixed(1)}) × {derived.w} = {fmtCurrency(derived.C_labor)}</div>
-          <div>C_AI = V × c × a = {derived.V.toLocaleString()} × {derived.c.toFixed(2)} × {derived.a.toFixed(3)} = {fmtCurrency(derived.C_AI)}</div>
-          <div>C_proposed = C_labor + C_AI + F = {fmtCurrency(derived.C_labor)} + {fmtCurrency(derived.C_AI)} + {fmtCurrency(derived.F)} = {fmtCurrency(derived.C_proposed)}</div>
-          <div>Savings = max(0, M - C_proposed) = max(0, {fmtCurrency(derived.M)} - {fmtCurrency(derived.C_proposed)}) = {fmtCurrency(derived.Savings)}</div>
-          <div>Invest = F + C_AI = {fmtCurrency(derived.F)} + {fmtCurrency(derived.C_AI)} = {fmtCurrency(derived.Invest)}</div>
-          <div>ROI = Savings / Invest = {fmtCurrency(derived.Savings)} / {fmtCurrency(derived.Invest)} = {derived.ROI === Infinity ? "∞" : derived.ROI.toFixed(3)}</div>
-          <div>Payback = S / Savings = {fmtCurrency(derived.S)} / {fmtCurrency(derived.Savings)} = {derived.Payback === Infinity ? "∞" : derived.Payback.toFixed(1)} months</div>
-        </div>
-      </details>
-
-      {/* Breakdown */}
-      <details className="mt-4 rounded-xl border border-slate-800 bg-slate-900/60 p-4">
-        <summary className="cursor-pointer select-none text-sm font-semibold text-slate-200">Cost breakdown</summary>
+        <pre className="mt-3 whitespace-pre-wrap break-words text-xs text-slate-300">
+{`H_review = (V × c × r) / 60 = (${s.volume} × ${s.coverage.toFixed(2)} × ${s.reviewMin}) / 60 = ${out.H_review.toFixed(2)} h
+H_residual = (V × (1 - c) × h) / 60 = (${s.volume} × ${(1 - s.coverage).toFixed(2)} × ${s.handleMin}) / 60 = ${out.H_residual.toFixed(2)} h
+C_labor = (H_review + H_residual) × w = (${out.H_review.toFixed(2)} + ${out.H_residual.toFixed(2)}) × ${s.hourly} = ${fmtC(out.C_labor)}
+C_AI = V × c × a = ${s.volume} × ${s.coverage.toFixed(2)} × ${s.aiCost} = ${fmtC(out.C_AI)}
+C_proposed = C_labor + C_AI + F = ${fmtC(out.C_labor)} + ${fmtC(out.C_AI)} + ${fmtC(s.algFee)} = ${fmtC(out.C_proposed)}
+Savings = max(0, M - C_proposed) = max(0, ${fmtC(baselineM)} - ${fmtC(out.C_proposed)}) = ${fmtC(out.Savings)}
+Invest = F + C_AI = ${fmtC(s.algFee)} + ${fmtC(out.C_AI)} = ${fmtC(out.Invest)}
+ROI = Savings / Invest = ${Number.isFinite(out.ROI) ? out.ROI.toFixed(2) : "∞"} (${pctFormatter(out.ROI)})
+Payback = S / Savings = ${fmtC(s.setup)} / ${fmtC(out.Savings)} = ${Number.isFinite(out.Payback) ? out.Payback.toFixed(2) + " months" : "∞"}
+`}
+        </pre>
         <div className="mt-4 grid gap-4 md:grid-cols-3 text-sm">
           <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-4">
             <div className="text-slate-400">Labor (review + residual)</div>
-            <div className="mt-1 font-semibold">{fmtCurrency(derived.C_labor)}</div>
+            <div className="mt-1 font-semibold">{fmtC(out.C_labor)}</div>
           </div>
           <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-4">
             <div className="text-slate-400">AI run cost</div>
-            <div className="mt-1 font-semibold">{fmtCurrency(derived.C_AI)}</div>
+            <div className="mt-1 font-semibold">{fmtC(out.C_AI)}</div>
           </div>
           <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-4">
             <div className="text-slate-400">Proposed total</div>
-            <div className="mt-1 font-semibold">{fmtCurrency(derived.C_proposed)}</div>
+            <div className="mt-1 font-semibold">{fmtC(out.C_proposed)}</div>
           </div>
         </div>
       </details>
