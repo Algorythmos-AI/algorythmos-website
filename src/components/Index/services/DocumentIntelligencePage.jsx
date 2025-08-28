@@ -1,6 +1,7 @@
 import React from "react";
 import ServiceLayout from "../ServiceLayout";
 import { FileText } from "lucide-react";
+import DocIntelFlowPlayer from "./DocIntelFlowPlayer";
 
 export default function DocumentIntelligencePage() {
   return (
@@ -41,6 +42,8 @@ export default function DocumentIntelligencePage() {
         { title: "SQL-based Dashboards", path: "/services/sql-dashboards" }
       ]}
       ctaText="Book a Consultation"
-    />
+    >
+      <DocIntelFlowPlayer />
+    </ServiceLayout>
   );
 }
