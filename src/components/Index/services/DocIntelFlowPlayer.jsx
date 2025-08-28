@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState, useCallback } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useSearchParams } from "react-router-dom";
+import FlowMetricsStrip from "./FlowMetricsStrip";
 // Optional analytics (safe if missing)
 let track = () => {};
 try {
@@ -25,6 +26,15 @@ export default function DocIntelFlowPlayer() {
   const [speed, setSpeed] = useState(parseFloat(params.get("speed") || "1"));
   const [key, setKey] = useState(0);
   const [step, setStep] = useState(parseInt(params.get("step") || "0", 10));
+
+  // Per-step metrics for Document Intelligence (example values)
+  const docMetrics = [
+    { acc: 82, auto: 30, time: 90,  cost: 3.5 },  // Ingest
+    { acc: 88, auto: 35, time: 75,  cost: 3.1 },  // OCR
+    { acc: 93, auto: 48, time: 45,  cost: 2.2 },  // Extract
+    { acc: 95, auto: 55, time: 30,  cost: 1.4 },  // Validate
+    { acc: 96, auto: 78, time: 8,   cost: 0.45 }, // Export
+  ];
 
   useEffect(() => {
     params.set("step", String(step));
@@ -464,6 +474,15 @@ export default function DocIntelFlowPlayer() {
           {current.caption}
         </p>
       </div>
+
+      <FlowMetricsStrip
+        items={[
+          { label: "Extraction accuracy", value: docMetrics[step].acc, suffix: "%", aria: "Estimated field extraction accuracy" },
+          { label: "Auto-approval rate", value: docMetrics[step].auto, suffix: "%", aria: "Share of docs approved without review" },
+          { label: "Median processing time", value: docMetrics[step].time, suffix: "s", aria: "Seconds per document" },
+          { label: "Cost per document", value: docMetrics[step].cost, suffix: "€", aria: "Estimated cost per processed document" },
+        ]}
+      />
 
       <noscript>
         <p className="mt-3 text-xs text-gray-400">

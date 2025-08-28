@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState, useCallback } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useSearchParams } from "react-router-dom";
 import { track } from "../../../lib/analytics"; // fallback to noop if file absent
+import FlowMetricsStrip from "./FlowMetricsStrip";
 
 /**
  * AgenticFlowPlayer
@@ -16,6 +17,15 @@ export default function AgenticFlowPlayer() {
   const [speed, setSpeed] = useState(parseFloat(params.get("speed") || "1"));
   const [key, setKey] = useState(0);
   const [step, setStep] = useState(parseInt(params.get("step") || "0", 10));
+
+  // Per-step metrics shown under the player (example values)
+  const agenticMetrics = [
+    { acc: 65, manual: 0,  time: 0.5, cost: 2.6 },  // step 0: prompt
+    { acc: 72, manual: 8,  time: 2.0, cost: 2.4 },  // step 1: plan+LLM
+    { acc: 89, manual: 15, time: 3.5, cost: 2.2 },  // step 2: retrieve
+    { acc: 91, manual: 22, time: 5.0, cost: 2.0 },  // step 3: compose
+    { acc: 94, manual: 35, time: 7.5, cost: 1.7 },  // step 4: deliver+write
+  ];
 
   // Diagram paths (must match the geometry in your existing diagram)
   const P = useMemo(() => ({
@@ -354,6 +364,15 @@ export default function AgenticFlowPlayer() {
         <p className="text-sm font-semibold">{current.title}</p>
         <p className="text-sm text-gray-300" aria-live="polite">{current.caption}</p>
       </div>
+
+      <FlowMetricsStrip
+        items={[
+          { label: "Grounded accuracy", value: agenticMetrics[step].acc, suffix: "%", aria: "Estimated grounded accuracy" },
+          { label: "Manual steps eliminated", value: agenticMetrics[step].manual, suffix: "%", aria: "Share of steps automated" },
+          { label: "Avg. cycle time saved", value: agenticMetrics[step].time, suffix: "min", aria: "Average minutes saved per task" },
+          { label: "Cost per task", value: agenticMetrics[step].cost, suffix: "€", aria: "Estimated cost per completed task" },
+        ]}
+      />
 
       {/* No-JS fallback */}
       <noscript>
