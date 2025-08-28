@@ -1,6 +1,6 @@
 import React from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { Search, Wand2, ShieldCheck, PlugZap } from "lucide-react";
+import { MemoryLensIcon, TransformSparkIcon, ShieldRingsIcon, IntegrationsMeshIcon } from "./icons/AgenticIcons";
 
 /**
  * EnterpriseCapabilities
@@ -16,28 +16,28 @@ export default function EnterpriseCapabilities() {
 
   const items = [
     {
-      icon: Search,
+      icon: MemoryLensIcon,
       title: "High-performance search & memory",
       text:
         "Stream agents with fresh context via fast ingestion and retrieval across documents, tickets, and tables—at scale.",
       href: "#enterprise-capabilities", // deep link to your detailed section
     },
     {
-      icon: Wand2,
+      icon: TransformSparkIcon,
       title: "Built-in agents for data transformation",
       text:
         "Prebuilt skills to parse, clean, and normalize inputs so downstream workflows operate on reliable, structured data.",
       href: "#enterprise-capabilities",
     },
     {
-      icon: ShieldCheck,
+      icon: ShieldRingsIcon,
       title: "Enterprise security & compliance",
       text:
         "SSO/RBAC, workspace isolation, strict access controls, audit logs, and review queues for regulated environments.",
       href: "#enterprise-capabilities",
     },
     {
-      icon: PlugZap,
+      icon: IntegrationsMeshIcon,
       title: "Integrations with popular frameworks",
       text:
         "Connect to LangGraph, CrewAI, LlamaIndex, or custom planners. Wire tools & memory (vector DBs) with minimal friction.",
@@ -59,11 +59,11 @@ export default function EnterpriseCapabilities() {
             whileInView={reduce ? {} : shown}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ delay: reduce ? 0 : i * 0.05 }}
-            className="rounded-2xl border border-white/10 bg-gradient-to-br from-gray-900/60 to-black/60 p-5 hover:border-white/20"
+            className="group rounded-2xl border border-white/10 bg-gradient-to-br from-gray-900/60 to-black/60 p-5 hover:border-white/20"
           >
             <div className="flex items-center gap-3 mb-2">
-              <span className="inline-flex p-2.5 rounded-xl bg-white/5">
-                <Icon className="w-5 h-5 text-emerald-300" aria-hidden="true" />
+              <span className="inline-flex p-2 rounded-xl bg-white/5">
+                <Icon className="w-10 h-10 transition-transform duration-300 group-hover:scale-105" />
               </span>
               <h3 className="text-lg font-semibold">{title}</h3>
             </div>
