@@ -13,6 +13,10 @@ import BlogDetailPage from './components/Index/BlogDetailPage.jsx';
 import ServiceDetailPage from './components/Index/ServiceDetailPage.jsx';
 import PricingPage from './components/Index/PricingPage.jsx';
 import GlobalCtaTracker from './components/GlobalCtaTracker.jsx';
+import AgenticAutomationPage from './components/Index/services/AgenticAutomationPage.jsx';
+import DocumentIntelligencePage from './components/Index/services/DocumentIntelligencePage.jsx';
+import SqlDashboardsPage from './components/Index/services/SqlDashboardsPage.jsx';
+import MlopsCicdPage from './components/Index/services/MlopsCicdPage.jsx';
 
 function App() {
   return (
@@ -22,6 +26,10 @@ function App() {
       <Routes>
         <Route path="/" element={<AdvancedBusinessWebsite />} />
         <Route path="/services" element={<ServicesPage />} />
+        <Route path="/services/agentic-automation" element={<AgenticAutomationPage />} />
+        <Route path="/services/document-intelligence" element={<DocumentIntelligencePage />} />
+        <Route path="/services/sql-dashboards" element={<SqlDashboardsPage />} />
+        <Route path="/services/mlops-cicd" element={<MlopsCicdPage />} />
         <Route path="/services/:slug" element={<ServiceDetailPage />} />
         <Route path="/about" element={<QuantumAboutPage />} />
         <Route path="/contact" element={<QuantumContactPage />} />
