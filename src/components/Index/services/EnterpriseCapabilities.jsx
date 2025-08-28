@@ -1,6 +1,7 @@
 import React from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { MemoryLensIcon, TransformSparkIcon, ShieldRingsIcon, IntegrationsMeshIcon } from "./icons/AgenticIcons";
+import useCardTilt from "./hooks/useCardTilt";
 
 /**
  * EnterpriseCapabilities
@@ -51,29 +52,49 @@ export default function EnterpriseCapabilities() {
         Enterprise capabilities
       </h2>
 
-      <div className="grid gap-4 md:grid-cols-2">
+      {/* perspective container for 3D tilt */}
+      <div className="grid gap-4 md:grid-cols-2" style={{ perspective: 1000 }}>
         {items.map(({ icon: Icon, title, text, href }, i) => (
-          <motion.article
-            key={title}
-            initial={reduce ? false : base}
-            whileInView={reduce ? {} : shown}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ delay: reduce ? 0 : i * 0.05 }}
-            className="group rounded-2xl border border-white/10 bg-gradient-to-br from-gray-900/60 to-black/60 p-5 hover:border-white/20"
-          >
-            <div className="flex items-center gap-3 mb-2">
-              <span className="inline-flex p-2 rounded-xl bg-white/5">
-                <Icon className="w-10 h-10 transition-transform duration-300 group-hover:scale-105" />
-              </span>
-              <h3 className="text-lg font-semibold">{title}</h3>
-            </div>
-            <p className="text-gray-300">{text}</p>
-            <div className="mt-3">
-              <a href={href} className="text-sm text-blue-300 hover:text-white underline underline-offset-4">
-                Learn more
-              </a>
-            </div>
-          </motion.article>
+          (() => {
+            const tilt = useCardTilt(6, 1.02, !!reduce);
+            return (
+              <motion.article
+                key={title}
+                initial={reduce ? false : base}
+                whileInView={reduce ? {} : shown}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ delay: reduce ? 0 : i * 0.05 }}
+                className="group rounded-2xl border border-white/10 bg-gradient-to-br from-gray-900/60 to-black/60 p-5 hover:border-white/20 will-change-transform"
+                ref={tilt.ref}
+                style={tilt.style}
+                onMouseMove={tilt.events.onMouseMove}
+                onMouseLeave={tilt.events.onMouseLeave}
+              >
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="relative inline-flex p-2 rounded-xl bg-white/5">
+                    <Icon className="w-10 h-10" />
+                    {/* shimmer highlight (disabled for reduced motion) */}
+                    <span
+                      aria-hidden="true"
+                      className={
+                        "pointer-events-none absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 " +
+                        (reduce ? "" : "animate-shimmer") +
+                        " bg-[linear-gradient(110deg,transparent,rgba(255,255,255,0.35),transparent)] " +
+                        "bg-[length:200%_100%] mix-blend-screen"
+                      }
+                    />
+                  </span>
+                  <h3 className="text-lg font-semibold">{title}</h3>
+                </div>
+                <p className="text-gray-300">{text}</p>
+                <div className="mt-3">
+                  <a href={href} className="text-sm text-blue-300 hover:text-white underline underline-offset-4">
+                    Learn more
+                  </a>
+                </div>
+              </motion.article>
+            );
+          })()
         ))}
       </div>
     </section>

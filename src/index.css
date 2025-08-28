@@ -99,3 +99,14 @@ html {
   --alg-deeppurple: #7658E7;
   --alg-bg: #0B0B17;
 }
+
+/* Gradient shimmer animation */
+@keyframes gradient-shimmer {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+/* utility for animated gradient shimmer */
+.animate-shimmer {
+  animation: gradient-shimmer 2.6s linear infinite;
+}
