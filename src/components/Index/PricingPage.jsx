@@ -7,7 +7,7 @@
 
 import React, { useEffect, useState, useMemo } from "react";
 import { track } from "../../lib/analytics";
-import { withUtm } from "../../lib/utm";
+import { withUtm, persistUtmFromLocation } from "../../lib/utm";
 import AlgorythmosCalculator from "../AlgorythmosCalculator";
 
 const Check = (props) => (
@@ -128,6 +128,8 @@ function StickyCTA(){
 
 export default function PricingPage(){
   useEffect(() => {
+    // Capture UTMs on initial render
+    persistUtmFromLocation();
     if (window.location.hash) {
       const el = document.querySelector(window.location.hash);
       if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -315,7 +317,12 @@ export default function PricingPage(){
               <button
                 className="mt-6 w-full rounded-xl bg-gradient-to-r from-[#6D00FF] via-[#7658E7] to-[#3715E0] px-4 py-2 font-semibold text-white shadow-lg transition hover:scale-[1.01] focus:outline-none focus:ring-4 focus:ring-violet-500/40"
                 aria-label={`${t.cta} for ${t.name}`}
-                onClick={() => track("click_plan_cta", { plan: t.name })}
+                onClick={() => {
+                  track("click_plan_cta", { 
+                    plan: t.name,
+                    utm_content: `${t.name.toLowerCase()}_cta`
+                  });
+                }}
               >
                 {t.cta}
               </button>
