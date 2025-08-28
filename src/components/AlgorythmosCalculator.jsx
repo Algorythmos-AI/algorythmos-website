@@ -17,7 +17,7 @@ const SegBtn = ({ active, children, onClick }) => (
   <button
     onClick={onClick}
     className={
-      "rounded-xl px-3 py-1 text-xs font-semibold transition " +
+      "rounded-xl px-3 py-1 text-xs font-semibold transition snap-start " +
       (active
         ? "bg-gradient-to-r from-[#6D00FF] via-[#7658E7] to-[#3715E0] text-white shadow-[0_8px_30px_-8px_rgba(55,21,224,0.55)]"
         : "bg-slate-800/80 text-slate-200 ring-1 ring-white/10 hover:bg-slate-800")
@@ -54,7 +54,7 @@ const Select = ({ value, onChange, options }) => (
   <select
     value={value}
     onChange={(e) => onChange(e.target.value)}
-    className="rounded-xl bg-slate-900/60 px-3 py-2 text-sm text-slate-100 ring-1 ring-slate-700 focus:outline-none focus:ring-2 focus:ring-violet-500"
+    className="rounded-xl bg-slate-900/60 px-3 py-2 text-sm text-slate-100 ring-1 ring-slate-700 focus:outline-none focus:ring-2 focus:ring-violet-500 snap-start"
   >
     {options.map((o) => (
       <option key={o.value} value={o.value}>{o.label}</option>
@@ -229,7 +229,7 @@ export default function AlgorythmosCalculator() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h3 className="text-base font-semibold">ROI (Return On Investment) Calculator</h3>
         <div
-          className="relative -mx-2 px-2 overflow-x-auto no-scrollbar"
+          className="relative -mx-2 px-2 overflow-x-auto no-scrollbar snap-x snap-mandatory"
           role="tablist"
           aria-label="Calculator modes"
         >
