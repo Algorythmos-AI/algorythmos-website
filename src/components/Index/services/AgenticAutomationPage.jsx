@@ -2,6 +2,7 @@ import React from "react";
 import ServiceLayout from "../ServiceLayout";
 import { Bot } from "lucide-react";
 import AgenticFlowDiagram from "./AgenticFlowDiagram";
+import EnterpriseCapabilities from "./EnterpriseCapabilities";
 
 export default function AgenticAutomationPage() {
   return (
@@ -122,6 +123,7 @@ export default function AgenticAutomationPage() {
       ctaText="Book a Consultation"
     >
       <AgenticFlowDiagram />
+      <EnterpriseCapabilities />
     </ServiceLayout>
   );
 }
