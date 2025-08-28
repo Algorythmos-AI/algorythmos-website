@@ -1,5 +1,7 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useCallback } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import { useSearchParams } from "react-router-dom";
+import { track } from "../../../lib/analytics"; // fallback to noop if file absent
 
 /**
  * AgenticFlowPlayer
@@ -9,10 +11,11 @@ import { motion, useReducedMotion } from "framer-motion";
  */
 export default function AgenticFlowPlayer() {
   const reduce = useReducedMotion();
-  const [playing, setPlaying] = useState(!reduce);
-  const [speed, setSpeed] = useState(1);     // 0.75, 1, 1.5
-  const [key, setKey] = useState(0);         // rerun animations by bumping this
-  const [step, setStep] = useState(0);
+  const [params, setParams] = useSearchParams();
+  const [playing, setPlaying] = useState(params.get("autoplay") !== "0" && !reduce);
+  const [speed, setSpeed] = useState(parseFloat(params.get("speed") || "1"));
+  const [key, setKey] = useState(0);
+  const [step, setStep] = useState(parseInt(params.get("step") || "0", 10));
 
   // Diagram paths (must match the geometry in your existing diagram)
   const P = useMemo(() => ({
@@ -92,11 +95,33 @@ export default function AgenticFlowPlayer() {
     return () => clearTimeout(t);
   }, [step, playing, speed, reduce, timeline]);
 
+  // URL sync
+  useEffect(() => {
+    params.set("step", String(step));
+    params.set("speed", String(speed));
+    params.set("autoplay", playing ? "1" : "0");
+    setParams(params, { replace: true });
+  }, [step, speed, playing]); // eslint-disable-line
+
   const current = timeline[step];
 
-  // Helpers
-  function restart() { setStep(0); setKey(k => k + 1); }
-  function next() { setStep(s => (s + 1) % timeline.length); setKey(k => k + 1); }
+  // Helpers & analytics
+  const restart = useCallback(() => {
+    setStep(0); setKey(k => k + 1);
+    try { track?.("flow_restart", { flow: "agentic" }); } catch {}
+  }, []);
+  const next = useCallback(() => {
+    setStep(s => (s + 1) % timeline.length); setKey(k => k + 1);
+    try { track?.("flow_step", { flow: "agentic", step: (step + 1) % timeline.length }); } catch {}
+  }, [step, timeline.length]);
+
+  const share = async () => {
+    const url = new URL(window.location.href);
+    url.searchParams.set("step", String(step));
+    url.searchParams.set("speed", String(speed));
+    url.searchParams.set("autoplay", playing ? "1" : "0");
+    await navigator.clipboard.writeText(url.toString());
+  };
 
   // Runner packet element using CSS motion path
   const Packet = ({ path, color = "#fff", delay = 0, duration = 1 }) => {
@@ -120,15 +145,39 @@ export default function AgenticFlowPlayer() {
     );
   };
 
+  // Keyboard navigation
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === " "){ e.preventDefault(); setPlaying(p => !p); }
+      if (e.key === "ArrowRight"){ next(); }
+      if (e.key === "ArrowLeft"){ setStep(s => (s - 1 + timeline.length) % timeline.length); setKey(k => k + 1); }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [next, timeline.length]);
+
   // glow helper
   const isGlowing = id => current?.glowIds?.includes(id);
 
   return (
     <section className="mt-10">
       {/* Controls */}
-      <div className="flex items-center gap-2 justify-end mb-2">
+      <div className="flex items-center gap-2 justify-between mb-2">
+        {/* Stepper */}
+        <div className="flex items-center gap-2 overflow-x-auto">
+          {timeline.map((t, i) => (
+            <button
+              key={t.id}
+              onClick={() => { setStep(i); setKey(k => k + 1); }}
+              className={`text-xs px-2 py-1 rounded-full border ${i===step ? "border-emerald-400/70 text-white" : "border-white/15 text-gray-300 hover:border-white/30"}`}
+              title={t.title}
+            >
+              {i+1}
+            </button>
+          ))}
+        </div>
         <button
-          onClick={() => setPlaying(p => !p)}
+          onClick={() => { setPlaying(p => !p); try { track?.("flow_play_toggle", { flow:"agentic" }); } catch {} }}
           className="text-xs px-3 py-1 rounded-full border border-white/15 hover:border-white/30 text-gray-200"
           aria-pressed={playing}
         >
@@ -146,14 +195,21 @@ export default function AgenticFlowPlayer() {
         >
           Restart
         </button>
+        <button
+          onClick={share}
+          className="text-xs px-3 py-1 rounded-full border border-white/15 hover:border-white/30 text-gray-200"
+          title="Copy link to this step"
+        >
+          Copy link
+        </button>
         <label className="text-xs text-gray-400 ml-2">
           Speed
-          <select
-            className="ml-1 bg-black/40 border border-white/10 rounded-md text-gray-200 text-xs px-1 py-0.5"
-            value={speed}
-            onChange={e => setSpeed(parseFloat(e.target.value))}
-            aria-label="Animation speed"
-          >
+                      <select
+              className="ml-1 bg-black/40 border border-white/10 rounded-md text-gray-200 text-xs px-1 py-0.5"
+              value={speed}
+              onChange={e => { const v=parseFloat(e.target.value); setSpeed(v); try { track?.("flow_speed", { flow:"agentic", speed:v }); } catch {} }}
+              aria-label="Animation speed"
+            >
             <option value={0.75}>0.75×</option>
             <option value={1}>1×</option>
             <option value={1.5}>1.5×</option>
@@ -181,6 +237,7 @@ export default function AgenticFlowPlayer() {
 
             {/* User */}
             <g transform="translate(70,200)" filter="url(#soft)" id="node-user">
+              <title>User — provides intent and receives the final response.</title>
               <rect width="140" height="120" rx="16"
                     className={`transition-colors duration-300 ${isGlowing("user") ? "stroke-emerald-400/70" : "stroke-white/10"}`}
                     fill="#0B1220" stroke="currentColor" />
@@ -193,6 +250,7 @@ export default function AgenticFlowPlayer() {
 
             {/* Agent */}
             <g transform="translate(540,200)" filter="url(#soft)" id="node-agent">
+              <title>AI Agent — plans steps, calls tools/LLM, and enforces guardrails.</title>
               <rect width="160" height="140" rx="16"
                     className={`transition-colors duration-300 ${isGlowing("agent") ? "stroke-emerald-400/70" : "stroke-white/12"}`}
                     fill="#101635" stroke="currentColor" />
@@ -207,6 +265,7 @@ export default function AgenticFlowPlayer() {
 
             {/* LLM */}
             <g transform="translate(740,60)" filter="url(#soft)" id="node-llm">
+              <title>LLM — language model used for reasoning/completion.</title>
               <rect width="120" height="120" rx="12"
                     className={`transition-colors duration-300 ${isGlowing("llm") ? "stroke-emerald-400/70" : "stroke-white/12"}`}
                     fill="#0B1220" stroke="currentColor" />
@@ -221,6 +280,7 @@ export default function AgenticFlowPlayer() {
 
             {/* Vector DB */}
             <g transform="translate(740,360)" filter="url(#soft)" id="node-vdb">
+              <title>Vector DB — long-term memory for retrieval and write-back.</title>
               <rect width="120" height="120" rx="12"
                     className={`transition-colors duration-300 ${isGlowing("vdb") ? "stroke-emerald-400/70" : "stroke-emerald-400/30"}`}
                     fill="#052E2B" stroke="currentColor" />
@@ -230,6 +290,7 @@ export default function AgenticFlowPlayer() {
 
             {/* Prompt pill */}
             <g transform="translate(312,190)" filter="url(#soft)" id="node-prompt">
+              <title>Prompt — structured instruction passed to the agent.</title>
               <rect width="130" height="44" rx="10"
                     className={`transition-colors duration-300 ${isGlowing("prompt") ? "stroke-blue-300/70" : "stroke-white/12"}`}
                     fill="#0B1220" stroke="currentColor" />
@@ -239,6 +300,7 @@ export default function AgenticFlowPlayer() {
 
             {/* Response pill */}
             <g transform="translate(312,286)" filter="url(#soft)" id="node-response">
+              <title>Response — composed output returned to the user.</title>
               <rect width="150" height="44" rx="10"
                     className={`transition-colors duration-300 ${isGlowing("response") ? "stroke-emerald-300/70" : "stroke-emerald-400/30"}`}
                     fill="#052E2B" stroke="currentColor" />
@@ -275,6 +337,16 @@ export default function AgenticFlowPlayer() {
             ))}
           </div>
         </div>
+      </div>
+
+      {/* Legend */}
+      <div className="mt-3 flex flex-wrap gap-4 text-xs text-gray-300">
+        <span className="inline-flex items-center gap-2">
+          <span className="w-2.5 h-2.5 rounded-full bg-white shadow-[0_0_6px_#ffffff]"></span> Data flow
+        </span>
+        <span className="inline-flex items-center gap-2">
+          <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_6px_#34d399]"></span> Memory (Vector DB)
+        </span>
       </div>
 
       {/* Caption for the current step (aria-live for screen readers) */}
