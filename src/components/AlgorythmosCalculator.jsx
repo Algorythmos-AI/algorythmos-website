@@ -226,32 +226,38 @@ export default function AlgorythmosCalculator() {
 
   return (
     <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-5">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h3 className="text-base font-semibold">ROI (Return On Investment) Calculator</h3>
-        <div className="flex items-center gap-2">
-          <SegBtn active={s.mode === "simple"} onClick={() => setS((x) => ({ ...x, mode: "simple" }))}>Simple</SegBtn>
-          <SegBtn active={s.mode === "advanced"} onClick={() => setS((x) => ({ ...x, mode: "advanced" }))}>Advanced</SegBtn>
-          <SegBtn active onClick={() => applyPreset("Starter")}>Starter</SegBtn>
-          <SegBtn active onClick={() => applyPreset("Growth")}>Growth</SegBtn>
-          <SegBtn active onClick={() => applyPreset("Scale")}>Scale</SegBtn>
-          <SegBtn onClick={() => setS({
-            ...s,
-            mode: "advanced",
-            baselineMode: "manual",
-            currency: "EUR",
-            volume: 100000, manualCost: 5000, coverage: 0.6, reviewMin: 0.5, handleMin: 2.5, hourly: 38, aiCost: 0.006, algFee: 3500, setup: 8000, overheadPct: 0.18,
-          })}>Reset</SegBtn>
-          <SegBtn onClick={share}>Share</SegBtn>
-          <SegBtn onClick={exportCSV}>Export CSV</SegBtn>
-          <Select
-            value={s.currency}
-            onChange={(val) => { setS((x) => ({ ...x, currency: val })); track("currency_changed", { to: val }); }}
-            options={[
-              { value: "EUR", label: "EUR €" },
-              { value: "USD", label: "USD $" },
-              { value: "GBP", label: "GBP £" },
-            ]}
-          />
+        <div
+          className="relative -mx-2 px-2 overflow-x-auto no-scrollbar"
+          role="tablist"
+          aria-label="Calculator modes"
+        >
+          <div className="flex items-center gap-2 min-w-full whitespace-nowrap">
+            <SegBtn active={s.mode === "simple"} onClick={() => setS((x) => ({ ...x, mode: "simple" }))}>Simple</SegBtn>
+            <SegBtn active={s.mode === "advanced"} onClick={() => setS((x) => ({ ...x, mode: "advanced" }))}>Advanced</SegBtn>
+            <SegBtn active onClick={() => applyPreset("Starter")}>Starter</SegBtn>
+            <SegBtn active onClick={() => applyPreset("Growth")}>Growth</SegBtn>
+            <SegBtn active onClick={() => applyPreset("Scale")}>Scale</SegBtn>
+            <SegBtn onClick={() => setS({
+              ...s,
+              mode: "advanced",
+              baselineMode: "manual",
+              currency: "EUR",
+              volume: 100000, manualCost: 5000, coverage: 0.6, reviewMin: 0.5, handleMin: 2.5, hourly: 38, aiCost: 0.006, algFee: 3500, setup: 8000, overheadPct: 0.18,
+            })}>Reset</SegBtn>
+            <SegBtn onClick={share}>Share</SegBtn>
+            <SegBtn onClick={exportCSV}>Export CSV</SegBtn>
+            <Select
+              value={s.currency}
+              onChange={(val) => { setS((x) => ({ ...x, currency: val })); track("currency_changed", { to: val }); }}
+              options={[
+                { value: "EUR", label: "EUR €" },
+                { value: "USD", label: "USD $" },
+                { value: "GBP", label: "GBP £" },
+              ]}
+            />
+          </div>
         </div>
       </div>
 

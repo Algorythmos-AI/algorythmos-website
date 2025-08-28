@@ -93,16 +93,20 @@ function StickyCTA(){
   }, []);
   return (
     <div
-      className="fixed inset-x-0 bottom-0 z-40 mx-auto max-w-6xl px-4 pb-4"
+      className="fixed left-0 right-0 bottom-0 z-40 px-3 pb-3 sm:px-4 sm:pb-4 pointer-events-none"
       aria-label="Sticky Call To Action to book a meeting"
     >
-      <div className="rounded-2xl bg-slate-900/90 backdrop-blur ring-1 ring-white/10 p-3 shadow-brand">
-        <div className="flex flex-col items-start gap-3 md:flex-row md:items-center md:justify-between">
-          <div className="text-sm text-slate-300">
-            Ready to estimate impact? Book a 30-min discovery. We'll review ROI (Return On Investment), accuracy targets, and deployment options.
-          </div>
-          <div className="flex items-center gap-3">
-                                       <a
+      <div className="mx-auto max-w-screen-sm sm:max-w-6xl pointer-events-auto">
+        <div
+          className="rounded-2xl bg-slate-900/90 backdrop-blur ring-1 ring-white/10 p-3 shadow-brand safe-px safe-pb"
+        >
+          <div className="flex flex-col items-start gap-3 md:flex-row md:items-center md:justify-between">
+            <div className="text-sm text-slate-300">
+              Ready to estimate impact? Book a 30-min discovery. We'll review ROI (Return On Investment),
+              accuracy targets, and deployment options.
+            </div>
+            <div className="flex items-center gap-3 w-full md:w-auto">
+              <a
                 href={calendlyUrl}
                 target="_blank"
                 rel="noreferrer"
@@ -110,18 +114,19 @@ function StickyCTA(){
                   recordLastCta("sticky_cta");
                   track("click_calendly", { source: "sticky_cta" });
                 }}
-                className="inline-flex items-center rounded-xl bg-gradient-to-r from-[#6D00FF] via-[#7658E7] to-[#3715E0] px-4 py-2 text-sm font-semibold text-white shadow-brand focus:outline-none focus:ring-4 focus:ring-violet-500/40"
+                className="flex-1 md:flex-none inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-[#6D00FF] via-[#7658E7] to-[#3715E0] px-4 py-2 text-sm font-semibold text-white shadow-brand focus:outline-none focus:ring-4 focus:ring-violet-500/40"
                 aria-label="Book a meeting on Calendly"
               >
                 Book on Calendly
               </a>
-             <a
-               href="#calculator"
-               onClick={() => track("click_open_calculator", { source: "sticky_cta" })}
-               className="inline-flex items-center rounded-xl bg-slate-800/80 px-4 py-2 text-sm font-semibold ring-1 ring-white/10"
-             >
-               Open calculator
-             </a>
+              <a
+                href="#calculator"
+                onClick={() => track("click_open_calculator", { source: "sticky_cta" })}
+                className="flex-1 md:flex-none inline-flex items-center justify-center rounded-xl bg-slate-800/80 px-4 py-2 text-sm font-semibold ring-1 ring-white/10"
+              >
+                Open calculator
+              </a>
+            </div>
           </div>
         </div>
       </div>

@@ -2,6 +2,34 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ===== Mobile safety & polish ===== */
+
+/* Hide horizontal scrollbar globally; prevent tiny layout bleed */
+html, body, #root {
+  overflow-x: hidden;
+}
+
+/* Safe-area padding helpers for iOS notches/home indicator */
+@supports (padding: max(0px)) {
+  .safe-px {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+  }
+  .safe-pb {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+  .safe-pt {
+    padding-top: max(1rem, env(safe-area-inset-top));
+  }
+}
+
+/* Class to hide scrollbars for overflow-x-auto elements */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE/Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
 /* Smooth scrolling for better mobile experience */
 html {
   scroll-behavior: smooth;
