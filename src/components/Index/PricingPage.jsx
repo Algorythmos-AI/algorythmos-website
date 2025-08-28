@@ -115,7 +115,7 @@ export default function PricingPage(){
         <div className="grid gap-6 md:grid-cols-3">
           {[
             {
-              name: "Starter",
+              name: "Pilot",
               price: "€2,000",
               period: "/mo",
               highlight: "For pilots and small teams",
@@ -123,19 +123,21 @@ export default function PricingPage(){
                 "Up to 10k items/mo",
                 "1 environment (dev/prod)",
                 "Basic RAG (Retrieval-Augmented Generation)",
+                "Shared multi-tenant infrastructure",
+                "No SSO (Single Sign-On)",
                 "Email support (24–48h)",
               ],
               cta: "Start a pilot",
             },
             {
-              name: "Growth",
+              name: "Operations",
               price: "€4,500",
               period: "/mo",
               highlight: "Most popular",
               features: [
                 "Up to 50k items/mo",
                 "Dual env + staging",
-                "Advanced guardrails + redaction",
+                "Audit logs + redaction guardrails",
                 "SLA (Service-Level Agreement) 99.5%",
                 "Priority support (same business day)",
               ],
@@ -143,15 +145,15 @@ export default function PricingPage(){
               popular: true,
             },
             {
-              name: "Scale",
-              price: "Custom",
-              period: "",
+              name: "Custom",
+              price: "From €9,000",
+              period: "/mo + run",
               highlight: "For regulated & high-volume",
               features: [
                 "> 50k items/mo",
                 "Private VPC (Virtual Private Cloud)",
-                "SAML SSO (Security Assertion Markup Language – Single Sign-On)",
-                "Custom KPIs (Key Performance Indicators) & reporting",
+                "SAML SSO (Single Sign-On)",
+                "Custom KPIs & reporting",
                 "Dedicated TAM (Technical Account Manager)",
               ],
               cta: "Talk to sales",
@@ -180,6 +182,58 @@ export default function PricingPage(){
               </button>
             </div>
           ))}
+        </div>
+        
+        <div className="mt-4 space-y-1 text-xs text-slate-400">
+          <p>
+            <span className="font-semibold">Definitions.</span>{" "}
+            <span className="font-semibold">Item</span> = one processed unit
+            (document, message, or API call).{" "}
+            <span className="font-semibold">Run</span> = usage costs (LLM tokens,
+            GPUs, vector DB) billed at provider rates (pass-through, no markup).
+          </p>
+          <p>
+            <span className="font-semibold">Add-ons.</span>{" "}
+            SAML SSO: <span className="font-semibold">€500/mo</span> ·
+            Private VPC: <span className="font-semibold">€1,000/mo</span> ·
+            Dedicated TAM: <span className="font-semibold">€1,500/mo</span>.{" "}
+            Reference pricing:{" "}
+            <a
+              href="https://www.vantage.sh/pricing"
+              target="_blank"
+              rel="noreferrer"
+              className="underline decoration-slate-600 hover:decoration-slate-300"
+              aria-label="Open Vantage pricing in a new tab"
+            >
+              Vantage
+            </a>{" "}
+            ·{" "}
+            <a
+              href="https://weaviate.io/pricing"
+              target="_blank"
+              rel="noreferrer"
+              className="underline decoration-slate-600 hover:decoration-slate-300"
+              aria-label="Open Weaviate pricing in a new tab"
+            >
+              Weaviate
+            </a>{" "}
+            ·{" "}
+            <a
+              href="https://auth0.com/pricing"
+              target="_blank"
+              rel="noreferrer"
+              className="underline decoration-slate-600 hover:decoration-slate-300"
+              aria-label="Open Auth0 pricing in a new tab"
+            >
+              Auth0
+            </a>
+          </p>
+          <p>
+            <span className="font-semibold">Billing.</span>{" "}
+            Month-to-month; cancel anytime before renewal. If item volume exceeds
+            your tier for 2 consecutive months, we'll recommend a tier upgrade to
+            ensure SLA and cost efficiency.
+          </p>
         </div>
       </section>
 
