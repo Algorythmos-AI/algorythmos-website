@@ -44,6 +44,8 @@ function useQuerySync(state, setState) {
     if (p.has("ai")) next.aiCost = toNumber(p.get("ai"));
     if (p.has("fee")) next.algFee = toNumber(p.get("fee"));
     if (p.has("setup")) next.setup = toNumber(p.get("setup"));
+    const mode = p.get("mode");
+    if (mode === "advanced" || mode === "simple") next.mode = mode;
     setState(next);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -60,6 +62,7 @@ function useQuerySync(state, setState) {
     p.set("ai", String(state.aiCost));
     p.set("fee", String(state.algFee));
     p.set("setup", String(state.setup));
+    p.set("mode", state.mode);
     u.search = p.toString();
     navigator.clipboard?.writeText(u.toString());
   };
@@ -67,9 +70,10 @@ function useQuerySync(state, setState) {
 }
 
 // ---------- UI primitives ----------
-const Label = ({ children, hint }) => (
+const Label = ({ children, hint, unit }) => (
   <div className="mb-1 flex items-center gap-2 text-sm font-medium text-slate-200">
     <span>{children}</span>
+    {unit && <span className="text-xs text-slate-400">({unit})</span>}
     {hint && <span className="text-xs text-slate-400">{hint}</span>}
   </div>
 );
@@ -101,6 +105,7 @@ const Range = ({ value, onChange, min = 0, max = 100, step = 1 }) => (
 // ---------- Main ----------
 export default function AlgorythmosCalculator() {
   const [s, setS] = useState({
+    mode: "simple",
     // Basic
     volume: 100000,
     manualCost: 5000,
@@ -118,20 +123,32 @@ export default function AlgorythmosCalculator() {
   const { copy } = useQuerySync(s, setS);
 
   const derived = useMemo(() => {
-    const v = Math.max(0, s.volume);
-    const cov = clamp01(s.coverage);
-    const reviewHrs = (v * cov * s.reviewMin) / 60;
-    const residualHrs = (v * (1 - cov) * s.handleMin) / 60;
-    const laborCost = (reviewHrs + residualHrs) * s.hourly;
-    const aiRun = v * cov * s.aiCost;
-    const proposed = laborCost + aiRun + s.algFee;
+    const V = Math.max(0, s.volume);
+    const M = Math.max(0, s.manualCost);
+    const c = clamp01(s.coverage);
+    const r = Math.max(0, s.reviewMin);
+    const h = Math.max(0, s.handleMin);
+    const w = Math.max(0, s.hourly);
+    const a = Math.max(0, s.aiCost);
+    const F = Math.max(0, s.algFee);
+    const S = Math.max(0, s.setup);
 
-    const savings = Math.max(0, s.manualCost - proposed);
-    const invest = s.algFee + aiRun;
-    const roi = invest > 0 ? savings / invest : (savings > 0 ? Infinity : 0);
-    const payback = savings > 0 ? s.setup / savings : Infinity;
+    // Exact formulas as specified
+    const H_review = (V * c * r) / 60;
+    const H_residual = (V * (1 - c) * h) / 60;
+    const C_labor = (H_review + H_residual) * w;
+    const C_AI = V * c * a;
+    const C_proposed = C_labor + C_AI + F;
+    const Savings = Math.max(0, M - C_proposed);
+    const Invest = F + C_AI;
+    const ROI = Invest > 0 ? Savings / Invest : (Savings > 0 ? Infinity : 0);
+    const Payback = Savings > 0 ? S / Savings : Infinity;
 
-    return { reviewHrs, residualHrs, laborCost, aiRun, proposed, savings, roi, payback };
+    return { 
+      V, M, c, r, h, w, a, F, S,
+      H_review, H_residual, C_labor, C_AI, C_proposed, 
+      Savings, Invest, ROI, Payback 
+    };
   }, [s]);
 
   // quick presets (inspired by quote calculators)
@@ -148,6 +165,30 @@ export default function AlgorythmosCalculator() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h3 className="text-base font-semibold">ROI (Return On Investment) Calculator</h3>
         <div className="flex items-center gap-2">
+          {/* Mode selector */}
+          <div className="flex items-center gap-1 rounded-xl bg-slate-800/80 p-1 ring-1 ring-white/10">
+            <button
+              onClick={() => setS((x) => ({ ...x, mode: "simple" }))}
+              className={`rounded-lg px-3 py-1 text-xs font-semibold transition-colors ${
+                s.mode === "simple" 
+                  ? "bg-gradient-to-r from-[#6D00FF] via-[#7658E7] to-[#3715E0] text-white shadow-[0_10px_40px_-10px_rgba(55,21,224,0.55)]" 
+                  : "text-slate-300 hover:text-white"
+              }`}
+            >
+              Simple
+            </button>
+            <button
+              onClick={() => setS((x) => ({ ...x, mode: "advanced" }))}
+              className={`rounded-lg px-3 py-1 text-xs font-semibold transition-colors ${
+                s.mode === "advanced" 
+                  ? "bg-gradient-to-r from-[#6D00FF] via-[#7658E7] to-[#3715E0] text-white shadow-[0_10px_40px_-10px_rgba(55,21,224,0.55)]" 
+                  : "text-slate-300 hover:text-white"
+              }`}
+            >
+              Advanced
+            </button>
+          </div>
+          
           {Object.entries(presets).map(([k, v]) => (
             <button key={k}
               onClick={() => applyPreset(v)}
@@ -158,7 +199,7 @@ export default function AlgorythmosCalculator() {
             </button>
           ))}
           <button
-            onClick={() => setS({ volume: 100000, manualCost: 5000, coverage: 0.6, reviewMin: 0.5, handleMin: 2.5, hourly: 38, aiCost: 0.006, algFee: 3500, setup: 8000 })}
+            onClick={() => setS({ mode: "simple", volume: 100000, manualCost: 5000, coverage: 0.6, reviewMin: 0.5, handleMin: 2.5, hourly: 38, aiCost: 0.006, algFee: 3500, setup: 8000 })}
             className="rounded-xl bg-slate-800/80 px-3 py-1 text-xs font-semibold ring-1 ring-white/10 hover:bg-slate-800"
             aria-label="Reset to defaults"
           >
@@ -178,83 +219,101 @@ export default function AlgorythmosCalculator() {
       {/* Basic inputs */}
       <div className="mt-4 grid gap-4 md:grid-cols-2">
         <div>
-          <Label>Monthly Processing Volume</Label>
+          <Label unit="items/month">Monthly Processing Volume (V)</Label>
           <NumberBox value={s.volume} onChange={(v) => setS((x) => ({ ...x, volume: Math.max(0, Math.round(v)) }))} allowFloat={false} />
         </div>
         <div>
-          <Label>Current Manual Cost (€/month)</Label>
+          <Label unit="€/month">Current Manual Cost (M)</Label>
           <NumberBox value={s.manualCost} onChange={(v) => setS((x) => ({ ...x, manualCost: Math.max(0, v) }))} />
         </div>
       </div>
 
-      {/* KPIs */}
-      <div className="mt-5 grid gap-4 md:grid-cols-3" aria-live="polite">
-        <div className="rounded-xl border border-slate-800 bg-slate-900/70 p-4">
-          <div className="text-sm text-slate-400">Estimated Monthly Savings</div>
-          <div className="mt-1 text-2xl font-bold text-emerald-400">{fmtCurrency(derived.savings)}</div>
-        </div>
-        <div className="rounded-xl border border-slate-800 bg-slate-900/70 p-4">
-          <div className="text-sm text-slate-400">ROI (Return On Investment)</div>
-          <div className="mt-1 text-2xl font-bold text-violet-400">{fmtPerc(derived.roi)}</div>
-        </div>
-        <div className="rounded-xl border border-slate-800 bg-slate-900/70 p-4">
-          <div className="text-sm text-slate-400">Payback Period</div>
-          <div className="mt-1 text-2xl font-bold text-sky-400">
-            {!isFinite(derived.payback) ? "—" : `${derived.payback.toFixed(1)} months`}
-          </div>
-        </div>
-      </div>
-
-      {/* Advanced */}
-      <details className="mt-6 rounded-xl border border-slate-800 bg-slate-900/60 p-4">
-        <summary className="cursor-pointer select-none text-sm font-semibold text-slate-200">Advanced settings</summary>
-        <div className="mt-4 grid gap-4 md:grid-cols-2">
+      {/* Advanced inputs */}
+      {s.mode === "advanced" && (
+        <div className="mt-6 grid gap-4 md:grid-cols-2">
           <div>
-            <Label>Automation coverage <span className="text-xs text-slate-400">(% items handled by AI (Artificial Intelligence))</span></Label>
+            <Label unit="%">Automation coverage (c)</Label>
             <div className="flex items-center gap-3">
               <Range value={Math.round(s.coverage * 100)} onChange={(v) => setS((x) => ({ ...x, coverage: clamp01(v / 100) }))} />
               <div className="w-12 text-right text-sm">{Math.round(s.coverage * 100)}%</div>
             </div>
           </div>
           <div>
-            <Label>Review time per automated item (minutes)</Label>
+            <Label unit="minutes">Review time per automated item (r)</Label>
             <NumberBox value={s.reviewMin} onChange={(v) => setS((x) => ({ ...x, reviewMin: Math.max(0, v) }))} />
           </div>
           <div>
-            <Label>Average handle time (manual) (minutes)</Label>
+            <Label unit="minutes">Handle time for non-automated items (h)</Label>
             <NumberBox value={s.handleMin} onChange={(v) => setS((x) => ({ ...x, handleMin: Math.max(0, v) }))} />
           </div>
           <div>
-            <Label>Hourly cost (€/hour)</Label>
+            <Label unit="€/hour">Hourly cost (w)</Label>
             <NumberBox value={s.hourly} onChange={(v) => setS((x) => ({ ...x, hourly: Math.max(0, v) }))} />
           </div>
           <div>
-            <Label>AI run cost per item (€/)</Label>
+            <Label unit="€/item">AI run cost per item (a)</Label>
             <NumberBox value={s.aiCost} step={0.001} onChange={(v) => setS((x) => ({ ...x, aiCost: Math.max(0, v) }))} />
           </div>
           <div>
-            <Label>Algorythmos monthly fee (€/month)</Label>
+            <Label unit="€/month">Algorythmos fee (F)</Label>
             <NumberBox value={s.algFee} onChange={(v) => setS((x) => ({ ...x, algFee: Math.max(0, v) }))} />
           </div>
           <div>
-            <Label>One-time setup cost (€)</Label>
+            <Label unit="€">One-time setup cost (S)</Label>
             <NumberBox value={s.setup} onChange={(v) => setS((x) => ({ ...x, setup: Math.max(0, v) }))} />
           </div>
         </div>
+      )}
 
-        {/* Breakdown */}
-        <div className="mt-6 grid gap-4 md:grid-cols-3 text-sm">
+      {/* KPIs */}
+      <div className="mt-5 grid gap-4 md:grid-cols-3" aria-live="polite">
+        <div className="rounded-xl border border-slate-800 bg-slate-900/70 p-4">
+          <div className="text-sm text-slate-400">Estimated Monthly Savings</div>
+          <div className="mt-1 text-2xl font-bold text-emerald-400">{fmtCurrency(derived.Savings)}</div>
+        </div>
+        <div className="rounded-xl border border-slate-800 bg-slate-900/70 p-4">
+          <div className="text-sm text-slate-400">ROI (Return On Investment)</div>
+          <div className="mt-1 text-2xl font-bold text-violet-400">{fmtPerc(derived.ROI)}</div>
+        </div>
+        <div className="rounded-xl border border-slate-800 bg-slate-900/70 p-4">
+          <div className="text-sm text-slate-400">Payback Period</div>
+          <div className="mt-1 text-2xl font-bold text-sky-400">
+            {!isFinite(derived.Payback) ? "—" : `${derived.Payback.toFixed(1)} months`}
+          </div>
+        </div>
+      </div>
+
+      {/* Equations Inspector */}
+      <details className="mt-6 rounded-xl border border-slate-800 bg-slate-900/60 p-4">
+        <summary className="cursor-pointer select-none text-sm font-semibold text-slate-200">Show equations</summary>
+        <div className="mt-4 space-y-2 font-mono text-xs text-slate-300">
+          <div>H_review = (V × c × r) / 60 = ({derived.V.toLocaleString()} × {derived.c.toFixed(2)} × {derived.r.toFixed(1)}) / 60 = {derived.H_review.toFixed(1)} h</div>
+          <div>H_residual = (V × (1 - c) × h) / 60 = ({derived.V.toLocaleString()} × {derived.h.toFixed(1)}) / 60 = {derived.H_residual.toFixed(1)} h</div>
+          <div>C_labor = (H_review + H_residual) × w = ({derived.H_review.toFixed(1)} + {derived.H_residual.toFixed(1)}) × {derived.w} = {fmtCurrency(derived.C_labor)}</div>
+          <div>C_AI = V × c × a = {derived.V.toLocaleString()} × {derived.c.toFixed(2)} × {derived.a.toFixed(3)} = {fmtCurrency(derived.C_AI)}</div>
+          <div>C_proposed = C_labor + C_AI + F = {fmtCurrency(derived.C_labor)} + {fmtCurrency(derived.C_AI)} + {fmtCurrency(derived.F)} = {fmtCurrency(derived.C_proposed)}</div>
+          <div>Savings = max(0, M - C_proposed) = max(0, {fmtCurrency(derived.M)} - {fmtCurrency(derived.C_proposed)}) = {fmtCurrency(derived.Savings)}</div>
+          <div>Invest = F + C_AI = {fmtCurrency(derived.F)} + {fmtCurrency(derived.C_AI)} = {fmtCurrency(derived.Invest)}</div>
+          <div>ROI = Savings / Invest = {fmtCurrency(derived.Savings)} / {fmtCurrency(derived.Invest)} = {derived.ROI === Infinity ? "∞" : derived.ROI.toFixed(3)}</div>
+          <div>Payback = S / Savings = {fmtCurrency(derived.S)} / {fmtCurrency(derived.Savings)} = {derived.Payback === Infinity ? "∞" : derived.Payback.toFixed(1)} months</div>
+        </div>
+      </details>
+
+      {/* Breakdown */}
+      <details className="mt-4 rounded-xl border border-slate-800 bg-slate-900/60 p-4">
+        <summary className="cursor-pointer select-none text-sm font-semibold text-slate-200">Cost breakdown</summary>
+        <div className="mt-4 grid gap-4 md:grid-cols-3 text-sm">
           <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-4">
             <div className="text-slate-400">Labor (review + residual)</div>
-            <div className="mt-1 font-semibold">{fmtCurrency(derived.laborCost)}</div>
+            <div className="mt-1 font-semibold">{fmtCurrency(derived.C_labor)}</div>
           </div>
           <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-4">
             <div className="text-slate-400">AI run cost</div>
-            <div className="mt-1 font-semibold">{fmtCurrency(derived.aiRun)}</div>
+            <div className="mt-1 font-semibold">{fmtCurrency(derived.C_AI)}</div>
           </div>
           <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-4">
             <div className="text-slate-400">Proposed total</div>
-            <div className="mt-1 font-semibold">{fmtCurrency(derived.proposed)}</div>
+            <div className="mt-1 font-semibold">{fmtCurrency(derived.C_proposed)}</div>
           </div>
         </div>
       </details>
