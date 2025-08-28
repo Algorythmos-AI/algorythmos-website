@@ -5,7 +5,7 @@
 // Tailwind CSS only. Acronyms shown with full forms in UI.
 // ================================================
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import AlgorythmosCalculator from "../AlgorythmosCalculator";
 
 const Check = (props) => (
@@ -15,6 +15,64 @@ const Check = (props) => (
 );
 
 const CALENDLY_URL = "https://calendly.com/algorythmos-france/30min";
+
+function InfoTip() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="relative inline-block">
+      <button
+        type="button"
+        aria-label="Compare to DIY and agency assumptions"
+        aria-expanded={open}
+        onMouseEnter={() => setOpen(true)}
+        onMouseLeave={() => setOpen(false)}
+        onFocus={() => setOpen(true)}
+        onBlur={() => setOpen(false)}
+        onKeyDown={(e) => e.key === "Escape" && setOpen(false)}
+        className="ml-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-slate-800 text-slate-300 ring-1 ring-white/10 text-[11px] font-semibold"
+        title="Compare to DIY & agency"
+      >
+        i
+      </button>
+
+      {open && (
+        <div
+          role="dialog"
+          aria-label="DIY and agency comparison"
+          className="absolute z-50 mt-2 w-80 max-w-[80vw] right-0 rounded-2xl bg-slate-900/95 p-4 text-xs text-slate-200 ring-1 ring-white/10 shadow-xl"
+          onMouseEnter={() => setOpen(true)}
+          onMouseLeave={() => setOpen(false)}
+        >
+          <div className="text-[11px] font-semibold text-slate-100">
+            Compare to DIY & agency
+          </div>
+          <ul className="mt-2 space-y-1 leading-relaxed">
+            <li>
+              <span className="font-semibold">DIY (Internal build)</span>: 3 FTE
+              in Paris (ML/Full-stack/DevOps) incl. employer charges and tools —
+              <span className="font-semibold"> ≈ €24,500/mo</span>.
+            </li>
+            <li>
+              <span className="font-semibold">Traditional agency</span>:
+              1–1.5 FTE senior consultants @ €600–€900/day —
+              <span className="font-semibold"> ≈ €18,000/mo</span>.
+            </li>
+            <li>
+              <span className="font-semibold">Algorythmos</span>:
+              platform & delivery from <span className="font-semibold">€4,500/mo</span> +
+              <span className="font-semibold"> run</span> (usage).
+            </li>
+          </ul>
+          <p className="mt-2 text-[11px] text-slate-400">
+            Illustrative only—use the <a href="#calculator" className="underline">calculator</a> for
+            ROI and payback.
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
 
 function StickyCTA(){
   return (
@@ -79,8 +137,9 @@ export default function PricingPage(){
               <span className="rounded-full bg-slate-800/80 px-3 py-1 ring-1 ring-white/10">API (Application Programming Interface) access</span>
             </div>
             <div className="mt-6 rounded-2xl bg-slate-900/70 ring-1 ring-white/10 p-4">
-              <div className="mb-3 text-sm text-slate-300">
-                Quick glance — TMC (Total Monthly Cost) estimates*
+              <div className="mb-3 text-sm text-slate-300 flex items-center">
+                <span>Quick glance — TMC (Total Monthly Cost) estimates*</span>
+                <InfoTip />
               </div>
               <div className="grid gap-3 md:grid-cols-3 text-sm">
                 <div className="rounded-xl border border-slate-800 p-4">
