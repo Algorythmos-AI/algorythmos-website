@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, Suspense } from "react";
 import {
   computeOutputs,
   computeBaselineM,
@@ -9,9 +9,9 @@ import {
   clamp01,
 } from "../lib/roiMath";
 import { track } from "../lib/analytics";
-import {
-  ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ReferenceLine,
-} from "recharts";
+
+// Lazy load the chart component
+const RoiCoverageChart = React.lazy(() => import("./RoiCoverageChart"));
 
 const SegBtn = ({ active, children, onClick }) => (
   <button
@@ -179,40 +179,50 @@ export default function AlgorythmosCalculator() {
     track("share_copied", { url: u.toString() });
   };
 
-  const exportCSV = () => {
-    const rows = [
-      ["currency", s.currency],
-      ["volume (V)", s.volume],
-      ["manualCost (M)", baselineM],
-      ["coverage (c)", s.coverage],
-      ["reviewMin (r)", s.reviewMin],
-      ["handleMin (h)", s.handleMin],
-      ["hourly (w)", s.hourly],
-      ["aiCost (a)", s.aiCost],
-      ["algFee (F)", s.algFee],
-      ["setup (S)", s.setup],
-      ["overheadPct", s.overheadPct],
-      ["H_review (h)", out.H_review],
-      ["H_residual (h)", out.H_residual],
-      ["C_labor", out.C_labor],
-      ["C_AI", out.C_AI],
-      ["C_proposed", out.C_proposed],
-      ["Savings", out.Savings],
-      ["Invest", out.Invest],
-      ["ROI (ratio)", out.ROI],
-      ["ROI %", out.ROI * 100],
-      ["Payback (months)", out.Payback],
-    ];
-    const csv = "key,value\n" + rows.map(([k, v]) => `${k},${String(v).replace(/,/g, "")}`).join("\n");
-    const blob = new Blob([csv], { type: "text/csv" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "algorythmos-roi.csv";
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    track("export_csv", { rows: rows.length });
-  };
+           const exportCSV = () => {
+           const rows = [
+             ["currency", s.currency],
+             ["volume (V)", s.volume],
+             ["manualCost (M)", baselineM],
+             ["coverage (c)", s.coverage],
+             ["reviewMin (r)", s.reviewMin],
+             ["handleMin (h)", s.handleMin],
+             ["hourly (w)", s.hourly],
+             ["aiCost (a)", s.aiCost],
+             ["algFee (F)", s.algFee],
+             ["setup (S)", s.setup],
+             ["overheadPct", s.overheadPct],
+             ["H_review (h)", out.H_review],
+             ["H_residual (h)", out.H_residual],
+             ["C_labor", out.C_labor],
+             ["C_AI", out.C_AI],
+             ["C_proposed", out.C_proposed],
+             ["Savings", out.Savings],
+             ["Invest", out.Invest],
+             ["ROI (ratio)", out.ROI],
+             ["ROI %", out.ROI * 100],
+             ["Payback (months)", out.Payback],
+           ];
+           
+           // Harden CSV export: wrap cells in quotes and escape double quotes
+           const escapeCSV = (value) => {
+             const str = String(value);
+             // Escape double quotes by doubling them
+             const escaped = str.replace(/"/g, '""');
+             // Wrap in quotes to handle commas, newlines, and quotes
+             return `"${escaped}"`;
+           };
+           
+           const csv = "key,value\n" + rows.map(([k, v]) => `${escapeCSV(k)},${escapeCSV(v)}`).join("\n");
+           const blob = new Blob([csv], { type: "text/csv" });
+           const a = document.createElement("a");
+           a.href = URL.createObjectURL(blob);
+           a.download = "algorythmos-roi.csv";
+           document.body.appendChild(a);
+           a.click();
+           a.remove();
+           track("export_csv", { rows: rows.length });
+         };
 
   return (
     <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-5">
@@ -335,26 +345,10 @@ export default function AlgorythmosCalculator() {
         </div>
       </div>
 
-      {/* Sensitivity chart (desktop) */}
-      <div className="mt-6 hidden md:block rounded-xl border border-slate-800 bg-slate-900/60 p-4">
-        <div className="mb-2 text-sm font-semibold text-slate-200">Sensitivity: ROI% vs coverage</div>
-        <div className="h-56 w-full">
-          <ResponsiveContainer>
-            <LineChart data={chartData} margin={{ top: 10, right: 20, bottom: 5, left: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
-              <XAxis dataKey="x" tick={{ fill: "#94a3b8", fontSize: 12 }} tickFormatter={(v) => `${v}%`} />
-              <YAxis tick={{ fill: "#94a3b8", fontSize: 12 }} />
-              <Tooltip
-                formatter={(v) => [`${Math.round(v)}%`, "ROI%"]}
-                labelFormatter={(l) => `Coverage ${l}%`}
-                contentStyle={{ background: "#0b1220", border: "1px solid #1f2937", color: "#E2E8F0" }}
-              />
-              <ReferenceLine x={Math.round(s.coverage * 100)} stroke="#7c3aed" strokeDasharray="3 3" />
-              <Line type="monotone" dataKey="y" stroke="#8b5cf6" dot={false} strokeWidth={2} />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
+                   {/* Sensitivity chart (desktop) - lazy loaded */}
+             <Suspense fallback={<div className="mt-6 hidden md:block rounded-xl border border-slate-800 bg-slate-900/60 p-4"><div className="h-56 flex items-center justify-center text-slate-400">Loading chart...</div></div>}>
+               <RoiCoverageChart chartData={chartData} currentCoverage={s.coverage} />
+             </Suspense>
 
       {/* Equations & breakdown */}
       <details className="mt-6 rounded-xl border border-slate-800 bg-slate-900/60 p-4">
