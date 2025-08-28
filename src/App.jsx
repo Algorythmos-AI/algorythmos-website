@@ -12,10 +12,12 @@ import CaseStudyPage from './components/Index/CaseStudyPage.jsx';
 import BlogDetailPage from './components/Index/BlogDetailPage.jsx';
 import ServiceDetailPage from './components/Index/ServiceDetailPage.jsx';
 import PricingPage from './components/Index/PricingPage.jsx';
+import GlobalCtaTracker from './components/GlobalCtaTracker.jsx';
 
 function App() {
   return (
     <>
+      <GlobalCtaTracker />
       <NavBar />
       <Routes>
         <Route path="/" element={<AdvancedBusinessWebsite />} />

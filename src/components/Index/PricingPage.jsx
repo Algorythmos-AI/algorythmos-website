@@ -141,6 +141,15 @@ export default function PricingPage(){
     }
   }, []);
 
+  // Add canonical tag to avoid SEO duplicates from UTM'd URLs
+  useEffect(() => {
+    const link = document.createElement("link");
+    link.rel = "canonical";
+    link.href = "https://www.algorythmos.fr/pricing";
+    document.head.appendChild(link);
+    return () => document.head.removeChild(link);
+  }, []);
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 pb-24">
       {/* Hero */}

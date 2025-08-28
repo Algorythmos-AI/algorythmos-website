@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";      // ✅ only once
 import emailjs from "@emailjs/browser";       // npm install @emailjs/browser
+import { track } from "../../lib/analytics";
+import { persistUtmFromLocation, readStoredUtm } from "../../lib/utm";
 // Footer is global via App.jsx
 
 const SERVICE_ID = "service_m5jcw4i";
@@ -13,6 +15,13 @@ const PUBLIC_KEY = "FtkTJ5DgfHW4fImxo";
 const QuantumContactPage = () => {
   const [scrollY, setScrollY] = useState(0);
   const [showNav, setShowNav] = useState(false);
+
+  // Page view tracking with UTM context
+  useEffect(() => {
+    persistUtmFromLocation();
+    const utm = readStoredUtm();
+    track("page_view", { page: "contact", ...utm });
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);

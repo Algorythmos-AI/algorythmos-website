@@ -30,6 +30,10 @@ export function persistUtmFromLocation() {
     const params = new URLSearchParams(window.location.search);
     const found = pickTrackingParams(params);
     if (Object.keys(found).length) {
+      // Normalize UTM values to lowercase for clean reporting
+      Object.keys(found).forEach(k => {
+        if (typeof found[k] === "string") found[k] = found[k].toLowerCase();
+      });
       sessionStorage.setItem(STORE_KEY, JSON.stringify(found));
     }
   } catch {}

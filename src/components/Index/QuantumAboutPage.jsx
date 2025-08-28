@@ -2,6 +2,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import TeamGrid from "./TeamGrid";
+import { track } from "../../lib/analytics";
+import { persistUtmFromLocation, readStoredUtm } from "../../lib/utm";
 
 import {
   Brain,
@@ -102,6 +104,13 @@ const QuantumAboutPage = () => {
   const [activeTab, setActiveTab] = useState("mission");
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
+
+  // Page view tracking with UTM context
+  useEffect(() => {
+    persistUtmFromLocation();
+    const utm = readStoredUtm();
+    track("page_view", { page: "about", ...utm });
+  }, []);
 
   // Canvas + particles are refs so we don't trigger re-renders every frame
   const canvasRef = useRef(null);
