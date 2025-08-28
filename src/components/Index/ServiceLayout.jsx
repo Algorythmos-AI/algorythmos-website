@@ -27,6 +27,7 @@ export default function ServiceLayout({
   faqs = [],
   related = [],
   ctaText = "Book a Consultation",
+  children,
 }) {
   const serviceLd = useMemo(() => ({
     "@context": "https://schema.org",
@@ -106,6 +107,9 @@ export default function ServiceLayout({
                 ))}
               </ul>
             )}
+
+            {/* Custom content slot (e.g., animated diagram) */}
+            {children}
 
             <div className="space-y-10">
               {sections.map(sec => (
