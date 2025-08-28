@@ -1,13 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { readStoredUtm } from "../lib/utm";
+import React from "react";
+import HiddenUtmFields from "./Index/HiddenUtmFields";
 
 export default function ContactForm() {
-  const [utm, setUtm] = useState({});
-  
-  useEffect(() => {
-    setUtm(readStoredUtm());
-  }, []);
-
   return (
     <form method="post" action="/api/contact" className="space-y-4">
       {/* Visible form fields */}
@@ -50,13 +44,8 @@ export default function ContactForm() {
         />
       </div>
 
-      {/* Hidden attribution fields */}
-      <input type="hidden" name="utm_source" value={utm.utm_source || "pricing"} />
-      <input type="hidden" name="utm_medium" value={utm.utm_medium || "cta"} />
-      <input type="hidden" name="utm_campaign" value={utm.utm_campaign || "discovery"} />
-      <input type="hidden" name="utm_content" value={utm.utm_content || "unknown"} />
-      <input type="hidden" name="gclid" value={utm.gclid || ""} />
-      <input type="hidden" name="fbclid" value={utm.fbclid || ""} />
+      {/* Hidden UTM fields with last-CTA attribution */}
+      <HiddenUtmFields defaults={{ utm_source: "website", utm_medium: "form" }} />
 
       <button 
         type="submit"

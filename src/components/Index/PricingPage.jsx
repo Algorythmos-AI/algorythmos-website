@@ -7,7 +7,7 @@
 
 import React, { useEffect, useState, useMemo } from "react";
 import { track } from "../../lib/analytics";
-import { withUtm, persistUtmFromLocation, readStoredUtm } from "../../lib/utm";
+import { withUtm, persistUtmFromLocation, readStoredUtm, recordLastCta } from "../../lib/utm";
 import AlgorythmosCalculator from "../AlgorythmosCalculator";
 
 const Check = (props) => (
@@ -106,7 +106,10 @@ function StickyCTA(){
                 href={calendlyUrl}
                 target="_blank"
                 rel="noreferrer"
-                onClick={() => track("click_calendly", { source: "sticky_cta" })}
+                onClick={() => {
+                  recordLastCta("sticky_cta");
+                  track("click_calendly", { source: "sticky_cta" });
+                }}
                 className="inline-flex items-center rounded-xl bg-gradient-to-r from-[#6D00FF] via-[#7658E7] to-[#3715E0] px-4 py-2 text-sm font-semibold text-white shadow-brand focus:outline-none focus:ring-4 focus:ring-violet-500/40"
                 aria-label="Book a meeting on Calendly"
               >
@@ -320,10 +323,9 @@ export default function PricingPage(){
                 className="mt-6 w-full rounded-xl bg-gradient-to-r from-[#6D00FF] via-[#7658E7] to-[#3715E0] px-4 py-2 font-semibold text-white shadow-lg transition hover:scale-[1.01] focus:outline-none focus:ring-4 focus:ring-violet-500/40"
                 aria-label={`${t.cta} for ${t.name}`}
                 onClick={() => {
-                  track("click_plan_cta", { 
-                    plan: t.name,
-                    utm_content: `${t.name.toLowerCase()}_cta`
-                  });
+                  const id = `${t.name.toLowerCase()}_cta`.replace(/\s+/g, "_");
+                  recordLastCta(id);
+                  track("click_plan_cta", { plan: t.name, utm_content: id });
                 }}
               >
                 {t.cta}
