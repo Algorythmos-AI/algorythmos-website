@@ -5,8 +5,9 @@
 // Tailwind CSS only. Acronyms shown with full forms in UI.
 // ================================================
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { track } from "../../lib/analytics";
+import { withUtm } from "../../lib/utm";
 import AlgorythmosCalculator from "../AlgorythmosCalculator";
 
 const Check = (props) => (
@@ -82,6 +83,14 @@ function InfoTip() {
 }
 
 function StickyCTA(){
+  const calendlyUrl = useMemo(() => {
+    return withUtm(CALENDLY_URL, {
+      utm_source: "pricing",
+      utm_medium: "cta",
+      utm_campaign: "discovery",
+      utm_content: "sticky_cta",
+    });
+  }, []);
   return (
     <div
       className="fixed inset-x-0 bottom-0 z-40 mx-auto max-w-6xl px-4 pb-4"
@@ -93,16 +102,16 @@ function StickyCTA(){
             Ready to estimate impact? Book a 30-min discovery. We'll review ROI (Return On Investment), accuracy targets, and deployment options.
           </div>
           <div className="flex items-center gap-3">
-                         <a
-               href={CALENDLY_URL}
-               target="_blank"
-               rel="noreferrer"
-               onClick={() => track("click_calendly", { source: "sticky_cta" })}
-               className="inline-flex items-center rounded-xl bg-gradient-to-r from-[#6D00FF] via-[#7658E7] to-[#3715E0] px-4 py-2 text-sm font-semibold text-white shadow-brand focus:outline-none focus:ring-4 focus:ring-violet-500/40"
-               aria-label="Book a meeting on Calendly"
-             >
-               Book on Calendly
-             </a>
+                                       <a
+                href={calendlyUrl}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() => track("click_calendly", { source: "sticky_cta" })}
+                className="inline-flex items-center rounded-xl bg-gradient-to-r from-[#6D00FF] via-[#7658E7] to-[#3715E0] px-4 py-2 text-sm font-semibold text-white shadow-brand focus:outline-none focus:ring-4 focus:ring-violet-500/40"
+                aria-label="Book a meeting on Calendly"
+              >
+                Book on Calendly
+              </a>
              <a
                href="#calculator"
                onClick={() => track("click_open_calculator", { source: "sticky_cta" })}
