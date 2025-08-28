@@ -6,6 +6,7 @@
 // ================================================
 
 import React, { useEffect, useState } from "react";
+import { track } from "../../lib/analytics";
 import AlgorythmosCalculator from "../AlgorythmosCalculator";
 
 const Check = (props) => (
@@ -30,7 +31,10 @@ function InfoTip() {
         aria-describedby={open ? tipId : undefined}
         onMouseEnter={() => setOpen(true)}
         onMouseLeave={() => setOpen(false)}
-        onClick={() => setOpen((v) => !v)} // mobile tap support
+        onClick={() => {
+          setOpen((v) => !v);
+          if (!open) track("tooltip_open", { tooltip: "tmc_comparison" });
+        }} // mobile tap support
         onFocus={() => setOpen(true)}
         onBlur={() => setOpen(false)}
         onKeyDown={(e) => e.key === "Escape" && setOpen(false)}
@@ -89,20 +93,23 @@ function StickyCTA(){
             Ready to estimate impact? Book a 30-min discovery. We'll review ROI (Return On Investment), accuracy targets, and deployment options.
           </div>
           <div className="flex items-center gap-3">
-            <a
-              href={CALENDLY_URL}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center rounded-xl bg-gradient-to-r from-[#6D00FF] via-[#7658E7] to-[#3715E0] px-4 py-2 text-sm font-semibold text-white shadow-brand focus:outline-none focus:ring-4 focus:ring-violet-500/40"
-            >
-              Book on Calendly
-            </a>
-            <a
-              href="#calculator"
-              className="inline-flex items-center rounded-xl bg-slate-800/80 px-4 py-2 text-sm font-semibold ring-1 ring-white/10"
-            >
-              Open calculator
-            </a>
+                         <a
+               href={CALENDLY_URL}
+               target="_blank"
+               rel="noreferrer"
+               onClick={() => track("click_calendly", { source: "sticky_cta" })}
+               className="inline-flex items-center rounded-xl bg-gradient-to-r from-[#6D00FF] via-[#7658E7] to-[#3715E0] px-4 py-2 text-sm font-semibold text-white shadow-brand focus:outline-none focus:ring-4 focus:ring-violet-500/40"
+               aria-label="Book a meeting on Calendly"
+             >
+               Book on Calendly
+             </a>
+             <a
+               href="#calculator"
+               onClick={() => track("click_open_calculator", { source: "sticky_cta" })}
+               className="inline-flex items-center rounded-xl bg-slate-800/80 px-4 py-2 text-sm font-semibold ring-1 ring-white/10"
+             >
+               Open calculator
+             </a>
           </div>
         </div>
       </div>
@@ -133,6 +140,52 @@ export default function PricingPage(){
               payback, and total cost. Built for secure AI (Artificial Intelligence) rollouts: RBAC (Role-Based Access Control),
               PII (Personally Identifiable Information) redaction, GDPR (General Data Protection Regulation) alignment.
             </p>
+
+            {/* SEO: Organization + Offers schema */}
+            <script type="application/ld+json" suppressHydrationWarning>
+              {JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "Organization",
+                "name": "Algorythmos",
+                "url": "https://www.algorythmos.fr",
+                "logo": "https://www.algorythmos.fr/favicon.ico",
+                "description": "Boutique AI & Data Science consultancy delivering secure, ROI-driven automation, document intelligence, dashboards, and MLOps.",
+                "sameAs": [
+                  "https://www.linkedin.com/company/algorythmos",
+                  "https://x.com/algorythmos",
+                  "https://github.com/algorythmos"
+                ],
+                "makesOffer": [
+                  {
+                    "@type": "Offer",
+                    "name": "Pilot",
+                    "price": "2000",
+                    "priceCurrency": "EUR",
+                    "priceSpecification": { "@type": "UnitPriceSpecification", "price": 2000, "priceCurrency": "EUR" },
+                    "url": "https://www.algorythmos.fr/pricing#pilot",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "Operations",
+                    "price": "4500",
+                    "priceCurrency": "EUR",
+                    "priceSpecification": { "@type": "UnitPriceSpecification", "price": 4500, "priceCurrency": "EUR" },
+                    "url": "https://www.algorythmos.fr/pricing#operations",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "Custom",
+                    "price": "9000",
+                    "priceCurrency": "EUR",
+                    "url": "https://www.algorythmos.fr/pricing#custom",
+                    "availability": "https://schema.org/PreOrder"
+                  }
+                ]
+              })}
+            </script>
+
             <div className="mt-6 flex flex-wrap items-center gap-3 text-xs text-slate-400">
               <span className="rounded-full bg-slate-800/80 px-3 py-1 ring-1 ring-white/10">SLA (Service-Level Agreement) options</span>
               <span className="rounded-full bg-slate-800/80 px-3 py-1 ring-1 ring-white/10">Audit logs</span>
@@ -190,6 +243,7 @@ export default function PricingPage(){
                 "Email support (24–48h)",
               ],
               cta: "Start a pilot",
+              id: "pilot"
             },
             {
               name: "Operations",
@@ -205,6 +259,7 @@ export default function PricingPage(){
               ],
               cta: "Scale operations",
               popular: true,
+              id: "operations"
             },
             {
               name: "Custom",
@@ -219,9 +274,18 @@ export default function PricingPage(){
                 "Dedicated TAM (Technical Account Manager)",
               ],
               cta: "Talk to sales",
+              id: "custom"
             },
           ].map((t) => (
-            <div key={t.name} className={`relative rounded-3xl border p-6 shadow-2xl ${t.popular ? "border-violet-500/50 bg-slate-900/70" : "border-slate-800 bg-slate-900/60"}`}>
+            <div
+              key={t.name}
+              className={`relative rounded-3xl border p-6 shadow-2xl ${
+                t.popular
+                  ? "border-violet-500/50 bg-slate-900/70"
+                  : "border-slate-800 bg-slate-900/60"
+              }`}
+              id={t.id ? t.id : undefined}
+            >
               {t.popular && (
                 <div className="absolute -top-3 left-6 rounded-full bg-gradient-to-r from-[#6D00FF] to-[#3715E0] px-3 py-1 text-xs font-semibold">Popular</div>
               )}
@@ -239,12 +303,21 @@ export default function PricingPage(){
                   </li>
                 ))}
               </ul>
-              <button className="mt-6 w-full rounded-xl bg-gradient-to-r from-[#6D00FF] via-[#7658E7] to-[#3715E0] px-4 py-2 font-semibold text-white shadow-lg transition hover:scale-[1.01] focus:outline-none focus:ring-4 focus:ring-violet-500/40">
+              <button
+                className="mt-6 w-full rounded-xl bg-gradient-to-r from-[#6D00FF] via-[#7658E7] to-[#3715E0] px-4 py-2 font-semibold text-white shadow-lg transition hover:scale-[1.01] focus:outline-none focus:ring-4 focus:ring-violet-500/40"
+                aria-label={`${t.cta} for ${t.name}`}
+                onClick={() => track("click_plan_cta", { plan: t.name })}
+              >
                 {t.cta}
               </button>
             </div>
           ))}
         </div>
+
+        {/* Pricing note */}
+        <p className="mt-4 text-xs text-slate-500">
+          Prices exclude VAT. Month-to-month billing; cancel anytime before renewal. If item volume exceeds your tier for 2 consecutive months, we'll recommend a tier upgrade to maintain SLA and cost efficiency.
+        </p>
         
         <div className="mt-4 space-y-1 text-xs text-slate-400">
           <p>
@@ -308,7 +381,13 @@ export default function PricingPage(){
                 <h2 className="text-2xl font-bold tracking-tight">Calculate your savings</h2>
                 <p className="mt-1 text-sm text-slate-300">Use the model to estimate monthly savings, ROI (Return On Investment), and payback. Adjust inputs to match your workload.</p>
               </div>
-              <a href="#contact" className="mt-3 inline-flex items-center justify-center rounded-xl bg-slate-800/80 px-4 py-2 text-sm font-semibold ring-1 ring-white/10 hover:bg-slate-800">Need help? Book a consult</a>
+              <a
+                href="#contact"
+                onClick={() => track("click_contact_from_calculator")}
+                className="mt-3 inline-flex items-center justify-center rounded-xl bg-slate-800/80 px-4 py-2 text-sm font-semibold ring-1 ring-white/10 hover:bg-slate-800"
+              >
+                Need help? Book a consult
+              </a>
             </div>
             <div className="mt-6">
               <AlgorythmosCalculator />

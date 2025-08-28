@@ -1,5 +1,10 @@
-export const track = (event, payload = {}) => {
-  // Swap this console.log with your analytics (GA4/PostHog/Vercel Analytics)
-  // eslint-disable-next-line no-console
-  console.log("[analytics]", event, payload);
-};
+// src/lib/analytics.js
+export function track(event, props = {}) {
+  // No-op stub: replace with GA/Amplitude/Mixpanel later
+  if (import.meta.env.DEV) {
+    // eslint-disable-next-line no-console
+    console.debug("[analytics]", event, props);
+  }
+  // window.gtag?.('event', event, props);
+  // window.amplitude?.track(event, props);
+}
