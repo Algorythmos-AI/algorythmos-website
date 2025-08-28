@@ -7,7 +7,7 @@
 
 import React, { useEffect, useState, useMemo } from "react";
 import { track } from "../../lib/analytics";
-import { withUtm, persistUtmFromLocation } from "../../lib/utm";
+import { withUtm, persistUtmFromLocation, readStoredUtm } from "../../lib/utm";
 import AlgorythmosCalculator from "../AlgorythmosCalculator";
 
 const Check = (props) => (
@@ -130,6 +130,8 @@ export default function PricingPage(){
   useEffect(() => {
     // Capture UTMs on initial render
     persistUtmFromLocation();
+    const utm = readStoredUtm();
+    track("page_view", { page: "pricing", ...utm });
     if (window.location.hash) {
       const el = document.querySelector(window.location.hash);
       if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
