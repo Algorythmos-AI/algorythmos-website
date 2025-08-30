@@ -108,6 +108,10 @@
     0%, 100% { transform: scale(0.88); opacity: 0.22; }
     50% { transform: scale(1.08); opacity: 0.36; }
   }
+  @keyframes glowShift {
+    0%   { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+  }
 }
 
 /* Shimmer gradient text */
@@ -149,3 +153,24 @@
 }
 
 .tabular-nums { font-variant-numeric: tabular-nums; }
+
+/* === Service Card Animations === */
+.card-glow {
+  background: linear-gradient(110deg, #6D00FF33, #7658E733, #6D00FF33);
+  background-size: 200% 100%;
+  border-radius: 18px;
+  pointer-events: none;
+}
+
+.card-glow-blur {
+  background: radial-gradient(220px 140px at 30% 20%, #6D00FF33, transparent 60%),
+              radial-gradient(220px 140px at 70% 80%, #7658E733, transparent 60%);
+  filter: blur(20px);
+  border-radius: 24px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 260ms ease;
+}
+
+/* Reveal blur on hover via parent group state using attribute selector */
+a.group:hover .card-glow-blur { opacity: 0.5; }
