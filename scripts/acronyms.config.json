@@ -1,0 +1,13 @@
+{
+  "routes": ["/services/mlops-cicd", "/services"],
+  "rules": [
+    { "acronym": "CI/CD", "expansion": "Continuous Integration/Continuous Delivery", "firstMentionOnly": true },
+    { "acronym": "DevSecOps", "expansion": "Development, Security & Operations", "firstMentionOnly": true },
+    { "acronym": "RBAC", "expansion": "Role-Based Access Control", "firstMentionOnly": true },
+    { "acronym": "W&B", "expansion": "Weights & Biases", "firstMentionOnly": true },
+    { "acronym": "MLOps", "expansion": "Machine Learning Operations", "firstMentionOnly": false },
+    { "acronym": "AI", "expansion": "Artificial Intelligence", "firstMentionOnly": false },
+    { "acronym": "ML", "expansion": "Machine Learning", "firstMentionOnly": false },
+    { "acronym": "LLM", "expansion": "Large Language Model", "firstMentionOnly": false }
+  ]
+}
