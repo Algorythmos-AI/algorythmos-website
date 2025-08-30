@@ -44,22 +44,22 @@ export default function DocIntelFlowPlayer() {
     setParams(params, { replace: true });
   }, [step, speed, playing]); // eslint-disable-line
 
-  // Node geometry (viewBox 920x520)
+  // Node geometry (viewBox 920x520) - improved paths for smoother animation
   const P = useMemo(
     () => ({
-      // (x,y) notes in analysis: boxes are placed left→right
-      sourcesToIngest: "M 200 275 H 260",
-      ingestToOCR: "M 400 275 V 155",
-      ocrToExtract: "M 530 210 V 340",
-      extractToValidate: "M 600 395 C 630 395, 620 280, 650 280",
-      validateToExport: "M 810 280 H 830",
-      // correction loop (validate back to extract)
-      validateToExtract: "M 650 280 C 620 280, 620 395, 600 395",
+      // Smoother curves and better timing
+      sourcesToIngest: "M 200 275 Q 230 275 260 275",
+      ingestToOCR: "M 400 275 Q 400 215 400 155",
+      ocrToExtract: "M 530 210 Q 530 275 530 340",
+      extractToValidate: "M 600 395 Q 625 395 650 280",
+      validateToExport: "M 810 280 Q 820 280 830 280",
+      // correction loop (validate back to extract) - smoother curve
+      validateToExtract: "M 650 280 Q 625 280 600 395",
     }),
     []
   );
 
-  // Timeline
+  // Timeline with improved timing and flow
   const timeline = useMemo(
     () => [
       {
@@ -67,27 +67,27 @@ export default function DocIntelFlowPlayer() {
         title: "1) Ingest",
         caption:
           "Documents arrive from inbox, uploads, S3, or APIs. We normalize filenames/metadata and queue them.",
-        packets: [{ path: P.sourcesToIngest, color: "#ffffff" }],
+        packets: [{ path: P.sourcesToIngest, color: "#ffffff", duration: 1.5 }],
         glow: ["sources", "ingest"],
-        duration: 1.2,
+        duration: 2.0,
       },
       {
         id: "ocr",
         title: "2) OCR",
         caption:
           "High-quality OCR renders text and layout structure (tables, boxes) for downstream extraction.",
-        packets: [{ path: P.ingestToOCR, color: "#ffffff" }],
+        packets: [{ path: P.ingestToOCR, color: "#ffffff", duration: 1.5 }],
         glow: ["ingest", "ocr"],
-        duration: 1.2,
+        duration: 2.0,
       },
       {
         id: "extract",
         title: "3) Extract",
         caption:
           "Domain-tuned NLP parses entities (amounts, vendors, dates, line items) with confidence scores.",
-        packets: [{ path: P.ocrToExtract, color: "#ffffff" }],
+        packets: [{ path: P.ocrToExtract, color: "#ffffff", duration: 1.5 }],
         glow: ["extract"],
-        duration: 1.2,
+        duration: 2.0,
       },
       {
         id: "validate",
@@ -95,34 +95,34 @@ export default function DocIntelFlowPlayer() {
         caption:
           "Rules + human-in-the-loop verify edge cases. If a check fails, we loop back to correct.",
         packets: [
-          { path: P.extractToValidate, color: "#ffffff" },
-          // small correction loop (amber), delayed
-          { path: P.validateToExtract, color: "#fbbf24", delay: 0.7 },
+          { path: P.extractToValidate, color: "#ffffff", duration: 1.8 },
+          // correction loop (amber) - delayed and slower
+          { path: P.validateToExtract, color: "#fbbf24", delay: 1.0, duration: 1.2 },
         ],
         glow: ["validate", "extract"],
-        duration: 1.9,
+        duration: 3.0,
       },
       {
         id: "export",
         title: "5) Export",
         caption:
           "Approved records are exported to ERP/DB with full audit trail and schema validation.",
-        packets: [{ path: P.validateToExport, color: "#34d399" }],
+        packets: [{ path: P.validateToExport, color: "#34d399", duration: 1.2 }],
         glow: ["validate", "export"],
-        duration: 1.4,
+        duration: 1.8,
       },
     ],
     [P]
   );
 
-  // Auto-advance
+  // Auto-advance with better timing
   useEffect(() => {
     if (reduce || !playing) return;
-    const d = timeline[step]?.duration ?? 1.2;
+    const d = timeline[step]?.duration ?? 2.0;
     const t = setTimeout(() => {
       setStep((s) => (s + 1) % timeline.length);
       setKey((k) => k + 1);
-    }, (d * 1000) / speed + 100);
+    }, (d * 1000) / speed + 200); // Added buffer for smoother transitions
     return () => clearTimeout(t);
   }, [step, playing, speed, reduce, timeline]);
 
@@ -189,7 +189,7 @@ export default function DocIntelFlowPlayer() {
                 setStep(i);
                 setKey((k) => k + 1);
               }}
-              className={`relative flex items-center justify-center w-8 h-8 rounded-full border transition-all duration-200 ${
+              className={`relative flex items-center justify-center w-8 h-8 rounded-full border transition-all duration-300 ${
                 i === step
                   ? "border-emerald-400/70 bg-emerald-400/10 text-emerald-400 shadow-lg shadow-emerald-400/20"
                   : "border-white/15 text-gray-300 hover:border-white/30 hover:bg-white/5"
@@ -202,7 +202,7 @@ export default function DocIntelFlowPlayer() {
                   className="absolute inset-0 rounded-full border-2 border-emerald-400/30"
                   initial={{ scale: 0.8, opacity: 0 }}
                   animate={{ scale: 1.2, opacity: 1 }}
-                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
                 />
               )}
             </button>
@@ -304,18 +304,28 @@ export default function DocIntelFlowPlayer() {
                   <feMergeNode in="SourceGraphic"/>
                 </feMerge>
               </filter>
+              {/* Enhanced glow filter for active nodes */}
+              <filter id="activeGlow" x="-100%" y="-100%" width="300%" height="300%">
+                <feGaussianBlur stdDeviation="4" result="blur"/>
+                <feFlood floodColor="#10b981" floodOpacity="0.3" result="color"/>
+                <feComposite in="color" in2="blur" operator="in" result="glow"/>
+                <feMerge>
+                  <feMergeNode in="glow"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
             </defs>
 
             {/* Sources */}
-            <g transform="translate(60,220)" filter="url(#soft)" id="node-sources">
+            <g transform="translate(60,220)" filter={glow("sources") ? "url(#activeGlow)" : "url(#soft)"} id="node-sources">
               <title>Sources — inbox, uploads, S3, APIs.</title>
               <rect
                 width="140"
                 height="110"
                 rx="16"
                 fill="#0B1220"
-                className={`transition-all duration-500 ${
-                  glow("sources") ? "stroke-emerald-400/70 shadow-lg" : "stroke-white/10"
+                className={`transition-all duration-700 ${
+                  glow("sources") ? "stroke-emerald-400/80" : "stroke-white/10"
                 }`}
                 stroke="currentColor"
                 strokeWidth="2"
@@ -331,15 +341,15 @@ export default function DocIntelFlowPlayer() {
             </g>
 
             {/* Ingest */}
-            <g transform="translate(260,220)" filter="url(#soft)" id="node-ingest">
+            <g transform="translate(260,220)" filter={glow("ingest") ? "url(#activeGlow)" : "url(#soft)"} id="node-ingest">
               <title>Ingest — normalize, queue, classify.</title>
               <rect
                 width="140"
                 height="110"
                 rx="16"
                 fill="#101635"
-                className={`transition-all duration-500 ${
-                  glow("ingest") ? "stroke-emerald-400/70 shadow-lg" : "stroke-white/12"
+                className={`transition-all duration-700 ${
+                  glow("ingest") ? "stroke-emerald-400/80" : "stroke-white/12"
                 }`}
                 stroke="currentColor"
                 strokeWidth="2"
@@ -355,14 +365,14 @@ export default function DocIntelFlowPlayer() {
             </g>
 
             {/* OCR */}
-            <g transform="translate(460,100)" filter="url(#soft)" id="node-ocr">
+            <g transform="translate(460,100)" filter={glow("ocr") ? "url(#activeGlow)" : "url(#soft)"} id="node-ocr">
               <title>OCR — text + layout extraction.</title>
               <rect
                 width="140"
                 height="110"
                 rx="12"
                 fill="#0B1220"
-                className={`transition-all duration-500 ${glow("ocr") ? "stroke-emerald-400/70 shadow-lg" : "stroke-white/12"}`}
+                className={`transition-all duration-700 ${glow("ocr") ? "stroke-emerald-400/80" : "stroke-white/12"}`}
                 stroke="currentColor"
                 strokeWidth="2"
               />
@@ -379,15 +389,15 @@ export default function DocIntelFlowPlayer() {
             </g>
 
             {/* Extract */}
-            <g transform="translate(460,340)" filter="url(#soft)" id="node-extract">
+            <g transform="translate(460,340)" filter={glow("extract") ? "url(#activeGlow)" : "url(#soft)"} id="node-extract">
               <title>Extract — entities & line items with confidence.</title>
               <rect
                 width="140"
                 height="110"
                 rx="12"
                 fill="#0B1220"
-                className={`transition-all duration-500 ${
-                  glow("extract") ? "stroke-emerald-400/70 shadow-lg" : "stroke-white/12"
+                className={`transition-all duration-700 ${
+                  glow("extract") ? "stroke-emerald-400/80" : "stroke-white/12"
                 }`}
                 stroke="currentColor"
                 strokeWidth="2"
@@ -406,15 +416,15 @@ export default function DocIntelFlowPlayer() {
             </g>
 
             {/* Validate */}
-            <g transform="translate(650,220)" filter="url(#soft)" id="node-validate">
+            <g transform="translate(650,220)" filter={glow("validate") ? "url(#activeGlow)" : "url(#soft)"} id="node-validate">
               <title>Validate — rules + human-in-the-loop.</title>
               <rect
                 width="160"
                 height="120"
                 rx="16"
                 fill="#101635"
-                className={`transition-all duration-500 ${
-                  glow("validate") ? "stroke-emerald-400/70 shadow-lg" : "stroke-white/12"
+                className={`transition-all duration-700 ${
+                  glow("validate") ? "stroke-emerald-400/80" : "stroke-white/12"
                 }`}
                 stroke="currentColor"
                 strokeWidth="2"
@@ -429,15 +439,15 @@ export default function DocIntelFlowPlayer() {
             </g>
 
             {/* Export */}
-            <g transform="translate(830,220)" filter="url(#soft)" id="node-export">
+            <g transform="translate(830,220)" filter={glow("export") ? "url(#activeGlow)" : "url(#soft)"} id="node-export">
               <title>Export — ERP / Database.</title>
               <rect
                 width="120"
                 height="120"
                 rx="12"
                 fill="#052E2B"
-                className={`transition-all duration-500 ${
-                  glow("export") ? "stroke-emerald-400/70 shadow-lg" : "stroke-emerald-400/30"
+                className={`transition-all duration-700 ${
+                  glow("export") ? "stroke-emerald-400/80" : "stroke-emerald-400/30"
                 }`}
                 stroke="currentColor"
                 strokeWidth="2"
@@ -457,33 +467,37 @@ export default function DocIntelFlowPlayer() {
               </text>
             </g>
 
-            {/* Background dashed guides */}
-            <g strokeDasharray="6 6" stroke="#ffffff" opacity="0.4" fill="none" strokeWidth="2">
+            {/* Background dashed guides - improved opacity */}
+            <g strokeDasharray="6 6" stroke="#ffffff" opacity="0.3" fill="none" strokeWidth="2">
               <path d={P.sourcesToIngest} />
               <path d={P.ingestToOCR} />
               <path d={P.ocrToExtract} />
               <path d={P.extractToValidate} />
               <path d={P.validateToExport} />
             </g>
-            {/* Correction loop (amber) */}
-            <path d={P.validateToExtract} stroke="#fbbf24" strokeWidth="2.5" strokeDasharray="7 7" fill="none" opacity="0.9" />
+            {/* Correction loop (amber) - improved visibility */}
+            <path d={P.validateToExtract} stroke="#fbbf24" strokeWidth="2.5" strokeDasharray="7 7" fill="none" opacity="0.8" />
           </svg>
 
-          {/* Packets overlay */}
+          {/* Enhanced Packets overlay */}
           <div className="pointer-events-none absolute inset-0">
             {current?.packets?.map((pkt, i) => (
               <motion.div
                 key={`${current.id}-${i}-${key}`}
                 initial={{ offsetDistance: "0%" }}
                 animate={{ offsetDistance: ["0%", "100%"] }}
-                transition={{ duration: current.duration / speed, ease: "linear", delay: pkt.delay || 0 }}
+                transition={{ 
+                  duration: (pkt.duration || current.duration) / speed, 
+                  ease: "easeInOut", 
+                  delay: pkt.delay || 0 
+                }}
                 style={{
                   offsetPath: `path('${pkt.path}')`,
-                  width: 12,
-                  height: 12,
+                  width: 14,
+                  height: 14,
                   borderRadius: 9999,
                   background: pkt.color,
-                  boxShadow: `0 0 12px ${pkt.color}, 0 0 20px ${pkt.color}66`,
+                  boxShadow: `0 0 16px ${pkt.color}, 0 0 24px ${pkt.color}66`,
                   position: "absolute",
                   top: 0,
                   left: 0,
