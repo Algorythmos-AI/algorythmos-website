@@ -12,8 +12,24 @@ import { NotebookIcon, RegistryIcon, BoxIcon, WorkflowIcon, MonitorIcon } from "
  *  - RBAC = Role-Based Access Control
  */
 export default function MlopsPipelinePro() {
-  const reduce = typeof window !== "undefined" &&
-    window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+  const [reduce, setReduce] = useState(false);
+
+  // Check for reduced motion preference
+  useEffect(() => {
+    const checkReducedMotion = () => {
+      const prefersReduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+      setReduce(prefersReduced || false);
+    };
+
+    checkReducedMotion();
+    
+    // Listen for changes
+    const mediaQuery = window.matchMedia?.("(prefers-reduced-motion: reduce)");
+    if (mediaQuery) {
+      mediaQuery.addEventListener("change", checkReducedMotion);
+      return () => mediaQuery.removeEventListener("change", checkReducedMotion);
+    }
+  }, []);
 
   const steps = useMemo(() => ([
     {
@@ -59,8 +75,12 @@ export default function MlopsPipelinePro() {
 
   useEffect(() => {
     if (reduce || !playing) return;
-    const t = setInterval(() => setActive(a => (a + 1) % steps.length), 1600 / speed);
-    return () => clearInterval(t);
+    
+    const interval = setInterval(() => {
+      setActive(a => (a + 1) % steps.length);
+    }, 1600 / speed);
+    
+    return () => clearInterval(interval);
   }, [playing, speed, reduce, steps.length]);
 
   const onStep = (i) => { setActive(i); };
