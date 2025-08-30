@@ -1,7 +1,7 @@
 import React from "react";
 import ServiceLayout from "../ServiceLayout";
 import { Layers } from "lucide-react";
-import MlopsProLifecycle from "./MlopsProLifecycle";
+import MlopsPipelinePro from "./MlopsPipelinePro";
 
 export default function MlopsCicdPage() {
   return (
@@ -10,7 +10,7 @@ export default function MlopsCicdPage() {
       title="MLOps Platform Engineering (Machine Learning Operations Platform Engineering)"
       meta="Productionize AI with CI/CD (Continuous Integration/Continuous Delivery) on Kubernetes and Docker, automated evaluations, observability, and safe rollbacks—with governance and DevSecOps (Development, Security & Operations) baked in."
       icon={Layers}
-      heroVisual={<MlopsProLifecycle />}
+      heroVisual={<MlopsPipelinePro />}
       heroPoints={[
         "Model packaging & registries with versioning.",
         "Automated evaluations, drift detection, rollbacks.",
@@ -49,7 +49,7 @@ export default function MlopsCicdPage() {
           ]
         },
         {
-          id: "architecture",
+          id: "reference-architecture",
           heading: "Reference architecture",
           paragraphs: [
             "Git → CI/CD Pipeline → Model Registry → Container Registry → Kubernetes → Monitoring Stack.",
