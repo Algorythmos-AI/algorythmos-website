@@ -1,10 +1,27 @@
 // /src/components/Index/ServicesPage.jsx
 import React from "react";
-import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
+import { Layers, Bot, FileText, BarChart3 } from "lucide-react";
+import ServiceCard from "./services/ServiceCard";
 import { servicesList } from "../../data/services";
 
 export default function ServicesPage() {
+  // Map icons by slug or title (adjust if your data format differs)
+  const iconBySlug = {
+    "agentic-automation": Bot,
+    "document-intelligence": FileText,
+    "sql-dashboards": BarChart3,
+    "mlops-cicd": Layers
+  };
+
+  // Optional: tighten the excerpt for MLOps card only (display purpose on /services)
+  const formatExcerpt = (s) => {
+    if (s.slug === "mlops-cicd") {
+      return "Productionize AI (Artificial Intelligence) with CI/CD (Continuous Integration/Continuous Delivery) on Kubernetes and Docker—automated evaluations, observability, safe rollbacks, and governance with DevSecOps (Development, Security & Operations) baked in.";
+    }
+    return s.tagline || s.meta || s.description || "";
+  };
+
   return (
     <div className="min-h-screen bg-black text-white">
       <Helmet>
@@ -27,21 +44,14 @@ export default function ServicesPage() {
         </header>
 
         <section className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {servicesList.map(({ slug, title, tagline, icon: Icon }) => (
-            <Link
-              key={slug}
-              to={`/services/${slug}`}
-              className="group rounded-2xl border border-white/10 bg-gradient-to-br from-gray-900/60 to-black/60 p-6 hover:border-white/20 hover:shadow-2xl"
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <span className="inline-flex p-3 rounded-xl bg-white/5">
-                  <Icon className="w-6 h-6 text-blue-300" />
-                </span>
-                <h2 className="text-xl font-bold">{title}</h2>
-              </div>
-              <p className="text-gray-300">{tagline}</p>
-              <div className="mt-5 text-sm text-blue-300 group-hover:text-white">Read more →</div>
-            </Link>
+          {servicesList.map((s) => (
+            <ServiceCard
+              key={s.slug}
+              title={s.title}
+              href={`/services/${s.slug}`}
+              icon={iconBySlug[s.slug] || Layers}
+              excerpt={formatExcerpt(s)}
+            />
           ))}
         </section>
       </main>
