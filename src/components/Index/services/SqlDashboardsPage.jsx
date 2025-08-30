@@ -1,6 +1,7 @@
 import React from "react";
 import ServiceLayout from "../ServiceLayout";
 import { BarChart2 } from "lucide-react";
+import SqlDashboardFlowPlayer from "./SqlDashboardFlowPlayer";
 
 export default function SqlDashboardsPage() {
   return (
@@ -41,6 +42,8 @@ export default function SqlDashboardsPage() {
         { title: "MLOps Platform Engineering", path: "/services/mlops-cicd" }
       ]}
       ctaText="Explore a Demo"
-    />
+    >
+      <SqlDashboardFlowPlayer />
+    </ServiceLayout>
   );
 }
