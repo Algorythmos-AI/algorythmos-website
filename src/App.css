@@ -174,3 +174,35 @@
 
 /* Reveal blur on hover via parent group state using attribute selector */
 a.group:hover .card-glow-blur { opacity: 0.5; }
+
+/* === Pipeline Animations === */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes lineDraw {
+    from { stroke-dashoffset: 240; }
+    to   { stroke-dashoffset: 0; }
+  }
+  @keyframes popIn {
+    0% { transform: translateY(6px) scale(.98); opacity: 0; }
+    100% { transform: translateY(0) scale(1); opacity: 1; }
+  }
+  @keyframes pulseRing {
+    0%, 100% { transform: scale(.88); opacity: .25; }
+    50% { transform: scale(1.06); opacity: .45; }
+  }
+}
+
+.pipeline-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 16px;
+  box-shadow: 0 10px 26px rgba(0,0,0,.28);
+}
+
+.pipeline-tooltip {
+  background: rgba(10,10,16,.95);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 12px;
+  box-shadow: 0 14px 36px rgba(0,0,0,.35);
+}
+
+.pipeline-focus { outline: 2px solid #6D00FF; outline-offset: 3px; }
