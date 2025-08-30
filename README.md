@@ -1,4 +1,6 @@
-# Algorythmos - AI & Data Science Consulting
+# Algorythmos
+
+<!-- Deployment trigger: Ensuring latest stable version is deployed -->
 
 A professional website for Algorythmos, showcasing AI and data science consulting services.
 
