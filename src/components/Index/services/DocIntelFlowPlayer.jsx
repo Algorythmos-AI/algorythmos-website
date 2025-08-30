@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState, useCallback } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useSearchParams } from "react-router-dom";
+import { Play, Pause, RotateCcw, Copy, ChevronRight, ChevronLeft } from "lucide-react";
 import FlowMetricsStrip from "./FlowMetricsStrip";
 // Optional analytics (safe if missing)
 let track = () => {};
@@ -11,10 +12,10 @@ try {
 
 /**
  * DocIntelFlowPlayer
- * Step-by-step pipeline demo:
+ * Professional Document Intelligence pipeline demo:
  * 1) Ingest → 2) OCR → 3) Extract → 4) Validate (with correction loop) → 5) Export (ERP/DB)
  *
- * Uses CSS offset-path for the animated "packet" dots.
+ * Enhanced with professional styling, smooth animations, and improved UX.
  * Respects prefers-reduced-motion; has Play/Pause, Step, Restart, Speed, Copy Link.
  */
 export default function DocIntelFlowPlayer() {
@@ -134,11 +135,20 @@ export default function DocIntelFlowPlayer() {
       track("flow_restart", { flow: "docintel" });
     } catch {}
   }, []);
+  
   const next = useCallback(() => {
     setStep((s) => (s + 1) % timeline.length);
     setKey((k) => k + 1);
     try {
       track("flow_step", { flow: "docintel", step: (step + 1) % timeline.length });
+    } catch {}
+  }, [step, timeline.length]);
+
+  const prev = useCallback(() => {
+    setStep((s) => (s - 1 + timeline.length) % timeline.length);
+    setKey((k) => k + 1);
+    try {
+      track("flow_step", { flow: "docintel", step: (step - 1 + timeline.length) % timeline.length });
     } catch {}
   }, [step, timeline.length]);
 
@@ -158,46 +168,20 @@ export default function DocIntelFlowPlayer() {
         setPlaying((p) => !p);
       }
       if (e.key === "ArrowRight") next();
-      if (e.key === "ArrowLeft") {
-        setStep((s) => (s - 1 + timeline.length) % timeline.length);
-        setKey((k) => k + 1);
-      }
+      if (e.key === "ArrowLeft") prev();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [next, timeline.length]);
-
-  // Packet dot
-  const Packet = ({ path, color = "#fff", delay = 0, duration = 1 }) => {
-    if (reduce) return null;
-    return (
-      <motion.div
-        key={`${key}-${path}-${delay}`}
-        initial={{ offsetDistance: "0%" }}
-        animate={{ offsetDistance: ["0%", "100%"] }}
-        transition={{ duration: duration / speed, ease: "linear", delay }}
-        style={{
-          offsetPath: `path('${path}')`,
-          width: 10,
-          height: 10,
-          borderRadius: 9999,
-          background: color,
-          boxShadow: `0 0 10px ${color}, 0 0 18px ${color}66`,
-          position: "absolute",
-          top: 0,
-          left: 0,
-        }}
-      />
-    );
-  };
+  }, [next, prev]);
 
   const glow = (id) => current?.glow?.includes(id);
 
   return (
     <section className="mt-10">
-      {/* Controls */}
-      <div className="flex items-center gap-2 justify-between mb-2">
-        <div className="flex items-center gap-2 overflow-x-auto">
+      {/* Enhanced Controls */}
+      <div className="flex items-center justify-between mb-4 p-4 rounded-xl border border-white/10 bg-white/[0.02] backdrop-blur-sm">
+        {/* Step Indicators */}
+        <div className="flex items-center gap-2">
           {timeline.map((t, i) => (
             <button
               key={t.id}
@@ -205,18 +189,27 @@ export default function DocIntelFlowPlayer() {
                 setStep(i);
                 setKey((k) => k + 1);
               }}
-              className={`text-xs px-2 py-1 rounded-full border ${
+              className={`relative flex items-center justify-center w-8 h-8 rounded-full border transition-all duration-200 ${
                 i === step
-                  ? "border-emerald-400/70 text-white"
-                  : "border-white/15 text-gray-300 hover:border-white/30"
+                  ? "border-emerald-400/70 bg-emerald-400/10 text-emerald-400 shadow-lg shadow-emerald-400/20"
+                  : "border-white/15 text-gray-300 hover:border-white/30 hover:bg-white/5"
               }`}
               title={t.title}
             >
-              {i + 1}
+              <span className="text-xs font-medium">{i + 1}</span>
+              {i === step && (
+                <motion.div
+                  className="absolute inset-0 rounded-full border-2 border-emerald-400/30"
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1.2, opacity: 1 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                />
+              )}
             </button>
           ))}
         </div>
 
+        {/* Control Buttons */}
         <div className="flex items-center gap-2">
           <button
             onClick={() => {
@@ -225,34 +218,51 @@ export default function DocIntelFlowPlayer() {
                 track("flow_play_toggle", { flow: "docintel" });
               } catch {}
             }}
-            className="text-xs px-3 py-1 rounded-full border border-white/15 hover:border-white/30 text-gray-200"
+            className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-white/15 hover:border-white/30 text-gray-200 hover:bg-white/5 transition-all duration-200"
             aria-pressed={playing}
           >
+            {playing ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
             {playing ? "Pause" : "Play"}
           </button>
+          
+          <button
+            onClick={prev}
+            className="p-2 rounded-lg border border-white/15 hover:border-white/30 text-gray-200 hover:bg-white/5 transition-all duration-200"
+            title="Previous step"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </button>
+          
           <button
             onClick={next}
-            className="text-xs px-3 py-1 rounded-full border border-white/15 hover:border-white/30 text-gray-200"
+            className="p-2 rounded-lg border border-white/15 hover:border-white/30 text-gray-200 hover:bg-white/5 transition-all duration-200"
+            title="Next step"
           >
-            Step
+            <ChevronRight className="h-4 w-4" />
           </button>
+          
           <button
             onClick={restart}
-            className="text-xs px-3 py-1 rounded-full border border-white/15 hover:border-white/30 text-gray-200"
+            className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-white/15 hover:border-white/30 text-gray-200 hover:bg-white/5 transition-all duration-200"
+            title="Restart animation"
           >
+            <RotateCcw className="h-4 w-4" />
             Restart
           </button>
+          
           <button
             onClick={share}
-            className="text-xs px-3 py-1 rounded-full border border-white/15 hover:border-white/30 text-gray-200"
+            className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-white/15 hover:border-white/30 text-gray-200 hover:bg-white/5 transition-all duration-200"
             title="Copy link to this step"
           >
+            <Copy className="h-4 w-4" />
             Copy link
           </button>
-          <label className="text-xs text-gray-400 ml-2">
-            Speed
+          
+          <div className="flex items-center gap-2 ml-2">
+            <label className="text-xs text-gray-400">Speed</label>
             <select
-              className="ml-1 bg-black/40 border border-white/10 rounded-md text-gray-200 text-xs px-1 py-0.5"
+              className="bg-black/40 border border-white/10 rounded-md text-gray-200 text-xs px-2 py-1.5 hover:border-white/20 transition-colors"
               value={speed}
               onChange={(e) => {
                 const v = parseFloat(e.target.value);
@@ -267,24 +277,32 @@ export default function DocIntelFlowPlayer() {
               <option value={1}>1×</option>
               <option value={1.5}>1.5×</option>
             </select>
-          </label>
+          </div>
         </div>
       </div>
 
-      {/* Canvas */}
-      <div className="relative rounded-3xl border border-white/10 bg-gradient-to-br from-slate-950 to-indigo-950 shadow-2xl overflow-hidden">
+      {/* Enhanced Canvas */}
+      <div className="relative rounded-2xl border border-white/10 bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-950 shadow-2xl overflow-hidden">
         {/* Chrome */}
-        <div className="h-8 rounded-t-3xl border-b border-white/10 px-3 flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-rose-400/80" />
-          <span className="w-2.5 h-2.5 rounded-full bg-amber-300/80" />
-          <span className="w-2.5 h-2.5 rounded-full bg-emerald-400/80" />
+        <div className="h-8 rounded-t-2xl border-b border-white/10 px-4 flex items-center gap-2 bg-gradient-to-r from-slate-900 to-slate-800">
+          <span className="w-3 h-3 rounded-full bg-rose-400/80" />
+          <span className="w-3 h-3 rounded-full bg-amber-300/80" />
+          <span className="w-3 h-3 rounded-full bg-emerald-400/80" />
+          <div className="ml-auto text-xs text-gray-400">Document Intelligence Pipeline</div>
         </div>
 
-        <div className="p-4 md:p-6">
+        <div className="p-6 md:p-8">
           <svg viewBox="0 0 920 520" className="w-full h-auto" aria-hidden="true">
             <defs>
               <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
-                <feDropShadow dx="0" dy="6" stdDeviation="10" floodColor="#000" floodOpacity="0.35" />
+                <feDropShadow dx="0" dy="8" stdDeviation="12" floodColor="#000" floodOpacity="0.4" />
+              </filter>
+              <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+                <feMerge> 
+                  <feMergeNode in="coloredBlur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
               </filter>
             </defs>
 
@@ -296,17 +314,18 @@ export default function DocIntelFlowPlayer() {
                 height="110"
                 rx="16"
                 fill="#0B1220"
-                className={`transition-colors duration-300 ${
-                  glow("sources") ? "stroke-emerald-400/70" : "stroke-white/10"
+                className={`transition-all duration-500 ${
+                  glow("sources") ? "stroke-emerald-400/70 shadow-lg" : "stroke-white/10"
                 }`}
                 stroke="currentColor"
+                strokeWidth="2"
               />
               {/* tray icon */}
               <g transform="translate(20,22)">
                 <rect x="0" y="20" width="48" height="16" rx="4" fill="#A7F3D0" />
                 <path d="M0 20 L12 8 H36 L48 20" fill="#A7F3D0" />
               </g>
-              <text x="70" y="88" textAnchor="middle" fontSize="14" fill="white">
+              <text x="70" y="88" textAnchor="middle" fontSize="14" fill="white" className="font-medium">
                 Sources
               </text>
             </g>
@@ -319,12 +338,18 @@ export default function DocIntelFlowPlayer() {
                 height="110"
                 rx="16"
                 fill="#101635"
-                className={`transition-colors duration-300 ${
-                  glow("ingest") ? "stroke-emerald-400/70" : "stroke-white/12"
+                className={`transition-all duration-500 ${
+                  glow("ingest") ? "stroke-emerald-400/70 shadow-lg" : "stroke-white/12"
                 }`}
                 stroke="currentColor"
+                strokeWidth="2"
               />
-              <text x="70" y="64" textAnchor="middle" fontSize="15" fill="white">
+              {/* funnel icon */}
+              <g transform="translate(35,25)" fill="#A7F3D0">
+                <path d="M35 15 L45 25 L45 35 L25 35 L25 25 Z" />
+                <rect x="30" y="35" width="10" height="8" rx="2" />
+              </g>
+              <text x="70" y="88" textAnchor="middle" fontSize="14" fill="white" className="font-medium">
                 Ingest
               </text>
             </g>
@@ -337,16 +362,18 @@ export default function DocIntelFlowPlayer() {
                 height="110"
                 rx="12"
                 fill="#0B1220"
-                className={`transition-colors duration-300 ${glow("ocr") ? "stroke-emerald-400/70" : "stroke-white/12"}`}
+                className={`transition-all duration-500 ${glow("ocr") ? "stroke-emerald-400/70 shadow-lg" : "stroke-white/12"}`}
                 stroke="currentColor"
+                strokeWidth="2"
               />
-              {/* small lines */}
+              {/* document with lines */}
               <g transform="translate(20,24)" fill="#A7F3D0">
                 <rect x="0" y="0" width="100" height="6" rx="3" />
                 <rect x="0" y="16" width="70" height="6" rx="3" />
                 <rect x="0" y="32" width="84" height="6" rx="3" />
+                <rect x="0" y="48" width="60" height="6" rx="3" />
               </g>
-              <text x="70" y="92" textAnchor="middle" fontSize="15" fill="white">
+              <text x="70" y="88" textAnchor="middle" fontSize="14" fill="white" className="font-medium">
                 OCR
               </text>
             </g>
@@ -359,10 +386,11 @@ export default function DocIntelFlowPlayer() {
                 height="110"
                 rx="12"
                 fill="#0B1220"
-                className={`transition-colors duration-300 ${
-                  glow("extract") ? "stroke-emerald-400/70" : "stroke-white/12"
+                className={`transition-all duration-500 ${
+                  glow("extract") ? "stroke-emerald-400/70 shadow-lg" : "stroke-white/12"
                 }`}
                 stroke="currentColor"
+                strokeWidth="2"
               />
               {/* table-ish */}
               <g transform="translate(18,24)" stroke="#A7F3D0" strokeWidth="1.5" opacity="0.8">
@@ -372,7 +400,7 @@ export default function DocIntelFlowPlayer() {
                 <path d="M52 0 V62" />
                 <path d="M80 0 V62" />
               </g>
-              <text x="70" y="92" textAnchor="middle" fontSize="15" fill="white">
+              <text x="70" y="88" textAnchor="middle" fontSize="14" fill="white" className="font-medium">
                 Extract
               </text>
             </g>
@@ -385,16 +413,17 @@ export default function DocIntelFlowPlayer() {
                 height="120"
                 rx="16"
                 fill="#101635"
-                className={`transition-colors duration-300 ${
-                  glow("validate") ? "stroke-emerald-400/70" : "stroke-white/12"
+                className={`transition-all duration-500 ${
+                  glow("validate") ? "stroke-emerald-400/70 shadow-lg" : "stroke-white/12"
                 }`}
                 stroke="currentColor"
+                strokeWidth="2"
               />
               <g transform="translate(56,32)">
                 <rect width="48" height="48" rx="12" fill="#0B1220" stroke="#6EE7B7" strokeWidth="2" />
                 <path d="M14 26 l6 6 14-14" stroke="#6EE7B7" strokeWidth="2.2" fill="none" />
               </g>
-              <text x="80" y="104" textAnchor="middle" fontSize="15" fill="white">
+              <text x="80" y="104" textAnchor="middle" fontSize="14" fill="white" className="font-medium">
                 Validate
               </text>
             </g>
@@ -407,18 +436,29 @@ export default function DocIntelFlowPlayer() {
                 height="120"
                 rx="12"
                 fill="#052E2B"
-                className={`transition-colors duration-300 ${
-                  glow("export") ? "stroke-emerald-400/70" : "stroke-emerald-400/30"
+                className={`transition-all duration-500 ${
+                  glow("export") ? "stroke-emerald-400/70 shadow-lg" : "stroke-emerald-400/30"
                 }`}
                 stroke="currentColor"
+                strokeWidth="2"
               />
-              <text x="60" y="68" textAnchor="middle" fontSize="14" fill="#CFFAEA">
+              {/* database icon */}
+              <g transform="translate(35,30)" fill="#CFFAEA">
+                <ellipse cx="25" cy="8" rx="25" ry="8" />
+                <rect x="0" y="8" width="50" height="40" rx="4" />
+                <ellipse cx="25" cy="48" rx="25" ry="8" />
+                <path d="M0 16 H50" stroke="#CFFAEA" strokeWidth="1" />
+                <path d="M0 24 H50" stroke="#CFFAEA" strokeWidth="1" />
+                <path d="M0 32 H50" stroke="#CFFAEA" strokeWidth="1" />
+                <path d="M0 40 H50" stroke="#CFFAEA" strokeWidth="1" />
+              </g>
+              <text x="60" y="104" textAnchor="middle" fontSize="14" fill="#CFFAEA" className="font-medium">
                 ERP / DB
               </text>
             </g>
 
             {/* Background dashed guides */}
-            <g strokeDasharray="6 6" stroke="#ffffff" opacity="0.55" fill="none" strokeWidth="2">
+            <g strokeDasharray="6 6" stroke="#ffffff" opacity="0.4" fill="none" strokeWidth="2">
               <path d={P.sourcesToIngest} />
               <path d={P.ingestToOCR} />
               <path d={P.ocrToExtract} />
@@ -439,11 +479,11 @@ export default function DocIntelFlowPlayer() {
                 transition={{ duration: current.duration / speed, ease: "linear", delay: pkt.delay || 0 }}
                 style={{
                   offsetPath: `path('${pkt.path}')`,
-                  width: 10,
-                  height: 10,
+                  width: 12,
+                  height: 12,
                   borderRadius: 9999,
                   background: pkt.color,
-                  boxShadow: `0 0 10px ${pkt.color}, 0 0 18px ${pkt.color}66`,
+                  boxShadow: `0 0 12px ${pkt.color}, 0 0 20px ${pkt.color}66`,
                   position: "absolute",
                   top: 0,
                   left: 0,
@@ -454,23 +494,23 @@ export default function DocIntelFlowPlayer() {
         </div>
       </div>
 
-      {/* Legend */}
-      <div className="mt-3 flex flex-wrap gap-4 text-xs text-gray-300">
+      {/* Enhanced Legend */}
+      <div className="mt-4 flex flex-wrap gap-6 text-sm text-gray-300">
         <span className="inline-flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-white shadow-[0_0_6px_#ffffff]"></span> Processing flow
+          <span className="w-3 h-3 rounded-full bg-white shadow-[0_0_8px_#ffffff]"></span> Processing flow
         </span>
         <span className="inline-flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_6px_#34d399]"></span> Approved export
+          <span className="w-3 h-3 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]"></span> Approved export
         </span>
         <span className="inline-flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-amber-400 shadow-[0_0_6px_#fbbf24]"></span> Correction loop
+          <span className="w-3 h-3 rounded-full bg-amber-400 shadow-[0_0_8px_#fbbf24]"></span> Correction loop
         </span>
       </div>
 
-      {/* Caption */}
-      <div className="mt-3 rounded-xl border border-white/10 bg-white/5 p-3">
-        <p className="text-sm font-semibold">{current.title}</p>
-        <p className="text-sm text-gray-300" aria-live="polite">
+      {/* Enhanced Caption */}
+      <div className="mt-4 rounded-xl border border-white/10 bg-white/[0.03] p-4 backdrop-blur-sm">
+        <p className="text-base font-semibold text-white mb-2">{current.title}</p>
+        <p className="text-sm text-gray-300 leading-relaxed" aria-live="polite">
           {current.caption}
         </p>
       </div>
