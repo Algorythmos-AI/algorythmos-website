@@ -2,6 +2,8 @@ import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { CheckCircle } from "lucide-react";
+import ShimmerHeading from "./services/ShimmerHeading";
+import HeroFX from "./services/HeroFX";
 
 function Breadcrumbs({ title }) {
   return (
@@ -83,30 +85,37 @@ export default function ServiceLayout({
         <article className="max-w-5xl mx-auto grid lg:grid-cols-[1fr,280px] gap-10">
           <div>
             <Breadcrumbs title={title} />
-            <div className="flex items-center gap-4 mb-3">
-              {Icon && (
-                <span className="inline-flex p-3 rounded-xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-white/10">
-                  <Icon className="w-7 h-7 text-blue-300" />
-                </span>
-              )}
-              <h1 className="text-4xl md:text-5xl font-black leading-tight">
-                <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                  {title}
-                </span>
-              </h1>
-            </div>
-            <p className="text-lg text-gray-400 mb-6 italic">{meta}</p>
+            
+            {/* Hero section with animations */}
+            <div className="relative">
+              <HeroFX />
+              <div className="flex items-center gap-4 mb-3">
+                {Icon && (
+                  <span className="inline-flex p-3 rounded-xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-white/10">
+                    <Icon className="w-7 h-7 text-blue-300" />
+                  </span>
+                )}
+                <h1 className="text-4xl md:text-5xl font-black leading-tight">
+                  <ShimmerHeading>
+                    {title}
+                  </ShimmerHeading>
+                </h1>
+              </div>
+              <p className="text-lg text-gray-400 mb-6 italic">{meta}</p>
 
-            {!!heroPoints.length && (
-              <ul className="grid sm:grid-cols-2 gap-3 mb-10">
-                {heroPoints.map((b, i) => (
-                  <li key={i} className="flex items-start gap-3 p-4 rounded-xl bg-gradient-to-br from-gray-900/70 to-black/70 border border-gray-800/60">
-                    <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0 mt-0.5" />
-                    <span className="text-gray-100">{b}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
+              {!!heroPoints.length && (
+                <ul className="grid sm:grid-cols-2 gap-3 mb-10">
+                  {heroPoints.map((b, i) => (
+                    <li key={i} className="glass px-4 py-3 text-sm text-white/90" style={{ animationDelay: `${120 + i * 70}ms` }}>
+                      <div className="fade-up flex items-start gap-3">
+                        <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0 mt-0.5" />
+                        <span className="text-gray-100">{b}</span>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
 
             {/* Custom content slot (e.g., animated diagram) */}
             {children}

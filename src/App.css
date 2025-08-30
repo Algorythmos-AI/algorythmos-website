@@ -85,3 +85,58 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+/* === Hero Animations === */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes shine {
+    0%   { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+  }
+  @keyframes floatY {
+    0%   { transform: translateY(0px) scale(1); }
+    50%  { transform: translateY(-6px) scale(1.02); }
+    100% { transform: translateY(0px) scale(1); }
+  }
+  @keyframes fadeUp {
+    0%   { opacity: 0; transform: translateY(8px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+}
+
+/* Shimmer gradient text */
+.shimmer-text {
+  background: linear-gradient(90deg, #6D00FF, #7658E7, #6D00FF);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shine 3.5s linear infinite;
+}
+
+/* Soft glass card */
+.glass {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+  border-radius: 12px;
+}
+
+/* Stagger utility */
+.fade-up {
+  opacity: 0;
+  transform: translateY(8px);
+  animation: fadeUp 520ms ease forwards;
+}
+
+/* Decorative orb */
+.hero-orb {
+  position: absolute;
+  width: 360px;
+  height: 360px;
+  border-radius: 9999px;
+  filter: blur(40px);
+  opacity: 0.18;
+  pointer-events: none;
+  background: radial-gradient(closest-side, #6D00FF 10%, #7658E7 55%, transparent 70%);
+  animation: floatY 8s ease-in-out infinite;
+}
