@@ -101,6 +101,13 @@
     0%   { opacity: 0; transform: translateY(8px); }
     100% { opacity: 1; transform: translateY(0); }
   }
+  @keyframes mlops-dash {
+    to { stroke-dashoffset: -180; }
+  }
+  @keyframes mlops-pulse {
+    0%, 100% { transform: scale(0.88); opacity: 0.22; }
+    50% { transform: scale(1.08); opacity: 0.36; }
+  }
 }
 
 /* Shimmer gradient text */
@@ -140,3 +147,5 @@
   background: radial-gradient(closest-side, #6D00FF 10%, #7658E7 55%, transparent 70%);
   animation: floatY 8s ease-in-out infinite;
 }
+
+.tabular-nums { font-variant-numeric: tabular-nums; }

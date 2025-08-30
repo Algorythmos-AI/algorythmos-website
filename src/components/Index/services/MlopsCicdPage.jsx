@@ -1,6 +1,7 @@
 import React from "react";
 import ServiceLayout from "../ServiceLayout";
 import { Layers } from "lucide-react";
+import MlopsHero from "./MlopsHero";
 
 export default function MlopsCicdPage() {
   return (
@@ -9,6 +10,7 @@ export default function MlopsCicdPage() {
       title="MLOps Platform Engineering (Machine Learning Operations Platform Engineering)"
       meta="Productionize AI with CI/CD (Continuous Integration/Continuous Delivery) on Kubernetes and Docker, automated evaluations, observability, and safe rollbacks—with governance and DevSecOps (Development, Security & Operations) baked in."
       icon={Layers}
+      heroVisual={<MlopsHero />}
       heroPoints={[
         "Model packaging & registries with versioning.",
         "Automated evaluations, drift detection, rollbacks.",

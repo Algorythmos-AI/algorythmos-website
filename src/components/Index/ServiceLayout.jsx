@@ -30,6 +30,7 @@ export default function ServiceLayout({
   related = [],
   ctaText = "Book a Consultation",
   children,
+  heroVisual,
 }) {
   const serviceLd = useMemo(() => ({
     "@context": "https://schema.org",
@@ -102,6 +103,9 @@ export default function ServiceLayout({
                 </h1>
               </div>
               <p className="text-lg text-gray-400 mb-6 italic">{meta}</p>
+
+              {/* Hero visual slot */}
+              {heroVisual && <div className="mb-6">{heroVisual}</div>}
 
               {!!heroPoints.length && (
                 <ul className="grid sm:grid-cols-2 gap-3 mb-10">
