@@ -329,15 +329,15 @@ export default function SqlDashboardFlowPlayer() {
                 stroke="currentColor"
                 strokeWidth="2"
               />
-              {/* Database icon */}
-              <g transform="translate(35,25)" fill="#A7F3D0">
-                <ellipse cx="35" cy="8" rx="35" ry="8" />
-                <rect x="0" y="8" width="70" height="40" rx="4" />
-                <ellipse cx="35" cy="48" rx="35" ry="8" />
-                <path d="M0 16 H70" stroke="#A7F3D0" strokeWidth="1" />
-                <path d="M0 24 H70" stroke="#A7F3D0" strokeWidth="1" />
-                <path d="M0 32 H70" stroke="#A7F3D0" strokeWidth="1" />
-                <path d="M0 40 H70" stroke="#A7F3D0" strokeWidth="1" />
+              {/* Database icon - properly sized and centered */}
+              <g transform="translate(25,20)" fill="#A7F3D0">
+                <ellipse cx="45" cy="8" rx="45" ry="8" />
+                <rect x="0" y="8" width="90" height="50" rx="4" />
+                <ellipse cx="45" cy="58" rx="45" ry="8" />
+                <path d="M0 16 H90" stroke="#A7F3D0" strokeWidth="1" />
+                <path d="M0 26 H90" stroke="#A7F3D0" strokeWidth="1" />
+                <path d="M0 36 H90" stroke="#A7F3D0" strokeWidth="1" />
+                <path d="M0 46 H90" stroke="#A7F3D0" strokeWidth="1" />
               </g>
               <text x="70" y="88" textAnchor="middle" fontSize="14" fill="white" className="font-medium">
                 Raw Data
@@ -358,10 +358,13 @@ export default function SqlDashboardFlowPlayer() {
                 stroke="currentColor"
                 strokeWidth="2"
               />
-              {/* Code/Model icon */}
-              <g transform="translate(25,25)" fill="#A7F3D0">
-                <rect x="0" y="0" width="90" height="60" rx="4" fill="none" stroke="#A7F3D0" strokeWidth="2" />
-                <path d="M10 15 L30 15 M10 25 L40 25 M10 35 L35 35 M10 45 L25 45" stroke="#A7F3D0" strokeWidth="2" />
+              {/* Code/Model icon - improved design */}
+              <g transform="translate(20,20)" fill="#A7F3D0">
+                <rect x="0" y="0" width="100" height="70" rx="6" fill="none" stroke="#A7F3D0" strokeWidth="2" />
+                <path d="M10 15 L35 15 M10 25 L45 25 M10 35 L40 35 M10 45 L30 45 M10 55 L25 55" stroke="#A7F3D0" strokeWidth="2" />
+                <circle cx="85" cy="15" r="3" fill="#A7F3D0" />
+                <circle cx="85" cy="25" r="3" fill="#A7F3D0" />
+                <circle cx="85" cy="35" r="3" fill="#A7F3D0" />
               </g>
               <text x="70" y="88" textAnchor="middle" fontSize="14" fill="white" className="font-medium">
                 Transform
@@ -380,13 +383,15 @@ export default function SqlDashboardFlowPlayer() {
                 stroke="currentColor"
                 strokeWidth="2"
               />
-              {/* Metrics icon */}
-              <g transform="translate(25,25)" fill="#A7F3D0">
-                <rect x="0" y="0" width="90" height="60" rx="4" fill="none" stroke="#A7F3D0" strokeWidth="2" />
-                <path d="M10 15 L30 15 M10 25 L40 25 M10 35 L35 35 M10 45 L25 45" stroke="#A7F3D0" strokeWidth="2" />
-                <circle cx="75" cy="15" r="3" fill="#A7F3D0" />
-                <circle cx="75" cy="25" r="3" fill="#A7F3D0" />
-                <circle cx="75" cy="35" r="3" fill="#A7F3D0" />
+              {/* Metrics icon - distinct from transform */}
+              <g transform="translate(20,20)" fill="#A7F3D0">
+                <rect x="0" y="0" width="100" height="70" rx="6" fill="none" stroke="#A7F3D0" strokeWidth="2" />
+                <path d="M10 15 L40 15 M10 25 L50 25 M10 35 L45 35 M10 45 L35 45 M10 55 L30 55" stroke="#A7F3D0" strokeWidth="2" />
+                <circle cx="85" cy="15" r="4" fill="#A7F3D0" />
+                <circle cx="85" cy="25" r="4" fill="#A7F3D0" />
+                <circle cx="85" cy="35" r="4" fill="#A7F3D0" />
+                <circle cx="85" cy="45" r="4" fill="#A7F3D0" />
+                <circle cx="85" cy="55" r="4" fill="#A7F3D0" />
               </g>
               <text x="70" y="88" textAnchor="middle" fontSize="14" fill="white" className="font-medium">
                 Metrics
@@ -407,10 +412,10 @@ export default function SqlDashboardFlowPlayer() {
                 stroke="currentColor"
                 strokeWidth="2"
               />
-              {/* Security/Shield icon */}
-              <g transform="translate(35,25)" fill="#A7F3D0">
-                <path d="M35 10 L50 20 L50 35 C50 45 35 50 35 50 C35 50 20 45 20 35 L20 20 Z" />
-                <path d="M30 25 L35 30 L40 25" stroke="#0B1220" strokeWidth="2" fill="none" />
+              {/* Security/Shield icon - properly sized */}
+              <g transform="translate(25,15)" fill="#A7F3D0">
+                <path d="M45 10 L65 25 L65 45 C65 60 45 70 45 70 C45 70 25 60 25 45 L25 25 Z" />
+                <path d="M35 30 L45 40 L55 30" stroke="#0B1220" strokeWidth="2.5" fill="none" />
               </g>
               <text x="70" y="88" textAnchor="middle" fontSize="14" fill="white" className="font-medium">
                 Governance
@@ -431,12 +436,13 @@ export default function SqlDashboardFlowPlayer() {
                 stroke="currentColor"
                 strokeWidth="2"
               />
-              {/* Dashboard/Chart icon */}
-              <g transform="translate(25,25)" fill="#CFFAEA">
-                <rect x="0" y="0" width="70" height="60" rx="4" fill="none" stroke="#CFFAEA" strokeWidth="2" />
-                <rect x="10" y="10" width="15" height="40" fill="#CFFAEA" />
-                <rect x="30" y="20" width="15" height="30" fill="#CFFAEA" />
-                <rect x="50" y="15" width="15" height="35" fill="#CFFAEA" />
+              {/* Dashboard/Chart icon - properly sized and distinct */}
+              <g transform="translate(15,15)" fill="#CFFAEA">
+                <rect x="0" y="0" width="90" height="80" rx="6" fill="none" stroke="#CFFAEA" strokeWidth="2" />
+                <rect x="10" y="10" width="20" height="60" fill="#CFFAEA" />
+                <rect x="35" y="20" width="20" height="50" fill="#CFFAEA" />
+                <rect x="60" y="15" width="20" height="55" fill="#CFFAEA" />
+                <path d="M10 50 L30 40 L50 45 L70 35" stroke="#0B1220" strokeWidth="2" fill="none" />
               </g>
               <text x="60" y="88" textAnchor="middle" fontSize="14" fill="#CFFAEA" className="font-medium">
                 Dashboards
