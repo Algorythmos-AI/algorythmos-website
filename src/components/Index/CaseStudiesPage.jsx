@@ -23,7 +23,7 @@ const caseStudies = [
   },
   {
     icon: Zap,
-    title: "Healthcare – MLOps & CI/CD",
+    title: "Healthcare – MLOps Platform Engineering",
     challenge: "AI models took weeks to move from prototype to production.",
     solution: "Implemented CI/CD pipelines with Docker, Kubernetes & GitHub Actions.",
     result: "Deployment time reduced by 60%, downtime cut in half.",

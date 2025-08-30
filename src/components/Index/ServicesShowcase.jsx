@@ -53,7 +53,7 @@ const ServicesShowcase = ({
     },
     {
       id: 'mlops',
-      title: 'MLOps & CI/CD',
+      title: 'MLOps Platform Engineering',
       icon: ServerCog,
       bullets: ['Docker & K8s', 'GitHub Actions', 'Model registry'],
       metric: '½ deployment errors',

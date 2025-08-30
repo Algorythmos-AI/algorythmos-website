@@ -38,7 +38,7 @@ export default function SqlDashboardsPage() {
         { q: "Do you replace our BI?", a: "Not necessarily. We standardize models and plug into your preferred BI, or set up a new one if needed." }
       ]}
       related={[
-        { title: "MLOps & CI/CD", path: "/services/mlops-cicd" }
+        { title: "MLOps Platform Engineering", path: "/services/mlops-cicd" }
       ]}
       ctaText="Explore a Demo"
     />

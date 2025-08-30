@@ -130,10 +130,10 @@ export const servicesList = [
   },
   {
     slug: "mlops-cicd",
-    title: "MLOps & CI/CD",
-    tagline: "Ship AI safely with versioning, evals, and observability.",
+    title: "MLOps Platform Engineering (Machine Learning Operations Platform Engineering)",
+    tagline: "Productionize AI with CI/CD (Continuous Integration/Continuous Delivery) on Kubernetes and Docker, automated evaluations, observability, and safe rollbacks—with governance and DevSecOps (Development, Security & Operations) baked in.",
     meta:
-      "End-to-end ML platform: packaging, registries, evaluations, drift detection, and safe rollouts.",
+      "Productionize AI with CI/CD (Continuous Integration/Continuous Delivery) on Kubernetes and Docker, automated evaluations, observability, and safe rollbacks—with governance and DevSecOps (Development, Security & Operations) baked in.",
     icon: Layers,
     heroPoints: ["Model registry & packaging", "Automated evals & drift monitoring", "Rollbacks and canaries"],
     sections: [

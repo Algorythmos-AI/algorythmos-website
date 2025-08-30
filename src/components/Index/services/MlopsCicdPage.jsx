@@ -6,8 +6,8 @@ export default function MlopsCicdPage() {
   return (
     <ServiceLayout
       slug="mlops-cicd"
-      title="MLOps & CI/CD"
-      meta="Streamline AI model deployment with CI/CD pipelines, Docker, Kubernetes, and GitHub Actions—cutting deployment errors and recurring costs."
+      title="MLOps Platform Engineering (Machine Learning Operations Platform Engineering)"
+      meta="Productionize AI with CI/CD (Continuous Integration/Continuous Delivery) on Kubernetes and Docker, automated evaluations, observability, and safe rollbacks—with governance and DevSecOps (Development, Security & Operations) baked in."
       icon={Layers}
       heroPoints={[
         "Model packaging & registries with versioning.",
@@ -20,11 +20,12 @@ export default function MlopsCicdPage() {
         ]},
         { id: "pipeline", heading: "Pipeline & tooling", bullets: [
           "CI/CD: GitHub Actions, GitLab CI, Argo.",
+          "CI/CD = Continuous Integration/Continuous Delivery; GitLab CI = GitLab Continuous Integration.",
           "Serving: FastAPI/BentoML, Triton, Kubernetes.",
-          "Tracking: MLflow/W&B; Monitoring: Prometheus/Grafana."
+          "Tracking: MLflow / W&B (Weights & Biases); Monitoring: Prometheus / Grafana."
         ]},
         { id: "governance", heading: "Security & governance", bullets: [
-          "RBAC, signed images, secrets management, environment isolation.",
+          "RBAC (Role-Based Access Control), signed images, secrets management, environment isolation.",
           "Audit trails and policy checks gate releases.",
           "Canary/blue-green rollouts with quick rollback."
         ]},

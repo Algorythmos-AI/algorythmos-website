@@ -29,7 +29,7 @@ const caseStudies = {
     cta: "Contact Algorythmos to explore AI for manufacturing operations.",
   },
   "healthcare-mlops": {
-    title: "AI for Healthcare – MLOps & CI/CD",
+    title: "AI for Healthcare – MLOps Platform Engineering",
     meta: "MLOps in healthcare. Deploy AI models faster with CI/CD and compliance.",
     challenge: "Healthcare models stalled moving from prototype to production.",
     solution:

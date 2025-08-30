@@ -11,7 +11,7 @@ export default function ServicesPage() {
         <title>Services | Algorythmos</title>
         <meta
           name="description"
-          content="AI services by Algorythmos: Agentic Automation, Document Intelligence, SQL Dashboards, and MLOps & CI/CD."
+          content="AI services by Algorythmos: Agentic Automation, Document Intelligence, SQL Dashboards, and MLOps Platform Engineering."
         />
         <link rel="canonical" href="https://algorythmos.fr/services" />
       </Helmet>

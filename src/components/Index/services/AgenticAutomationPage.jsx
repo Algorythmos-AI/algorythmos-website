@@ -118,7 +118,7 @@ export default function AgenticAutomationPage() {
       ]}
       related={[
         { title: "Document Intelligence", path: "/services/document-intelligence" },
-        { title: "MLOps & CI/CD", path: "/services/mlops-cicd" }
+        { title: "MLOps Platform Engineering", path: "/services/mlops-cicd" }
       ]}
       ctaText="Book a Consultation"
     >

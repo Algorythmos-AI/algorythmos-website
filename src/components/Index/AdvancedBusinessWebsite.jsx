@@ -146,8 +146,8 @@ const AdvancedBusinessWebsite = () => {
     },
     {
       icon: <Globe className="w-8 h-8" />,
-      title: "MLOps & CI/CD ⚙️",
-      description: "Streamline AI model deployment with CI/CD pipelines, Docker, Kubernetes, and GitHub Actions—reducing errors and lowering recurring costs.",
+      title: "MLOps Platform Engineering ⚙️",
+      description: "Productionize AI with CI/CD (Continuous Integration/Continuous Delivery) on Kubernetes and Docker, automated evaluations, observability, and safe rollbacks—with governance and DevSecOps (Development, Security & Operations) baked in.",
       gradient: "from-orange-500 to-red-500"
     },
     {
