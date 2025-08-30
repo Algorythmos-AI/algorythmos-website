@@ -2,7 +2,6 @@ import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { CheckCircle } from "lucide-react";
-import ShimmerHeading from "./services/ShimmerHeading";
 import HeroFX from "./services/HeroFX";
 
 function Breadcrumbs({ title }) {
@@ -96,11 +95,11 @@ export default function ServiceLayout({
                     <Icon className="w-7 h-7 text-blue-300" />
                   </span>
                 )}
-                <h1 className="text-4xl md:text-5xl font-black leading-tight">
-                  <ShimmerHeading>
+                <div className="no-anim">
+                  <h1 className="text-4xl md:text-5xl font-black leading-tight brand-h1">
                     {title}
-                  </ShimmerHeading>
-                </h1>
+                  </h1>
+                </div>
               </div>
               <p className="text-lg text-gray-400 mb-6 italic">{meta}</p>
 

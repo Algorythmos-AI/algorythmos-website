@@ -246,3 +246,14 @@ a.group:hover .card-glow-blur { opacity: 0.5; }
   border: 1px solid rgba(255,255,255,0.16);
   border-radius: 9999px;
 }
+
+/* Static brand gradient heading (no animation; Safari-safe) */
+.brand-h1 {
+  background: linear-gradient(90deg, #B892FF 0%, #6D00FF 50%, #B892FF 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Scope that explicitly disables any shimmer descendants */
+.no-anim .shimmer-text { animation: none !important; }

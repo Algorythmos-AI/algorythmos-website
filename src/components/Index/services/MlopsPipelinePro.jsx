@@ -12,23 +12,20 @@ import { NotebookIcon, RegistryIcon, BoxIcon, WorkflowIcon, MonitorIcon } from "
  *  - RBAC = Role-Based Access Control
  */
 export default function MlopsPipelinePro() {
-  const [reduce, setReduce] = useState(false);
+  const [active, setActive] = useState(0);
+  const [playing, setPlaying] = useState(true);
+  const [speed, setSpeed] = useState(1);
+  const [reduce, setReduce] = useState(
+    typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches
+  );
 
-  // Check for reduced motion preference
+  // Listen to prefers-reduced-motion changes at runtime
   useEffect(() => {
-    const checkReducedMotion = () => {
-      const prefersReduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
-      setReduce(prefersReduced || false);
-    };
-
-    checkReducedMotion();
-    
-    // Listen for changes
-    const mediaQuery = window.matchMedia?.("(prefers-reduced-motion: reduce)");
-    if (mediaQuery) {
-      mediaQuery.addEventListener("change", checkReducedMotion);
-      return () => mediaQuery.removeEventListener("change", checkReducedMotion);
-    }
+    const mql = window.matchMedia?.("(prefers-reduced-motion: reduce)");
+    if (!mql?.addEventListener) return;
+    const onChange = () => setReduce(mql.matches);
+    mql.addEventListener("change", onChange);
+    return () => mql.removeEventListener("change", onChange);
   }, []);
 
   const steps = useMemo(() => ([
@@ -69,30 +66,43 @@ export default function MlopsPipelinePro() {
     }
   ]), []);
 
-  const [active, setActive] = useState(0);
-  const [playing, setPlaying] = useState(true);
-  const [speed, setSpeed] = useState(1);
-
+  // rAF stepper
   useEffect(() => {
-    if (reduce || !playing) return;
-    
-    const interval = setInterval(() => {
-      setActive(a => (a + 1) % steps.length);
-    }, 1600 / speed);
-    
-    return () => clearInterval(interval);
+    if (reduce) return;
+    let raf = 0;
+    let last = performance.now();
+    let acc = 0;
+    const baseStepMs = 1600;
+
+    const loop = (t) => {
+      const dt = t - last;
+      last = t;
+      if (playing) {
+        acc += dt / speed;
+        if (acc >= baseStepMs) {
+          acc = 0;
+          setActive(a => (a + 1) % steps.length);
+        }
+      }
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(raf);
   }, [playing, speed, reduce, steps.length]);
 
-  const onStep = (i) => { setActive(i); };
-
   return (
-    <div className="mt-6 pipeline-surface p-5 md:p-6">
+    <div
+      className="mt-6 pipeline-surface p-5 md:p-6"
+      data-pipeline="mlops"
+      data-active-index={active}
+    >
       {/* Header row */}
       <div className="mb-4 flex items-center justify-between gap-3">
         <div className="text-sm text-white/70">MLOps (Machine Learning Operations) Lifecycle</div>
         <div className="flex items-center gap-2">
           <a href="#reference-architecture" className="btn-ghost text-sm">See reference architecture</a>
           <button
+            type="button"
             className="inline-flex items-center gap-2 btn-ghost"
             onClick={() => setPlaying(p => !p)}
             aria-pressed={playing}
@@ -133,15 +143,20 @@ export default function MlopsPipelinePro() {
           <div className="absolute inset-0 w-full rounded-full bg-white/10" />
         </div>
 
-        <div className="mx-auto grid max-w-6xl grid-cols-5 gap-4">
+        <div className="mx-auto grid max-w-6xl grid-cols-5 gap-4" role="tablist" aria-label="MLOps steps">
           {steps.map((s, i) => {
             const Icon = s.icon;
             const isActive = i === active && !reduce;
             return (
               <button
                 key={s.id}
-                onMouseEnter={() => onStep(i)}
-                onFocus={() => onStep(i)}
+                type="button"
+                role="tab"
+                aria-selected={i === active}
+                aria-controls="mlops-details"
+                onClick={() => setActive(i)}
+                onMouseEnter={() => setActive(i)}
+                onFocus={() => setActive(i)}
                 className="group relative flex flex-col items-center gap-2 rounded-xl border border-white/12 bg-white/[0.03] px-3 py-4 hover:bg-white/[0.07] focus-visible:pipeline-focus"
                 style={{ animation: reduce ? "none" : "popIn 240ms ease both" }}
                 aria-current={i===active}
@@ -171,7 +186,8 @@ export default function MlopsPipelinePro() {
               return (
                 <button
                   key={s.id}
-                  onClick={() => onStep(i)}
+                  type="button"
+                  onClick={() => setActive(i)}
                   className="relative flex items-start gap-4 rounded-xl border border-white/12 bg-white/[0.03] p-3 text-left hover:bg-white/[0.07] focus-visible:pipeline-focus"
                 >
                   <div className="relative ml-3 grid h-10 w-10 place-items-center icon-tile">
@@ -196,7 +212,7 @@ export default function MlopsPipelinePro() {
       </div>
 
       {/* Details panel + link */}
-      <div className="mt-5 flex flex-col gap-3 rounded-xl border border-white/12 bg-white/[0.03] p-4 md:flex-row md:items-center md:justify-between">
+      <div id="mlops-details" role="tabpanel" aria-live="polite" className="mt-5 flex flex-col gap-3 rounded-xl border border-white/12 bg-white/[0.03] p-4 md:flex-row md:items-center md:justify-between">
         <div className="text-sm text-white/85 md:pr-6">
           <span className="font-semibold">{steps[active].label} — </span>
           {steps[active].oneLiner}
