@@ -61,11 +61,11 @@ export default function MlopsProLifecycle() {
   return (
     <div className="mt-6 pipeline-card p-5 md:p-6 relative overflow-hidden">
       {/* Controls */}
-      <div className="mb-3 flex items-center justify-between gap-3">
-        <div className="text-sm text-white/70">MLOps (Machine Learning Operations) Lifecycle</div>
+      <div className="mb-4 flex items-center justify-between gap-3">
+        <div className="text-sm font-medium text-white/90">MLOps (Machine Learning Operations) Lifecycle</div>
         <div className="flex items-center gap-2">
           <button
-            className="inline-flex items-center gap-2 rounded-md border border-white/15 bg-white/[0.04] px-3 py-1.5 text-sm text-white hover:bg-white/[0.07] focus-visible:pipeline-focus"
+            className="inline-flex items-center gap-2 rounded-md border border-white/20 bg-white/[0.08] px-3 py-1.5 text-sm text-white hover:bg-white/[0.12] focus-visible:pipeline-focus transition-colors"
             onClick={() => setPlaying(p => !p)}
             aria-pressed={playing}
           >
@@ -73,7 +73,7 @@ export default function MlopsProLifecycle() {
             {playing ? "Pause" : "Play"}
           </button>
           <select
-            className="rounded-md border border-white/15 bg-white/[0.04] px-2 py-1.5 text-sm text-white"
+            className="rounded-md border border-white/20 bg-white/[0.08] px-2 py-1.5 text-sm text-white hover:bg-white/[0.12] transition-colors"
             value={speed}
             onChange={(e) => setSpeed(parseFloat(e.target.value))}
             aria-label="Speed"
@@ -86,13 +86,13 @@ export default function MlopsProLifecycle() {
       </div>
 
       {/* Rail + connectors */}
-      <div className="relative mt-2">
-        <div ref={railRef} className="relative mx-auto h-[88px] w-full max-w-5xl">
+      <div className="relative mt-4">
+        <div ref={railRef} className="relative mx-auto h-[120px] w-full max-w-5xl">
           {/* SVG connectors (draw-in) */}
           <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1000 100" aria-hidden="true">
             <defs>
-              <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
-                <path d="M0,0 L10,3 L0,6 Z" fill="#8C6BFF" opacity="0.9" />
+              <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto">
+                <path d="M0,0 L12,4 L0,8 Z" fill="#8C6BFF" opacity="0.95" />
               </marker>
             </defs>
             {[0,1,2,3].map((i) => {
@@ -103,12 +103,12 @@ export default function MlopsProLifecycle() {
                   key={i}
                   x1={x1} y1={50} x2={x2} y2={50}
                   stroke="#8C6BFF"
-                  strokeWidth="3"
+                  strokeWidth="4"
                   strokeDasharray="240"
                   strokeDashoffset={reduce ? 0 : 240}
                   style={reduce ? {} : { animation: `lineDraw 1100ms ease forwards ${200 + i*120}ms` }}
                   markerEnd="url(#arrow)"
-                  opacity="0.9"
+                  opacity="0.95"
                 />
               );
             })}
@@ -122,7 +122,7 @@ export default function MlopsProLifecycle() {
               return (
                 <div key={s.id} className="relative">
                   <button
-                    className={`group grid place-items-center rounded-full border border-white/20 bg-white/[0.03] p-3 transition-colors hover:bg-white/[0.08] focus-visible:pipeline-focus ${isActive ? "ring-2 ring-[#6D00FF]" : ""}`}
+                    className={`group grid place-items-center rounded-full border-2 border-white/30 bg-white/[0.08] p-4 transition-all duration-200 hover:bg-white/[0.15] hover:border-white/50 focus-visible:pipeline-focus ${isActive ? "ring-2 ring-[#6D00FF] ring-offset-2 ring-offset-black" : ""}`}
                     onMouseEnter={() => setActive(i)}
                     onFocus={() => setActive(i)}
                     aria-describedby={`${s.id}-tip`}
@@ -134,25 +134,25 @@ export default function MlopsProLifecycle() {
                         style={{
                           transformOrigin: "center",
                           animation: isActive ? "pulseRing 2.2s ease-in-out infinite" : "none",
-                          background: "radial-gradient(closest-side, rgba(109,0,255,.22), transparent 70%)"
+                          background: "radial-gradient(closest-side, rgba(109,0,255,.3), transparent 70%)"
                         }}
                         aria-hidden="true"
                       />
                     )}
-                    <Icon className="h-6 w-6 text-white relative z-10" />
+                    <Icon className="h-7 w-7 text-white relative z-10" />
                   </button>
-                  <div className="mt-2 text-center text-xs font-medium text-white/85">{s.label}</div>
+                  <div className="mt-3 text-center text-sm font-semibold text-white/95">{s.label}</div>
 
                   {/* Tooltip */}
                   <div
                     id={`${s.id}-tip`}
                     role="tooltip"
-                    className="pipeline-tooltip absolute left-1/2 mt-3 w-64 -translate-x-1/2 p-3 text-[13px] text-white/85 transition-opacity"
+                    className="pipeline-tooltip absolute left-1/2 mt-4 w-72 -translate-x-1/2 p-4 text-sm text-white/90 transition-opacity"
                     style={{
                       opacity: isActive ? 1 : 0,
                       pointerEvents: isActive ? "auto" : "none",
                       animation: isActive && !reduce ? "popIn 280ms ease both" : "none",
-                      zIndex: 5
+                      zIndex: 10
                     }}
                   >
                     {s.tip}
