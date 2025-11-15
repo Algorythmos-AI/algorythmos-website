@@ -49,7 +49,81 @@ export default function DocumentIntelligencePage() {
             },
             "description": "Transform PDFs and images into structured data with OCR, NLP, and validation. Extract invoices, contracts, and compliance documents with GDPR-compliant pipelines.",
             "url": "https://www.algorythmos.fr/services/document-intelligence",
-            "areaServed": "Europe"
+            "areaServed": ["France", "Australia", "Europe"]
+          })}
+        </script>
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://www.algorythmos.fr"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Services",
+                "item": "https://www.algorythmos.fr/services"
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Document Intelligence",
+                "item": "https://www.algorythmos.fr/services/document-intelligence"
+              }
+            ]
+          })}
+        </script>
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "Which file types are supported?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "PDF, PNG, JPG, TIFF, and most common image formats. We support batch ingestion via S3/GCS, REST API, or web UI upload."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Can it learn new document templates?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes. Our models adapt quickly to new vendor formats using few-shot tuning and pattern rules—no need for extensive retraining."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How do you handle low-quality scans?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "We apply image preprocessing (deskewing, noise reduction, contrast enhancement) before OCR. Fields with low confidence are flagged for human review."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Is it GDPR-compliant?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Absolutely. All processing happens in EU/GDPR-compliant regions with encryption, RBAC, audit logs, and configurable data retention policies."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How do you integrate with our ERP?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "We provide REST APIs, webhooks, and pre-built connectors for SAP, NetSuite, Dynamics, and custom systems. Data can also be exported to your data warehouse."
+                }
+              }
+            ]
           })}
         </script>
       </Helmet>

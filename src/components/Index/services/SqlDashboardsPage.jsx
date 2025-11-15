@@ -49,7 +49,31 @@ export default function SqlDashboardsPage() {
             },
             "description": "Unified metrics and AI-assisted insights on modern SQL stacks. Modeled data, executive-ready dashboards with alerts, RBAC, and self-serve analytics for data-driven decisions.",
             "url": "https://www.algorythmos.fr/services/sql-dashboards",
-            "areaServed": "Europe"
+            "areaServed": ["France", "Australia", "Europe"]
+          })}
+        </script>
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.algorythmos.fr"},
+              {"@type": "ListItem", "position": 2, "name": "Services", "item": "https://www.algorythmos.fr/services"},
+              {"@type": "ListItem", "position": 3, "name": "SQL Dashboards & Analytics", "item": "https://www.algorythmos.fr/services/sql-dashboards"}
+            ]
+          })}
+        </script>
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {"@type": "Question", "name": "Which data warehouses do you support?", "acceptedAnswer": {"@type": "Answer", "text": "We work with Snowflake, BigQuery, Redshift, Postgres, and other modern SQL engines. We can also help migrate from legacy systems."}},
+              {"@type": "Question", "name": "Do I need a data team to maintain this?", "acceptedAnswer": {"@type": "Answer", "text": "Not necessarily. We design models and dashboards that are self-documenting and easy to update. We also offer managed services if you prefer."}},
+              {"@type": "Question", "name": "Can non-technical users explore the data?", "acceptedAnswer": {"@type": "Answer", "text": "Absolutely. Modern BI tools provide intuitive interfaces for filtering, drilling down, and creating custom views—no SQL required."}},
+              {"@type": "Question", "name": "How do you ensure data quality?", "acceptedAnswer": {"@type": "Answer", "text": "We implement data validation tests, lineage tracking, and automated alerts for schema changes or anomalies. dbt tests run on every transformation."}},
+              {"@type": "Question", "name": "What about real-time dashboards?", "acceptedAnswer": {"@type": "Answer", "text": "We can build near-real-time dashboards using streaming pipelines (Kafka, Kinesis) and incremental models. Talk to us about your latency requirements."}}
+            ]
           })}
         </script>
       </Helmet>

@@ -49,7 +49,73 @@ export default function AgenticAutomationPage() {
             },
             "description": "Multi-agent AI workflows that orchestrate tools and APIs safely. Reduce repetitive work by 40-60% with auditability, guardrails, and human-in-the-loop controls.",
             "url": "https://www.algorythmos.fr/services/agentic-automation",
-            "areaServed": "Europe"
+            "areaServed": ["France", "Australia", "Europe"]
+          })}
+        </script>
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://www.algorythmos.fr"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Services",
+                "item": "https://www.algorythmos.fr/services"
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Agentic Automation",
+                "item": "https://www.algorythmos.fr/services/agentic-automation"
+              }
+            ]
+          })}
+        </script>
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "How is this safer than a regular LLM bot?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Actions go through explicit tools with input/output validation, policy prompts, and optional human review before execution. You control what the agent can and cannot do."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Do you support on-premises deployment?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes. We can deploy the full stack on your infrastructure with SSO, RBAC, and private networking. Perfect for regulated industries or sensitive data."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What systems can you integrate with?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Most CRMs (Salesforce, HubSpot), ERPs (SAP, NetSuite), email (Gmail, Outlook), Slack, databases, and custom APIs. We build connectors as needed."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How do you handle errors and edge cases?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Agents can retry with backoff, escalate to human review queues, or fail gracefully with detailed error logs. We design workflows for resilience."
+                }
+              }
+            ]
           })}
         </script>
       </Helmet>

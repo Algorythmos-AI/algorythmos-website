@@ -49,7 +49,31 @@ export default function MlopsCicdPage() {
             },
             "description": "Production-grade ML with CI/CD on Kubernetes and Docker. Automated evaluations, observability, drift monitoring, safe rollbacks, and DevSecOps governance for AI that survives production.",
             "url": "https://www.algorythmos.fr/services/mlops-cicd",
-            "areaServed": "Europe"
+            "areaServed": ["France", "Australia", "Europe"]
+          })}
+        </script>
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.algorythmos.fr"},
+              {"@type": "ListItem", "position": 2, "name": "Services", "item": "https://www.algorythmos.fr/services"},
+              {"@type": "ListItem", "position": 3, "name": "MLOps & Platform Engineering", "item": "https://www.algorythmos.fr/services/mlops-cicd"}
+            ]
+          })}
+        </script>
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {"@type": "Question", "name": "Do you support on-premises deployment?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. We can deploy the full ML stack on your Kubernetes cluster with SSO, RBAC, private networking, and air-gapped operation if required."}},
+              {"@type": "Question", "name": "How do you handle model drift?", "acceptedAnswer": {"@type": "Answer", "text": "We monitor feature distributions, prediction patterns, and model performance in production. Automated alerts trigger retraining workflows when drift is detected."}},
+              {"@type": "Question", "name": "What about LLM-specific MLOps?", "acceptedAnswer": {"@type": "Answer", "text": "We specialize in LLM deployment: prompt versioning, evaluation pipelines, cost tracking, guardrails, and human-in-the-loop feedback loops."}},
+              {"@type": "Question", "name": "Can you integrate with our existing tools?", "acceptedAnswer": {"@type": "Answer", "text": "Absolutely. We work with your existing infrastructure: cloud providers, CI/CD tools, model registries, and monitoring stacks."}},
+              {"@type": "Question", "name": "How long does it take to set up?", "acceptedAnswer": {"@type": "Answer", "text": "Depends on your stack and requirements. A basic CI/CD pipeline can be live in 2-3 weeks. Full production setup with monitoring and governance takes 1-2 months."}}
+            ]
           })}
         </script>
       </Helmet>

@@ -127,7 +127,7 @@ const Footer = () => {
           {/* Column 1: Logo + Tagline + Newsletter */}
           <div className="lg:col-span-1">
             <div className="flex items-center mb-4 gap-2">
-              <img src={logo} alt="Algorythmos logo" className="h-8 w-auto md:h-10 object-contain bg-transparent" />
+              <img src={logo} alt="Algorythmos logo" loading="lazy" className="h-8 w-auto md:h-10 object-contain bg-transparent" />
               <span className="text-lg md:text-xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                 Algorythmos
               </span>
