@@ -25,10 +25,57 @@ export default function SqlDashboardsPage() {
           name="description"
           content="Unified metrics and AI-assisted insights on modern SQL stacks. Modeled data, executive-ready dashboards with alerts, RBAC, and self-serve analytics for data-driven decisions."
         />
-        <link rel="canonical" href="https://algorythmos.fr/services/sql-dashboards" />
-        <meta property="og:title" content="SQL Dashboards & Analytics | Algorythmos™" />
-        <meta property="og:description" content="Unified metrics and insights on modern SQL stacks with self-serve analytics." />
+        <link rel="canonical" href="https://www.algorythmos.fr/services/sql-dashboards" />
         <meta property="og:type" content="website" />
+        <meta property="og:title" content="SQL Dashboards & Analytics | Algorythmos™" />
+        <meta property="og:description" content="Unified metrics and AI-assisted insights on modern SQL stacks. Modeled data, executive-ready dashboards with alerts, RBAC, and self-serve analytics for data-driven decisions." />
+        <meta property="og:url" content="https://www.algorythmos.fr/services/sql-dashboards" />
+        <meta property="og:image" content="https://www.algorythmos.fr/Algorythmos.png" />
+        <meta property="og:site_name" content="Algorythmos" />
+        <meta property="og:locale" content="en_US" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="SQL Dashboards & Analytics | Algorythmos™" />
+        <meta name="twitter:description" content="Unified metrics and AI-assisted insights on modern SQL stacks. Modeled data, executive-ready dashboards with alerts, RBAC, and self-serve analytics for data-driven decisions." />
+        <meta name="twitter:image" content="https://www.algorythmos.fr/Algorythmos.png" />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Service",
+            "name": "SQL Dashboards & Analytics",
+            "provider": {
+              "@type": "Organization",
+              "name": "Algorythmos",
+              "url": "https://www.algorythmos.fr"
+            },
+            "description": "Unified metrics and AI-assisted insights on modern SQL stacks. Modeled data, executive-ready dashboards with alerts, RBAC, and self-serve analytics for data-driven decisions.",
+            "url": "https://www.algorythmos.fr/services/sql-dashboards",
+            "areaServed": ["France", "Australia", "Europe"]
+          })}
+        </script>
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.algorythmos.fr"},
+              {"@type": "ListItem", "position": 2, "name": "Services", "item": "https://www.algorythmos.fr/services"},
+              {"@type": "ListItem", "position": 3, "name": "SQL Dashboards & Analytics", "item": "https://www.algorythmos.fr/services/sql-dashboards"}
+            ]
+          })}
+        </script>
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {"@type": "Question", "name": "Which data warehouses do you support?", "acceptedAnswer": {"@type": "Answer", "text": "We work with Snowflake, BigQuery, Redshift, Postgres, and other modern SQL engines. We can also help migrate from legacy systems."}},
+              {"@type": "Question", "name": "Do I need a data team to maintain this?", "acceptedAnswer": {"@type": "Answer", "text": "Not necessarily. We design models and dashboards that are self-documenting and easy to update. We also offer managed services if you prefer."}},
+              {"@type": "Question", "name": "Can non-technical users explore the data?", "acceptedAnswer": {"@type": "Answer", "text": "Absolutely. Modern BI tools provide intuitive interfaces for filtering, drilling down, and creating custom views—no SQL required."}},
+              {"@type": "Question", "name": "How do you ensure data quality?", "acceptedAnswer": {"@type": "Answer", "text": "We implement data validation tests, lineage tracking, and automated alerts for schema changes or anomalies. dbt tests run on every transformation."}},
+              {"@type": "Question", "name": "What about real-time dashboards?", "acceptedAnswer": {"@type": "Answer", "text": "We can build near-real-time dashboards using streaming pipelines (Kafka, Kinesis) and incremental models. Talk to us about your latency requirements."}}
+            ]
+          })}
+        </script>
       </Helmet>
 
       {/* Hero Section */}
@@ -70,7 +117,7 @@ export default function SqlDashboardsPage() {
 
           {/* Subtitle */}
           <p className="mb-8 max-w-3xl text-lg md:text-xl text-gray-300 leading-relaxed">
-            A single source of truth powered by modeled data and executive-ready dashboards. Track operations KPIs, finance metrics, and support SLAs with role-based access, proactive alerts, and self-serve analytics.
+            Business intelligence solutions for SMEs across France and Australia. Algorythmos delivers executive-ready dashboards with modeled data—track operations KPIs, finance metrics, and support SLAs with role-based access, proactive alerts, and self-serve analytics for leaders in Paris and Sydney alike.
           </p>
 
           {/* Key Points */}

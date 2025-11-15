@@ -1,6 +1,7 @@
 // src/components/Index/QuantumAboutPage.jsx
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import TeamGrid from "./TeamGrid";
 import { track } from "../../lib/analytics";
 import { persistUtmFromLocation, readStoredUtm } from "../../lib/utm";
@@ -213,6 +214,33 @@ const QuantumAboutPage = () => {
 
   return (
     <div className="relative min-h-screen bg-black text-white overflow-hidden">
+      <Helmet>
+        <title>About | Algorythmos™</title>
+        <meta
+          name="description"
+          content="Algorythmos is a boutique AI consultancy founded in 2025, delivering secure, ROI-driven AI solutions for SMEs and enterprises across France and Australia. Learn about our mission, values, and team supporting clients from Suresnes to Sydney."
+        />
+        <link rel="canonical" href="https://www.algorythmos.fr/about" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="About Us | Algorythmos™" />
+        <meta property="og:description" content="Algorythmos is a boutique AI consultancy founded in 2025, delivering secure, ROI-driven AI solutions for SMEs and enterprises across France and Australia. Learn about our mission, values, and team supporting clients from Suresnes to Sydney." />
+        <meta property="og:url" content="https://www.algorythmos.fr/about" />
+        <meta property="og:image" content="https://www.algorythmos.fr/Algorythmos.png" />
+        <meta property="og:site_name" content="Algorythmos" />
+        <meta property="og:locale" content="en_US" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="About Us | Algorythmos™" />
+        <meta name="twitter:description" content="Algorythmos is a boutique AI consultancy founded in 2025, delivering secure, ROI-driven AI solutions for SMEs and enterprises across France and Australia. Learn about our mission, values, and team supporting clients from Suresnes to Sydney." />
+        <meta property="og:url" content="https://www.algorythmos.fr/about" />
+        <meta property="og:image" content="https://www.algorythmos.fr/Algorythmos.png" />
+        <meta property="og:site_name" content="Algorythmos" />
+        <meta property="og:locale" content="en_US" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="About | Algorythmos™" />
+        <meta name="twitter:description" content="Algorythmos is a boutique AI consultancy founded in 2025, delivering secure, ROI-driven AI solutions for SMEs across Europe. Learn about our mission, values, and team." />
+        <meta name="twitter:image" content="https://www.algorythmos.fr/Algorythmos.png" />
+      </Helmet>
+      
       {/* Global Navbar is rendered by App.jsx */}
 
       {/* Canvas Background */}
@@ -256,8 +284,8 @@ const QuantumAboutPage = () => {
 
             <p className="text-lg sm:text-xl md:text-2xl lg:text-4xl text-gray-300 mb-8 sm:mb-12 max-w-5xl mx-auto leading-relaxed px-4">
               At Algorythmos, we transform complex data challenges into
-              <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent font-bold"> practical AI solutions</span>.
-              Our mission is clear: to deliver secure, ROI-driven innovation that helps businesses scale, adapt, and thrive.
+              <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent font-bold"> practical AI solutions </span>
+              for enterprises and SMEs across France and Australia. Our mission is clear: to deliver secure, ROI-driven innovation that helps businesses from Suresnes to Sydney scale, adapt, and thrive.
             </p>
           </div>
         </div>

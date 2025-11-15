@@ -25,10 +25,107 @@ export default function DocumentIntelligencePage() {
           name="description"
           content="Transform PDFs and images into structured data with OCR, NLP, and validation. Extract invoices, contracts, and compliance documents with GDPR-compliant pipelines."
         />
-        <link rel="canonical" href="https://algorythmos.fr/services/document-intelligence" />
-        <meta property="og:title" content="Document Intelligence | Algorythmos™" />
-        <meta property="og:description" content="OCR + NLP pipelines for invoices, contracts, and compliance documents." />
+        <link rel="canonical" href="https://www.algorythmos.fr/services/document-intelligence" />
         <meta property="og:type" content="website" />
+        <meta property="og:title" content="Document Intelligence | Algorythmos™" />
+        <meta property="og:description" content="Transform PDFs and images into structured data with OCR, NLP, and validation. Extract invoices, contracts, and compliance documents with GDPR-compliant pipelines." />
+        <meta property="og:url" content="https://www.algorythmos.fr/services/document-intelligence" />
+        <meta property="og:image" content="https://www.algorythmos.fr/Algorythmos.png" />
+        <meta property="og:site_name" content="Algorythmos" />
+        <meta property="og:locale" content="en_US" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Document Intelligence | Algorythmos™" />
+        <meta name="twitter:description" content="Transform PDFs and images into structured data with OCR, NLP, and validation. Extract invoices, contracts, and compliance documents with GDPR-compliant pipelines." />
+        <meta name="twitter:image" content="https://www.algorythmos.fr/Algorythmos.png" />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Service",
+            "name": "Document Intelligence",
+            "provider": {
+              "@type": "Organization",
+              "name": "Algorythmos",
+              "url": "https://www.algorythmos.fr"
+            },
+            "description": "Transform PDFs and images into structured data with OCR, NLP, and validation. Extract invoices, contracts, and compliance documents with GDPR-compliant pipelines.",
+            "url": "https://www.algorythmos.fr/services/document-intelligence",
+            "areaServed": ["France", "Australia", "Europe"]
+          })}
+        </script>
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://www.algorythmos.fr"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Services",
+                "item": "https://www.algorythmos.fr/services"
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Document Intelligence",
+                "item": "https://www.algorythmos.fr/services/document-intelligence"
+              }
+            ]
+          })}
+        </script>
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "Which file types are supported?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "PDF, PNG, JPG, TIFF, and most common image formats. We support batch ingestion via S3/GCS, REST API, or web UI upload."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Can it learn new document templates?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes. Our models adapt quickly to new vendor formats using few-shot tuning and pattern rules—no need for extensive retraining."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How do you handle low-quality scans?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "We apply image preprocessing (deskewing, noise reduction, contrast enhancement) before OCR. Fields with low confidence are flagged for human review."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Is it GDPR-compliant?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Absolutely. All processing happens in EU/GDPR-compliant regions with encryption, RBAC, audit logs, and configurable data retention policies."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How do you integrate with our ERP?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "We provide REST APIs, webhooks, and pre-built connectors for SAP, NetSuite, Dynamics, and custom systems. Data can also be exported to your data warehouse."
+                }
+              }
+            ]
+          })}
+        </script>
       </Helmet>
 
       {/* Hero Section */}
@@ -70,7 +167,7 @@ export default function DocumentIntelligencePage() {
 
           {/* Subtitle */}
           <p className="mb-8 max-w-3xl text-lg md:text-xl text-gray-300 leading-relaxed">
-            Extract accurate, structured data from invoices, purchase orders, contracts, and compliance documents using enterprise OCR, layout parsing, and domain-tuned NLP—with validation and human-in-the-loop for edge cases.
+            AI-powered document intelligence for businesses across France and Australia. Extract accurate, structured data from invoices, purchase orders, contracts, and compliance documents using enterprise OCR, layout parsing, and domain-tuned NLP—with validation and human-in-the-loop for edge cases. Trusted by SMEs from Suresnes to Sydney.
           </p>
 
           {/* Key Points */}

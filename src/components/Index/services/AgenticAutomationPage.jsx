@@ -25,10 +25,99 @@ export default function AgenticAutomationPage() {
           name="description"
           content="Multi-agent AI workflows that orchestrate tools and APIs safely. Reduce repetitive work by 40-60% with auditability, guardrails, and human-in-the-loop controls."
         />
-        <link rel="canonical" href="https://algorythmos.fr/services/agentic-automation" />
-        <meta property="og:title" content="Agentic Automation | Algorythmos™" />
-        <meta property="og:description" content="Multi-agent AI workflows that orchestrate tools and APIs safely." />
+        <link rel="canonical" href="https://www.algorythmos.fr/services/agentic-automation" />
         <meta property="og:type" content="website" />
+        <meta property="og:title" content="Agentic Automation | Algorythmos™" />
+        <meta property="og:description" content="Multi-agent AI workflows that orchestrate tools and APIs safely. Reduce repetitive work by 40-60% with auditability, guardrails, and human-in-the-loop controls." />
+        <meta property="og:url" content="https://www.algorythmos.fr/services/agentic-automation" />
+        <meta property="og:image" content="https://www.algorythmos.fr/Algorythmos.png" />
+        <meta property="og:site_name" content="Algorythmos" />
+        <meta property="og:locale" content="en_US" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Agentic Automation | Algorythmos™" />
+        <meta name="twitter:description" content="Multi-agent AI workflows that orchestrate tools and APIs safely. Reduce repetitive work by 40-60% with auditability, guardrails, and human-in-the-loop controls." />
+        <meta name="twitter:image" content="https://www.algorythmos.fr/Algorythmos.png" />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Service",
+            "name": "Agentic Automation",
+            "provider": {
+              "@type": "Organization",
+              "name": "Algorythmos",
+              "url": "https://www.algorythmos.fr"
+            },
+            "description": "Multi-agent AI workflows that orchestrate tools and APIs safely. Reduce repetitive work by 40-60% with auditability, guardrails, and human-in-the-loop controls.",
+            "url": "https://www.algorythmos.fr/services/agentic-automation",
+            "areaServed": ["France", "Australia", "Europe"]
+          })}
+        </script>
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://www.algorythmos.fr"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Services",
+                "item": "https://www.algorythmos.fr/services"
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Agentic Automation",
+                "item": "https://www.algorythmos.fr/services/agentic-automation"
+              }
+            ]
+          })}
+        </script>
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "How is this safer than a regular LLM bot?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Actions go through explicit tools with input/output validation, policy prompts, and optional human review before execution. You control what the agent can and cannot do."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Do you support on-premises deployment?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes. We can deploy the full stack on your infrastructure with SSO, RBAC, and private networking. Perfect for regulated industries or sensitive data."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What systems can you integrate with?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Most CRMs (Salesforce, HubSpot), ERPs (SAP, NetSuite), email (Gmail, Outlook), Slack, databases, and custom APIs. We build connectors as needed."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How do you handle errors and edge cases?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Agents can retry with backoff, escalate to human review queues, or fail gracefully with detailed error logs. We design workflows for resilience."
+                }
+              }
+            ]
+          })}
+        </script>
       </Helmet>
 
       {/* Hero Section */}
@@ -70,7 +159,7 @@ export default function AgenticAutomationPage() {
 
           {/* Subtitle */}
           <p className="mb-8 max-w-3xl text-lg md:text-xl text-gray-300 leading-relaxed">
-            Orchestrate multi-step workflows across your CRM, ERP, email, and data warehouse with AI agents that understand context, follow policies, and act with full auditability.
+            Algorythmos delivers agentic automation solutions for SMEs and enterprises in France and Australia. Orchestrate multi-step workflows across your CRM, ERP, email, and data warehouse with AI agents that understand context, follow policies, and act with full auditability—from Sydney to Suresnes.
           </p>
 
           {/* Key Points */}

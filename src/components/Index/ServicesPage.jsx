@@ -30,7 +30,18 @@ export default function ServicesPage() {
           name="description"
           content="AI services by Algorythmos: Agentic Automation, Document Intelligence, SQL Dashboards, and MLOps Platform Engineering."
         />
-        <link rel="canonical" href="https://algorythmos.fr/services" />
+        <link rel="canonical" href="https://www.algorythmos.fr/services" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Services | Algorythmos" />
+        <meta property="og:description" content="AI services by Algorythmos: Agentic Automation, Document Intelligence, SQL Dashboards, and MLOps Platform Engineering." />
+        <meta property="og:url" content="https://www.algorythmos.fr/services" />
+        <meta property="og:image" content="https://www.algorythmos.fr/Algorythmos.png" />
+        <meta property="og:site_name" content="Algorythmos" />
+        <meta property="og:locale" content="en_US" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Services | Algorythmos" />
+        <meta name="twitter:description" content="AI services by Algorythmos: Agentic Automation, Document Intelligence, SQL Dashboards, and MLOps Platform Engineering." />
+        <meta name="twitter:image" content="https://www.algorythmos.fr/Algorythmos.png" />
       </Helmet>
 
       <main className="pt-36 pb-20 px-6 max-w-6xl mx-auto">
@@ -39,7 +50,7 @@ export default function ServicesPage() {
             What we build for you
           </h1>
           <p className="text-gray-400 mt-3 max-w-2xl">
-            Each service has a deep-dive page with architecture, impact, and FAQs—designed like Weaviate's agentic pages.
+            AI consultancy services for enterprises and SMEs across France and Australia. Each service offers deep-dive architecture, measurable impact, and FAQs—from automation to MLOps, built for businesses from Sydney to Suresnes.
           </p>
         </header>
 
