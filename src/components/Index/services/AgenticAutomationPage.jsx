@@ -93,7 +93,7 @@ export default function AgenticAutomationPage() {
 
           {/* Subtitle */}
           <p className="mb-8 max-w-3xl text-lg md:text-xl text-gray-300 leading-relaxed">
-            Orchestrate multi-step workflows across your CRM, ERP, email, and data warehouse with AI agents that understand context, follow policies, and act with full auditability.
+            Algorythmos delivers agentic automation solutions for SMEs and enterprises in France and Australia. Orchestrate multi-step workflows across your CRM, ERP, email, and data warehouse with AI agents that understand context, follow policies, and act with full auditability—from Sydney to Suresnes.
           </p>
 
           {/* Key Points */}

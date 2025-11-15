@@ -93,7 +93,7 @@ export default function SqlDashboardsPage() {
 
           {/* Subtitle */}
           <p className="mb-8 max-w-3xl text-lg md:text-xl text-gray-300 leading-relaxed">
-            A single source of truth powered by modeled data and executive-ready dashboards. Track operations KPIs, finance metrics, and support SLAs with role-based access, proactive alerts, and self-serve analytics.
+            Business intelligence solutions for SMEs across France and Australia. Algorythmos delivers executive-ready dashboards with modeled data—track operations KPIs, finance metrics, and support SLAs with role-based access, proactive alerts, and self-serve analytics for leaders in Paris and Sydney alike.
           </p>
 
           {/* Key Points */}

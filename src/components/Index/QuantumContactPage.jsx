@@ -108,12 +108,19 @@ const QuantumContactPage = () => {
         <title>Contact | Algorythmos™</title>
         <meta
           name="description"
-          content="Get in touch with Algorythmos for AI consultancy, collaboration, support, or inquiries. Book a consultation or send us a message."
+          content="Contact Algorythmos for AI consultancy and automation solutions across France and Australia. Book a consultation with our team in Suresnes or Sydney for collaboration, support, or inquiries."
         />
         <link rel="canonical" href="https://www.algorythmos.fr/contact" />
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="Contact | Algorythmos™" />
-        <meta property="og:description" content="Get in touch with Algorythmos for AI consultancy, collaboration, support, or inquiries. Book a consultation or send us a message." />
+        <meta property="og:title" content="Contact Us | Algorythmos™" />
+        <meta property="og:description" content="Contact Algorythmos for AI consultancy and automation solutions across France and Australia. Book a consultation with our team in Suresnes or Sydney for collaboration, support, or inquiries." />
+        <meta property="og:url" content="https://www.algorythmos.fr/contact" />
+        <meta property="og:image" content="https://www.algorythmos.fr/Algorythmos.png" />
+        <meta property="og:site_name" content="Algorythmos" />
+        <meta property="og:locale" content="en_US" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Contact Us | Algorythmos™" />
+        <meta name="twitter:description" content="Contact Algorythmos for AI consultancy and automation solutions across France and Australia. Book a consultation with our team in Suresnes or Sydney for collaboration, support, or inquiries." />
         <meta property="og:url" content="https://www.algorythmos.fr/contact" />
         <meta property="og:image" content="https://www.algorythmos.fr/Algorythmos.png" />
         <meta property="og:site_name" content="Algorythmos" />
@@ -155,7 +162,7 @@ const QuantumContactPage = () => {
           Contact
         </h1>
         <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 mb-8 sm:mb-12 px-4">
-          Get in touch with the team for collaboration, support, or inquiries.
+          Contact Algorythmos for AI consultancy and automation across France and Australia. Get in touch with our team in Suresnes or Sydney for collaboration, support, or inquiries.
         </p>
 
         <div className="flex justify-center">

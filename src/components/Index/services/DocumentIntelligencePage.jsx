@@ -93,7 +93,7 @@ export default function DocumentIntelligencePage() {
 
           {/* Subtitle */}
           <p className="mb-8 max-w-3xl text-lg md:text-xl text-gray-300 leading-relaxed">
-            Extract accurate, structured data from invoices, purchase orders, contracts, and compliance documents using enterprise OCR, layout parsing, and domain-tuned NLP—with validation and human-in-the-loop for edge cases.
+            AI-powered document intelligence for businesses across France and Australia. Extract accurate, structured data from invoices, purchase orders, contracts, and compliance documents using enterprise OCR, layout parsing, and domain-tuned NLP—with validation and human-in-the-loop for edge cases. Trusted by SMEs from Suresnes to Sydney.
           </p>
 
           {/* Key Points */}

@@ -93,7 +93,7 @@ export default function MlopsCicdPage() {
 
           {/* Subtitle */}
           <p className="mb-8 max-w-3xl text-lg md:text-xl text-gray-300 leading-relaxed">
-            Productionize AI with CI/CD on Kubernetes and Docker—automated evaluations, observability, drift monitoring, safe rollbacks, and governance with DevSecOps baked in. Deploy on-prem, in VPC, or cloud with confidence.
+            MLOps consultancy for AI-driven businesses in France and Australia. Productionize AI with CI/CD on Kubernetes and Docker—automated evaluations, observability, drift monitoring, safe rollbacks, and governance with DevSecOps baked in. Deploy on-prem, in VPC, or cloud with confidence, supported by expert engineers from Suresnes and Sydney.
           </p>
 
           {/* Key Points */}

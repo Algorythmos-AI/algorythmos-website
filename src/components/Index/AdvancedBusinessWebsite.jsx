@@ -272,8 +272,7 @@ const AdvancedBusinessWebsite = () => {
               </h1>
 
               <p className="text-base sm:text-lg md:text-xl text-gray-300 leading-relaxed mb-8 max-w-xl mx-auto md:mx-0">
-                Algorythmos helps enterprises move beyond experimentation to deliver secure, measurable AI outcomes.
-                Strategy, automation, and analytics—built for production and scale.
+                AI consultancy for enterprises and SMEs across France and Australia. Algorythmos delivers secure, production-ready AI solutions—from automation and MLOps to document intelligence—with measurable ROI and strategic guidance from Sydney to Suresnes.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
@@ -339,9 +338,8 @@ const AdvancedBusinessWebsite = () => {
               </span>
             </h2>
             <p className="text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
-              Unlock AI solutions that reduce costs, save time, and create measurable business impact. 
-              These aren’t just features—they’re the foundation for smarter, safer, and faster decisions.
-
+              Comprehensive AI solutions for businesses in France and Australia—reducing costs, saving time, and delivering measurable impact. 
+              From agentic automation to secure MLOps, we provide the strategic foundation for smarter, safer, and faster AI-driven decisions.
             </p>
           </div>
 

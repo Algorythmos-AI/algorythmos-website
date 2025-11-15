@@ -50,7 +50,7 @@ export default function ServicesPage() {
             What we build for you
           </h1>
           <p className="text-gray-400 mt-3 max-w-2xl">
-            Each service has a deep-dive page with architecture, impact, and FAQs—designed like Weaviate's agentic pages.
+            AI consultancy services for enterprises and SMEs across France and Australia. Each service offers deep-dive architecture, measurable impact, and FAQs—from automation to MLOps, built for businesses from Sydney to Suresnes.
           </p>
         </header>
 
