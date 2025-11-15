@@ -1,6 +1,7 @@
 // src/components/Index/QuantumAboutPage.jsx
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import TeamGrid from "./TeamGrid";
 import { track } from "../../lib/analytics";
 import { persistUtmFromLocation, readStoredUtm } from "../../lib/utm";
@@ -213,6 +214,26 @@ const QuantumAboutPage = () => {
 
   return (
     <div className="relative min-h-screen bg-black text-white overflow-hidden">
+      <Helmet>
+        <title>About | Algorythmos™</title>
+        <meta
+          name="description"
+          content="Algorythmos is a boutique AI consultancy founded in 2025, delivering secure, ROI-driven AI solutions for SMEs across Europe. Learn about our mission, values, and team."
+        />
+        <link rel="canonical" href="https://www.algorythmos.fr/about" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="About | Algorythmos™" />
+        <meta property="og:description" content="Algorythmos is a boutique AI consultancy founded in 2025, delivering secure, ROI-driven AI solutions for SMEs across Europe. Learn about our mission, values, and team." />
+        <meta property="og:url" content="https://www.algorythmos.fr/about" />
+        <meta property="og:image" content="https://www.algorythmos.fr/Algorythmos.png" />
+        <meta property="og:site_name" content="Algorythmos" />
+        <meta property="og:locale" content="en_US" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="About | Algorythmos™" />
+        <meta name="twitter:description" content="Algorythmos is a boutique AI consultancy founded in 2025, delivering secure, ROI-driven AI solutions for SMEs across Europe. Learn about our mission, values, and team." />
+        <meta name="twitter:image" content="https://www.algorythmos.fr/Algorythmos.png" />
+      </Helmet>
+      
       {/* Global Navbar is rendered by App.jsx */}
 
       {/* Canvas Background */}

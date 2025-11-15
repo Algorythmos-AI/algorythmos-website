@@ -25,10 +25,33 @@ export default function AgenticAutomationPage() {
           name="description"
           content="Multi-agent AI workflows that orchestrate tools and APIs safely. Reduce repetitive work by 40-60% with auditability, guardrails, and human-in-the-loop controls."
         />
-        <link rel="canonical" href="https://algorythmos.fr/services/agentic-automation" />
-        <meta property="og:title" content="Agentic Automation | Algorythmos™" />
-        <meta property="og:description" content="Multi-agent AI workflows that orchestrate tools and APIs safely." />
+        <link rel="canonical" href="https://www.algorythmos.fr/services/agentic-automation" />
         <meta property="og:type" content="website" />
+        <meta property="og:title" content="Agentic Automation | Algorythmos™" />
+        <meta property="og:description" content="Multi-agent AI workflows that orchestrate tools and APIs safely. Reduce repetitive work by 40-60% with auditability, guardrails, and human-in-the-loop controls." />
+        <meta property="og:url" content="https://www.algorythmos.fr/services/agentic-automation" />
+        <meta property="og:image" content="https://www.algorythmos.fr/Algorythmos.png" />
+        <meta property="og:site_name" content="Algorythmos" />
+        <meta property="og:locale" content="en_US" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Agentic Automation | Algorythmos™" />
+        <meta name="twitter:description" content="Multi-agent AI workflows that orchestrate tools and APIs safely. Reduce repetitive work by 40-60% with auditability, guardrails, and human-in-the-loop controls." />
+        <meta name="twitter:image" content="https://www.algorythmos.fr/Algorythmos.png" />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Service",
+            "name": "Agentic Automation",
+            "provider": {
+              "@type": "Organization",
+              "name": "Algorythmos",
+              "url": "https://www.algorythmos.fr"
+            },
+            "description": "Multi-agent AI workflows that orchestrate tools and APIs safely. Reduce repetitive work by 40-60% with auditability, guardrails, and human-in-the-loop controls.",
+            "url": "https://www.algorythmos.fr/services/agentic-automation",
+            "areaServed": "Europe"
+          })}
+        </script>
       </Helmet>
 
       {/* Hero Section */}

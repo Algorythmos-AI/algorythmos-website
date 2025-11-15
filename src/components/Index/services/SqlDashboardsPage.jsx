@@ -25,10 +25,33 @@ export default function SqlDashboardsPage() {
           name="description"
           content="Unified metrics and AI-assisted insights on modern SQL stacks. Modeled data, executive-ready dashboards with alerts, RBAC, and self-serve analytics for data-driven decisions."
         />
-        <link rel="canonical" href="https://algorythmos.fr/services/sql-dashboards" />
-        <meta property="og:title" content="SQL Dashboards & Analytics | Algorythmos™" />
-        <meta property="og:description" content="Unified metrics and insights on modern SQL stacks with self-serve analytics." />
+        <link rel="canonical" href="https://www.algorythmos.fr/services/sql-dashboards" />
         <meta property="og:type" content="website" />
+        <meta property="og:title" content="SQL Dashboards & Analytics | Algorythmos™" />
+        <meta property="og:description" content="Unified metrics and AI-assisted insights on modern SQL stacks. Modeled data, executive-ready dashboards with alerts, RBAC, and self-serve analytics for data-driven decisions." />
+        <meta property="og:url" content="https://www.algorythmos.fr/services/sql-dashboards" />
+        <meta property="og:image" content="https://www.algorythmos.fr/Algorythmos.png" />
+        <meta property="og:site_name" content="Algorythmos" />
+        <meta property="og:locale" content="en_US" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="SQL Dashboards & Analytics | Algorythmos™" />
+        <meta name="twitter:description" content="Unified metrics and AI-assisted insights on modern SQL stacks. Modeled data, executive-ready dashboards with alerts, RBAC, and self-serve analytics for data-driven decisions." />
+        <meta name="twitter:image" content="https://www.algorythmos.fr/Algorythmos.png" />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Service",
+            "name": "SQL Dashboards & Analytics",
+            "provider": {
+              "@type": "Organization",
+              "name": "Algorythmos",
+              "url": "https://www.algorythmos.fr"
+            },
+            "description": "Unified metrics and AI-assisted insights on modern SQL stacks. Modeled data, executive-ready dashboards with alerts, RBAC, and self-serve analytics for data-driven decisions.",
+            "url": "https://www.algorythmos.fr/services/sql-dashboards",
+            "areaServed": "Europe"
+          })}
+        </script>
       </Helmet>
 
       {/* Hero Section */}

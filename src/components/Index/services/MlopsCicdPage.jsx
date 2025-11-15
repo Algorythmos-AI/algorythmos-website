@@ -25,10 +25,33 @@ export default function MlopsCicdPage() {
           name="description"
           content="Production-grade ML with CI/CD on Kubernetes and Docker. Automated evaluations, observability, drift monitoring, safe rollbacks, and DevSecOps governance for AI that survives production."
         />
-        <link rel="canonical" href="https://algorythmos.fr/services/mlops-cicd" />
-        <meta property="og:title" content="MLOps & Platform Engineering | Algorythmos™" />
-        <meta property="og:description" content="Productionize AI with CI/CD, monitoring, and platform engineering." />
+        <link rel="canonical" href="https://www.algorythmos.fr/services/mlops-cicd" />
         <meta property="og:type" content="website" />
+        <meta property="og:title" content="MLOps & Platform Engineering | Algorythmos™" />
+        <meta property="og:description" content="Production-grade ML with CI/CD on Kubernetes and Docker. Automated evaluations, observability, drift monitoring, safe rollbacks, and DevSecOps governance for AI that survives production." />
+        <meta property="og:url" content="https://www.algorythmos.fr/services/mlops-cicd" />
+        <meta property="og:image" content="https://www.algorythmos.fr/Algorythmos.png" />
+        <meta property="og:site_name" content="Algorythmos" />
+        <meta property="og:locale" content="en_US" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="MLOps & Platform Engineering | Algorythmos™" />
+        <meta name="twitter:description" content="Production-grade ML with CI/CD on Kubernetes and Docker. Automated evaluations, observability, drift monitoring, safe rollbacks, and DevSecOps governance for AI that survives production." />
+        <meta name="twitter:image" content="https://www.algorythmos.fr/Algorythmos.png" />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Service",
+            "name": "MLOps & Platform Engineering",
+            "provider": {
+              "@type": "Organization",
+              "name": "Algorythmos",
+              "url": "https://www.algorythmos.fr"
+            },
+            "description": "Production-grade ML with CI/CD on Kubernetes and Docker. Automated evaluations, observability, drift monitoring, safe rollbacks, and DevSecOps governance for AI that survives production.",
+            "url": "https://www.algorythmos.fr/services/mlops-cicd",
+            "areaServed": "Europe"
+          })}
+        </script>
       </Helmet>
 
       {/* Hero Section */}

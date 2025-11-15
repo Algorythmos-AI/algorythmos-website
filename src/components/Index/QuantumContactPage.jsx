@@ -1,7 +1,7 @@
 // /src/components/Index/QuantumContactPage.jsx
-// /src/components/Index/QuantumContactPage.jsx
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";      // ✅ only once
+import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import emailjs from "@emailjs/browser";       // npm install @emailjs/browser
 import { track } from "../../lib/analytics";
 import { persistUtmFromLocation, readStoredUtm } from "../../lib/utm";
@@ -104,6 +104,26 @@ const QuantumContactPage = () => {
 
   return (
     <div className="min-h-screen bg-black text-white overflow-hidden relative">
+      <Helmet>
+        <title>Contact | Algorythmos™</title>
+        <meta
+          name="description"
+          content="Get in touch with Algorythmos for AI consultancy, collaboration, support, or inquiries. Book a consultation or send us a message."
+        />
+        <link rel="canonical" href="https://www.algorythmos.fr/contact" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Contact | Algorythmos™" />
+        <meta property="og:description" content="Get in touch with Algorythmos for AI consultancy, collaboration, support, or inquiries. Book a consultation or send us a message." />
+        <meta property="og:url" content="https://www.algorythmos.fr/contact" />
+        <meta property="og:image" content="https://www.algorythmos.fr/Algorythmos.png" />
+        <meta property="og:site_name" content="Algorythmos" />
+        <meta property="og:locale" content="en_US" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Contact | Algorythmos™" />
+        <meta name="twitter:description" content="Get in touch with Algorythmos for AI consultancy, collaboration, support, or inquiries. Book a consultation or send us a message." />
+        <meta name="twitter:image" content="https://www.algorythmos.fr/Algorythmos.png" />
+      </Helmet>
+      
       {/* Global Navbar is rendered by App.jsx */}
 
       {/* Decorative background (optional) */}

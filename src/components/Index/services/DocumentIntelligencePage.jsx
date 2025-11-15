@@ -25,10 +25,33 @@ export default function DocumentIntelligencePage() {
           name="description"
           content="Transform PDFs and images into structured data with OCR, NLP, and validation. Extract invoices, contracts, and compliance documents with GDPR-compliant pipelines."
         />
-        <link rel="canonical" href="https://algorythmos.fr/services/document-intelligence" />
-        <meta property="og:title" content="Document Intelligence | Algorythmos™" />
-        <meta property="og:description" content="OCR + NLP pipelines for invoices, contracts, and compliance documents." />
+        <link rel="canonical" href="https://www.algorythmos.fr/services/document-intelligence" />
         <meta property="og:type" content="website" />
+        <meta property="og:title" content="Document Intelligence | Algorythmos™" />
+        <meta property="og:description" content="Transform PDFs and images into structured data with OCR, NLP, and validation. Extract invoices, contracts, and compliance documents with GDPR-compliant pipelines." />
+        <meta property="og:url" content="https://www.algorythmos.fr/services/document-intelligence" />
+        <meta property="og:image" content="https://www.algorythmos.fr/Algorythmos.png" />
+        <meta property="og:site_name" content="Algorythmos" />
+        <meta property="og:locale" content="en_US" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Document Intelligence | Algorythmos™" />
+        <meta name="twitter:description" content="Transform PDFs and images into structured data with OCR, NLP, and validation. Extract invoices, contracts, and compliance documents with GDPR-compliant pipelines." />
+        <meta name="twitter:image" content="https://www.algorythmos.fr/Algorythmos.png" />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Service",
+            "name": "Document Intelligence",
+            "provider": {
+              "@type": "Organization",
+              "name": "Algorythmos",
+              "url": "https://www.algorythmos.fr"
+            },
+            "description": "Transform PDFs and images into structured data with OCR, NLP, and validation. Extract invoices, contracts, and compliance documents with GDPR-compliant pipelines.",
+            "url": "https://www.algorythmos.fr/services/document-intelligence",
+            "areaServed": "Europe"
+          })}
+        </script>
       </Helmet>
 
       {/* Hero Section */}
