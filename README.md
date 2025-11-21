@@ -145,29 +145,113 @@ npm run build
 
 ```
 /
-├── src/
-│   ├── components/           # React components
-│   │   ├── Index/           # Page-level components
-│   │   │   ├── services/    # Service detail pages
-│   │   │   └── ...
-│   │   ├── AlgorythmosCalculator.jsx
-│   │   ├── ContactForm.jsx
-│   │   ├── GlobalCtaTracker.jsx
-│   │   └── RoiCoverageChart.jsx
-│   ├── data/                # Static data (services, team)
-│   ├── lib/                 # Utilities (analytics, UTM, ROI math)
-│   ├── assets/              # Images and static assets
-│   ├── App.jsx              # Main app with routes
-│   └── main.jsx             # Entry point
-├── public/                  # Static files, SEO files
-├── e2e/                     # E2E tests (Playwright)
-├── tests/                   # Unit tests (Vitest)
-├── scripts/                 # Build/validation scripts
-├── tailwind.config.js       # Tailwind configuration
-├── vite.config.js           # Vite configuration
-├── playwright.config.ts     # Playwright test configuration
-└── vercel.json              # Vercel deployment config
+├── src/                                    # Source code directory
+│   ├── components/                         # All React components
+│   │   ├── Index/                         # Page-level components (full pages)
+│   │   │   ├── AdvancedBusinessWebsite.jsx    # Homepage with hero, features, CTA sections
+│   │   │   ├── ServicesPage.jsx               # Services overview with cards and descriptions
+│   │   │   ├── ServiceDetailPage.jsx          # Dynamic service detail page (slug-based routing)
+│   │   │   ├── QuantumAboutPage.jsx           # About us page with team and company info
+│   │   │   ├── QuantumContactPage.jsx         # Contact page with form and UTM tracking
+│   │   │   ├── CaseStudiesPage.jsx            # Case studies listing page
+│   │   │   ├── CaseStudyPage.jsx              # Individual case study detail page
+│   │   │   ├── BlogPage.jsx                   # Blog listing page with post previews
+│   │   │   ├── BlogDetailPage.jsx             # Individual blog post page
+│   │   │   ├── PricingPage.jsx                # Pricing page with ROI calculator
+│   │   │   ├── Navigation.jsx                 # Main navigation bar with mobile menu
+│   │   │   ├── Navbar.jsx                     # Alternative/legacy navbar component
+│   │   │   ├── Footer.jsx                     # Footer with newsletter, links, social media
+│   │   │   ├── HeroIllustration.jsx           # Hero section animated graphics
+│   │   │   ├── ServicesShowcase.jsx           # Services grid/showcase component
+│   │   │   ├── PartnersCarousel.jsx           # Embla-based partners logo carousel
+│   │   │   ├── TeamGrid.jsx                   # Team member grid with photos and bios
+│   │   │   ├── ServiceLayout.jsx              # Layout wrapper for service pages
+│   │   │   ├── HiddenUtmFields.jsx            # Hidden form fields for UTM tracking
+│   │   │   └── services/                      # Individual service detail pages
+│   │   │       ├── AgenticAutomationPage.jsx      # Agentic AI automation service page
+│   │   │       ├── DocumentIntelligencePage.jsx   # Document processing service page
+│   │   │       ├── SqlDashboardsPage.jsx          # SQL analytics service page
+│   │   │       ├── MlopsCicdPage.jsx              # MLOps CI/CD service page
+│   │   │       └── ServiceCard.jsx                # Reusable service card component
+│   │   │
+│   │   ├── AlgorythmosCalculator.jsx      # Interactive ROI calculator with inputs/outputs
+│   │   ├── ContactForm.jsx                # Reusable contact form with EmailJS integration
+│   │   ├── GlobalCtaTracker.jsx           # Analytics tracker for CTA button clicks
+│   │   └── RoiCoverageChart.jsx           # Recharts visualization for ROI sensitivity
+│   │
+│   ├── data/                              # Static data and content
+│   │   ├── services.js                        # Service definitions, descriptions, FAQs
+│   │   └── team.js                            # Team member data (names, roles, photos)
+│   │
+│   ├── lib/                               # Utility functions and helpers
+│   │   ├── analytics.js                       # Analytics tracking wrapper (GA/Amplitude stub)
+│   │   ├── utm.js                             # UTM parameter persistence and retrieval
+│   │   ├── roiMath.js                         # ROI calculation logic and formatters
+│   │   └── roiMath.spec.js                    # Unit tests for ROI calculations
+│   │
+│   ├── assets/                            # Images, logos, and static media
+│   │   ├── partners/                          # Partner company logos
+│   │   └── team/                              # Team member photos
+│   │       └── README.md                      # Documentation for team photos
+│   │
+│   ├── App.jsx                            # Main app component with React Router setup
+│   ├── App.css                            # Global app styles
+│   ├── main.jsx                           # Application entry point (renders App)
+│   └── index.css                          # Global CSS and Tailwind imports
+│
+├── public/                                # Static files served directly (no processing)
+│   ├── Algorythmos.png                        # Main logo and favicon image
+│   ├── favicon.ico                            # Browser favicon
+│   ├── vite.svg                               # Vite logo
+│   ├── manifest.json                          # PWA manifest for mobile installation
+│   ├── sitemap.xml                            # SEO sitemap for search engines
+│   ├── robots.txt                             # Search engine crawler instructions
+│   ├── google-site-verification.html          # Google Search Console verification
+│   ├── bing-verification.html                 # Bing Webmaster Tools verification
+│   └── yandex-verification.html               # Yandex Webmaster verification
+│
+├── e2e/                                   # End-to-end tests (Playwright)
+│   ├── acronym-expansions.spec.ts             # Tests acronym first-mention expansions
+│   └── mlops-pause.spec.ts                    # Tests MLOps pipeline animation controls
+│
+├── tests/                                 # Unit and integration tests (Vitest)
+│   └── pricing-utm.spec.ts                    # Tests UTM tracking on pricing page
+│
+├── scripts/                               # Build and validation scripts
+│   ├── seo-validate.js                        # SEO metadata validation script
+│   └── acronyms.config.json                   # Configuration for acronym testing
+│
+├── tailwind.config.js                     # Tailwind CSS configuration (colors, plugins)
+├── postcss.config.js                      # PostCSS configuration for Tailwind
+├── vite.config.js                         # Vite build tool configuration
+├── eslint.config.js                       # ESLint linting rules
+├── playwright.config.ts                   # Playwright E2E test configuration
+├── vercel.json                            # Vercel deployment and routing config
+├── package.json                           # Project dependencies and scripts
+├── package-lock.json                      # Locked dependency versions
+├── index.html                             # HTML entry point with SEO meta tags
+└── README.md                              # Project documentation (this file)
 ```
+
+### Key Directory Explanations
+
+#### `src/components/Index/`
+Contains all **full-page components** that correspond to routes in the application. Each file represents a complete page view with its own layout, content, and functionality. These are the main destinations users navigate to.
+
+#### `src/components/`
+Houses **reusable UI components** that can be used across multiple pages. These include forms, calculators, charts, and tracking components that provide specific functionality without being full pages.
+
+#### `src/data/`
+Stores **static content and configuration** in JavaScript files. This separation allows easy content updates without touching component code. Service descriptions, team profiles, and other structured data live here.
+
+#### `src/lib/`
+Contains **pure utility functions** with no React dependencies. These helpers handle business logic like ROI calculations, UTM parameter management, and analytics tracking. Keeping them separate makes testing easier.
+
+#### `public/`
+Files here are **served directly to the browser** without any build processing. Perfect for SEO files (sitemap, robots.txt), verification files for search engines, and static assets that don't need optimization.
+
+#### `e2e/` and `tests/`
+Two types of tests: **end-to-end tests** (`e2e/`) simulate real user interactions in a browser, while **unit tests** (`tests/`) verify individual functions and components work correctly in isolation.
 
 ## 🎨 Branding
 
