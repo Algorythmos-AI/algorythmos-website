@@ -21,7 +21,7 @@ export const TEAM = [
     role: "Chief Technology Officer",
     tagline: "AI Architecture Visionary",
     blurb:
-      "Former NASA engineer specializing in neural network optimization.",
+      "Former engineer specializing in neural network optimization.",
     links: {
       linkedin: "#",
       x: "#",
@@ -35,7 +35,7 @@ export const TEAM = [
     role: "Chief Innovation Officer",
     tagline: "Data Science Luminary",
     blurb:
-      "PhD in Advanced Mathematics, 10+ AI research publications.",
+      "PhD in Advanced Mathematics, 6+ AI research publications.",
     links: {
       linkedin: "#",
       x: "#",
@@ -49,7 +49,7 @@ export const TEAM = [
     role: "Chief Product Officer",
     tagline: "UX/UI Evolutionary",
     blurb:
-      "Design thinking expert with 12+ years in human-computer interaction.",
+      "Design thinking expert with 5+ years in human-computer interaction.",
     links: {
       linkedin: "#",
       x: "#",
