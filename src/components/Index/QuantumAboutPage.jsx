@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
+import { motion } from "framer-motion";
 import TeamGrid from "./TeamGrid";
 import { track } from "../../lib/analytics";
 import { persistUtmFromLocation, readStoredUtm } from "../../lib/utm";
@@ -292,58 +293,84 @@ const QuantumAboutPage = () => {
       </section>
 
       {/* What Does Algorythmos Mean? */}
-      <section className="py-16 sm:py-24 relative z-10">
+      <section className="py-20 sm:py-28 md:py-32 lg:py-36 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
-          <div className="text-center mb-12 sm:mb-16">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+          <motion.div 
+            className="text-center mb-16 sm:mb-20 md:mb-24 lg:mb-28"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          >
+            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-extrabold mb-8 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent tracking-tight leading-[1.1]">
               What Does Algorythmos Mean?
             </h2>
-          </div>
+          </motion.div>
 
           {/* Two-Card Fusion Layout */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-12 sm:mb-16">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-14 xl:gap-16 mb-16 sm:mb-20 md:mb-24 lg:mb-28">
             {/* Card 1: Algorithm */}
-            <div className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-900/30 via-blue-800/20 to-purple-900/30 border border-blue-500/30 backdrop-blur-xl p-8 sm:p-10 transition-all duration-700 hover:scale-105 hover:border-blue-400/50 shadow-lg hover:shadow-blue-500/20">
+            <motion.div 
+              className="group relative overflow-hidden rounded-[2.5rem] bg-white/[0.02] backdrop-blur-3xl border border-white/[0.08] p-10 sm:p-12 lg:p-14 transition-all duration-700 hover:scale-[1.012] hover:border-blue-400/30 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.4)] hover:shadow-[0_24px_64px_-12px_rgba(59,130,246,0.25)]"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.1 }}
+            >
+              {/* Refined gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/[0.08] via-blue-600/[0.04] to-purple-600/[0.06] opacity-80" />
+              
               {/* Geometric Pattern Background */}
-              <div className="absolute inset-0 opacity-10">
+              <div className="absolute inset-0 opacity-[0.06]">
                 <div className="absolute top-0 left-0 w-full h-full" style={{
-                  backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(59, 130, 246, 0.1) 10px, rgba(59, 130, 246, 0.1) 20px)`
+                  backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 14px, rgba(59, 130, 246, 0.12) 14px, rgba(59, 130, 246, 0.12) 28px)`
                 }}>
                 </div>
               </div>
 
               <div className="relative z-10">
-                {/* Icon */}
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="p-3 bg-blue-500/20 rounded-2xl group-hover:bg-blue-500/30 transition-colors duration-300">
-                    <Cpu className="w-8 h-8 text-blue-400" />
+                {/* Icon & Title */}
+                <div className="flex items-start gap-5 mb-9">
+                  <div className="p-4 bg-blue-400/10 border border-blue-400/20 rounded-2xl group-hover:bg-blue-400/15 group-hover:border-blue-400/30 transition-all duration-500 group-hover:scale-110 group-hover:rotate-3">
+                    <Cpu className="w-9 h-9 text-blue-400" />
                   </div>
-                  <div>
-                    <h3 className="text-2xl sm:text-3xl font-black text-white mb-1">Algorithm</h3>
-                    <p className="text-sm sm:text-base text-blue-300/80">Logic, structure, precision</p>
+                  <div className="flex-1">
+                    <h3 className="text-3xl sm:text-4xl font-black text-white mb-3 tracking-tight">Algorithm</h3>
+                    <div className="h-[1px] w-20 bg-gradient-to-r from-blue-400/60 via-blue-400/30 to-transparent mb-4" />
+                    <p className="text-base sm:text-lg text-blue-300/90 leading-loose tracking-[0.02em]">Logic, structure, precision</p>
                   </div>
                 </div>
 
                 {/* Code-style snippet */}
-                <div className="bg-black/40 border border-blue-500/20 rounded-xl p-4 font-mono text-sm sm:text-base text-blue-300 backdrop-blur-sm">
-                  <span className="text-purple-400">{'{'}</span> reason <span className="text-gray-400">→</span> automate <span className="text-gray-400">→</span> optimise <span className="text-purple-400">{'}'}</span>
+                <div className="bg-black/60 border border-blue-400/20 rounded-[1.25rem] p-6 font-mono text-base sm:text-lg text-blue-300 backdrop-blur-sm shadow-[inset_0_2px_8px_rgba(0,0,0,0.3)]">
+                  <span className="text-purple-400">{'{'}</span> <span className="text-gray-200">reason</span> <span className="text-blue-400 mx-1">→</span> <span className="text-gray-200">automate</span> <span className="text-blue-400 mx-1">→</span> <span className="text-gray-200">optimise</span> <span className="text-purple-400">{'}'}</span>
                 </div>
               </div>
 
-              {/* Hover glow effect */}
-              <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-700 -z-10" />
-            </div>
+              {/* Softer hover glow effect */}
+              <div className="absolute -inset-3 bg-gradient-to-r from-blue-500/20 via-blue-600/15 to-purple-600/20 rounded-[2.5rem] opacity-0 group-hover:opacity-100 blur-3xl transition-opacity duration-700 -z-10" />
+            </motion.div>
 
             {/* Card 2: Rhythmos */}
-            <div className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-purple-900/30 via-pink-800/20 to-rose-900/30 border border-purple-500/30 backdrop-blur-xl p-8 sm:p-10 transition-all duration-700 hover:scale-105 hover:border-purple-400/50 shadow-lg hover:shadow-purple-500/20">
+            <motion.div 
+              className="group relative overflow-hidden rounded-[2.5rem] bg-white/[0.02] backdrop-blur-3xl border border-white/[0.08] p-10 sm:p-12 lg:p-14 transition-all duration-700 hover:scale-[1.012] hover:border-purple-400/30 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.4)] hover:shadow-[0_24px_64px_-12px_rgba(168,85,247,0.25)]"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.2 }}
+            >
+              {/* Refined gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/[0.08] via-pink-600/[0.04] to-rose-600/[0.06] opacity-80" />
+              
               {/* Wavy Pattern Background */}
-              <div className="absolute inset-0 opacity-10">
+              <div className="absolute inset-0 opacity-[0.07]">
                 <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
                   <defs>
-                    <pattern id="wave-pattern" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
-                      <path d="M0 50 Q 25 30, 50 50 T 100 50" stroke="rgba(236, 72, 153, 0.3)" strokeWidth="2" fill="none" />
-                      <path d="M0 70 Q 25 50, 50 70 T 100 70" stroke="rgba(168, 85, 247, 0.3)" strokeWidth="2" fill="none" />
+                    <pattern id="wave-pattern" x="0" y="0" width="140" height="140" patternUnits="userSpaceOnUse">
+                      <path d="M0 70 Q 35 50, 70 70 T 140 70" stroke="rgba(236, 72, 153, 0.35)" strokeWidth="2.5" fill="none" />
+                      <path d="M0 90 Q 35 70, 70 90 T 140 90" stroke="rgba(168, 85, 247, 0.35)" strokeWidth="2.5" fill="none" />
+                      <path d="M0 110 Q 35 90, 70 110 T 140 110" stroke="rgba(236, 72, 153, 0.25)" strokeWidth="2" fill="none" />
                     </pattern>
                   </defs>
                   <rect width="100%" height="100%" fill="url(#wave-pattern)" />
@@ -351,57 +378,67 @@ const QuantumAboutPage = () => {
               </div>
 
               <div className="relative z-10">
-                {/* Icon */}
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="p-3 bg-purple-500/20 rounded-2xl group-hover:bg-purple-500/30 transition-colors duration-300">
-                    <Network className="w-8 h-8 text-purple-400" />
+                {/* Icon & Title */}
+                <div className="flex items-start gap-5 mb-9">
+                  <div className="p-4 bg-purple-400/10 border border-purple-400/20 rounded-2xl group-hover:bg-purple-400/15 group-hover:border-purple-400/30 transition-all duration-500 group-hover:scale-110 group-hover:-rotate-3">
+                    <Network className="w-9 h-9 text-purple-400" />
                   </div>
-                  <div>
-                    <h3 className="text-2xl sm:text-3xl font-black text-white mb-1">Rhythmos</h3>
-                    <p className="text-sm sm:text-base text-purple-300/80">Flow, timing, adaptation</p>
+                  <div className="flex-1">
+                    <h3 className="text-3xl sm:text-4xl font-black text-white mb-3 tracking-tight">Rhythmos</h3>
+                    <div className="h-[1px] w-20 bg-gradient-to-r from-purple-400/60 via-purple-400/30 to-transparent mb-4" />
+                    <p className="text-base sm:text-lg text-purple-300/90 leading-loose tracking-[0.02em]">Flow, timing, adaptation</p>
                   </div>
                 </div>
 
                 {/* Greek etymology note */}
-                <div className="bg-black/40 border border-purple-500/20 rounded-xl p-4 backdrop-blur-sm">
-                  <p className="text-sm sm:text-base text-purple-300 italic">
-                    <span className="font-semibold text-pink-300">Greek:</span> ῥυθμός (rhythmós)
+                <div className="bg-black/60 border border-purple-400/20 rounded-[1.25rem] p-6 backdrop-blur-sm shadow-[inset_0_2px_8px_rgba(0,0,0,0.3)]">
+                  <p className="text-base sm:text-lg text-purple-300 italic leading-loose">
+                    <span className="font-semibold text-pink-300">Greek:</span> <span className="text-purple-200">ῥυθμός</span> <span className="text-purple-400/80">(rhythmós)</span>
                   </p>
-                  <p className="text-xs sm:text-sm text-purple-400/80 mt-1">
+                  <p className="text-sm sm:text-base text-purple-400/80 mt-3 leading-loose">
                     "flow, harmony, natural pattern"
                   </p>
                 </div>
               </div>
 
-              {/* Hover glow effect */}
-              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-3xl opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-700 -z-10" />
-            </div>
+              {/* Softer hover glow effect */}
+              <div className="absolute -inset-3 bg-gradient-to-r from-purple-500/20 via-pink-600/15 to-rose-600/20 rounded-[2.5rem] opacity-0 group-hover:opacity-100 blur-3xl transition-opacity duration-700 -z-10" />
+            </motion.div>
           </div>
 
           {/* Explanation Text - Three Paragraphs */}
-          <div className="max-w-4xl mx-auto">
-            <div className="relative rounded-3xl bg-gradient-to-br from-gray-900/80 via-gray-800/60 to-black/80 border border-gray-700/50 backdrop-blur-xl p-8 sm:p-10 md:p-12 shadow-2xl overflow-hidden">
-              {/* Subtle background accent */}
-              <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-full blur-3xl -z-10" />
-              <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-purple-500/10 to-pink-500/10 rounded-full blur-3xl -z-10" />
+          <div className="max-w-4xl mx-auto mt-12 sm:mt-16 lg:mt-20 xl:mt-24">
+            <motion.div 
+              className="relative rounded-[2.5rem] bg-gradient-to-br from-gray-900/95 via-gray-850/90 to-gray-900/95 border border-white/[0.06] backdrop-blur-3xl px-8 py-12 sm:px-12 sm:py-14 md:px-14 md:py-16 lg:px-16 lg:py-20 shadow-[0_24px_88px_-12px_rgba(0,0,0,0.5)] overflow-hidden"
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+            >
+              {/* Top accent line */}
+              <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-blue-400/40 via-purple-400/40 to-transparent" />
+              
+              {/* Subtle background accent blobs */}
+              <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-blue-500/[0.06] via-purple-500/[0.04] to-transparent rounded-full blur-3xl -z-10" />
+              <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-purple-500/[0.06] via-pink-500/[0.04] to-transparent rounded-full blur-3xl -z-10" />
 
-              <div className="relative z-10 prose prose-lg prose-invert max-w-prose mx-auto">
-                <p className="text-base sm:text-lg md:text-xl text-gray-200 leading-loose mb-6">
+              <div className="relative z-10 max-w-prose mx-auto space-y-9">
+                <p className="text-lg sm:text-xl md:text-2xl text-gray-100 leading-[1.75] tracking-[0.01em]">
                   Algorythmos is born from two worlds. <span className="text-blue-400 font-semibold">"Algorithm"</span>, the domain of logic and structured intelligence. And <span className="text-purple-400 font-semibold">"Rhythmos"</span>, the Greek idea of flow, harmony, and natural pattern. Together, they form a brand built on balance: rigorous reasoning paired with the rhythm of real business life.
                 </p>
 
-                <p className="text-base sm:text-lg md:text-xl text-gray-200 leading-loose mb-6">
+                <p className="text-lg sm:text-xl md:text-2xl text-gray-100 leading-[1.75] tracking-[0.01em]">
                   For us, the algorithm represents precision, automation, and the intelligence behind every decision. The rhythm represents timing, human context, and the way every organisation moves at its own pace.
                 </p>
 
-                <p className="text-base sm:text-lg md:text-xl text-gray-200 leading-loose">
+                <p className="text-lg sm:text-xl md:text-2xl text-gray-100 leading-[1.75] tracking-[0.01em]">
                   Algorythmos stands for AI that doesn't fight your workflow but moves with it – learning your patterns, adapting to your tempo, and becoming a natural part of how your team operates every day.
                 </p>
               </div>
 
-              {/* Decorative accent line */}
-              <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 opacity-50" />
-            </div>
+              {/* Bottom decorative accent line */}
+              <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-blue-500/30 via-purple-500/30 to-pink-500/30" />
+            </motion.div>
           </div>
         </div>
       </section>
