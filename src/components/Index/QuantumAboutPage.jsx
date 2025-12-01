@@ -293,16 +293,115 @@ const QuantumAboutPage = () => {
 
       {/* What Does Algorythmos Mean? */}
       <section className="py-16 sm:py-24 relative z-10">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8 sm:mb-12">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 sm:mb-8 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Section Header */}
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
               What Does Algorythmos Mean?
             </h2>
           </div>
-          <div className="bg-gradient-to-br from-gray-900/60 to-black/60 rounded-3xl border border-gray-800/50 backdrop-blur-xl p-6 sm:p-8 md:p-10">
-            <p className="text-base sm:text-lg md:text-xl text-gray-300 leading-relaxed">
-              Algorythmos brings together "Algorithm" and the Greek word "Rhythmos", which means flow, harmony, and natural pattern. It captures our belief that the best technology combines rigorous logic with the right timing and cadence in the real world. The "algorithm" reflects the structured reasoning that powers our solutions, while the "rhythm" represents how we adapt to the tempo of each business, its people, and its operations. For our clients, Algorythmos means intelligent systems that learn the patterns of their organisation and move in sync with existing workflows, rather than fighting against them. In practice, Algorythmos stands for AI (artificial intelligence) that is practical, predictable, and seamlessly integrated into day-to-day decision-making, so it feels less like a bolt-on tool and more like a new operating rhythm for the business.
-            </p>
+
+          {/* Two-Card Fusion Layout */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-12 sm:mb-16">
+            {/* Card 1: Algorithm */}
+            <div className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-900/30 via-blue-800/20 to-purple-900/30 border border-blue-500/30 backdrop-blur-xl p-8 sm:p-10 transition-all duration-700 hover:scale-105 hover:border-blue-400/50 shadow-lg hover:shadow-blue-500/20">
+              {/* Geometric Pattern Background */}
+              <div className="absolute inset-0 opacity-10">
+                <div className="absolute top-0 left-0 w-full h-full" style={{
+                  backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(59, 130, 246, 0.1) 10px, rgba(59, 130, 246, 0.1) 20px)`
+                }}>
+                </div>
+              </div>
+
+              <div className="relative z-10">
+                {/* Icon */}
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="p-3 bg-blue-500/20 rounded-2xl group-hover:bg-blue-500/30 transition-colors duration-300">
+                    <Cpu className="w-8 h-8 text-blue-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl sm:text-3xl font-black text-white mb-1">Algorithm</h3>
+                    <p className="text-sm sm:text-base text-blue-300/80">Logic, structure, precision</p>
+                  </div>
+                </div>
+
+                {/* Code-style snippet */}
+                <div className="bg-black/40 border border-blue-500/20 rounded-xl p-4 font-mono text-sm sm:text-base text-blue-300 backdrop-blur-sm">
+                  <span className="text-purple-400">{'{'}</span> reason <span className="text-gray-400">→</span> automate <span className="text-gray-400">→</span> optimise <span className="text-purple-400">{'}'}</span>
+                </div>
+              </div>
+
+              {/* Hover glow effect */}
+              <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-700 -z-10" />
+            </div>
+
+            {/* Card 2: Rhythmos */}
+            <div className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-purple-900/30 via-pink-800/20 to-rose-900/30 border border-purple-500/30 backdrop-blur-xl p-8 sm:p-10 transition-all duration-700 hover:scale-105 hover:border-purple-400/50 shadow-lg hover:shadow-purple-500/20">
+              {/* Wavy Pattern Background */}
+              <div className="absolute inset-0 opacity-10">
+                <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <pattern id="wave-pattern" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+                      <path d="M0 50 Q 25 30, 50 50 T 100 50" stroke="rgba(236, 72, 153, 0.3)" strokeWidth="2" fill="none" />
+                      <path d="M0 70 Q 25 50, 50 70 T 100 70" stroke="rgba(168, 85, 247, 0.3)" strokeWidth="2" fill="none" />
+                    </pattern>
+                  </defs>
+                  <rect width="100%" height="100%" fill="url(#wave-pattern)" />
+                </svg>
+              </div>
+
+              <div className="relative z-10">
+                {/* Icon */}
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="p-3 bg-purple-500/20 rounded-2xl group-hover:bg-purple-500/30 transition-colors duration-300">
+                    <Network className="w-8 h-8 text-purple-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl sm:text-3xl font-black text-white mb-1">Rhythmos</h3>
+                    <p className="text-sm sm:text-base text-purple-300/80">Flow, timing, adaptation</p>
+                  </div>
+                </div>
+
+                {/* Greek etymology note */}
+                <div className="bg-black/40 border border-purple-500/20 rounded-xl p-4 backdrop-blur-sm">
+                  <p className="text-sm sm:text-base text-purple-300 italic">
+                    <span className="font-semibold text-pink-300">Greek:</span> ῥυθμός (rhythmós)
+                  </p>
+                  <p className="text-xs sm:text-sm text-purple-400/80 mt-1">
+                    "flow, harmony, natural pattern"
+                  </p>
+                </div>
+              </div>
+
+              {/* Hover glow effect */}
+              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-3xl opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-700 -z-10" />
+            </div>
+          </div>
+
+          {/* Explanation Text - Three Paragraphs */}
+          <div className="max-w-4xl mx-auto">
+            <div className="relative rounded-3xl bg-gradient-to-br from-gray-900/80 via-gray-800/60 to-black/80 border border-gray-700/50 backdrop-blur-xl p-8 sm:p-10 md:p-12 shadow-2xl overflow-hidden">
+              {/* Subtle background accent */}
+              <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-full blur-3xl -z-10" />
+              <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-purple-500/10 to-pink-500/10 rounded-full blur-3xl -z-10" />
+
+              <div className="relative z-10 prose prose-lg prose-invert max-w-prose mx-auto">
+                <p className="text-base sm:text-lg md:text-xl text-gray-200 leading-loose mb-6">
+                  Algorythmos is born from two worlds. <span className="text-blue-400 font-semibold">"Algorithm"</span>, the domain of logic and structured intelligence. And <span className="text-purple-400 font-semibold">"Rhythmos"</span>, the Greek idea of flow, harmony, and natural pattern. Together, they form a brand built on balance: rigorous reasoning paired with the rhythm of real business life.
+                </p>
+
+                <p className="text-base sm:text-lg md:text-xl text-gray-200 leading-loose mb-6">
+                  For us, the algorithm represents precision, automation, and the intelligence behind every decision. The rhythm represents timing, human context, and the way every organisation moves at its own pace.
+                </p>
+
+                <p className="text-base sm:text-lg md:text-xl text-gray-200 leading-loose">
+                  Algorythmos stands for AI that doesn't fight your workflow but moves with it – learning your patterns, adapting to your tempo, and becoming a natural part of how your team operates every day.
+                </p>
+              </div>
+
+              {/* Decorative accent line */}
+              <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 opacity-50" />
+            </div>
           </div>
         </div>
       </section>
