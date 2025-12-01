@@ -4,6 +4,10 @@
 
 A professional website for **Algorythmos**, a boutique AI consultancy delivering agentic automation, document intelligence, SQL analytics, and MLOps engineering for SMEs across Europe and Australia.
 
+## What Does Algorythmos Mean?
+
+Algorythmos brings together "Algorithm" and the Greek word "Rhythmos", which means flow, harmony, and natural pattern. It captures our belief that the best technology combines rigorous logic with the right timing and cadence in the real world. The "algorithm" reflects the structured reasoning that powers our solutions, while the "rhythm" represents how we adapt to the tempo of each business, its people, and its operations. For our clients, Algorythmos means intelligent systems that learn the patterns of their organisation and move in sync with existing workflows, rather than fighting against them. In practice, Algorythmos stands for AI (artificial intelligence) that is practical, predictable, and seamlessly integrated into day-to-day decision-making, so it feels less like a bolt-on tool and more like a new operating rhythm for the business.
+
 ## 🚀 Tech Stack
 
 - **Frontend Framework**: React 18 with React Router

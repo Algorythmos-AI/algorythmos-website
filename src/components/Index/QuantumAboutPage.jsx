@@ -291,6 +291,22 @@ const QuantumAboutPage = () => {
         </div>
       </section>
 
+      {/* What Does Algorythmos Mean? */}
+      <section className="py-16 sm:py-24 relative z-10">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-8 sm:mb-12">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 sm:mb-8 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+              What Does Algorythmos Mean?
+            </h2>
+          </div>
+          <div className="bg-gradient-to-br from-gray-900/60 to-black/60 rounded-3xl border border-gray-800/50 backdrop-blur-xl p-6 sm:p-8 md:p-10">
+            <p className="text-base sm:text-lg md:text-xl text-gray-300 leading-relaxed">
+              Algorythmos brings together "Algorithm" and the Greek word "Rhythmos", which means flow, harmony, and natural pattern. It captures our belief that the best technology combines rigorous logic with the right timing and cadence in the real world. The "algorithm" reflects the structured reasoning that powers our solutions, while the "rhythm" represents how we adapt to the tempo of each business, its people, and its operations. For our clients, Algorythmos means intelligent systems that learn the patterns of their organisation and move in sync with existing workflows, rather than fighting against them. In practice, Algorythmos stands for AI (artificial intelligence) that is practical, predictable, and seamlessly integrated into day-to-day decision-making, so it feels less like a bolt-on tool and more like a new operating rhythm for the business.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Tabs */}
       <section className="py-16 sm:py-24 relative z-10">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
