@@ -268,51 +268,55 @@ const QuantumAboutPage = () => {
       </div>
 
       {/* Hero */}
-      <section className="relative min-h-screen flex items-center justify-center z-10 pt-20 md:pt-0">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="animate-fade-in-up">
-            <div className="inline-flex items-center px-4 sm:px-6 py-2 sm:py-3 mb-6 sm:mb-8 bg-gradient-to-r from-blue-600/20 to-purple-600/20 backdrop-blur-sm border border-white/20 rounded-full text-sm sm:text-lg font-medium">
-              <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3 animate-spin" />
+      <section className="relative min-h-screen flex items-center justify-center z-10 pt-24 sm:pt-28 md:pt-0 pb-12 sm:pb-16 md:pb-0">
+        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          >
+            <div className="inline-flex items-center px-5 sm:px-7 py-2.5 sm:py-3.5 mb-8 sm:mb-10 md:mb-12 bg-gradient-to-r from-blue-600/20 to-purple-600/20 backdrop-blur-sm border border-white/20 rounded-full text-sm sm:text-base md:text-lg font-medium shadow-lg">
+              <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 mr-2.5 sm:mr-3 animate-spin" />
               Driving AI Innovations
             </div>
 
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-9xl font-black mb-6 sm:mb-8 leading-tight">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-black mb-8 sm:mb-10 md:mb-12 leading-[1.1] tracking-tight">
               <span className="block bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                 Beyond
               </span>
-              <span className="block text-white">Business as Usual</span>
+              <span className="block text-white mt-2 sm:mt-3">Business as Usual</span>
             </h1>
 
-            <p className="text-lg sm:text-xl md:text-2xl lg:text-4xl text-gray-300 mb-8 sm:mb-12 max-w-5xl mx-auto leading-relaxed px-4">
+            <p className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-gray-200 mb-10 sm:mb-12 md:mb-14 max-w-5xl mx-auto leading-relaxed px-2 sm:px-4">
               At Algorythmos, we transform complex data challenges into
               <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent font-bold"> practical AI solutions </span>
               for enterprises and SMEs across France and Australia. Our mission is clear: to deliver secure, ROI-driven innovation that helps businesses from Suresnes to Sydney scale, adapt, and thrive.
             </p>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* What Does Algorythmos Mean? */}
-      <section className="py-20 sm:py-28 md:py-32 lg:py-36 relative z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-16 sm:py-20 md:py-28 lg:py-32 xl:py-36 relative z-10">
+        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
           {/* Section Header */}
           <motion.div 
-            className="text-center mb-16 sm:mb-20 md:mb-24 lg:mb-28"
+            className="text-center mb-12 sm:mb-16 md:mb-20 lg:mb-24 xl:mb-28"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
-            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-extrabold mb-8 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent tracking-tight leading-[1.1]">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-extrabold mb-6 sm:mb-8 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent tracking-tight leading-[1.1] px-4">
               What Does Algorythmos Mean?
             </h2>
           </motion.div>
 
           {/* Two-Card Fusion Layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-14 xl:gap-16 mb-16 sm:mb-20 md:mb-24 lg:mb-28">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 md:gap-10 lg:gap-12 xl:gap-14 mb-12 sm:mb-16 md:mb-20 lg:mb-24 xl:mb-28">
             {/* Card 1: Algorithm */}
             <motion.div 
-              className="group relative overflow-hidden rounded-[2.5rem] bg-white/[0.02] backdrop-blur-3xl border border-white/[0.08] p-10 sm:p-12 lg:p-14 transition-all duration-700 hover:scale-[1.012] hover:border-blue-400/30 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.4)] hover:shadow-[0_24px_64px_-12px_rgba(59,130,246,0.25)]"
+              className="group relative overflow-hidden rounded-2xl sm:rounded-3xl lg:rounded-[2.5rem] bg-white/[0.02] backdrop-blur-3xl border border-white/[0.08] p-6 sm:p-8 md:p-10 lg:p-12 xl:p-14 transition-all duration-700 hover:scale-[1.012] hover:border-blue-400/30 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.4)] hover:shadow-[0_24px_64px_-12px_rgba(59,130,246,0.25)]"  
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -331,19 +335,19 @@ const QuantumAboutPage = () => {
 
               <div className="relative z-10">
                 {/* Icon & Title */}
-                <div className="flex items-start gap-5 mb-9">
-                  <div className="p-4 bg-blue-400/10 border border-blue-400/20 rounded-2xl group-hover:bg-blue-400/15 group-hover:border-blue-400/30 transition-all duration-500 group-hover:scale-110 group-hover:rotate-3">
-                    <Cpu className="w-9 h-9 text-blue-400" />
+                <div className="flex items-start gap-4 sm:gap-5 mb-6 sm:mb-8 lg:mb-9">
+                  <div className="p-3 sm:p-3.5 lg:p-4 bg-blue-400/10 border border-blue-400/20 rounded-xl sm:rounded-2xl group-hover:bg-blue-400/15 group-hover:border-blue-400/30 transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 flex-shrink-0">
+                    <Cpu className="w-7 h-7 sm:w-8 sm:h-8 lg:w-9 lg:h-9 text-blue-400" />
                   </div>
-                  <div className="flex-1">
-                    <h3 className="text-3xl sm:text-4xl font-black text-white mb-3 tracking-tight">Algorithm</h3>
-                    <div className="h-[1px] w-20 bg-gradient-to-r from-blue-400/60 via-blue-400/30 to-transparent mb-4" />
-                    <p className="text-base sm:text-lg text-blue-300/90 leading-loose tracking-[0.02em]">Logic, structure, precision</p>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white mb-2 sm:mb-3 tracking-tight">Algorithm</h3>
+                    <div className="h-[1px] w-16 sm:w-20 bg-gradient-to-r from-blue-400/60 via-blue-400/30 to-transparent mb-3 sm:mb-4" />
+                    <p className="text-sm sm:text-base lg:text-lg text-blue-300/90 leading-loose tracking-[0.02em]">Logic, structure, precision</p>
                   </div>
                 </div>
 
                 {/* Code-style snippet */}
-                <div className="bg-black/60 border border-blue-400/20 rounded-[1.25rem] p-6 font-mono text-base sm:text-lg text-blue-300 backdrop-blur-sm shadow-[inset_0_2px_8px_rgba(0,0,0,0.3)]">
+                <div className="bg-black/60 border border-blue-400/20 rounded-xl sm:rounded-[1.25rem] p-4 sm:p-5 lg:p-6 font-mono text-sm sm:text-base lg:text-lg text-blue-300 backdrop-blur-sm shadow-[inset_0_2px_8px_rgba(0,0,0,0.3)] overflow-x-auto">
                   <span className="text-purple-400">{'{'}</span> <span className="text-gray-200">reason</span> <span className="text-blue-400 mx-1">→</span> <span className="text-gray-200">automate</span> <span className="text-blue-400 mx-1">→</span> <span className="text-gray-200">optimise</span> <span className="text-purple-400">{'}'}</span>
                 </div>
               </div>
@@ -354,7 +358,7 @@ const QuantumAboutPage = () => {
 
             {/* Card 2: Rhythmos */}
             <motion.div 
-              className="group relative overflow-hidden rounded-[2.5rem] bg-white/[0.02] backdrop-blur-3xl border border-white/[0.08] p-10 sm:p-12 lg:p-14 transition-all duration-700 hover:scale-[1.012] hover:border-purple-400/30 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.4)] hover:shadow-[0_24px_64px_-12px_rgba(168,85,247,0.25)]"
+              className="group relative overflow-hidden rounded-2xl sm:rounded-3xl lg:rounded-[2.5rem] bg-white/[0.02] backdrop-blur-3xl border border-white/[0.08] p-6 sm:p-8 md:p-10 lg:p-12 xl:p-14 transition-all duration-700 hover:scale-[1.012] hover:border-purple-400/30 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.4)] hover:shadow-[0_24px_64px_-12px_rgba(168,85,247,0.25)]"  
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -379,23 +383,23 @@ const QuantumAboutPage = () => {
 
               <div className="relative z-10">
                 {/* Icon & Title */}
-                <div className="flex items-start gap-5 mb-9">
-                  <div className="p-4 bg-purple-400/10 border border-purple-400/20 rounded-2xl group-hover:bg-purple-400/15 group-hover:border-purple-400/30 transition-all duration-500 group-hover:scale-110 group-hover:-rotate-3">
-                    <Network className="w-9 h-9 text-purple-400" />
+                <div className="flex items-start gap-4 sm:gap-5 mb-6 sm:mb-8 lg:mb-9">
+                  <div className="p-3 sm:p-3.5 lg:p-4 bg-purple-400/10 border border-purple-400/20 rounded-xl sm:rounded-2xl group-hover:bg-purple-400/15 group-hover:border-purple-400/30 transition-all duration-500 group-hover:scale-110 group-hover:-rotate-3 flex-shrink-0">
+                    <Network className="w-7 h-7 sm:w-8 sm:h-8 lg:w-9 lg:h-9 text-purple-400" />
                   </div>
-                  <div className="flex-1">
-                    <h3 className="text-3xl sm:text-4xl font-black text-white mb-3 tracking-tight">Rhythmos</h3>
-                    <div className="h-[1px] w-20 bg-gradient-to-r from-purple-400/60 via-purple-400/30 to-transparent mb-4" />
-                    <p className="text-base sm:text-lg text-purple-300/90 leading-loose tracking-[0.02em]">Flow, timing, adaptation</p>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white mb-2 sm:mb-3 tracking-tight">Rhythmos</h3>
+                    <div className="h-[1px] w-16 sm:w-20 bg-gradient-to-r from-purple-400/60 via-purple-400/30 to-transparent mb-3 sm:mb-4" />
+                    <p className="text-sm sm:text-base lg:text-lg text-purple-300/90 leading-loose tracking-[0.02em]">Flow, timing, adaptation</p>
                   </div>
                 </div>
 
                 {/* Greek etymology note */}
-                <div className="bg-black/60 border border-purple-400/20 rounded-[1.25rem] p-6 backdrop-blur-sm shadow-[inset_0_2px_8px_rgba(0,0,0,0.3)]">
-                  <p className="text-base sm:text-lg text-purple-300 italic leading-loose">
+                <div className="bg-black/60 border border-purple-400/20 rounded-xl sm:rounded-[1.25rem] p-4 sm:p-5 lg:p-6 backdrop-blur-sm shadow-[inset_0_2px_8px_rgba(0,0,0,0.3)]">
+                  <p className="text-sm sm:text-base lg:text-lg text-purple-300 italic leading-loose">
                     <span className="font-semibold text-pink-300">Greek:</span> <span className="text-purple-200">ῥυθμός</span> <span className="text-purple-400/80">(rhythmós)</span>
                   </p>
-                  <p className="text-sm sm:text-base text-purple-400/80 mt-3 leading-loose">
+                  <p className="text-xs sm:text-sm lg:text-base text-purple-400/80 mt-2 sm:mt-3 leading-loose">
                     "flow, harmony, natural pattern"
                   </p>
                 </div>
@@ -407,9 +411,9 @@ const QuantumAboutPage = () => {
           </div>
 
           {/* Explanation Text - Three Paragraphs */}
-          <div className="max-w-4xl mx-auto mt-12 sm:mt-16 lg:mt-20 xl:mt-24">
+          <div className="max-w-4xl mx-auto mt-10 sm:mt-12 md:mt-16 lg:mt-20 xl:mt-24">
             <motion.div 
-              className="relative rounded-[2.5rem] bg-gradient-to-br from-gray-900/95 via-gray-850/90 to-gray-900/95 border border-white/[0.06] backdrop-blur-3xl px-8 py-12 sm:px-12 sm:py-14 md:px-14 md:py-16 lg:px-16 lg:py-20 shadow-[0_24px_88px_-12px_rgba(0,0,0,0.5)] overflow-hidden"
+              className="relative rounded-2xl sm:rounded-3xl lg:rounded-[2.5rem] bg-gradient-to-br from-gray-900/95 via-gray-850/90 to-gray-900/95 border border-white/[0.06] backdrop-blur-3xl px-6 py-10 sm:px-10 sm:py-12 md:px-12 md:py-14 lg:px-14 lg:py-16 xl:px-16 xl:py-20 shadow-[0_24px_88px_-12px_rgba(0,0,0,0.5)] overflow-hidden"
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -422,16 +426,16 @@ const QuantumAboutPage = () => {
               <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-blue-500/[0.06] via-purple-500/[0.04] to-transparent rounded-full blur-3xl -z-10" />
               <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-purple-500/[0.06] via-pink-500/[0.04] to-transparent rounded-full blur-3xl -z-10" />
 
-              <div className="relative z-10 max-w-prose mx-auto space-y-9">
-                <p className="text-lg sm:text-xl md:text-2xl text-gray-100 leading-[1.75] tracking-[0.01em]">
+              <div className="relative z-10 max-w-prose mx-auto space-y-6 sm:space-y-8 lg:space-y-9">
+                <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-100 leading-[1.7] sm:leading-[1.75] tracking-[0.01em]">
                   Algorythmos is born from two worlds. <span className="text-blue-400 font-semibold">"Algorithm"</span>, the domain of logic and structured intelligence. And <span className="text-purple-400 font-semibold">"Rhythmos"</span>, the Greek idea of flow, harmony, and natural pattern. Together, they form a brand built on balance: rigorous reasoning paired with the rhythm of real business life.
                 </p>
 
-                <p className="text-lg sm:text-xl md:text-2xl text-gray-100 leading-[1.75] tracking-[0.01em]">
+                <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-100 leading-[1.7] sm:leading-[1.75] tracking-[0.01em]">
                   For us, the algorithm represents precision, automation, and the intelligence behind every decision. The rhythm represents timing, human context, and the way every organisation moves at its own pace.
                 </p>
 
-                <p className="text-lg sm:text-xl md:text-2xl text-gray-100 leading-[1.75] tracking-[0.01em]">
+                <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-100 leading-[1.7] sm:leading-[1.75] tracking-[0.01em]">
                   Algorythmos stands for AI that doesn't fight your workflow but moves with it – learning your patterns, adapting to your tempo, and becoming a natural part of how your team operates every day.
                 </p>
               </div>
@@ -444,15 +448,15 @@ const QuantumAboutPage = () => {
       </section>
 
       {/* Tabs */}
-      <section className="py-16 sm:py-24 relative z-10">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-center mb-12 sm:mb-16">
-            <div className="flex flex-col sm:flex-row bg-gray-900/50 backdrop-blur-xl rounded-2xl p-2 border border-gray-700/50 w-full sm:w-auto">
+      <section className="py-16 sm:py-20 md:py-24 lg:py-28 relative z-10">
+        <div className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-12">
+          <div className="flex justify-center mb-12 sm:mb-14 md:mb-16">
+            <div className="flex flex-col sm:flex-row bg-gray-900/50 backdrop-blur-xl rounded-xl sm:rounded-2xl p-2 border border-gray-700/50 w-full sm:w-auto max-w-2xl">
               {Object.keys(TAB_CONTENT).map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`px-4 sm:px-8 py-3 sm:py-4 rounded-xl font-medium text-xs md:text-sm transition-all duration-500 relative ${
+                  className={`px-6 sm:px-8 py-3.5 sm:py-4 rounded-lg sm:rounded-xl font-medium text-sm md:text-base transition-all duration-500 relative min-h-[44px] flex items-center justify-center ${
                     activeTab === tab ? "text-white" : "text-gray-400 hover:text-white"
                   }`}
                   aria-pressed={activeTab === tab}
@@ -466,11 +470,11 @@ const QuantumAboutPage = () => {
             </div>
           </div>
 
-          <div className="text-center">
-            <h2 id="mission" className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight text-white text-center">
+          <div className="text-center px-4">
+            <h2 id="mission" className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight text-white mb-5 sm:mb-6">
               {TAB_CONTENT[activeTab].title}
             </h2>
-            <p className="mt-4 text-base md:text-lg text-slate-300/90 max-w-2xl mx-auto text-center">
+            <p className="mt-4 sm:mt-5 md:mt-6 text-base sm:text-lg md:text-xl text-slate-300/90 max-w-2xl mx-auto leading-relaxed">
               {TAB_CONTENT[activeTab].content}
             </p>
           </div>
@@ -478,19 +482,19 @@ const QuantumAboutPage = () => {
       </section>
 
       {/* Stats */}
-      <section aria-label="Company key facts" className="mt-10 md:mt-14">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+      <section aria-label="Company key facts" className="py-12 sm:py-16 md:py-20">
+        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 md:gap-8">
             {STATS.map(({ icon: Icon, value, label }) => (
               <div
                 key={label}
-                className="rounded-3xl bg-white/5 ring-1 ring-white/10 p-6 md:p-8 flex flex-col gap-3 hover:-translate-y-0.5 transition-transform duration-300"
+                className="rounded-2xl sm:rounded-3xl bg-white/5 ring-1 ring-white/10 p-6 sm:p-7 md:p-8 flex flex-col gap-3 sm:gap-4 hover:-translate-y-1 transition-all duration-300 min-h-[160px] sm:min-h-[180px]"
               >
-                <Icon className="size-6 md:size-7 text-white/70" aria-hidden="true" />
-                <div className="text-3xl md:text-4xl lg:text-5xl font-bold leading-none tracking-tight text-white">
+                <Icon className="w-6 h-6 sm:w-7 sm:h-7 text-white/70" aria-hidden="true" />
+                <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-none tracking-tight text-white">
                   {value}
                 </div>
-                <div className="text-xs md:text-sm uppercase tracking-wide text-slate-400/90">
+                <div className="text-xs sm:text-sm uppercase tracking-wide text-slate-400/90">
                   {label}
                 </div>
               </div>
@@ -500,25 +504,25 @@ const QuantumAboutPage = () => {
       </section>
 
       {/* Values */}
-      <section className="py-16 sm:py-32 relative z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12 sm:mb-20">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black mb-6 sm:mb-8">
+      <section className="py-16 sm:py-20 md:py-28 lg:py-32 relative z-10">
+        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+          <div className="text-center mb-12 sm:mb-16 md:mb-20">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black mb-6 sm:mb-8 px-4">
               Our
-              <span className="block bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+              <span className="block bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mt-2">
                 Values
               </span>
             </h2>
-            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 max-w-4xl mx-auto px-4">
+            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 max-w-4xl mx-auto px-4 leading-relaxed">
               These principles guide every solution we deliver — ensuring innovation, trust, and measurable business impact.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 md:gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 md:gap-10 lg:gap-12">
             {VALUES.map((value, i) => (
               <div
                 key={i}
-                className="group relative p-6 sm:p-8 md:p-10 bg-gradient-to-br from-gray-900/60 to-black/60 rounded-3xl border border-gray-800/50 hover:border-white/20 backdrop-blur-xl transition-all duration-700 transform hover:scale-105 hover:-translate-y-4 overflow-hidden shadow-lg"
+                className="group relative p-6 sm:p-8 md:p-10 bg-gradient-to-br from-gray-900/60 to-black/60 rounded-2xl sm:rounded-3xl border border-gray-800/50 hover:border-white/20 backdrop-blur-xl transition-all duration-700 transform hover:scale-[1.02] hover:-translate-y-2 overflow-hidden shadow-lg"
                 style={{ transitionDelay: `${i * 120}ms` }}
               >
                 <div className={`absolute inset-0 bg-gradient-to-br ${value.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-700`} />
@@ -552,35 +556,35 @@ const QuantumAboutPage = () => {
       </section>
 
       {/* Timeline */}
-      <section className="py-32 relative z-10">
-        <div className="max-w-6xl mx-auto px-6 lg:px-8">
-          <div className="text-center mb-20">
-            <h2 className="text-6xl md:text-7xl font-black mb-8">
+      <section className="py-16 sm:py-20 md:py-28 lg:py-32 relative z-10">
+        <div className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-12">
+          <div className="text-center mb-12 sm:mb-16 md:mb-20">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black mb-6 sm:mb-8 px-4">
               Our
-              <span className="block bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+              <span className="block bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mt-2">
                 Journey
               </span>
             </h2>
-            <p className="text-2xl text-gray-300 max-w-4xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 max-w-4xl mx-auto px-4 leading-relaxed">
               Milestones from first prototype to secure, production‑ready AI for enterprises.
             </p>
           </div>
 
           <div className="relative">
-            <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-blue-500 via-purple-500 to-pink-500" />
+            <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-0.5 sm:w-1 h-full bg-gradient-to-b from-blue-500 via-purple-500 to-pink-500" />
             {TIMELINE.map((item, i) => {
               const leftSide = i % 2 === 0;
               return (
-                <div key={i} className={`relative flex items-center mb-16 ${leftSide ? "justify-start" : "justify-end"}`}>
-                  <div className="absolute left-1/2 transform -translate-x-1/2 w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full border-4 border-black z-10 animate-pulse" />
-                  <div className={`w-full md:w-5/12 ${leftSide ? "md:pr-12 text-right" : "md:pl-12 text-left"}`}>
-                    <div className="group p-8 bg-gradient-to-br from-gray-900/80 to-black/80 rounded-3xl border border-gray-800/50 hover:border-white/20 backdrop-blur-xl transition-all duration-500 transform hover:scale-105">
-                      <div className={`flex items-center mb-4 ${leftSide ? "justify-end" : "justify-start"}`}>
-                        <div className="text-purple-400 mr-3 group-hover:scale-110 transition-transform duration-300">{item.icon}</div>
-                        <div className="text-2xl font-black bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">{item.year}</div>
+                <div key={i} className={`relative flex items-center mb-10 sm:mb-12 md:mb-16 ${leftSide ? "justify-start" : "justify-end"}`}>
+                  <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-5 h-5 sm:w-6 sm:h-6 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full border-4 border-black z-10 animate-pulse" />
+                  <div className={`w-full md:w-5/12 ${leftSide ? "md:pr-8 lg:pr-12 md:text-right" : "md:pl-8 lg:pl-12 text-left"}`}>
+                    <div className="group p-6 sm:p-7 md:p-8 bg-gradient-to-br from-gray-900/80 to-black/80 rounded-2xl sm:rounded-3xl border border-gray-800/50 hover:border-white/20 backdrop-blur-xl transition-all duration-500 transform hover:scale-[1.02]">
+                      <div className={`flex items-center gap-3 mb-4 sm:mb-5 ${leftSide ? "md:justify-end" : "justify-start"}`}>
+                        <div className="text-purple-400 group-hover:scale-110 transition-transform duration-300">{item.icon}</div>
+                        <div className="text-xl sm:text-2xl font-black bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">{item.year}</div>
                       </div>
-                      <h3 className="text-2xl font-bold mb-4 group-hover:text-blue-400 transition-colors duration-300">{item.title}</h3>
-                      <p className="text-gray-300 group-hover:text-white transition-colors duration-300 leading-relaxed">{item.description}</p>
+                      <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 group-hover:text-blue-400 transition-colors duration-300">{item.title}</h3>
+                      <p className="text-sm sm:text-base text-gray-300 group-hover:text-white transition-colors duration-300 leading-relaxed">{item.description}</p>
                     </div>
                   </div>
                 </div>
@@ -591,23 +595,23 @@ const QuantumAboutPage = () => {
       </section>
 
       {/* CTA */}
-      <section className="py-32 relative z-10">
-        <div className="max-w-5xl mx-auto text-center px-6 lg:px-8">
-          <h2 className="text-6xl md:text-8xl font-black mb-8">
+      <section className="py-16 sm:py-20 md:py-28 lg:py-32 relative z-10">
+        <div className="max-w-5xl mx-auto text-center px-6 sm:px-8 lg:px-12">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-black mb-6 sm:mb-8 leading-tight">
             Ready to
-            <span className="block bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+            <span className="block bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mt-2">
               Start Your AI Journey?
             </span>
           </h2>
 
-          <p className="text-2xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 mb-10 sm:mb-12 max-w-3xl mx-auto leading-relaxed px-4">
             Move beyond experimentation. Unlock secure, ROI-driven AI solutions that reduce costs, save time, and empower smarter decisions.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-6 justify-center">
+          <div className="flex flex-col sm:flex-row gap-5 sm:gap-6 justify-center items-center px-4">
             <Link
               to="/contact"
-              className="group relative px-12 py-6 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl font-bold text-2xl overflow-hidden transform hover:scale-105 transition-all duration-500"
+              className="group relative px-8 sm:px-10 md:px-12 py-4 sm:py-5 md:py-6 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl sm:rounded-2xl font-bold text-lg sm:text-xl md:text-2xl overflow-hidden transform hover:scale-105 transition-all duration-500 min-h-[56px] flex items-center justify-center w-full sm:w-auto"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-left" />
               <span className="relative">Book a Consultation</span>
@@ -615,14 +619,14 @@ const QuantumAboutPage = () => {
 
             <Link
               to="/services"
-              className="group relative px-12 py-6 border-2 border-gray-600 rounded-2xl font-bold text-2xl hover:border-white transition-all duration-500 backdrop-blur-sm overflow-hidden"
+              className="group relative px-8 sm:px-10 md:px-12 py-4 sm:py-5 md:py-6 border-2 border-gray-600 rounded-xl sm:rounded-2xl font-bold text-lg sm:text-xl md:text-2xl hover:border-white transition-all duration-500 backdrop-blur-sm overflow-hidden min-h-[56px] flex items-center justify-center w-full sm:w-auto"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-left" />
               <span className="relative">Explore Our Services</span>
             </Link>
           </div>
 
-          <div className="mt-6 text-gray-400 text-sm space-x-4">
+          <div className="mt-6 sm:mt-8 text-gray-400 text-xs sm:text-sm flex flex-wrap justify-center gap-x-4 gap-y-2 px-4">
             <span>✅ GDPR & EU AI Act Ready</span>
             <span>•</span>
             <span>⚙️ MLOps with CI/CD</span>
