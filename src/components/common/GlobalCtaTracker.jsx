@@ -1,6 +1,6 @@
 // src/components/GlobalCtaTracker.jsx
 import React, { useEffect } from "react";
-import { recordLastCta } from "../lib/utm";
+import { recordLastCta } from "../../app/utils/utm";
 
 export default function GlobalCtaTracker() {
   useEffect(() => {

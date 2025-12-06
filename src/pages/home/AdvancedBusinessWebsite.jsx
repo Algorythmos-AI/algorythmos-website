@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronDown, Menu, X, ArrowRight, Star, Users, Zap, Shield, CheckCircle, Play, MousePointer2, Sparkles, Globe, Rocket, Brain, Eye } from 'lucide-react';
-import PartnersCarousel from './PartnersCarousel.jsx';
-import HeroIllustration from './HeroIllustration.jsx';
-import ServicesShowcase from './ServicesShowcase.jsx'; // Added import for ServicesShowcase
+import PartnersCarousel from '../../components/ui/PartnersCarousel.jsx';
+import HeroIllustration from '../../components/ui/HeroIllustration.jsx';
+import ServicesShowcase from '../../components/ui/ServicesShowcase.jsx';
 
 const AdvancedBusinessWebsite = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

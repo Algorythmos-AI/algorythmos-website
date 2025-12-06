@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "deploy:prod": "vercel pull --yes --environment=production && vercel deploy --prod",
-    "test": "vitest",
+    "test": "vitest --exclude 'e2e/**' --exclude 'tests/**'",
     "test:e2e": "playwright test",
     "test:e2e:acronyms": "playwright test e2e/acronym-expansions.spec.ts",
     "seo:check": "node scripts/seo-validate.js"

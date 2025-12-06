@@ -3,7 +3,7 @@ import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { Bot, ArrowRight, CheckCircle, Activity, Shield, Zap, GitBranch, Users } from "lucide-react";
-import { withUtm } from "../../../lib/utm";
+import { withUtm } from "../../../app/utils/utm";
 
 const CALENDLY_URL = "https://calendly.com/algorythmos-france/30min";
 

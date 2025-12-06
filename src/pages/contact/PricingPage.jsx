@@ -1,14 +1,14 @@
 // ================================================
-// File: src/components/Index/PricingPage.jsx
+// File: src/pages/contact/PricingPage.jsx
 // Description: Brand-skinned Pricing page that embeds the
 // ROI (Return On Investment) calculator and shows tier cards.
 // Tailwind CSS only. Acronyms shown with full forms in UI.
 // ================================================
 
 import React, { useEffect, useState, useMemo } from "react";
-import { track } from "../../lib/analytics";
-import { withUtm, persistUtmFromLocation, readStoredUtm, recordLastCta } from "../../lib/utm";
-import AlgorythmosCalculator from "../AlgorythmosCalculator";
+import { track } from "../../app/utils/analytics";
+import { withUtm, persistUtmFromLocation, readStoredUtm, recordLastCta } from "../../app/utils/utm";
+import AlgorythmosCalculator from "../../components/charts/AlgorythmosCalculator";
 
 const Check = (props) => (
   <svg viewBox="0 0 24 24" aria-hidden="true" className={`h-5 w-5 ${props.className || ""}`}>

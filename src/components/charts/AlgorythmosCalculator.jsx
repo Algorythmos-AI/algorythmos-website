@@ -7,8 +7,8 @@ import {
   sweepCoverageForRoiPct,
   parseNumber,
   clamp01,
-} from "../lib/roiMath";
-import { track } from "../lib/analytics";
+} from "../../app/utils/roiMath";
+import { track } from "../../app/utils/analytics";
 
 // Lazy load the chart component
 const RoiCoverageChart = React.lazy(() => import("./RoiCoverageChart"));

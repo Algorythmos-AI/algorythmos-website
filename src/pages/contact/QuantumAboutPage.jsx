@@ -1,11 +1,11 @@
-// src/components/Index/QuantumAboutPage.jsx
+// src/pages/contact/QuantumAboutPage.jsx
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
-import TeamGrid from "./TeamGrid";
-import { track } from "../../lib/analytics";
-import { persistUtmFromLocation, readStoredUtm } from "../../lib/utm";
+import TeamGrid from "../../components/ui/TeamGrid";
+import { track } from "../../app/utils/analytics";
+import { persistUtmFromLocation, readStoredUtm } from "../../app/utils/utm";
 
 import {
   Brain,

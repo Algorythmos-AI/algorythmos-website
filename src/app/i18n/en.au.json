@@ -1,0 +1,19 @@
+{
+  "hero.title": "AI That Delivers for Australia",
+  "hero.subtitle": "Algorythmos Australia delivers AI consultancy, agentic automation, document intelligence, and MLOps for Australian SMEs and enterprises across healthcare, logistics, mining, and financial services.",
+
+  "about.subtitle": "AI consultancy serving Australian businesses from Sydney to Perth, Melbourne to Brisbane.",
+
+  "footer.description": "AI consultancy delivering agentic automation, document intelligence, and MLOps for Australian SMEs across healthcare, logistics, mining, and finance.",
+
+  "region.current": "Australia",
+
+  "industries.healthcare": "Healthcare",
+  "industries.logistics": "Logistics & Supply Chain",
+  "industries.mining": "Mining & Resources",
+  "industries.finance": "Financial Services",
+
+  "compliance.title": "Australian Compliance",
+  "compliance.apps": "Australian Privacy Principles (APPs)",
+  "compliance.enterprise": "Enterprise Security Standards"
+}

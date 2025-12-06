@@ -1,24 +1,28 @@
 import './App.css';
 import { Routes, Route } from 'react-router-dom';
-import AdvancedBusinessWebsite from './components/Index/AdvancedBusinessWebsite.jsx';
-import ServicesPage from './components/Index/ServicesPage.jsx';
-import QuantumAboutPage from './components/Index/QuantumAboutPage.jsx';
-import QuantumContactPage from './components/Index/QuantumContactPage.jsx';
-import CaseStudiesPage from './components/Index/CaseStudiesPage.jsx';
-import BlogPage from './components/Index/BlogPage.jsx';
-import NavBar from './components/Index/Navigation.jsx';
-import Footer from './components/Index/Footer.jsx';
-import CaseStudyPage from './components/Index/CaseStudyPage.jsx';
-import BlogDetailPage from './components/Index/BlogDetailPage.jsx';
-import ServiceDetailPage from './components/Index/ServiceDetailPage.jsx';
-import PricingPage from './components/Index/PricingPage.jsx';
-import GlobalCtaTracker from './components/GlobalCtaTracker.jsx';
-import AgenticAutomationPage from './components/Index/services/AgenticAutomationPage.jsx';
-import DocumentIntelligencePage from './components/Index/services/DocumentIntelligencePage.jsx';
-import SqlDashboardsPage from './components/Index/services/SqlDashboardsPage.jsx';
-import MlopsCicdPage from './components/Index/services/MlopsCicdPage.jsx';
-import AustraliaPage from './components/Index/AustraliaPage.jsx';
-import FrancePage from './components/Index/FrancePage.jsx';
+
+// Pages
+import AdvancedBusinessWebsite from './pages/home/AdvancedBusinessWebsite.jsx';
+import ServicesPage from './pages/services/ServicesPage.jsx';
+import ServiceDetailPage from './pages/services/ServiceDetailPage.jsx';
+import AgenticAutomationPage from './pages/services/services/AgenticAutomationPage.jsx';
+import DocumentIntelligencePage from './pages/services/services/DocumentIntelligencePage.jsx';
+import SqlDashboardsPage from './pages/services/services/SqlDashboardsPage.jsx';
+import MlopsCicdPage from './pages/services/services/MlopsCicdPage.jsx';
+import QuantumAboutPage from './pages/contact/QuantumAboutPage.jsx';
+import QuantumContactPage from './pages/contact/QuantumContactPage.jsx';
+import PricingPage from './pages/contact/PricingPage.jsx';
+import CaseStudiesPage from './pages/insights/CaseStudiesPage.jsx';
+import CaseStudyPage from './pages/insights/CaseStudyPage.jsx';
+import BlogPage from './pages/insights/BlogPage.jsx';
+import BlogDetailPage from './pages/insights/BlogDetailPage.jsx';
+import AustraliaPage from './pages/regions/au/AustraliaPage.jsx';
+import FrancePage from './pages/regions/fr/FrancePage.jsx';
+
+// Layout & Common Components
+import NavBar from './components/layout/Navigation.jsx';
+import Footer from './components/layout/Footer.jsx';
+import GlobalCtaTracker from './components/common/GlobalCtaTracker.jsx';
 
 function App() {
   return (

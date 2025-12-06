@@ -3,8 +3,8 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import emailjs from "@emailjs/browser";       // npm install @emailjs/browser
-import { track } from "../../lib/analytics";
-import { persistUtmFromLocation, readStoredUtm } from "../../lib/utm";
+import { track } from "../../app/utils/analytics";
+import { persistUtmFromLocation, readStoredUtm } from "../../app/utils/utm";
 // Footer is global via App.jsx
 
 const SERVICE_ID = "service_m5jcw4i";

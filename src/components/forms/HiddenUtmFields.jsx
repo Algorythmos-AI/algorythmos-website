@@ -1,6 +1,6 @@
 // src/components/Index/HiddenUtmFields.jsx
 import React, { useEffect, useState } from "react";
-import { buildFormUtm } from "../../lib/utm";
+import { buildFormUtm } from "../../app/utils/utm";
 
 export default function HiddenUtmFields({ defaults = {} }) {
   const [utm, setUtm] = useState({});

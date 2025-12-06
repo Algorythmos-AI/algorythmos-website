@@ -1,5 +1,5 @@
 import React from "react";
-import HiddenUtmFields from "./Index/HiddenUtmFields";
+import HiddenUtmFields from "./HiddenUtmFields";
 
 export default function ContactForm() {
   return (
