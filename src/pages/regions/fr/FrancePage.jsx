@@ -1,8 +1,8 @@
-// src/components/Index/FrancePage.jsx
+// src/pages/regions/fr/FrancePage.jsx
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
+import { RegionHelmet } from "../../../app/seo";
 import {
   Globe,
   Cpu,
@@ -21,33 +21,6 @@ import {
   Scale,
   Lock,
 } from "lucide-react";
-
-/* ----------------------------- JSON-LD Structured Data ----------------------------- */
-const organizationJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "Algorythmos France",
-  "alternateName": "Algorythmos",
-  "url": "https://algorythmos.fr",
-  "logo": "https://algorythmos.fr/Algorythmos.png",
-  "description": "Algorythmos est un cabinet de conseil en IA basé à Suresnes, spécialisé dans l'automatisation agentique, l'intelligence documentaire, les dashboards SQL et le MLOps pour les PME et ETI françaises.",
-  "foundingDate": "2025",
-  "areaServed": {
-    "@type": "Country",
-    "name": "France"
-  },
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Suresnes",
-    "addressRegion": "Île-de-France",
-    "postalCode": "92150",
-    "addressCountry": "FR"
-  },
-  "sameAs": [
-    "https://www.linkedin.com/company/algorythmos",
-    "https://x.com/algorythmos"
-  ]
-};
 
 /* ----------------------------- Use Cases ----------------------------- */
 const USE_CASES = [
@@ -196,39 +169,7 @@ const FrancePage = () => {
 
   return (
     <div className="relative min-h-screen bg-black text-white overflow-hidden">
-      <Helmet>
-        <title>Algorythmos France | Cabinet de Conseil en IA pour PME & ETI</title>
-        <meta
-          name="description"
-          content="Algorythmos est un cabinet de conseil en IA basé à Suresnes, spécialisé dans l'automatisation agentique, l'intelligence documentaire, les dashboards SQL et le MLOps. Conforme RGPD et EU AI Act."
-        />
-        <link rel="canonical" href="https://algorythmos.fr" />
-        
-        {/* Hreflang for international targeting */}
-        <link rel="alternate" hreflang="x-default" href="https://www.algorythmos.fr" />
-        <link rel="alternate" hreflang="en-AU" href="https://algorythmos.com.au" />
-        <link rel="alternate" hreflang="fr-FR" href="https://algorythmos.fr" />
-        
-        {/* Open Graph */}
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content="Algorythmos France | Cabinet de Conseil en IA pour PME & ETI" />
-        <meta property="og:description" content="Algorythmos est un cabinet de conseil en IA basé à Suresnes, spécialisé dans l'automatisation agentique, l'intelligence documentaire, les dashboards SQL et le MLOps. Conforme RGPD et EU AI Act." />
-        <meta property="og:url" content="https://algorythmos.fr" />
-        <meta property="og:image" content="https://algorythmos.fr/Algorythmos.png" />
-        <meta property="og:site_name" content="Algorythmos France" />
-        <meta property="og:locale" content="fr_FR" />
-        
-        {/* Twitter Card */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Algorythmos France | Cabinet de Conseil en IA pour PME & ETI" />
-        <meta name="twitter:description" content="Algorythmos est un cabinet de conseil en IA basé à Suresnes, spécialisé dans l'automatisation agentique, l'intelligence documentaire et le MLOps." />
-        <meta name="twitter:image" content="https://algorythmos.fr/Algorythmos.png" />
-        
-        {/* JSON-LD Structured Data */}
-        <script type="application/ld+json">
-          {JSON.stringify(organizationJsonLd)}
-        </script>
-      </Helmet>
+      <RegionHelmet region="FR" />
 
       {/* Background Effects */}
       <div className="fixed inset-0 z-0">

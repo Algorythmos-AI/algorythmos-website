@@ -1,8 +1,8 @@
-// src/components/Index/AustraliaPage.jsx
+// src/pages/regions/au/AustraliaPage.jsx
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
+import { RegionHelmet } from "../../../app/seo";
 import {
   Globe,
   Cpu,
@@ -19,37 +19,6 @@ import {
   Users,
   Target,
 } from "lucide-react";
-
-/* ----------------------------- JSON-LD Structured Data ----------------------------- */
-const organizationJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "Algorythmos Australia",
-  "alternateName": "Algorythmos",
-  "url": "https://algorythmos.com.au",
-  "logo": "https://algorythmos.com.au/Algorythmos.png",
-  "description": "Algorythmos Australia delivers AI consultancy, agentic automation, document intelligence, and MLOps for Australian SMEs and enterprises across healthcare, logistics, mining, and financial services.",
-  "foundingDate": "2025",
-  "areaServed": {
-    "@type": "Country",
-    "name": "Australia"
-  },
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Sydney",
-    "addressRegion": "NSW",
-    "addressCountry": "AU"
-  },
-  "sameAs": [
-    "https://www.linkedin.com/company/algorythmos",
-    "https://x.com/algorythmos"
-  ],
-  "parentOrganization": {
-    "@type": "Corporation",
-    "name": "Algorythmos",
-    "url": "https://www.algorythmos.fr"
-  }
-};
 
 /* ----------------------------- Use Cases ----------------------------- */
 const USE_CASES = [
@@ -166,39 +135,7 @@ const AustraliaPage = () => {
 
   return (
     <div className="relative min-h-screen bg-black text-white overflow-hidden">
-      <Helmet>
-        <title>Algorythmos Australia | AI Consultancy for Australian SMEs & Enterprises</title>
-        <meta
-          name="description"
-          content="Algorythmos Australia delivers AI consultancy, agentic automation, document intelligence, and MLOps for Australian SMEs and enterprises across healthcare, logistics, mining, and financial services."
-        />
-        <link rel="canonical" href="https://algorythmos.com.au" />
-        
-        {/* Hreflang for international targeting */}
-        <link rel="alternate" hreflang="x-default" href="https://www.algorythmos.fr" />
-        <link rel="alternate" hreflang="en-AU" href="https://algorythmos.com.au" />
-        <link rel="alternate" hreflang="fr-FR" href="https://algorythmos.fr" />
-        
-        {/* Open Graph */}
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content="Algorythmos Australia | AI Consultancy for Australian SMEs & Enterprises" />
-        <meta property="og:description" content="Algorythmos Australia delivers AI consultancy, agentic automation, document intelligence, and MLOps for Australian SMEs and enterprises across healthcare, logistics, mining, and financial services." />
-        <meta property="og:url" content="https://algorythmos.com.au" />
-        <meta property="og:image" content="https://algorythmos.com.au/Algorythmos.png" />
-        <meta property="og:site_name" content="Algorythmos Australia" />
-        <meta property="og:locale" content="en_AU" />
-        
-        {/* Twitter Card */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Algorythmos Australia | AI Consultancy for Australian SMEs & Enterprises" />
-        <meta name="twitter:description" content="Algorythmos Australia delivers AI consultancy, agentic automation, document intelligence, and MLOps for Australian SMEs and enterprises." />
-        <meta name="twitter:image" content="https://algorythmos.com.au/Algorythmos.png" />
-        
-        {/* JSON-LD Structured Data */}
-        <script type="application/ld+json">
-          {JSON.stringify(organizationJsonLd)}
-        </script>
-      </Helmet>
+      <RegionHelmet region="AU" />
 
       {/* Background Effects */}
       <div className="fixed inset-0 z-0">
