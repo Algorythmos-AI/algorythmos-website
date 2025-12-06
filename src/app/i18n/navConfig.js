@@ -1,43 +1,82 @@
-// src/i18n/navConfig.js
+// src/app/i18n/navConfig.js
 // Region-aware navigation configuration
 
 /**
- * Navigation configuration per region
- * Each item has:
- * - key: translation key for the label
- * - path: the path suffix (will be prefixed with region prefix)
- * - external: if true, path is used as-is (for external links)
+ * Region path prefixes
  */
-export const NAV_CONFIG = {
-  GLOBAL: [
-    { key: "nav.home", path: "/" },
-    { key: "nav.services", path: "/services" },
-    { key: "nav.pricing", path: "/pricing" },
-    { key: "nav.about", path: "/about" },
-    { key: "nav.blog", path: "/blog" },
-    { key: "nav.caseStudies", path: "/case-studies" },
-    { key: "nav.contact", path: "/contact" },
-  ],
-  AU: [
-    { key: "nav.home", path: "/au" },
-    { key: "nav.services", path: "/services" },
-    { key: "nav.pricing", path: "/pricing" },
-    { key: "nav.about", path: "/about" },
-    { key: "nav.caseStudies", path: "/case-studies" },
-    { key: "nav.contact", path: "/contact" },
-  ],
-  FR: [
-    { key: "nav.home", path: "/fr" },
-    { key: "nav.services", path: "/services" },
-    { key: "nav.pricing", path: "/pricing" },
-    { key: "nav.about", path: "/about" },
-    { key: "nav.caseStudies", path: "/case-studies" },
-    { key: "nav.contact", path: "/contact" },
-  ],
+const REGION_PREFIXES = {
+  GLOBAL: '',
+  AU: '/au',
+  FR: '/fr',
+  // Future regions:
+  // IN: '/in',
+  // UK: '/uk',
+  // US: '/us',
 };
 
 /**
- * Footer navigation links per region
+ * Generate region-aware path
+ * @param {string} region - Region code (GLOBAL, AU, FR, etc.)
+ * @param {string} path - Base path (e.g., "/about", "/services")
+ * @returns {string} Region-prefixed path
+ */
+export function withRegionPath(region, path) {
+  // Home path for non-global regions
+  if (path === '/' && region !== 'GLOBAL') {
+    return REGION_PREFIXES[region] || '/';
+  }
+  
+  // Global uses paths as-is
+  if (region === 'GLOBAL') {
+    return path;
+  }
+  
+  // Add region prefix
+  const prefix = REGION_PREFIXES[region] || '';
+  return `${prefix}${path}`;
+}
+
+/**
+ * Base navigation items (without region prefixes)
+ * These are the canonical paths that get prefixed per region
+ */
+const BASE_NAV_ITEMS = [
+  { key: "nav.home", path: "/" },
+  { key: "nav.services", path: "/services" },
+  { key: "nav.pricing", path: "/pricing" },
+  { key: "nav.about", path: "/about" },
+  { key: "nav.blog", path: "/blog" },
+  { key: "nav.caseStudies", path: "/case-studies" },
+  { key: "nav.contact", path: "/contact" },
+];
+
+/**
+ * Region-specific nav overrides (optional)
+ * Use this to hide/show items per region
+ */
+const REGION_NAV_OVERRIDES = {
+  AU: {
+    // AU doesn't show blog in nav
+    exclude: ["nav.blog"],
+  },
+  FR: {
+    // FR doesn't show blog in nav
+    exclude: ["nav.blog"],
+  },
+};
+
+/**
+ * Navigation configuration per region (legacy format - kept for backwards compatibility)
+ * Now auto-generated with proper region prefixes
+ */
+export const NAV_CONFIG = {
+  GLOBAL: BASE_NAV_ITEMS,
+  AU: BASE_NAV_ITEMS,
+  FR: BASE_NAV_ITEMS,
+};
+
+/**
+ * Footer navigation links (base paths)
  */
 export const FOOTER_NAV = {
   services: [
@@ -59,17 +98,39 @@ export const FOOTER_NAV = {
 };
 
 /**
- * Get navigation items for a specific region
+ * Get navigation items for a specific region with proper prefixes
+ * @param {string} region - Region code
+ * @returns {Array} Navigation items with region-prefixed paths
  */
 export function getNavItems(region) {
-  return NAV_CONFIG[region] || NAV_CONFIG.GLOBAL;
+  const overrides = REGION_NAV_OVERRIDES[region] || {};
+  const excludeKeys = overrides.exclude || [];
+  
+  return BASE_NAV_ITEMS
+    .filter(item => !excludeKeys.includes(item.key))
+    .map(item => ({
+      ...item,
+      path: withRegionPath(region, item.path),
+    }));
 }
 
 /**
- * Get footer navigation items
+ * Get footer navigation items with region prefixes
+ * @param {string} region - Region code
+ * @returns {Object} Footer nav sections with region-prefixed paths
  */
-export function getFooterNav() {
-  return FOOTER_NAV;
+export function getFooterNav(region) {
+  const prefixItems = (items) => 
+    items.map(item => ({
+      ...item,
+      path: withRegionPath(region, item.path),
+    }));
+
+  return {
+    services: prefixItems(FOOTER_NAV.services),
+    company: prefixItems(FOOTER_NAV.company),
+    resources: prefixItems(FOOTER_NAV.resources),
+  };
 }
 
 export default NAV_CONFIG;

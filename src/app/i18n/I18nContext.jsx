@@ -1,7 +1,8 @@
-// src/i18n/I18nContext.jsx
+// src/app/i18n/I18nContext.jsx
 // Enterprise-grade i18n context for multi-region localisation
 import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { getAutoRedirectInfo, detectRegionFromBrowser } from '../routing/regionDetection';
 
 // Import translation files
 import enGlobal from './en.global.json';
@@ -98,15 +99,28 @@ export function I18nProvider({ children }) {
     }
   }, [region]);
 
-  // Restore region from localStorage on mount (only if URL is root)
+  // Auto-detect region on first visit OR restore from localStorage
   useEffect(() => {
     if (location.pathname === '/') {
       try {
         const stored = localStorage.getItem(STORAGE_KEY);
+        
         if (stored && REGIONS[stored] && stored !== 'GLOBAL') {
-          // If user previously selected a region, redirect them
+          // Returning user: redirect to their stored preference
           const targetPath = REGIONS[stored].pathPrefix || '/';
           if (location.pathname !== targetPath) {
+            navigate(targetPath, { replace: true });
+          }
+        } else if (!stored) {
+          // First-time visitor: auto-detect from browser locale
+          const { shouldRedirect, targetPath, detectedRegion } = getAutoRedirectInfo(
+            location.pathname, 
+            STORAGE_KEY
+          );
+          
+          if (shouldRedirect && targetPath) {
+            // Store the detected region so we don't auto-detect again
+            localStorage.setItem(STORAGE_KEY, detectedRegion);
             navigate(targetPath, { replace: true });
           }
         }

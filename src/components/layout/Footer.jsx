@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Youtube, Linkedin, Twitter, Github, CalendarDays, PenLine } from "lucide-react";
 import logo from "../../assets/Algorythmos.png";
+import { useI18n } from "../../app/i18n/I18nContext.jsx";
+import { withRegionPath } from "../../app/i18n/navConfig.js";
 
 // X Icon Component
 const XIcon = ({ className = "h-5 w-5" }) => (
@@ -16,9 +18,13 @@ const XIcon = ({ className = "h-5 w-5" }) => (
 );
 
 const Footer = () => {
+  const { region } = useI18n();
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
+  
+  // Helper to generate region-aware paths
+  const rp = (path) => withRegionPath(region, path);
 
   const handleNewsletterSubmit = async (e) => {
     e.preventDefault();
@@ -180,27 +186,27 @@ const Footer = () => {
             <h3 className="text-white font-semibold mb-4">Links</h3>
             <ul className="space-y-3">
               <li>
-                <Link to="/services" className="text-gray-400 hover:text-white transition-colors duration-300">
+                <Link to={rp("/services")} className="text-gray-400 hover:text-white transition-colors duration-300">
                   Services
                 </Link>
               </li>
               <li>
-                <Link to="/case-studies" className="text-gray-400 hover:text-white transition-colors duration-300">
+                <Link to={rp("/case-studies")} className="text-gray-400 hover:text-white transition-colors duration-300">
                   Case Studies
                 </Link>
               </li>
               <li>
-                <Link to="/about" className="text-gray-400 hover:text-white transition-colors duration-300">
+                <Link to={rp("/about")} className="text-gray-400 hover:text-white transition-colors duration-300">
                   Benefits
                 </Link>
               </li>
               <li>
-                <Link to="/pricing" className="text-gray-400 hover:text-white transition-colors duration-300">
+                <Link to={rp("/pricing")} className="text-gray-400 hover:text-white transition-colors duration-300">
                   Pricing
                 </Link>
               </li>
               <li>
-                <Link to="/pricing#calculator" className="text-gray-400 hover:text-white transition-colors duration-300">
+                <Link to={rp("/pricing") + "#calculator"} className="text-gray-400 hover:text-white transition-colors duration-300">
                   ROI (Return On Investment) calculator
                 </Link>
               </li>
@@ -212,22 +218,22 @@ const Footer = () => {
             <h3 className="text-white font-semibold mb-4">Pages</h3>
             <ul className="space-y-3">
               <li>
-                <Link to="/" className="text-gray-400 hover:text-white transition-colors duration-300">
+                <Link to={rp("/")} className="text-gray-400 hover:text-white transition-colors duration-300">
                   Home
                 </Link>
               </li>
               <li>
-                <Link to="/about" className="text-gray-400 hover:text-white transition-colors duration-300">
+                <Link to={rp("/about")} className="text-gray-400 hover:text-white transition-colors duration-300">
                   About
                 </Link>
               </li>
               <li>
-                <Link to="/blog" className="text-gray-400 hover:text-white transition-colors duration-300">
+                <Link to={rp("/blog")} className="text-gray-400 hover:text-white transition-colors duration-300">
                   Blog
                 </Link>
               </li>
               <li>
-                <Link to="/contact" className="text-gray-400 hover:text-white transition-colors duration-300">
+                <Link to={rp("/contact")} className="text-gray-400 hover:text-white transition-colors duration-300">
                   Contact
                 </Link>
               </li>

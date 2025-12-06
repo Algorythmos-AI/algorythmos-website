@@ -1,15 +1,18 @@
-// src/components/Index/CountrySelector.jsx
-// Enterprise-grade country/region selector with globe icon dropdown
+// src/components/navigation/CountrySelector.jsx
+// Enterprise-grade country/region selector
 import React, { useState, useRef, useEffect } from "react";
-import { Globe, ChevronDown, Check } from "lucide-react";
+import { ChevronDown, Check } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { useI18n, REGIONS } from "../../app/i18n/I18nContext.jsx";
+import { withRegionPath } from "../../app/i18n/navConfig.js";
 
 /**
  * Country Selector Dropdown
- * Accenture-style region selector with globe icon
+ * Clean, minimal region selector matching enterprise standards
  */
 const CountrySelector = ({ variant = "desktop" }) => {
   const { region, setLanguageAndRegion, t, regionConfig } = useI18n();
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
   const buttonRef = useRef(null);
@@ -52,14 +55,6 @@ const CountrySelector = ({ variant = "desktop" }) => {
     setIsOpen(false);
   };
 
-  // Keyboard navigation
-  const handleKeyDown = (event, regionCode) => {
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      handleSelect(regionCode);
-    }
-  };
-
   // Get region list for dropdown
   const regionList = Object.values(REGIONS);
 
@@ -72,27 +67,21 @@ const CountrySelector = ({ variant = "desktop" }) => {
       <button
         ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
-        onKeyDown={(e) => {
-          if (e.key === "ArrowDown" && !isOpen) {
-            e.preventDefault();
-            setIsOpen(true);
-          }
-        }}
         aria-expanded={isOpen}
         aria-haspopup="listbox"
-        aria-label={t("region.selector.label")}
+        aria-label="Select region"
         className={`
-          flex items-center gap-2 rounded-lg transition-all duration-300
-          focus:outline-none focus:ring-2 focus:ring-violet-500/40
+          flex items-center gap-2 rounded-lg transition-all duration-200
+          focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-500/50
           ${isDesktop 
-            ? "px-3 py-2 text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 border border-white/20 hover:border-white/40" 
-            : "w-full px-4 py-3 text-left font-medium text-gray-300 hover:text-white hover:bg-white/10"
+            ? "px-3 py-2 text-sm text-gray-400 hover:text-white hover:bg-white/5" 
+            : "w-full px-4 py-3 text-left text-gray-400 hover:text-white hover:bg-white/5"
           }
         `}
       >
-        <Globe className="w-4 h-4" />
-        <span className="hidden sm:inline">{regionConfig.flag}</span>
-        <span className={isDesktop ? "hidden lg:inline" : ""}>
+        {/* Flag only - no duplicate globe */}
+        <span className="text-lg leading-none">{regionConfig.flag}</span>
+        <span className="font-medium">
           {region === "GLOBAL" ? "Global" : region}
         </span>
         <ChevronDown 
@@ -105,69 +94,45 @@ const CountrySelector = ({ variant = "desktop" }) => {
         <div
           ref={dropdownRef}
           role="listbox"
-          aria-label={t("region.selector.label")}
+          aria-label="Select region"
           className={`
-            absolute z-50 mt-2 w-56 rounded-xl
+            absolute z-50 mt-2 w-48 rounded-lg
             bg-black/95 backdrop-blur-xl
-            border border-white/10 shadow-2xl
-            py-2 overflow-hidden
-            animate-in fade-in slide-in-from-top-2 duration-200
+            border border-white/10 shadow-xl
+            py-1 overflow-hidden
             ${isDesktop ? "right-0" : "left-0"}
           `}
         >
-          {/* Header */}
-          <div className="px-4 py-2 border-b border-white/10">
-            <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
-              {t("region.selector.label")}
-            </span>
-          </div>
+          {regionList.map((regionItem) => (
+            <button
+              key={regionItem.code}
+              role="option"
+              aria-selected={region === regionItem.code}
+              onClick={() => handleSelect(regionItem.code)}
+              className={`
+                w-full flex items-center gap-3 px-4 py-2.5
+                text-left text-sm transition-colors duration-150
+                focus:outline-none focus:bg-white/10
+                ${region === regionItem.code 
+                  ? "text-white bg-white/5" 
+                  : "text-gray-400 hover:text-white hover:bg-white/5"
+                }
+              `}
+            >
+              {/* Flag */}
+              <span className="text-lg leading-none">{regionItem.flag}</span>
+              
+              {/* Label */}
+              <span className="flex-1 font-medium">
+                {regionItem.code === "GLOBAL" ? "Global" : regionItem.code}
+              </span>
 
-          {/* Region Options */}
-          <div className="py-1">
-            {regionList.map((regionItem) => (
-              <button
-                key={regionItem.code}
-                role="option"
-                aria-selected={region === regionItem.code}
-                onClick={() => handleSelect(regionItem.code)}
-                onKeyDown={(e) => handleKeyDown(e, regionItem.code)}
-                className={`
-                  w-full flex items-center gap-3 px-4 py-3
-                  text-left transition-all duration-200
-                  focus:outline-none focus:bg-white/10
-                  ${region === regionItem.code 
-                    ? "bg-gradient-to-r from-algviolet/20 to-transparent text-white" 
-                    : "text-gray-300 hover:bg-white/10 hover:text-white"
-                  }
-                `}
-              >
-                {/* Flag */}
-                <span className="text-xl">{regionItem.flag}</span>
-                
-                {/* Label */}
-                <div className="flex-1">
-                  <div className="font-medium">{t(regionItem.label)}</div>
-                  <div className="text-xs text-gray-500">
-                    {regionItem.code === "GLOBAL" && "algorythmos.fr"}
-                    {regionItem.code === "AU" && "algorythmos.com.au"}
-                    {regionItem.code === "FR" && "algorythmos.fr"}
-                  </div>
-                </div>
-
-                {/* Check mark for selected */}
-                {region === regionItem.code && (
-                  <Check className="w-4 h-4 text-algviolet" />
-                )}
-              </button>
-            ))}
-          </div>
-
-          {/* Footer hint */}
-          <div className="px-4 py-2 border-t border-white/10">
-            <span className="text-xs text-gray-500">
-              Content and services vary by region
-            </span>
-          </div>
+              {/* Check mark for selected */}
+              {region === regionItem.code && (
+                <Check className="w-4 h-4 text-violet-400" />
+              )}
+            </button>
+          ))}
         </div>
       )}
     </div>
