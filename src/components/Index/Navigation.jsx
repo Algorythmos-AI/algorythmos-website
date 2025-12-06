@@ -123,6 +123,36 @@ const NavBar = () => {
               Contact
             </NavLink>
             
+            {/* Region Links */}
+            <div className="flex items-center gap-1 ml-2 border-l border-white/20 pl-4">
+              <NavLink 
+                to="/au" 
+                className={({ isActive }) => 
+                  `relative px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-violet-500/40 ${
+                    isActive 
+                      ? "text-white bg-white/10" 
+                      : "text-gray-400 hover:text-white hover:bg-white/10"
+                  }`
+                }
+                title="Algorythmos Australia"
+              >
+                🇦🇺 AU
+              </NavLink>
+              <NavLink 
+                to="/fr" 
+                className={({ isActive }) => 
+                  `relative px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-violet-500/40 ${
+                    isActive 
+                      ? "text-white bg-white/10" 
+                      : "text-gray-400 hover:text-white hover:bg-white/10"
+                  }`
+                }
+                title="Algorythmos France"
+              >
+                🇫🇷 FR
+              </NavLink>
+            </div>
+            
             {/* Calculator CTA */}
             <Link
               to="/pricing#calculator"
@@ -240,6 +270,39 @@ const NavBar = () => {
             >
               Contact
             </NavLink>
+            
+            {/* Mobile Region Links */}
+            <div className="flex items-center gap-2 px-4 py-2 border-t border-white/10 mt-2 pt-3">
+              <span className="text-xs text-gray-500 mr-2">Region:</span>
+              <NavLink 
+                to="/au" 
+                className={({ isActive }) => 
+                  `px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-violet-500/40 ${
+                    isActive 
+                      ? "text-white bg-white/10" 
+                      : "text-gray-400 hover:text-white hover:bg-white/10"
+                  }`
+                }
+                onClick={() => setIsMenuOpen(false)}
+                title="Algorythmos Australia"
+              >
+                🇦🇺 AU
+              </NavLink>
+              <NavLink 
+                to="/fr" 
+                className={({ isActive }) => 
+                  `px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-violet-500/40 ${
+                    isActive 
+                      ? "text-white bg-white/10" 
+                      : "text-gray-400 hover:text-white hover:bg-white/10"
+                  }`
+                }
+                onClick={() => setIsMenuOpen(false)}
+                title="Algorythmos France"
+              >
+                🇫🇷 FR
+              </NavLink>
+            </div>
             
             {/* Mobile Calculator CTA */}
             <Link

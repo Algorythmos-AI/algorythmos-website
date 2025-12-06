@@ -17,6 +17,8 @@ import AgenticAutomationPage from './components/Index/services/AgenticAutomation
 import DocumentIntelligencePage from './components/Index/services/DocumentIntelligencePage.jsx';
 import SqlDashboardsPage from './components/Index/services/SqlDashboardsPage.jsx';
 import MlopsCicdPage from './components/Index/services/MlopsCicdPage.jsx';
+import AustraliaPage from './components/Index/AustraliaPage.jsx';
+import FrancePage from './components/Index/FrancePage.jsx';
 
 function App() {
   return (
@@ -38,6 +40,8 @@ function App() {
         <Route path="/blog" element={<BlogPage />} />
         <Route path="/blog/:slug" element={<BlogDetailPage />} />
         <Route path="/pricing" element={<PricingPage />} />
+        <Route path="/au" element={<AustraliaPage />} />
+        <Route path="/fr" element={<FrancePage />} />
       </Routes>
       <Footer />
     </>
