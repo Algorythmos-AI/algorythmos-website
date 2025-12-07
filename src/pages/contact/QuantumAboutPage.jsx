@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef, Suspense, lazy } from "react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { motion } from "framer-motion";
+import AnimatedSection from "../../components/ui/AnimatedSection";
 import { track } from "../../app/utils/analytics";
 import { persistUtmFromLocation, readStoredUtm } from "../../app/utils/utm";
 
@@ -272,11 +272,7 @@ const QuantumAboutPage = () => {
       {/* Hero */}
       <section className="relative min-h-screen flex items-center justify-center z-10 pt-24 sm:pt-28 md:pt-0 pb-12 sm:pb-16 md:pb-0">
         <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-          >
+          <AnimatedSection>
             <div className="inline-flex items-center px-5 sm:px-7 py-2.5 sm:py-3.5 mb-8 sm:mb-10 md:mb-12 bg-gradient-to-r from-blue-600/20 to-purple-600/20 backdrop-blur-sm border border-white/20 rounded-full text-sm sm:text-base md:text-lg font-medium shadow-lg">
               <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 mr-2.5 sm:mr-3 animate-spin" />
               Driving AI Innovations
@@ -294,7 +290,7 @@ const QuantumAboutPage = () => {
               <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent font-bold"> practical AI solutions </span>
               for enterprises and SMEs across France and Australia. Our mission is clear: to deliver secure, ROI-driven innovation that helps businesses from Suresnes to Sydney scale, adapt, and thrive.
             </p>
-          </motion.div>
+          </AnimatedSection>
         </div>
       </section>
 
@@ -302,27 +298,20 @@ const QuantumAboutPage = () => {
       <section className="py-16 sm:py-20 md:py-28 lg:py-32 xl:py-36 relative z-10">
         <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
           {/* Section Header */}
-          <motion.div 
+          <AnimatedSection 
             className="text-center mb-12 sm:mb-16 md:mb-20 lg:mb-24 xl:mb-28"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
           >
             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-extrabold mb-6 sm:mb-8 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent tracking-tight leading-[1.1] px-4">
               What Does Algorythmos Mean?
             </h2>
-          </motion.div>
+          </AnimatedSection>
 
           {/* Two-Card Fusion Layout */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 md:gap-10 lg:gap-12 xl:gap-14 mb-12 sm:mb-16 md:mb-20 lg:mb-24 xl:mb-28">
             {/* Card 1: Algorithm */}
-            <motion.div 
+            <AnimatedSection 
               className="group relative overflow-hidden rounded-2xl sm:rounded-3xl lg:rounded-[2.5rem] bg-white/[0.02] backdrop-blur-3xl border border-white/[0.08] p-6 sm:p-8 md:p-10 lg:p-12 xl:p-14 transition-all duration-700 hover:scale-[1.012] hover:border-blue-400/30 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.4)] hover:shadow-[0_24px_64px_-12px_rgba(59,130,246,0.25)]"  
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: 0.1 }}
+              delay={100}
             >
               {/* Refined gradient overlay */}
               <div className="absolute inset-0 bg-gradient-to-br from-blue-500/[0.08] via-blue-600/[0.04] to-purple-600/[0.06] opacity-80" />
@@ -356,15 +345,12 @@ const QuantumAboutPage = () => {
 
               {/* Softer hover glow effect */}
               <div className="absolute -inset-3 bg-gradient-to-r from-blue-500/20 via-blue-600/15 to-purple-600/20 rounded-[2.5rem] opacity-0 group-hover:opacity-100 blur-3xl transition-opacity duration-700 -z-10" />
-            </motion.div>
+            </AnimatedSection>
 
             {/* Card 2: Rhythmos */}
-            <motion.div 
+            <AnimatedSection 
               className="group relative overflow-hidden rounded-2xl sm:rounded-3xl lg:rounded-[2.5rem] bg-white/[0.02] backdrop-blur-3xl border border-white/[0.08] p-6 sm:p-8 md:p-10 lg:p-12 xl:p-14 transition-all duration-700 hover:scale-[1.012] hover:border-purple-400/30 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.4)] hover:shadow-[0_24px_64px_-12px_rgba(168,85,247,0.25)]"  
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: 0.2 }}
+              delay={200}
             >
               {/* Refined gradient overlay */}
               <div className="absolute inset-0 bg-gradient-to-br from-purple-500/[0.08] via-pink-600/[0.04] to-rose-600/[0.06] opacity-80" />
@@ -409,17 +395,14 @@ const QuantumAboutPage = () => {
 
               {/* Softer hover glow effect */}
               <div className="absolute -inset-3 bg-gradient-to-r from-purple-500/20 via-pink-600/15 to-rose-600/20 rounded-[2.5rem] opacity-0 group-hover:opacity-100 blur-3xl transition-opacity duration-700 -z-10" />
-            </motion.div>
+            </AnimatedSection>
           </div>
 
           {/* Explanation Text - Three Paragraphs */}
           <div className="max-w-4xl mx-auto mt-10 sm:mt-12 md:mt-16 lg:mt-20 xl:mt-24">
-            <motion.div 
+            <AnimatedSection 
               className="relative rounded-2xl sm:rounded-3xl lg:rounded-[2.5rem] bg-gradient-to-br from-gray-900/95 via-gray-850/90 to-gray-900/95 border border-white/[0.06] backdrop-blur-3xl px-6 py-10 sm:px-10 sm:py-12 md:px-12 md:py-14 lg:px-14 lg:py-16 xl:px-16 xl:py-20 shadow-[0_24px_88px_-12px_rgba(0,0,0,0.5)] overflow-hidden"
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.3 }}
+              delay={300}
             >
               {/* Top accent line */}
               <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-blue-400/40 via-purple-400/40 to-transparent" />
@@ -444,7 +427,7 @@ const QuantumAboutPage = () => {
 
               {/* Bottom decorative accent line */}
               <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-blue-500/30 via-purple-500/30 to-pink-500/30" />
-            </motion.div>
+            </AnimatedSection>
           </div>
         </div>
       </section>

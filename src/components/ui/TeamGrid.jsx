@@ -1,8 +1,8 @@
 // src/components/Index/TeamGrid.jsx
 import React from "react";
-import { motion, useReducedMotion } from "framer-motion";
 import { Linkedin, Github, Twitter as XIcon, Sparkles } from "lucide-react";
 import { TEAM } from "../../data/team";
+import { useInView } from "../../app/utils/useInView";
 
 // Resolve images from src/assets/team/* at build time (Vite)
 const images = import.meta.glob("/src/assets/team/*.{jpg,jpeg,png,webp}", {
@@ -31,16 +31,20 @@ const RolePill = ({ children }) => (
 );
 
 const Card = ({ person, index }) => {
-  const shouldReduce = useReducedMotion();
+  const [ref, isInView] = useInView({ threshold: 0.3, once: true });
   const imgUrl = resolveImage(person.image);
+  
+  // Check for reduced motion preference
+  const prefersReducedMotion = typeof window !== 'undefined' 
+    && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
   return (
-    <motion.article
-      initial={shouldReduce ? false : { opacity: 0, y: 16 }}
-      whileInView={shouldReduce ? {} : { opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.3 }}
-      transition={{ duration: 0.5, delay: index * 0.05 }}
-      className="group relative rounded-3xl bg-white/5 ring-1 ring-white/10 p-6 md:p-8 flex flex-col gap-4 hover:-translate-y-0.5 transition-transform duration-300"
+    <article
+      ref={ref}
+      className={`group relative rounded-3xl bg-white/5 ring-1 ring-white/10 p-6 md:p-8 flex flex-col gap-4 hover:-translate-y-0.5 transition-all duration-500 ${
+        prefersReducedMotion ? 'opacity-100' : 'animate-on-scroll'
+      } ${isInView ? 'in-view' : ''}`}
+      style={{ transitionDelay: prefersReducedMotion ? '0ms' : `${index * 50}ms` }}
       itemScope
       itemType="https://schema.org/Person"
     >
@@ -117,7 +121,7 @@ const Card = ({ person, index }) => {
           </a>
         )}
       </div>
-    </motion.article>
+    </article>
   );
 };
 

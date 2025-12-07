@@ -110,3 +110,159 @@ html {
 .animate-shimmer {
   animation: gradient-shimmer 2.6s linear infinite;
 }
+
+/* ===== Lightweight Animation Utilities ===== */
+/* Replaces Framer Motion for scroll-triggered animations */
+
+/* Fade-up animation keyframes */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Infinite floating animation for hero decorations */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes floatReverse {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(10px); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* Base classes for animated elements - hidden by default */
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.animate-on-scroll.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Variant: scale animation */
+.animate-scale-on-scroll {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.animate-scale-on-scroll.in-view {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Variant: fade only */
+.animate-fade-on-scroll {
+  opacity: 0;
+  transition: opacity 0.6s ease-out;
+}
+
+.animate-fade-on-scroll.in-view {
+  opacity: 1;
+}
+
+/* Utility classes for infinite animations */
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-float-reverse {
+  animation: floatReverse 5s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: float 8s ease-in-out infinite;
+}
+
+.animate-pulse-slow {
+  animation: pulse 4s ease-in-out infinite;
+}
+
+/* Stagger delay utilities */
+.delay-100 { transition-delay: 100ms; }
+.delay-200 { transition-delay: 200ms; }
+.delay-300 { transition-delay: 300ms; }
+.delay-400 { transition-delay: 400ms; }
+.delay-500 { transition-delay: 500ms; }
+.delay-600 { transition-delay: 600ms; }
+.delay-700 { transition-delay: 700ms; }
+.delay-800 { transition-delay: 800ms; }
+
+/* Animation delay utilities for keyframe animations */
+.anim-delay-100 { animation-delay: 100ms; }
+.anim-delay-200 { animation-delay: 200ms; }
+.anim-delay-300 { animation-delay: 300ms; }
+.anim-delay-500 { animation-delay: 500ms; }
+.anim-delay-700 { animation-delay: 700ms; }
+.anim-delay-1000 { animation-delay: 1000ms; }
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .animate-on-scroll,
+  .animate-scale-on-scroll,
+  .animate-fade-on-scroll {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  
+  .animate-float,
+  .animate-float-reverse,
+  .animate-float-slow,
+  .animate-pulse-slow {
+    animation: none;
+  }
+}

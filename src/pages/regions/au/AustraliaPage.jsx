@@ -1,7 +1,7 @@
 // src/pages/regions/au/AustraliaPage.jsx
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import AnimatedSection from "../../../components/ui/AnimatedSection";
 import { RegionHelmet } from "../../../app/seo";
 import {
   Globe,
@@ -160,11 +160,7 @@ const AustraliaPage = () => {
       {/* Hero Section */}
       <section className="relative z-10 min-h-[70vh] flex items-center justify-center px-4 pt-16">
         <div className="max-w-6xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
+          <AnimatedSection>
             <span className="inline-block px-4 py-2 mb-6 text-sm font-medium rounded-full bg-gradient-to-r from-algviolet/20 to-algblue/20 border border-algviolet/30 text-algpurple">
               🇦🇺 Serving Australian Businesses
             </span>
@@ -192,18 +188,14 @@ const AustraliaPage = () => {
                 View Pricing
               </Link>
             </div>
-          </motion.div>
+          </AnimatedSection>
         </div>
       </section>
 
       {/* Why Algorythmos in Australia */}
       <section className="relative z-10 py-24 px-4">
         <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+          <AnimatedSection
             className="text-center mb-16"
           >
             <h2 className="text-3xl md:text-5xl font-bold mb-6">
@@ -217,16 +209,13 @@ const AustraliaPage = () => {
               We bring European AI engineering excellence to Australian businesses, 
               combining global best practices with local market understanding.
             </p>
-          </motion.div>
+          </AnimatedSection>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {WHY_ALGORYTHMOS.map((item, index) => (
-              <motion.div
+              <AnimatedSection
                 key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
+                delay={index * 100}
                 className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-algviolet/50 transition-all duration-300"
               >
                 <div className="w-14 h-14 rounded-xl bg-gradient-to-r from-algviolet/20 to-algblue/20 flex items-center justify-center mb-4 text-algpurple">
@@ -234,7 +223,7 @@ const AustraliaPage = () => {
                 </div>
                 <h3 className="text-xl font-semibold mb-3 text-white">{item.title}</h3>
                 <p className="text-gray-400">{item.description}</p>
-              </motion.div>
+              </AnimatedSection>
             ))}
           </div>
         </div>
@@ -243,11 +232,7 @@ const AustraliaPage = () => {
       {/* Use Cases */}
       <section className="relative z-10 py-24 px-4 bg-gradient-to-b from-transparent via-purple-900/5 to-transparent">
         <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+          <AnimatedSection
             className="text-center mb-16"
           >
             <h2 className="text-3xl md:text-5xl font-bold mb-6">
@@ -259,16 +244,13 @@ const AustraliaPage = () => {
             <p className="text-lg text-gray-400 max-w-2xl mx-auto">
               AI solutions tailored for key Australian industry sectors.
             </p>
-          </motion.div>
+          </AnimatedSection>
 
           <div className="grid md:grid-cols-2 gap-8">
             {USE_CASES.map((useCase, index) => (
-              <motion.div
+              <AnimatedSection
                 key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
+                delay={index * 100}
                 className="p-8 rounded-2xl bg-white/5 border border-white/10 hover:border-white/20 transition-all duration-300"
               >
                 <div className={`w-16 h-16 rounded-xl bg-gradient-to-r ${useCase.gradient} bg-opacity-20 flex items-center justify-center mb-6 text-white`}>
@@ -276,7 +258,7 @@ const AustraliaPage = () => {
                 </div>
                 <h3 className="text-2xl font-semibold mb-4 text-white">{useCase.title}</h3>
                 <p className="text-gray-400 leading-relaxed">{useCase.description}</p>
-              </motion.div>
+              </AnimatedSection>
             ))}
           </div>
         </div>
@@ -285,11 +267,7 @@ const AustraliaPage = () => {
       {/* Services */}
       <section className="relative z-10 py-24 px-4">
         <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+          <AnimatedSection
             className="text-center mb-16"
           >
             <h2 className="text-3xl md:text-5xl font-bold mb-6">
@@ -301,16 +279,13 @@ const AustraliaPage = () => {
             <p className="text-lg text-gray-400 max-w-2xl mx-auto">
               End-to-end AI capabilities delivered by senior engineers who understand Australian business.
             </p>
-          </motion.div>
+          </AnimatedSection>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {SERVICES.map((service, index) => (
-              <motion.div
+              <AnimatedSection
                 key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
+                delay={index * 100}
               >
                 <Link
                   to={service.link}
@@ -324,7 +299,7 @@ const AustraliaPage = () => {
                   </h3>
                   <p className="text-gray-400 text-sm">{service.description}</p>
                 </Link>
-              </motion.div>
+              </AnimatedSection>
             ))}
           </div>
         </div>
@@ -333,11 +308,7 @@ const AustraliaPage = () => {
       {/* How We Work */}
       <section className="relative z-10 py-24 px-4 bg-gradient-to-b from-transparent via-blue-900/5 to-transparent">
         <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+          <AnimatedSection
             className="text-center mb-16"
           >
             <h2 className="text-3xl md:text-5xl font-bold mb-6">
@@ -349,22 +320,19 @@ const AustraliaPage = () => {
             <p className="text-lg text-gray-400 max-w-2xl mx-auto">
               A structured approach that delivers measurable results, fast.
             </p>
-          </motion.div>
+          </AnimatedSection>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {PROCESS_STEPS.map((step, index) => (
-              <motion.div
+              <AnimatedSection
                 key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
+                delay={index * 100}
                 className="relative p-6 rounded-2xl bg-white/5 border border-white/10"
               >
                 <div className="text-5xl font-bold text-algviolet/20 mb-4">{step.step}</div>
                 <h3 className="text-xl font-semibold mb-3 text-white">{step.title}</h3>
                 <p className="text-gray-400">{step.description}</p>
-              </motion.div>
+              </AnimatedSection>
             ))}
           </div>
         </div>
@@ -373,11 +341,7 @@ const AustraliaPage = () => {
       {/* CTA Section */}
       <section className="relative z-10 py-24 px-4">
         <div className="max-w-4xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+          <AnimatedSection
             className="p-12 rounded-3xl bg-gradient-to-r from-algviolet/20 via-algpurple/10 to-algblue/20 border border-white/10 text-center"
           >
             <Target className="w-16 h-16 mx-auto mb-6 text-algpurple" />
@@ -403,7 +367,7 @@ const AustraliaPage = () => {
                 Calculate Your ROI
               </Link>
             </div>
-          </motion.div>
+          </AnimatedSection>
         </div>
       </section>
     </div>

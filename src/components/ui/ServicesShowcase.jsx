@@ -1,5 +1,4 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { motion, useReducedMotion, AnimatePresence } from 'framer-motion';
 import useEmblaCarousel from 'embla-carousel-react';
 import { Link } from 'react-router-dom';
 import { Bot, FileText, BarChart3, ServerCog, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -18,7 +17,13 @@ const ServicesShowcase = ({
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [progress, setProgress] = useState(0);
   const [isPlaying, setIsPlaying] = useState(autoplay);
-  const prefersReducedMotion = useReducedMotion();
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setPrefersReducedMotion(window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    }
+  }, []);
 
   const services = [
     {
@@ -153,6 +158,32 @@ const ServicesShowcase = ({
       aria-roledescription="carousel"
       aria-label="Our core services"
     >
+      <style>{`
+        @keyframes glowPulse {
+          0%, 100% { transform: scale(1); opacity: 0.6; }
+          50% { transform: scale(1.05); opacity: 0.8; }
+        }
+        @keyframes iconBounce {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-8px); }
+        }
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideInLeft {
+          from { opacity: 0; transform: translateX(-20px); }
+          to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes scaleIn {
+          from { opacity: 0; transform: scale(0.9); }
+          to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+      `}</style>
       {/* Carousel Container */}
       <div className="embla overflow-hidden" ref={emblaRef}>
         <div className="embla__container flex">
@@ -164,90 +195,69 @@ const ServicesShowcase = ({
                 className="embla__slide flex-[0_0_100%] min-w-0"
                 aria-label={`${service.title} - ${index + 1} of ${services.length}`}
               >
-                <motion.div
+                <div
                   className="relative p-6 sm:p-8"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, ease: "easeOut" }}
+                  style={{ animation: prefersReducedMotion ? 'none' : 'fadeUp 0.6s ease-out forwards' }}
                 >
                   {/* Animated Gradient Glow */}
-                  <motion.div
+                  <div
                     className={`absolute -inset-6 rounded-[24px] blur-2xl opacity-60 bg-gradient-to-br ${service.gradient}`}
-                    animate={{ 
-                      scale: [1, 1.05, 1],
-                      opacity: [0.6, 0.8, 0.6]
+                    style={{ 
+                      mixBlendMode: 'screen',
+                      animation: prefersReducedMotion ? 'none' : 'glowPulse 4s ease-in-out infinite'
                     }}
-                    transition={{ 
-                      duration: 4, 
-                      repeat: Infinity, 
-                      ease: "easeInOut" 
-                    }}
-                    style={{ mixBlendMode: 'screen' }}
                   />
 
                   {/* Glassmorphic Card */}
                   <div className="relative rounded-3xl bg-slate-900/50 ring-1 ring-white/10 backdrop-blur-xl p-6 sm:p-8 border border-white/5">
                     {/* Icon */}
-                    <motion.div
+                    <div
                       className={`inline-flex p-4 bg-gradient-to-br ${service.gradient} rounded-2xl mb-6`}
-                      animate={prefersReducedMotion ? {} : { 
-                        y: [0, -8, 0] 
-                      }}
-                      transition={{ 
-                        duration: 3, 
-                        repeat: Infinity, 
-                        ease: "easeInOut" 
-                      }}
+                      style={{ animation: prefersReducedMotion ? 'none' : 'iconBounce 3s ease-in-out infinite' }}
                     >
                       <Icon className="h-8 w-8 text-white" />
-                    </motion.div>
+                    </div>
 
                     {/* Title */}
-                    <motion.h3
+                    <h3
                       className="text-2xl sm:text-3xl font-bold text-white mb-4"
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.2, duration: 0.5 }}
+                      style={{ animation: prefersReducedMotion ? 'none' : 'slideInLeft 0.5s ease-out 0.2s forwards', opacity: prefersReducedMotion ? 1 : 0 }}
                     >
                       {service.title}
-                    </motion.h3>
+                    </h3>
 
                     {/* Bullets */}
-                    <motion.ul
+                    <ul
                       className="space-y-2 mb-6"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: 0.3, duration: 0.5 }}
+                      style={{ animation: prefersReducedMotion ? 'none' : 'fadeIn 0.5s ease-out 0.3s forwards', opacity: prefersReducedMotion ? 1 : 0 }}
                     >
                       {service.bullets.map((bullet, idx) => (
-                        <motion.li
+                        <li
                           key={idx}
                           className="flex items-center text-gray-300 text-sm sm:text-base"
-                          initial={{ opacity: 0, x: -10 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: 0.4 + idx * 0.1, duration: 0.4 }}
+                          style={{ 
+                            animation: prefersReducedMotion ? 'none' : 'slideInLeft 0.4s ease-out forwards',
+                            animationDelay: prefersReducedMotion ? '0s' : `${0.4 + idx * 0.1}s`,
+                            opacity: prefersReducedMotion ? 1 : 0
+                          }}
                         >
                           <div className={`w-2 h-2 rounded-full bg-gradient-to-r ${service.gradient} mr-3`} />
                           {bullet}
-                        </motion.li>
+                        </li>
                       ))}
-                    </motion.ul>
+                    </ul>
 
                     {/* Metric */}
-                    <motion.div
+                    <div
                       className={`inline-block px-4 py-2 bg-gradient-to-r ${service.gradient} rounded-xl text-white font-semibold text-sm sm:text-base mb-6`}
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: 0.6, duration: 0.5 }}
+                      style={{ animation: prefersReducedMotion ? 'none' : 'scaleIn 0.5s ease-out 0.6s forwards', opacity: prefersReducedMotion ? 1 : 0 }}
                     >
                       {service.metric}
-                    </motion.div>
+                    </div>
 
                     {/* CTA Button */}
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.7, duration: 0.5 }}
+                    <div
+                      style={{ animation: prefersReducedMotion ? 'none' : 'fadeUp 0.5s ease-out 0.7s forwards', opacity: prefersReducedMotion ? 1 : 0 }}
                     >
                       <Link
                         to={service.ctaLink}
@@ -256,9 +266,9 @@ const ServicesShowcase = ({
                         {service.cta}
                         <ChevronRight className="ml-2 h-4 w-4" />
                       </Link>
-                    </motion.div>
+                    </div>
                   </div>
-                </motion.div>
+                </div>
               </div>
             );
           })}
@@ -306,11 +316,9 @@ const ServicesShowcase = ({
       {/* Progress Bar */}
       {autoplay && !prefersReducedMotion && (
         <div className="mt-4 h-1 bg-white/10 rounded-full overflow-hidden">
-          <motion.div
+          <div
             className="h-full bg-gradient-to-r from-violet-600 to-indigo-600"
-            initial={{ width: 0 }}
-            animate={{ width: `${progress}%` }}
-            transition={{ duration: 0.1, ease: "linear" }}
+            style={{ width: `${progress}%`, transition: 'width 0.1s linear' }}
           />
         </div>
       )}
