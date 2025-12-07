@@ -5,6 +5,7 @@ import { Helmet } from "react-helmet-async";
 import emailjs from "@emailjs/browser";       // npm install @emailjs/browser
 import { track } from "../../app/utils/analytics";
 import { persistUtmFromLocation, readStoredUtm } from "../../app/utils/utm";
+import { useI18n } from "../../app/i18n/I18nContext";
 // Footer is global via App.jsx
 
 const SERVICE_ID = "service_m5jcw4i";
@@ -13,6 +14,7 @@ const PUBLIC_KEY = "FtkTJ5DgfHW4fImxo";
 
 
 const QuantumContactPage = () => {
+  const { t, region } = useI18n();
   const [scrollY, setScrollY] = useState(0);
   const [showNav, setShowNav] = useState(false);
 
@@ -39,11 +41,11 @@ const QuantumContactPage = () => {
   const validate = (field, value) => {
     switch (field) {
       case "name":
-        return value.trim().length < 2 ? "Name must be at least 2 characters." : "";
+        return value.trim().length < 2 ? t("contactPage.validation.nameMin") : "";
       case "email":
-        return !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ? "Invalid email address." : "";
+        return !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ? t("contactPage.validation.emailInvalid") : "";
       case "message":
-        return value.trim().length < 10 ? "Message must be at least 10 characters." : "";
+        return value.trim().length < 10 ? t("contactPage.validation.messageMin") : "";
       default:
         return "";
     }
@@ -105,29 +107,22 @@ const QuantumContactPage = () => {
   return (
     <div className="min-h-screen bg-black text-white overflow-hidden relative">
       <Helmet>
-        <title>Contact | Algorythmos™</title>
+        <title>{t("contactPage.meta.title")}</title>
         <meta
           name="description"
-          content="Contact Algorythmos for AI consultancy and automation solutions across France and Australia. Book a consultation with our team in Suresnes or Sydney for collaboration, support, or inquiries."
+          content={t("contactPage.meta.description")}
         />
         <link rel="canonical" href="https://www.algorythmos.fr/contact" />
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="Contact Us | Algorythmos™" />
-        <meta property="og:description" content="Contact Algorythmos for AI consultancy and automation solutions across France and Australia. Book a consultation with our team in Suresnes or Sydney for collaboration, support, or inquiries." />
+        <meta property="og:title" content={t("contactPage.meta.title")} />
+        <meta property="og:description" content={t("contactPage.meta.description")} />
         <meta property="og:url" content="https://www.algorythmos.fr/contact" />
         <meta property="og:image" content="https://www.algorythmos.fr/Algorythmos.png" />
         <meta property="og:site_name" content="Algorythmos" />
-        <meta property="og:locale" content="en_US" />
+        <meta property="og:locale" content={region === "FR" ? "fr_FR" : "en_US"} />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Contact Us | Algorythmos™" />
-        <meta name="twitter:description" content="Contact Algorythmos for AI consultancy and automation solutions across France and Australia. Book a consultation with our team in Suresnes or Sydney for collaboration, support, or inquiries." />
-        <meta property="og:url" content="https://www.algorythmos.fr/contact" />
-        <meta property="og:image" content="https://www.algorythmos.fr/Algorythmos.png" />
-        <meta property="og:site_name" content="Algorythmos" />
-        <meta property="og:locale" content="en_US" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Contact | Algorythmos™" />
-        <meta name="twitter:description" content="Get in touch with Algorythmos for AI consultancy, collaboration, support, or inquiries. Book a consultation or send us a message." />
+        <meta name="twitter:title" content={t("contactPage.meta.title")} />
+        <meta name="twitter:description" content={t("contactPage.meta.description")} />
         <meta name="twitter:image" content="https://www.algorythmos.fr/Algorythmos.png" />
       </Helmet>
       
@@ -159,10 +154,10 @@ const QuantumContactPage = () => {
       {/* Contact Content */}
       <main className="pt-32 md:pt-32 pb-16 md:pb-32 px-4 sm:px-6 md:px-12 max-w-5xl mx-auto text-center relative z-10">
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-6 sm:mb-8 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-          Contact
+          {t("contactPage.hero.title")}
         </h1>
         <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 mb-8 sm:mb-12 px-4">
-          Contact Algorythmos for AI consultancy and automation across France and Australia. Get in touch with our team in Suresnes or Sydney for collaboration, support, or inquiries.
+          {t("contactPage.hero.subtitle")}
         </p>
 
         <div className="flex justify-center">
@@ -186,7 +181,7 @@ const QuantumContactPage = () => {
             {/* Name */}
             <div className="mb-2 text-left">
               <label htmlFor="name" className="block mb-2 text-sm sm:text-base font-medium text-gray-200">
-                Name
+                {t("contactPage.form.nameLabel")}
               </label>
               <input
                 id="name"
@@ -209,7 +204,7 @@ const QuantumContactPage = () => {
             {/* Email */}
             <div className="mb-2 text-left">
               <label htmlFor="email" className="block mb-2 text-sm sm:text-base font-medium text-gray-200">
-                Email
+                {t("contactPage.form.emailLabel")}
               </label>
               <input
                 id="email"
@@ -233,7 +228,7 @@ const QuantumContactPage = () => {
             {/* Message */}
             <div className="mb-2 text-left">
               <label htmlFor="message" className="block mb-2 text-sm sm:text-base font-medium text-gray-200">
-                Message
+                {t("contactPage.form.messageLabel")}
               </label>
               <textarea
                 id="message"
@@ -264,14 +259,14 @@ const QuantumContactPage = () => {
                   <svg className="animate-spin" width="20" height="20" fill="none" stroke="currentColor">
                     <circle cx="10" cy="10" r="8" strokeWidth="4" />
                   </svg>
-                  Sending...
+                  {t("contactPage.form.sendingButton")}
                 </span>
               ) : (
                 <span className="flex items-center justify-center gap-2">
                   <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path d="M2 12l8-8 8 8" />
                   </svg>
-                  Send Message
+                  {t("contactPage.form.submitButton")}
                 </span>
               )}
             </button>
@@ -300,12 +295,12 @@ const QuantumContactPage = () => {
             </svg>
           </span>
           <span className="font-semibold text-base text-white drop-shadow">
-            Message sent successfully!
+            {t("contactPage.snackbar.success")}
           </span>
           <button
             className="ml-auto text-white/80 hover:text-white text-lg px-2 py-1 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 transition-colors"
             onClick={() => setShowSnackbar(false)}
-            aria-label="Close notification"
+            aria-label={t("contactPage.snackbar.closeLabel")}
           >
             ✖
           </button>

@@ -1,73 +1,40 @@
 import { useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { CheckCircle } from "lucide-react";
+import { useI18n } from "../../app/i18n/I18nContext";
 
-const caseStudies = {
-  "financial-compliance": {
-    title: "AI in Financial Services – Compliance Automation",
-    meta: "AI compliance automation in financial services. Faster reporting, fewer errors, 40% cost savings.",
-    challenge: "Manual compliance reporting took days and was error-prone.",
-    solution: "We deployed an AI-powered compliance engine with automated validation and integration into client systems.",
-    results: [
-      "Reports generated in minutes",
-      "99% accuracy",
-      "40% cost savings",
-    ],
-    cta: "Contact Algorythmos to explore AI for compliance automation.",
-  },
-  "manufacturing-docs": {
-    title: "AI Automation in Manufacturing – Document Intelligence",
-    meta: "AI document intelligence in manufacturing. Faster invoice processing, fewer errors, automated validation.",
-    challenge: "Processing thousands of invoices manually caused backlogs and errors.",
-    solution:
-      "We deployed OCR + NLP to extract fields, validate SKUs, and automate approvals with human-in-the-loop checks.",
-    results: [
-      "50% less manual effort",
-      "30% better data accuracy",
-      "2x faster invoice cycle",
-    ],
-    cta: "Contact Algorythmos to explore AI for manufacturing operations.",
-  },
-  "healthcare-mlops": {
-    title: "AI for Healthcare – MLOps Platform Engineering",
-    meta: "MLOps in healthcare. Deploy AI models faster with CI/CD and compliance.",
-    challenge: "Healthcare models stalled moving from prototype to production.",
-    solution:
-      "We added CI/CD pipelines with data validation, versioning, drift detection, and compliance monitoring.",
-    results: [
-      "60% faster deployments",
-      "50% fewer failures",
-      "Traceable model lifecycle",
-    ],
-    cta: "Contact Algorythmos to explore MLOps for healthcare.",
-  },
-  "retail-sql": {
-    title: "AI for Retail Analytics – SQL Dashboards",
-    meta: "Retail analytics with AI dashboards. Real-time KPIs and demand insights.",
-    challenge: "Retailers lacked unified demand visibility across regions.",
-    solution:
-      "We built SQL dashboards with demand forecasting, promotion analysis, and real-time store-level KPIs.",
-    results: [
-      "15% revenue uplift",
-      "Faster planning cycles",
-      "Consistent multi-region metrics",
-    ],
-    cta: "Contact Algorythmos to explore AI for retail analytics.",
-  },
-};
+// Valid case study slugs
+const studySlugs = ["financial-compliance", "manufacturing-docs", "healthcare-mlops", "retail-sql"];
 
 export default function CaseStudyPage() {
+  const { t, region } = useI18n();
   const { slug } = useParams();
-  const study = caseStudies[slug];
+  
+  // Check if slug is valid
+  const isValidSlug = studySlugs.includes(slug);
+  
+  // Build study from translations
+  const study = isValidSlug ? {
+    title: t(`caseStudyDetail.studies.${slug}.title`),
+    meta: t(`caseStudyDetail.studies.${slug}.meta`),
+    challenge: t(`caseStudyDetail.studies.${slug}.challenge`),
+    solution: t(`caseStudyDetail.studies.${slug}.solution`),
+    results: [
+      t(`caseStudyDetail.studies.${slug}.results.0`),
+      t(`caseStudyDetail.studies.${slug}.results.1`),
+      t(`caseStudyDetail.studies.${slug}.results.2`),
+    ],
+    cta: t(`caseStudyDetail.studies.${slug}.cta`),
+  } : null;
 
   if (!study) {
     return (
       <div className="min-h-screen bg-black text-white">
         <main className="pt-40 pb-20 px-6 max-w-3xl mx-auto text-center">
           <h1 className="text-4xl font-black mb-6 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-            Case study not found
+            {t("caseStudyDetail.notFound.title")}
           </h1>
-          <p className="text-gray-400">We couldn't find the case study you requested.</p>
+          <p className="text-gray-400">{t("caseStudyDetail.notFound.message")}</p>
         </main>
       </div>
     );
@@ -88,6 +55,7 @@ export default function CaseStudyPage() {
         <meta property="og:description" content={study.meta} />
         <meta property="og:type" content="article" />
         <meta property="og:url" content={`https://algorythmos.fr/case-studies/${slug}`} />
+        <meta property="og:locale" content={region === "FR" ? "fr_FR" : "en_US"} />
       </Helmet>
 
       <main className="pt-40 pb-24 px-6">
@@ -106,7 +74,7 @@ export default function CaseStudyPage() {
 
           {/* Challenge */}
           <section className="mb-10">
-            <h2 className="text-2xl font-bold mb-3">Challenge</h2>
+            <h2 className="text-2xl font-bold mb-3">{t("caseStudyDetail.sections.challenge")}</h2>
             <div className="p-6 rounded-2xl bg-gradient-to-br from-gray-900/60 to-black/60 border border-gray-800/50">
               <p className="text-gray-200 leading-relaxed">{study.challenge}</p>
             </div>
@@ -114,7 +82,7 @@ export default function CaseStudyPage() {
 
           {/* Solution */}
           <section className="mb-10">
-            <h2 className="text-2xl font-bold mb-3">Solution</h2>
+            <h2 className="text-2xl font-bold mb-3">{t("caseStudyDetail.sections.solution")}</h2>
             <div className="p-6 rounded-2xl bg-gradient-to-br from-gray-900/60 to-black/60 border border-gray-800/50">
               <p className="text-gray-200 leading-relaxed">{study.solution}</p>
             </div>
@@ -122,7 +90,7 @@ export default function CaseStudyPage() {
 
           {/* Results */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">Results</h2>
+            <h2 className="text-2xl font-bold mb-4">{t("caseStudyDetail.sections.results")}</h2>
             <ul className="space-y-3">
               {study.results.map((r, idx) => (
                 <li
@@ -143,7 +111,7 @@ export default function CaseStudyPage() {
               className="group relative inline-flex items-center justify-center px-8 py-4 rounded-2xl font-semibold text-lg bg-gradient-to-r from-blue-600 to-purple-600 overflow-hidden"
             >
               <span className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
-              <span className="relative">Book a Consultation</span>
+              <span className="relative">{t("caseStudyDetail.cta.button")}</span>
             </a>
             <span className="text-gray-400">
               {study.cta}

@@ -1,125 +1,71 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
+import { useI18n } from "../../app/i18n/I18nContext";
 
-const blogs = {
+// Blog structure definitions (content comes from i18n)
+const blogStructures = {
   "gdpr-ai": {
-    title: "GDPR & AI: What SMEs Need to Know",
-    meta: "How to ensure AI systems are GDPR-ready and aligned with the EU AI Act.",
-    date: "Aug 2025",
     content: [
-      {
-        heading: "Overview",
-        paragraphs: [
-          "SMEs adopting AI must align with GDPR and prepare for the EU AI Act. The goal is simple: protect personal data, design for transparency, and document risk mitigations.",
-          "This guide outlines practical steps for data mapping, DPIA preparation, and model governance so your AI projects are compliant by design.",
-        ],
-      },
-      {
-        heading: "Key Requirements",
-        list: [
-          "Data minimization and lawful basis for processing",
-          "Human oversight for high-risk AI systems",
-          "Model and data lineage with audit trails",
-          "Vendor assessments and standardized DPAs",
-        ],
-      },
-      {
-        heading: "Action Plan",
-        paragraphs: [
-          "Start with a data inventory, map flows, and identify risks. Establish governance with clear owners, versioning, and review cadences.",
-          "Adopt secure MLOps practices with automated testing, bias checks, and drift detection to ensure continuous compliance.",
-        ],
-      },
+      { heading: true, paragraphs: [0, 1] },
+      { heading: true, list: [0, 1, 2, 3] },
+      { heading: true, paragraphs: [0, 1] },
     ],
   },
   "mlops-production": {
-    title: "MLOps: From Prototype to Production",
-    meta: "Best practices for scaling AI securely using CI/CD, Docker, and Kubernetes.",
-    date: "Jul 2025",
     content: [
-      {
-        heading: "Why MLOps",
-        paragraphs: [
-          "Moving from notebooks to production requires repeatable pipelines, strong observability, and clear ownership. MLOps brings DevOps discipline to AI.",
-          "CI/CD for models reduces release friction and increases reliability. This lets teams ship improvements fast without sacrificing safety.",
-        ],
-      },
-      {
-        heading: "Pillars of Production",
-        list: [
-          "Automated training and evaluation gates",
-          "Model registry with versioning and lineage",
-          "Drift detection and alerting",
-          "Blue/green or canary rollouts with rollback",
-        ],
-      },
-      {
-        heading: "Tooling Stack",
-        paragraphs: [
-          "Combine Docker, Kubernetes, and CI/CD to standardize packaging and deployments. Add feature stores, experiment tracking, and policy-as-code for guardrails.",
-        ],
-      },
+      { heading: true, paragraphs: [0, 1] },
+      { heading: true, list: [0, 1, 2, 3] },
+      { heading: true, paragraphs: [0] },
     ],
   },
   "agentic-ai": {
-    title: "Agentic AI: Moving Beyond Chatbots",
-    meta: "Multi-step, goal-driven automation for real business outcomes.",
-    date: "Jun 2025",
     content: [
-      {
-        heading: "From Q&A to Workflows",
-        paragraphs: [
-          "Agentic AI orchestrates tools and APIs to complete tasks end-to-end. It moves beyond question answering to deliver measurable outcomes.",
-        ],
-      },
-      {
-        heading: "Design Principles",
-        list: [
-          "Explicit goals and constraints",
-          "Deterministic tool interfaces",
-          "Safety rails and audit trails",
-          "Cost-aware planning and retries",
-        ],
-      },
+      { heading: true, paragraphs: [0] },
+      { heading: true, list: [0, 1, 2, 3] },
     ],
   },
   "llmsecops": {
-    title: "LLMSecOps: Securing Large Language Models",
-    meta: "A lifecycle approach to safe, trustworthy AI adoption.",
-    date: "May 2025",
     content: [
-      {
-        heading: "Threat Model",
-        paragraphs: [
-          "LLMs introduce new risks: prompt injection, data leakage, and jailbreaks. LLMSecOps applies security controls across the model lifecycle.",
-        ],
-      },
-      {
-        heading: "Controls",
-        list: [
-          "Input/output filtering and policy enforcement",
-          "Secrets handling and token hygiene",
-          "Red-teaming and adversarial testing",
-          "Monitoring and incident response playbooks",
-        ],
-      },
+      { heading: true, paragraphs: [0] },
+      { heading: true, list: [0, 1, 2, 3] },
     ],
   },
 };
 
+const blogSlugs = ["gdpr-ai", "mlops-production", "agentic-ai", "llmsecops"];
+
 export default function BlogDetailPage() {
+  const { t, region } = useI18n();
   const { slug } = useParams();
-  const post = blogs[slug];
+  
+  // Check if slug is valid
+  const isValidSlug = blogSlugs.includes(slug);
+  
+  // Build post from translations
+  const post = isValidSlug ? {
+    title: t(`blogDetail.posts.${slug}.title`),
+    meta: t(`blogDetail.posts.${slug}.meta`),
+    date: t(`blogDetail.posts.${slug}.date`),
+    content: blogStructures[slug].content.map((section, idx) => ({
+      heading: section.heading ? t(`blogDetail.posts.${slug}.content.${idx}.heading`) : null,
+      paragraphs: section.paragraphs?.map((pIdx) => 
+        t(`blogDetail.posts.${slug}.content.${idx}.paragraphs.${pIdx}`)
+      ),
+      list: section.list?.map((lIdx) => 
+        t(`blogDetail.posts.${slug}.content.${idx}.list.${lIdx}`)
+      ),
+    })),
+  } : null;
 
   if (!post) {
     return (
       <div className="min-h-screen bg-black text-white">
         <main className="pt-40 pb-20 px-6 max-w-3xl mx-auto text-center">
           <h1 className="text-4xl font-black mb-6 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-            Blog post not found
+            {t("blogDetail.notFound.title")}
           </h1>
-          <p className="text-gray-400">We couldn't find the blog you requested.</p>
+          <p className="text-gray-400">{t("blogDetail.notFound.message")}</p>
         </main>
       </div>
     );
@@ -138,6 +84,7 @@ export default function BlogDetailPage() {
         <meta property="og:description" content={post.meta} />
         <meta property="og:type" content="article" />
         <meta property="og:url" content={`https://algorythmos.fr/blog/${slug}`} />
+        <meta property="og:locale" content={region === "FR" ? "fr_FR" : "en_US"} />
       </Helmet>
 
       <main className="pt-40 pb-24 px-6">
@@ -181,7 +128,7 @@ export default function BlogDetailPage() {
               className="group relative inline-flex items-center justify-center px-8 py-4 rounded-2xl font-semibold text-lg bg-gradient-to-r from-blue-600 to-purple-600 overflow-hidden"
             >
               <span className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
-              <span className="relative">Speak with our team</span>
+              <span className="relative">{t("blogDetail.cta.text")}</span>
             </a>
           </div>
         </article>
