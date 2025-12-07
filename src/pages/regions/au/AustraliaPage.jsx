@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import AnimatedSection from "../../../components/ui/AnimatedSection";
 import { RegionHelmet } from "../../../app/seo";
+import { useI18n } from "../../../app/i18n/I18nContext";
 import {
   Globe,
   Cpu,
@@ -20,111 +21,46 @@ import {
   Target,
 } from "lucide-react";
 
-/* ----------------------------- Use Cases ----------------------------- */
-const USE_CASES = [
-  {
-    icon: <Stethoscope className="w-8 h-8" />,
-    title: "Healthcare",
-    description: "Automate patient intake, medical records processing, and clinical document extraction with AI that meets Australian healthcare compliance standards.",
-    gradient: "from-blue-500 to-cyan-500",
-  },
-  {
-    icon: <Truck className="w-8 h-8" />,
-    title: "Logistics & Supply Chain",
-    description: "Streamline freight documentation, customs processing, and supply chain visibility with intelligent document automation and real-time dashboards.",
-    gradient: "from-green-500 to-emerald-500",
-  },
-  {
-    icon: <HardHat className="w-8 h-8" />,
-    title: "Mining & Resources",
-    description: "Deploy AI-powered analytics for operational efficiency, safety compliance reporting, and predictive maintenance across remote sites.",
-    gradient: "from-orange-500 to-amber-500",
-  },
-  {
-    icon: <Building2 className="w-8 h-8" />,
-    title: "Financial Services",
-    description: "Accelerate loan processing, automate compliance checks, and extract insights from financial documents with enterprise-grade security.",
-    gradient: "from-purple-500 to-pink-500",
-  },
+/* ----------------------------- Icon Maps ----------------------------- */
+const USE_CASE_ICONS = [
+  <Stethoscope className="w-8 h-8" />,
+  <Truck className="w-8 h-8" />,
+  <HardHat className="w-8 h-8" />,
+  <Building2 className="w-8 h-8" />,
 ];
 
-/* ----------------------------- Services ----------------------------- */
-const SERVICES = [
-  {
-    icon: <Cpu className="w-6 h-6" />,
-    title: "Agentic Automation",
-    description: "AI agents that orchestrate complex workflows, eliminate manual handoffs, and scale with your business.",
-    link: "/services/agentic-automation",
-  },
-  {
-    icon: <FileText className="w-6 h-6" />,
-    title: "Document Intelligence",
-    description: "Extract, classify, and process documents automatically with OCR and NLP tailored to Australian business formats.",
-    link: "/services/document-intelligence",
-  },
-  {
-    icon: <BarChart3 className="w-6 h-6" />,
-    title: "SQL Analytics Dashboards",
-    description: "Transform raw data into executive-ready dashboards that drive decisions across your organisation.",
-    link: "/services/sql-dashboards",
-  },
-  {
-    icon: <Settings className="w-6 h-6" />,
-    title: "MLOps & CI/CD",
-    description: "Production-grade machine learning pipelines with continuous integration, monitoring, and governance.",
-    link: "/services/mlops-cicd",
-  },
+const USE_CASE_GRADIENTS = [
+  "from-blue-500 to-cyan-500",
+  "from-green-500 to-emerald-500",
+  "from-orange-500 to-amber-500",
+  "from-purple-500 to-pink-500",
 ];
 
-/* ----------------------------- Why Algorythmos ----------------------------- */
-const WHY_ALGORYTHMOS = [
-  {
-    icon: <Globe className="w-8 h-8" />,
-    title: "Local Expertise, Global Standards",
-    description: "We combine Australian market knowledge with world-class AI engineering practices from Europe.",
-  },
-  {
-    icon: <Shield className="w-8 h-8" />,
-    title: "Security & Compliance First",
-    description: "Built for Australian Privacy Principles (APPs) and enterprise security requirements from day one.",
-  },
-  {
-    icon: <Zap className="w-8 h-8" />,
-    title: "Rapid Time-to-Value",
-    description: "From discovery to production in weeks, not months. We focus on measurable ROI, not endless pilots.",
-  },
-  {
-    icon: <Users className="w-8 h-8" />,
-    title: "Boutique Partnership Model",
-    description: "Direct access to senior AI engineers who understand your business, not layers of account managers.",
-  },
+const SERVICE_ICONS = [
+  <Cpu className="w-6 h-6" />,
+  <FileText className="w-6 h-6" />,
+  <BarChart3 className="w-6 h-6" />,
+  <Settings className="w-6 h-6" />,
 ];
 
-/* ----------------------------- How We Work ----------------------------- */
-const PROCESS_STEPS = [
-  {
-    step: "01",
-    title: "Discovery & Assessment",
-    description: "We map your current workflows, identify automation opportunities, and quantify potential ROI.",
-  },
-  {
-    step: "02",
-    title: "Proof of Concept",
-    description: "Build a working prototype on your data within 2-4 weeks to validate the approach and refine requirements.",
-  },
-  {
-    step: "03",
-    title: "Production Deployment",
-    description: "Deploy to production with CI/CD pipelines, monitoring, and security controls tailored to your infrastructure.",
-  },
-  {
-    step: "04",
-    title: "Ongoing Partnership",
-    description: "Continuous improvement, model retraining, and expansion to new use cases as your needs evolve.",
-  },
+const SERVICE_LINKS = [
+  "/services/agentic-automation",
+  "/services/document-intelligence",
+  "/services/sql-dashboards",
+  "/services/mlops-cicd",
 ];
+
+const WHY_US_ICONS = [
+  <Globe className="w-8 h-8" />,
+  <Shield className="w-8 h-8" />,
+  <Zap className="w-8 h-8" />,
+  <Users className="w-8 h-8" />,
+];
+
+const STEP_NUMBERS = ["01", "02", "03", "04"];
 
 const AustraliaPage = () => {
+  const { t } = useI18n();
   const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
@@ -162,30 +98,29 @@ const AustraliaPage = () => {
         <div className="max-w-6xl mx-auto text-center">
           <AnimatedSection>
             <span className="inline-block px-4 py-2 mb-6 text-sm font-medium rounded-full bg-gradient-to-r from-algviolet/20 to-algblue/20 border border-algviolet/30 text-algpurple">
-              🇦🇺 Serving Australian Businesses
+              {t("regionAu.hero.badge")}
             </span>
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
               <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                Algorythmos Australia
+                {t("regionAu.hero.title")}
               </span>
             </h1>
             <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto mb-8 leading-relaxed">
-              AI consultancy delivering agentic automation, document intelligence, and MLOps 
-              for Australian SMEs and enterprises — from Sydney to Perth, Melbourne to Brisbane.
+              {t("regionAu.hero.subtitle")}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 to="/contact"
                 className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-algviolet via-algpurple to-algblue text-white font-semibold shadow-brand hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
               >
-                Book a Discovery Call
+                {t("regionAu.hero.cta.primary")}
                 <ArrowRight className="w-5 h-5" />
               </Link>
               <Link
                 to="/pricing"
                 className="inline-flex items-center gap-2 px-8 py-4 rounded-xl border-2 border-white/20 text-white font-semibold hover:bg-white/10 transition-all duration-300"
               >
-                View Pricing
+                {t("regionAu.hero.cta.secondary")}
               </Link>
             </div>
           </AnimatedSection>
@@ -199,30 +134,25 @@ const AustraliaPage = () => {
             className="text-center mb-16"
           >
             <h2 className="text-3xl md:text-5xl font-bold mb-6">
-              Why Choose{" "}
-              <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                Algorythmos
-              </span>{" "}
-              in Australia?
+              {t("regionAu.whyUs.title")}
             </h2>
             <p className="text-lg text-gray-400 max-w-2xl mx-auto">
-              We bring European AI engineering excellence to Australian businesses, 
-              combining global best practices with local market understanding.
+              {t("regionAu.whyUs.subtitle")}
             </p>
           </AnimatedSection>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {WHY_ALGORYTHMOS.map((item, index) => (
+            {[0, 1, 2, 3].map((index) => (
               <AnimatedSection
                 key={index}
                 delay={index * 100}
                 className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-algviolet/50 transition-all duration-300"
               >
                 <div className="w-14 h-14 rounded-xl bg-gradient-to-r from-algviolet/20 to-algblue/20 flex items-center justify-center mb-4 text-algpurple">
-                  {item.icon}
+                  {WHY_US_ICONS[index]}
                 </div>
-                <h3 className="text-xl font-semibold mb-3 text-white">{item.title}</h3>
-                <p className="text-gray-400">{item.description}</p>
+                <h3 className="text-xl font-semibold mb-3 text-white">{t(`regionAu.whyUs.items.${index}.title`)}</h3>
+                <p className="text-gray-400">{t(`regionAu.whyUs.items.${index}.description`)}</p>
               </AnimatedSection>
             ))}
           </div>
@@ -236,28 +166,25 @@ const AustraliaPage = () => {
             className="text-center mb-16"
           >
             <h2 className="text-3xl md:text-5xl font-bold mb-6">
-              Typical{" "}
-              <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                Use Cases
-              </span>
+              {t("regionAu.useCases.title")}
             </h2>
             <p className="text-lg text-gray-400 max-w-2xl mx-auto">
-              AI solutions tailored for key Australian industry sectors.
+              {t("regionAu.useCases.subtitle")}
             </p>
           </AnimatedSection>
 
           <div className="grid md:grid-cols-2 gap-8">
-            {USE_CASES.map((useCase, index) => (
+            {[0, 1, 2, 3].map((index) => (
               <AnimatedSection
                 key={index}
                 delay={index * 100}
                 className="p-8 rounded-2xl bg-white/5 border border-white/10 hover:border-white/20 transition-all duration-300"
               >
-                <div className={`w-16 h-16 rounded-xl bg-gradient-to-r ${useCase.gradient} bg-opacity-20 flex items-center justify-center mb-6 text-white`}>
-                  {useCase.icon}
+                <div className={`w-16 h-16 rounded-xl bg-gradient-to-r ${USE_CASE_GRADIENTS[index]} bg-opacity-20 flex items-center justify-center mb-6 text-white`}>
+                  {USE_CASE_ICONS[index]}
                 </div>
-                <h3 className="text-2xl font-semibold mb-4 text-white">{useCase.title}</h3>
-                <p className="text-gray-400 leading-relaxed">{useCase.description}</p>
+                <h3 className="text-2xl font-semibold mb-4 text-white">{t(`regionAu.useCases.items.${index}.title`)}</h3>
+                <p className="text-gray-400 leading-relaxed">{t(`regionAu.useCases.items.${index}.description`)}</p>
               </AnimatedSection>
             ))}
           </div>
@@ -271,33 +198,30 @@ const AustraliaPage = () => {
             className="text-center mb-16"
           >
             <h2 className="text-3xl md:text-5xl font-bold mb-6">
-              Our{" "}
-              <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                Services
-              </span>
+              {t("regionAu.services.title")}
             </h2>
             <p className="text-lg text-gray-400 max-w-2xl mx-auto">
-              End-to-end AI capabilities delivered by senior engineers who understand Australian business.
+              {t("regionAu.services.subtitle")}
             </p>
           </AnimatedSection>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {SERVICES.map((service, index) => (
+            {[0, 1, 2, 3].map((index) => (
               <AnimatedSection
                 key={index}
                 delay={index * 100}
               >
                 <Link
-                  to={service.link}
+                  to={SERVICE_LINKS[index]}
                   className="block p-6 h-full rounded-2xl bg-white/5 border border-white/10 hover:border-algviolet/50 hover:bg-white/10 transition-all duration-300 group"
                 >
                   <div className="w-12 h-12 rounded-lg bg-gradient-to-r from-algviolet/20 to-algblue/20 flex items-center justify-center mb-4 text-algpurple group-hover:scale-110 transition-transform duration-300">
-                    {service.icon}
+                    {SERVICE_ICONS[index]}
                   </div>
                   <h3 className="text-lg font-semibold mb-2 text-white group-hover:text-algpurple transition-colors">
-                    {service.title}
+                    {t(`regionAu.services.items.${index}.title`)}
                   </h3>
-                  <p className="text-gray-400 text-sm">{service.description}</p>
+                  <p className="text-gray-400 text-sm">{t(`regionAu.services.items.${index}.description`)}</p>
                 </Link>
               </AnimatedSection>
             ))}
@@ -312,26 +236,23 @@ const AustraliaPage = () => {
             className="text-center mb-16"
           >
             <h2 className="text-3xl md:text-5xl font-bold mb-6">
-              How We{" "}
-              <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                Work
-              </span>
+              {t("regionAu.howWeWork.title")}
             </h2>
             <p className="text-lg text-gray-400 max-w-2xl mx-auto">
-              A structured approach that delivers measurable results, fast.
+              {t("regionAu.howWeWork.subtitle")}
             </p>
           </AnimatedSection>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {PROCESS_STEPS.map((step, index) => (
+            {[0, 1, 2, 3].map((index) => (
               <AnimatedSection
                 key={index}
                 delay={index * 100}
                 className="relative p-6 rounded-2xl bg-white/5 border border-white/10"
               >
-                <div className="text-5xl font-bold text-algviolet/20 mb-4">{step.step}</div>
-                <h3 className="text-xl font-semibold mb-3 text-white">{step.title}</h3>
-                <p className="text-gray-400">{step.description}</p>
+                <div className="text-5xl font-bold text-algviolet/20 mb-4">{STEP_NUMBERS[index]}</div>
+                <h3 className="text-xl font-semibold mb-3 text-white">{t(`regionAu.howWeWork.steps.${index}.title`)}</h3>
+                <p className="text-gray-400">{t(`regionAu.howWeWork.steps.${index}.description`)}</p>
               </AnimatedSection>
             ))}
           </div>
@@ -346,25 +267,24 @@ const AustraliaPage = () => {
           >
             <Target className="w-16 h-16 mx-auto mb-6 text-algpurple" />
             <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">
-              Ready to Transform Your Business with AI?
+              {t("regionAu.cta.title")}
             </h2>
             <p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto">
-              Book a free 30-minute discovery call to discuss your automation opportunities 
-              and see how we can help you achieve measurable ROI.
+              {t("regionAu.cta.subtitle")}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 to="/contact"
                 className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-algviolet via-algpurple to-algblue text-white font-semibold shadow-brand hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
               >
-                Book Discovery Call
+                {t("regionAu.cta.primary")}
                 <ArrowRight className="w-5 h-5" />
               </Link>
               <Link
                 to="/pricing#calculator"
                 className="inline-flex items-center gap-2 px-8 py-4 rounded-xl border-2 border-white/20 text-white font-semibold hover:bg-white/10 transition-all duration-300"
               >
-                Calculate Your ROI
+                {t("regionAu.cta.secondary")}
               </Link>
             </div>
           </AnimatedSection>
