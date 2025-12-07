@@ -5,10 +5,12 @@ import { Helmet } from "react-helmet-async";
 import AnimatedSection from "../../components/ui/AnimatedSection";
 import { track } from "../../app/utils/analytics";
 import { persistUtmFromLocation, readStoredUtm } from "../../app/utils/utm";
+import { useI18n } from "../../app/i18n/I18nContext";
 
 // Lazy-load heavy components
 const TeamGrid = lazy(() => import("../../components/ui/TeamGrid"));
 
+/* ----------------------------- icon imports ----------------------------- */
 import {
   Brain,
   Zap,
@@ -26,88 +28,70 @@ import {
   Network,
 } from "lucide-react";
 
-/* ----------------------------- static content ----------------------------- */
-const STATS = [
-  { icon: Rocket, value: "2025", label: "Founded" },
-  { icon: Globe, value: "Suresnes, FR", label: "Headquarters" },
-  { icon: Users, value: "2–10", label: "Team Size" },
-  { icon: Shield, value: "GDPR • EU AI Act", label: "Compliance Ready" },
+/* ----------------------------- icon mapping for timeline ----------------------------- */
+const TIMELINE_ICONS = [
+  Award, Target, Cpu, Users, Shield, Rocket, Brain, Network, Globe, Award, Network, TrendingUp, Eye
 ];
 
-
-
-const VALUES = [
-  {
-    icon: <Brain className="w-12 h-12" />,
-    title: "Infinite Innovation",
-    description:
-      "We push beyond the boundaries of what's possible, constantly evolving and reimagining the future of business intelligence.",
-    gradient: "from-blue-500 to-purple-500",
-  },
-  {
-    icon: <Heart className="w-12 h-12" />,
-    title: "Human-Centric Design",
-    description:
-      "Technology serves humanity. Every quantum leap we make is designed to enhance human potential and create meaningful impact.",
-    gradient: "from-pink-500 to-rose-500",
-  },
-  {
-    icon: <Globe className="w-12 h-12" />,
-    title: "Global Consciousness",
-    description:
-      "Our solutions transcend borders, cultures, and limitations. We think globally while acting with precision and purpose.",
-    gradient: "from-green-500 to-emerald-500",
-  },
-  {
-    icon: <Zap className="w-12 h-12" />,
-    title: "Quantum Excellence",
-    description:
-      "Excellence isn't a destination—it's our quantum state. We exist in a superposition of continuous improvement and breakthrough innovation.",
-    gradient: "from-yellow-500 to-orange-500",
-  },
+const VALUE_ICONS = [
+  <Brain className="w-12 h-12" />,
+  <Heart className="w-12 h-12" />,
+  <Globe className="w-12 h-12" />,
+  <Zap className="w-12 h-12" />,
 ];
 
-const TIMELINE = [
-  { year: "2024 Jun", title: "Idea at SKEMA Business School", description: "Conceived Algorythmos after graduating from SKEMA—focus: practical, secure, ROI‑driven AI for enterprises.", icon: <Award className="w-8 h-8" /> },
-  { year: "2024 Jul", title: "Problem Discovery", description: "Conducted 20+ founder interviews with finance/ops leaders to validate pain points in document processing, data access, and deployment risk.", icon: <Target className="w-8 h-8" /> },
-  { year: "2024 Sep", title: "Document Intelligence Prototype", description: "Built the first OCR + NLP pipeline for invoices/contracts; moved from manual to programmatic extraction.", icon: <Cpu className="w-8 h-8" /> },
-  { year: "2024 Oct", title: "First Pilot (Anonymized EU Mid‑Market)", description: "Automated monthly invoice reconciliation; reduced cycle time from days to hours and cut repetitive work for the finance team.", icon: <Users className="w-8 h-8" /> },
-  { year: "2024 Nov", title: "Security by Design", description: "Established AppSec baseline and LLMSecOps controls; mapped to GDPR & EU AI Act.", icon: <Shield className="w-8 h-8" /> },
-  { year: "2025 Jan", title: "Company Founded — Suresnes, FR", description: "Algorythmos incorporated with a boutique model to stay close to impact and delivery quality.", icon: <Rocket className="w-8 h-8" /> },
-  { year: "2025 Feb", title: "Agentic Automation POC", description: "Deployed AI agents to orchestrate API workflows; eliminated hand‑offs and manual status updates.", icon: <Brain className="w-8 h-8" /> },
-  { year: "2025 Mar", title: "MLOps to CI/CD", description: "Productionized models using CI/CD, Docker, and Kubernetes—fewer deployment errors, faster iteration.", icon: <Network className="w-8 h-8" /> },
-  { year: "2025 Apr", title: "First Paying Customer", description: "Signed a mid‑market logistics client for document intelligence + agentic automation; leadership gained near‑real‑time visibility on exceptions.", icon: <Globe className="w-8 h-8" /> },
-  { year: "2025 May", title: "Compliance Toolkit", description: "Released DPIA templates and policy packs aligned to GDPR and emerging EU AI Act requirements.", icon: <Award className="w-8 h-8" /> },
-  { year: "2025 Jun", title: "Integration & Data Accelerators", description: "Shipped connectors for common data stacks/message buses, reducing time‑to‑first‑value.", icon: <Network className="w-8 h-8" /> },
-  { year: "2025 Jul", title: "SQL Dashboard Starter", description: "Launched a reusable analytics starter to turn raw SQL into executive‑ready dashboards.", icon: <TrendingUp className="w-8 h-8" /> },
-  { year: "2025 Aug", title: "Scale & Seed Readiness", description: "Active pilots in 3 verticals; preparing for seed with delivery playbooks and compliance posture.", icon: <Eye className="w-8 h-8" /> },
+const VALUE_GRADIENTS = [
+  "from-blue-500 to-purple-500",
+  "from-pink-500 to-rose-500",
+  "from-green-500 to-emerald-500",
+  "from-yellow-500 to-orange-500",
 ];
-
-const TAB_CONTENT = {
-  mission: {
-    title: "Our Mission",
-    content:
-      "Algorythmos helps enterprises unlock the real value of their data with secure, practical, ROI‑driven AI. We design, build, and integrate solutions that reduce costs, save time, and improve decision‑making.",
-  },
-  vision: {
-    title: "Our Vision",
-    content:
-      "A world where AI is trustworthy by design—compliant with GDPR and the EU AI Act, engineered with AppSec and LLMSecOps, and built to augment people, not replace them.",
-  },
-  impact: {
-    title: "Our Impact",
-    content:
-      "From rapid prototypes to production systems, we deliver measurable outcomes: faster cycles, fewer manual steps, and clearer decisions. We partner end‑to‑end—from strategy to MLOps with CI/CD.",
-  },
-};
 
 /* -------------------------------- component -------------------------------- */
 
 const QuantumAboutPage = () => {
+  const { t, getRegionPath, region } = useI18n();
   const [scrollY, setScrollY] = useState(0);
   const [activeTab, setActiveTab] = useState("mission");
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
+
+  // Build dynamic data from translations
+  const STATS = [
+    { icon: Rocket, value: "2025", label: t("about.stats.founded") },
+    { icon: Globe, value: "Suresnes, FR", label: t("about.stats.headquarters") },
+    { icon: Users, value: "2–10", label: t("about.stats.teamSize") },
+    { icon: Shield, value: "GDPR • EU AI Act", label: t("about.stats.complianceReady") },
+  ];
+
+  const VALUES = VALUE_ICONS.map((icon, i) => ({
+    icon,
+    title: t(`about.values.${i}.title`),
+    description: t(`about.values.${i}.description`),
+    gradient: VALUE_GRADIENTS[i],
+  }));
+
+  const TIMELINE = Array.from({ length: 13 }, (_, i) => ({
+    year: t(`about.journey.${i}.year`),
+    title: t(`about.journey.${i}.title`),
+    description: t(`about.journey.${i}.description`),
+    icon: React.createElement(TIMELINE_ICONS[i], { className: "w-8 h-8" }),
+  }));
+
+  const TAB_CONTENT = {
+    mission: {
+      title: t("about.mission.title"),
+      content: t("about.mission.content"),
+    },
+    vision: {
+      title: t("about.vision.title"),
+      content: t("about.vision.content"),
+    },
+    impact: {
+      title: t("about.impact.title"),
+      content: t("about.impact.content"),
+    },
+  };
 
   // Page view tracking with UTM context
   useEffect(() => {
@@ -218,29 +202,22 @@ const QuantumAboutPage = () => {
   return (
     <div className="relative min-h-screen bg-black text-white overflow-hidden">
       <Helmet>
-        <title>About | Algorythmos™</title>
+        <title>{t("about.meta.title")}</title>
         <meta
           name="description"
-          content="Algorythmos is a boutique AI consultancy founded in 2025, delivering secure, ROI-driven AI solutions for SMEs and enterprises across France and Australia. Learn about our mission, values, and team supporting clients from Suresnes to Sydney."
+          content={t("about.meta.description")}
         />
         <link rel="canonical" href="https://www.algorythmos.fr/about" />
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="About Us | Algorythmos™" />
-        <meta property="og:description" content="Algorythmos is a boutique AI consultancy founded in 2025, delivering secure, ROI-driven AI solutions for SMEs and enterprises across France and Australia. Learn about our mission, values, and team supporting clients from Suresnes to Sydney." />
+        <meta property="og:title" content={t("about.meta.title")} />
+        <meta property="og:description" content={t("about.meta.description")} />
         <meta property="og:url" content="https://www.algorythmos.fr/about" />
         <meta property="og:image" content="https://www.algorythmos.fr/Algorythmos.png" />
         <meta property="og:site_name" content="Algorythmos" />
-        <meta property="og:locale" content="en_US" />
+        <meta property="og:locale" content={region === "FR" ? "fr_FR" : "en_US"} />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="About Us | Algorythmos™" />
-        <meta name="twitter:description" content="Algorythmos is a boutique AI consultancy founded in 2025, delivering secure, ROI-driven AI solutions for SMEs and enterprises across France and Australia. Learn about our mission, values, and team supporting clients from Suresnes to Sydney." />
-        <meta property="og:url" content="https://www.algorythmos.fr/about" />
-        <meta property="og:image" content="https://www.algorythmos.fr/Algorythmos.png" />
-        <meta property="og:site_name" content="Algorythmos" />
-        <meta property="og:locale" content="en_US" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="About | Algorythmos™" />
-        <meta name="twitter:description" content="Algorythmos is a boutique AI consultancy founded in 2025, delivering secure, ROI-driven AI solutions for SMEs across Europe. Learn about our mission, values, and team." />
+        <meta name="twitter:title" content={t("about.meta.title")} />
+        <meta name="twitter:description" content={t("about.meta.description")} />
         <meta name="twitter:image" content="https://www.algorythmos.fr/Algorythmos.png" />
       </Helmet>
       
@@ -275,20 +252,26 @@ const QuantumAboutPage = () => {
           <AnimatedSection>
             <div className="inline-flex items-center px-5 sm:px-7 py-2.5 sm:py-3.5 mb-8 sm:mb-10 md:mb-12 bg-gradient-to-r from-blue-600/20 to-purple-600/20 backdrop-blur-sm border border-white/20 rounded-full text-sm sm:text-base md:text-lg font-medium shadow-lg">
               <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 mr-2.5 sm:mr-3 animate-spin" />
-              Driving AI Innovations
+              {t("about.hero.badge")}
             </div>
 
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-black mb-8 sm:mb-10 md:mb-12 leading-[1.1] tracking-tight">
               <span className="block bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                Beyond
+                {t("about.hero.title1")}
               </span>
-              <span className="block text-white mt-2 sm:mt-3">Business as Usual</span>
+              <span className="block text-white mt-2 sm:mt-3">{t("about.hero.title2")}</span>
             </h1>
 
             <p className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-gray-200 mb-10 sm:mb-12 md:mb-14 max-w-5xl mx-auto leading-relaxed px-2 sm:px-4">
-              At Algorythmos, we transform complex data challenges into
-              <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent font-bold"> practical AI solutions </span>
-              for enterprises and SMEs across France and Australia. Our mission is clear: to deliver secure, ROI-driven innovation that helps businesses from Suresnes to Sydney scale, adapt, and thrive.
+              {t("about.hero.subtitle").split("<highlight>")[0]}
+              <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent font-bold">
+                {t("about.hero.subtitle").includes("<highlight>") 
+                  ? t("about.hero.subtitle").split("<highlight>")[1]?.split("</highlight>")[0] 
+                  : "practical AI solutions"}
+              </span>
+              {t("about.hero.subtitle").includes("</highlight>") 
+                ? t("about.hero.subtitle").split("</highlight>")[1] 
+                : ""}
             </p>
           </AnimatedSection>
         </div>
@@ -302,7 +285,7 @@ const QuantumAboutPage = () => {
             className="text-center mb-12 sm:mb-16 md:mb-20 lg:mb-24 xl:mb-28"
           >
             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-extrabold mb-6 sm:mb-8 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent tracking-tight leading-[1.1] px-4">
-              What Does Algorythmos Mean?
+              {t("about.meaning.title")}
             </h2>
           </AnimatedSection>
 
@@ -331,15 +314,20 @@ const QuantumAboutPage = () => {
                     <Cpu className="w-7 h-7 sm:w-8 sm:h-8 lg:w-9 lg:h-9 text-blue-400" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white mb-2 sm:mb-3 tracking-tight">Algorithm</h3>
+                    <h3 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white mb-2 sm:mb-3 tracking-tight">{t("about.meaning.algorithm.title")}</h3>
                     <div className="h-[1px] w-16 sm:w-20 bg-gradient-to-r from-blue-400/60 via-blue-400/30 to-transparent mb-3 sm:mb-4" />
-                    <p className="text-sm sm:text-base lg:text-lg text-blue-300/90 leading-loose tracking-[0.02em]">Logic, structure, precision</p>
+                    <p className="text-sm sm:text-base lg:text-lg text-blue-300/90 leading-loose tracking-[0.02em]">{t("about.meaning.algorithm.tagline")}</p>
                   </div>
                 </div>
 
                 {/* Code-style snippet */}
                 <div className="bg-black/60 border border-blue-400/20 rounded-xl sm:rounded-[1.25rem] p-4 sm:p-5 lg:p-6 font-mono text-sm sm:text-base lg:text-lg text-blue-300 backdrop-blur-sm shadow-[inset_0_2px_8px_rgba(0,0,0,0.3)] overflow-x-auto">
-                  <span className="text-purple-400">{'{'}</span> <span className="text-gray-200">reason</span> <span className="text-blue-400 mx-1">→</span> <span className="text-gray-200">automate</span> <span className="text-blue-400 mx-1">→</span> <span className="text-gray-200">optimise</span> <span className="text-purple-400">{'}'}</span>
+                  <span className="text-purple-400">{'{'}</span> <span className="text-gray-200">{t("about.meaning.algorithm.snippet").replace(/[{}]/g, '').split('→').map((part, i, arr) => (
+                    <React.Fragment key={i}>
+                      {part.trim()}
+                      {i < arr.length - 1 && <span className="text-blue-400 mx-1">→</span>}
+                    </React.Fragment>
+                  ))}</span> <span className="text-purple-400">{'}'}</span>
                 </div>
               </div>
 
@@ -376,19 +364,19 @@ const QuantumAboutPage = () => {
                     <Network className="w-7 h-7 sm:w-8 sm:h-8 lg:w-9 lg:h-9 text-purple-400" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white mb-2 sm:mb-3 tracking-tight">Rhythmos</h3>
+                    <h3 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white mb-2 sm:mb-3 tracking-tight">{t("about.meaning.rhythmos.title")}</h3>
                     <div className="h-[1px] w-16 sm:w-20 bg-gradient-to-r from-purple-400/60 via-purple-400/30 to-transparent mb-3 sm:mb-4" />
-                    <p className="text-sm sm:text-base lg:text-lg text-purple-300/90 leading-loose tracking-[0.02em]">Flow, timing, adaptation</p>
+                    <p className="text-sm sm:text-base lg:text-lg text-purple-300/90 leading-loose tracking-[0.02em]">{t("about.meaning.rhythmos.tagline")}</p>
                   </div>
                 </div>
 
                 {/* Greek etymology note */}
                 <div className="bg-black/60 border border-purple-400/20 rounded-xl sm:rounded-[1.25rem] p-4 sm:p-5 lg:p-6 backdrop-blur-sm shadow-[inset_0_2px_8px_rgba(0,0,0,0.3)]">
                   <p className="text-sm sm:text-base lg:text-lg text-purple-300 italic leading-loose">
-                    <span className="font-semibold text-pink-300">Greek:</span> <span className="text-purple-200">ῥυθμός</span> <span className="text-purple-400/80">(rhythmós)</span>
+                    <span className="font-semibold text-pink-300">{t("about.meaning.rhythmos.greek")}</span> <span className="text-purple-200">{t("about.meaning.rhythmos.word")}</span> <span className="text-purple-400/80">{t("about.meaning.rhythmos.pronunciation")}</span>
                   </p>
                   <p className="text-xs sm:text-sm lg:text-base text-purple-400/80 mt-2 sm:mt-3 leading-loose">
-                    "flow, harmony, natural pattern"
+                    "{t("about.meaning.rhythmos.translation")}"
                   </p>
                 </div>
               </div>
@@ -413,15 +401,19 @@ const QuantumAboutPage = () => {
 
               <div className="relative z-10 max-w-prose mx-auto space-y-6 sm:space-y-8 lg:space-y-9">
                 <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-100 leading-[1.7] sm:leading-[1.75] tracking-[0.01em]">
-                  Algorythmos is born from two worlds. <span className="text-blue-400 font-semibold">"Algorithm"</span>, the domain of logic and structured intelligence. And <span className="text-purple-400 font-semibold">"Rhythmos"</span>, the Greek idea of flow, harmony, and natural pattern. Together, they form a brand built on balance: rigorous reasoning paired with the rhythm of real business life.
+                  {t("about.meaning.p1").split(/<blue>|<\/blue>|<purple>|<\/purple>/).map((part, i) => {
+                    if (i === 1) return <span key={i} className="text-blue-400 font-semibold">{part}</span>;
+                    if (i === 3) return <span key={i} className="text-purple-400 font-semibold">{part}</span>;
+                    return <React.Fragment key={i}>{part}</React.Fragment>;
+                  })}
                 </p>
 
                 <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-100 leading-[1.7] sm:leading-[1.75] tracking-[0.01em]">
-                  For us, the algorithm represents precision, automation, and the intelligence behind every decision. The rhythm represents timing, human context, and the way every organisation moves at its own pace.
+                  {t("about.meaning.p2")}
                 </p>
 
                 <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-100 leading-[1.7] sm:leading-[1.75] tracking-[0.01em]">
-                  Algorythmos stands for AI that doesn't fight your workflow but moves with it – learning your patterns, adapting to your tempo, and becoming a natural part of how your team operates every day.
+                  {t("about.meaning.p3")}
                 </p>
               </div>
 
@@ -493,13 +485,13 @@ const QuantumAboutPage = () => {
         <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
           <div className="text-center mb-12 sm:mb-16 md:mb-20">
             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black mb-6 sm:mb-8 px-4">
-              Our
+              {t("about.values.title")}
               <span className="block bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mt-2">
-                Values
+                {t("about.values.titleHighlight")}
               </span>
             </h2>
             <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 max-w-4xl mx-auto px-4 leading-relaxed">
-              These principles guide every solution we deliver — ensuring innovation, trust, and measurable business impact.
+              {t("about.values.subtitle")}
             </p>
           </div>
 
@@ -547,13 +539,13 @@ const QuantumAboutPage = () => {
         <div className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-12">
           <div className="text-center mb-12 sm:mb-16 md:mb-20">
             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black mb-6 sm:mb-8 px-4">
-              Our
+              {t("about.journey.title")}
               <span className="block bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mt-2">
-                Journey
+                {t("about.journey.titleHighlight")}
               </span>
             </h2>
             <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 max-w-4xl mx-auto px-4 leading-relaxed">
-              Milestones from first prototype to secure, production‑ready AI for enterprises.
+              {t("about.journey.subtitle")}
             </p>
           </div>
 
@@ -585,40 +577,40 @@ const QuantumAboutPage = () => {
       <section className="py-16 sm:py-20 md:py-28 lg:py-32 relative z-10">
         <div className="max-w-5xl mx-auto text-center px-6 sm:px-8 lg:px-12">
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-black mb-6 sm:mb-8 leading-tight">
-            Ready to
+            {t("about.cta.title")}
             <span className="block bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mt-2">
-              Start Your AI Journey?
+              {t("about.cta.titleHighlight")}
             </span>
           </h2>
 
           <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 mb-10 sm:mb-12 max-w-3xl mx-auto leading-relaxed px-4">
-            Move beyond experimentation. Unlock secure, ROI-driven AI solutions that reduce costs, save time, and empower smarter decisions.
+            {t("about.cta.subtitle")}
           </p>
 
           <div className="flex flex-col sm:flex-row gap-5 sm:gap-6 justify-center items-center px-4">
             <Link
-              to="/contact"
+              to={getRegionPath("/contact")}
               className="group relative px-8 sm:px-10 md:px-12 py-4 sm:py-5 md:py-6 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl sm:rounded-2xl font-bold text-lg sm:text-xl md:text-2xl overflow-hidden transform hover:scale-105 transition-all duration-500 min-h-[56px] flex items-center justify-center w-full sm:w-auto"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-left" />
-              <span className="relative">Book a Consultation</span>
+              <span className="relative">{t("cta.bookConsultation")}</span>
             </Link>
 
             <Link
-              to="/services"
+              to={getRegionPath("/services")}
               className="group relative px-8 sm:px-10 md:px-12 py-4 sm:py-5 md:py-6 border-2 border-gray-600 rounded-xl sm:rounded-2xl font-bold text-lg sm:text-xl md:text-2xl hover:border-white transition-all duration-500 backdrop-blur-sm overflow-hidden min-h-[56px] flex items-center justify-center w-full sm:w-auto"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-left" />
-              <span className="relative">Explore Our Services</span>
+              <span className="relative">{t("cta.exploreServices")}</span>
             </Link>
           </div>
 
           <div className="mt-6 sm:mt-8 text-gray-400 text-xs sm:text-sm flex flex-wrap justify-center gap-x-4 gap-y-2 px-4">
-            <span>✅ GDPR & EU AI Act Ready</span>
+            <span>{t("about.cta.badge1")}</span>
             <span>•</span>
-            <span>⚙️ MLOps with CI/CD</span>
+            <span>{t("about.cta.badge2")}</span>
             <span>•</span>
-            <span>🤖 Agentic Automation</span>
+            <span>{t("about.cta.badge3")}</span>
           </div>
         </div>
       </section>

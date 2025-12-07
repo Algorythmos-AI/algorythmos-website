@@ -4,10 +4,13 @@ import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { Bot, ArrowRight, CheckCircle, Activity, Shield, Zap, GitBranch, Users } from "lucide-react";
 import { withUtm } from "../../../app/utils/utm";
+import { useI18n } from "../../../app/i18n/I18nContext.jsx";
 
 const CALENDLY_URL = "https://calendly.com/algorythmos-france/30min";
 
 export default function AgenticAutomationPage() {
+  const { t, region } = useI18n();
+  
   const contactUrl = useMemo(() => {
     return withUtm(CALENDLY_URL, {
       utm_source: "services",
@@ -20,22 +23,22 @@ export default function AgenticAutomationPage() {
   return (
     <div className="min-h-screen bg-black text-white">
       <Helmet>
-        <title>Agentic Automation | Algorythmos™</title>
+        <title>{t("serviceAgentic.meta.title")}</title>
         <meta
           name="description"
-          content="Multi-agent AI workflows that orchestrate tools and APIs safely. Reduce repetitive work by 40-60% with auditability, guardrails, and human-in-the-loop controls."
+          content={t("serviceAgentic.meta.description")}
         />
         <link rel="canonical" href="https://www.algorythmos.fr/services/agentic-automation" />
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="Agentic Automation | Algorythmos™" />
-        <meta property="og:description" content="Multi-agent AI workflows that orchestrate tools and APIs safely. Reduce repetitive work by 40-60% with auditability, guardrails, and human-in-the-loop controls." />
+        <meta property="og:title" content={t("serviceAgentic.meta.title")} />
+        <meta property="og:description" content={t("serviceAgentic.meta.description")} />
         <meta property="og:url" content="https://www.algorythmos.fr/services/agentic-automation" />
         <meta property="og:image" content="https://www.algorythmos.fr/Algorythmos.png" />
         <meta property="og:site_name" content="Algorythmos" />
-        <meta property="og:locale" content="en_US" />
+        <meta property="og:locale" content={region === "FR" ? "fr_FR" : "en_US"} />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Agentic Automation | Algorythmos™" />
-        <meta name="twitter:description" content="Multi-agent AI workflows that orchestrate tools and APIs safely. Reduce repetitive work by 40-60% with auditability, guardrails, and human-in-the-loop controls." />
+        <meta name="twitter:title" content={t("serviceAgentic.meta.title")} />
+        <meta name="twitter:description" content={t("serviceAgentic.meta.description")} />
         <meta name="twitter:image" content="https://www.algorythmos.fr/Algorythmos.png" />
         <script type="application/ld+json">
           {JSON.stringify({
@@ -129,10 +132,10 @@ export default function AgenticAutomationPage() {
           {/* Breadcrumb */}
           <nav className="mb-8 text-sm text-gray-400">
             <Link to="/services" className="hover:text-blue-400 transition-colors">
-              Services
+              {t("serviceAgentic.breadcrumb.services")}
             </Link>
             <span className="mx-2">/</span>
-            <span className="text-white">Agentic Automation</span>
+            <span className="text-white">{t("serviceAgentic.breadcrumb.current")}</span>
           </nav>
 
           {/* Icon & Badge */}
@@ -142,32 +145,32 @@ export default function AgenticAutomationPage() {
             </div>
             <div className="inline-flex items-center gap-2 rounded-full bg-blue-500/10 px-4 py-1.5 text-xs font-semibold text-blue-400 ring-1 ring-blue-500/20">
               <Activity className="h-3 w-3" />
-              AI That Acts
+              {t("serviceAgentic.hero.badge")}
             </div>
           </div>
 
           {/* Title */}
           <h1 className="mb-6 text-4xl md:text-6xl font-black leading-tight">
             <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-              Agentic Automation
+              {t("serviceAgentic.hero.title1")}
             </span>
             <br />
             <span className="text-white">
-              for Operations that Run Themselves
+              {t("serviceAgentic.hero.title2")}
             </span>
           </h1>
 
           {/* Subtitle */}
           <p className="mb-8 max-w-3xl text-lg md:text-xl text-gray-300 leading-relaxed">
-            Algorythmos delivers agentic automation solutions for SMEs and enterprises in France and Australia. Orchestrate multi-step workflows across your CRM, ERP, email, and data warehouse with AI agents that understand context, follow policies, and act with full auditability—from Sydney to Suresnes.
+            {t("serviceAgentic.hero.subtitle")}
           </p>
 
           {/* Key Points */}
           <div className="mb-10 grid md:grid-cols-3 gap-4 max-w-3xl">
             {[
-              { icon: GitBranch, text: "Context-aware, multi-step workflows" },
-              { icon: Shield, text: "Policy guardrails + human review queues" },
-              { icon: Zap, text: "Integrations with CRMs, ERPs, Slack, APIs" }
+              { icon: GitBranch, text: t("serviceAgentic.hero.keyPoints.0") },
+              { icon: Shield, text: t("serviceAgentic.hero.keyPoints.1") },
+              { icon: Zap, text: t("serviceAgentic.hero.keyPoints.2") }
             ].map((item, i) => (
               <div key={i} className="flex items-start gap-3 text-sm text-gray-300">
                 <item.icon className="h-5 w-5 text-blue-400 flex-shrink-0 mt-0.5" />
@@ -184,14 +187,14 @@ export default function AgenticAutomationPage() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-3 font-semibold text-white shadow-lg shadow-blue-500/25 transition-all hover:shadow-xl hover:shadow-blue-500/40 hover:-translate-y-0.5"
             >
-              Book a Consultation
+              {t("serviceAgentic.hero.cta.primary")}
               <ArrowRight className="h-5 w-5" />
             </a>
             <Link
               to="/contact"
               className="inline-flex items-center gap-2 rounded-xl bg-white/5 px-6 py-3 font-semibold text-white ring-1 ring-white/10 transition-all hover:bg-white/10"
             >
-              Contact Us
+              {t("serviceAgentic.hero.cta.secondary")}
             </Link>
           </div>
         </div>
@@ -202,21 +205,21 @@ export default function AgenticAutomationPage() {
         <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-8 text-center">
           <div>
             <div className="text-4xl font-black bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-2">
-              40–60%
+              {t("serviceAgentic.metrics.0.value")}
             </div>
-            <div className="text-sm text-gray-400">Reduction in repetitive manual work</div>
+            <div className="text-sm text-gray-400">{t("serviceAgentic.metrics.0.label")}</div>
           </div>
           <div>
             <div className="text-4xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">
-              3–5x
+              {t("serviceAgentic.metrics.1.value")}
             </div>
-            <div className="text-sm text-gray-400">Faster cycle times with fewer handoffs</div>
+            <div className="text-sm text-gray-400">{t("serviceAgentic.metrics.1.label")}</div>
           </div>
           <div>
             <div className="text-4xl font-black bg-gradient-to-r from-pink-400 to-blue-400 bg-clip-text text-transparent mb-2">
-              100%
+              {t("serviceAgentic.metrics.2.value")}
             </div>
-            <div className="text-sm text-gray-400">Actionable audit trails for compliance</div>
+            <div className="text-sm text-gray-400">{t("serviceAgentic.metrics.2.label")}</div>
           </div>
         </div>
       </section>
@@ -225,14 +228,14 @@ export default function AgenticAutomationPage() {
       <section className="py-20 px-6">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-black mb-6 text-white">
-            What It Is
+            {t("serviceAgentic.whatItIs.title")}
           </h2>
           <div className="space-y-4 text-lg text-gray-300 leading-relaxed">
             <p>
-              Agentic AI goes beyond chatbots. It coordinates multiple steps to complete real business workflows—not just answer questions. Think of it as your digital workforce that can draft emails, update CRM records, trigger approvals, query databases, and escalate edge cases to humans.
+              {t("serviceAgentic.whatItIs.p1")}
             </p>
             <p>
-              Unlike brittle RPA scripts, agents adapt to context, handle exceptions gracefully, and integrate with CRMs, ERPs, data warehouses, and internal APIs—all with full traceability and policy controls.
+              {t("serviceAgentic.whatItIs.p2")}
             </p>
           </div>
         </div>
@@ -242,36 +245,36 @@ export default function AgenticAutomationPage() {
       <section className="py-20 px-6 bg-gradient-to-br from-slate-900/50 to-slate-800/30">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-black mb-6 text-white">
-            How It Works
+            {t("serviceAgentic.howItWorks.title")}
           </h2>
           <div className="space-y-6">
             <div className="rounded-2xl bg-white/5 p-6 ring-1 ring-white/10">
               <h3 className="text-xl font-bold text-blue-400 mb-3 flex items-center gap-2">
                 <GitBranch className="h-5 w-5" />
-                Deterministic Tools + Policy Prompts
+                {t("serviceAgentic.howItWorks.0.title")}
               </h3>
               <p className="text-gray-300 leading-relaxed">
-                We connect agents to your systems through explicit, validated tools (functions). Each action goes through input/output validation and policy-enforced prompts that encode business rules and compliance requirements.
+                {t("serviceAgentic.howItWorks.0.description")}
               </p>
             </div>
 
             <div className="rounded-2xl bg-white/5 p-6 ring-1 ring-white/10">
               <h3 className="text-xl font-bold text-purple-400 mb-3 flex items-center gap-2">
                 <Users className="h-5 w-5" />
-                Human-in-the-Loop Review Queues
+                {t("serviceAgentic.howItWorks.1.title")}
               </h3>
               <p className="text-gray-300 leading-relaxed">
-                Sensitive actions (like sending money, deleting records, or approving contracts) can be routed to human reviewers before execution. This gives you confidence while maintaining speed for routine tasks.
+                {t("serviceAgentic.howItWorks.1.description")}
               </p>
             </div>
 
             <div className="rounded-2xl bg-white/5 p-6 ring-1 ring-white/10">
               <h3 className="text-xl font-bold text-pink-400 mb-3 flex items-center gap-2">
                 <Activity className="h-5 w-5" />
-                Monitoring, Cost Controls & Governance
+                {t("serviceAgentic.howItWorks.2.title")}
               </h3>
               <p className="text-gray-300 leading-relaxed">
-                Full observability with metrics, traces, and logs. Set cost budgets per workflow, track token usage, and maintain audit-ready lineage for every decision and action taken by the agents.
+                {t("serviceAgentic.howItWorks.2.description")}
               </p>
             </div>
           </div>
@@ -282,14 +285,14 @@ export default function AgenticAutomationPage() {
       <section className="py-20 px-6">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-black mb-8 text-white">
-            Business Impact
+            {t("serviceAgentic.businessImpact.title")}
           </h2>
           <div className="grid md:grid-cols-2 gap-6">
             {[
-              { title: "30–60% reduction in repetitive work", desc: "Free up your team to focus on high-value tasks while agents handle routine operations." },
-              { title: "Faster cycle times, fewer handoffs", desc: "Workflows that used to take days now complete in minutes with automated coordination." },
-              { title: "Actionable audit trails", desc: "Every action is logged with full context—perfect for compliance, debugging, and optimization." },
-              { title: "Spend visibility & cost control", desc: "Track LLM token usage, API calls, and compute costs per workflow with real-time budgets." }
+              { title: t("serviceAgentic.businessImpact.0.title"), desc: t("serviceAgentic.businessImpact.0.description") },
+              { title: t("serviceAgentic.businessImpact.1.title"), desc: t("serviceAgentic.businessImpact.1.description") },
+              { title: t("serviceAgentic.businessImpact.2.title"), desc: t("serviceAgentic.businessImpact.2.description") },
+              { title: t("serviceAgentic.businessImpact.3.title"), desc: t("serviceAgentic.businessImpact.3.description") }
             ].map((item, i) => (
               <div key={i} className="flex items-start gap-4 rounded-xl bg-gradient-to-br from-blue-500/5 to-purple-500/5 p-6 ring-1 ring-white/10">
                 <CheckCircle className="h-6 w-6 text-blue-400 flex-shrink-0 mt-1" />
@@ -307,7 +310,7 @@ export default function AgenticAutomationPage() {
       <section className="py-20 px-6 bg-gradient-to-br from-slate-900/50 to-slate-800/30">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-black mb-6 text-white">
-            Reference Architecture
+            {t("serviceAgentic.architecture.title")}
           </h2>
           <div className="rounded-2xl bg-black/30 p-8 ring-1 ring-white/10">
             <div className="space-y-4 text-gray-300">
@@ -315,10 +318,10 @@ export default function AgenticAutomationPage() {
                 <span className="text-blue-400">Planner/Router</span> → <span className="text-purple-400">Tools/Functions</span> → <span className="text-pink-400">Memory/Vector DB</span> → <span className="text-green-400">Review Queue</span> → <span className="text-orange-400">Observability</span>
               </p>
               <p className="text-sm leading-relaxed">
-                We integrate with orchestrators like <strong>LangGraph</strong>, <strong>CrewAI</strong>, or custom state machines. Memory layer powered by <strong>Weaviate</strong>, <strong>pgvector</strong>, or <strong>OpenSearch</strong>. Full CI/CD for prompts, tools, and evaluation datasets.
+                {t("serviceAgentic.architecture.p1")}
               </p>
               <p className="text-sm leading-relaxed">
-                Deploy on your infrastructure (on-prem, VPC, or cloud) with SSO, RBAC, and private networking.
+                {t("serviceAgentic.architecture.p2")}
               </p>
             </div>
           </div>
@@ -329,25 +332,25 @@ export default function AgenticAutomationPage() {
       <section className="py-20 px-6">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-black mb-8 text-white">
-            Frequently Asked Questions
+            {t("serviceAgentic.faqs.title")}
           </h2>
           <div className="space-y-4">
             {[
               {
-                q: "How is this safer than a regular LLM bot?",
-                a: "Actions go through explicit tools with input/output validation, policy prompts, and optional human review before execution. You control what the agent can and cannot do."
+                q: t("serviceAgentic.faqs.0.question"),
+                a: t("serviceAgentic.faqs.0.answer")
               },
               {
-                q: "Do you support on-premises deployment?",
-                a: "Yes. We can deploy the full stack on your infrastructure with SSO, RBAC, and private networking. Perfect for regulated industries or sensitive data."
+                q: t("serviceAgentic.faqs.1.question"),
+                a: t("serviceAgentic.faqs.1.answer")
               },
               {
-                q: "What systems can you integrate with?",
-                a: "Most CRMs (Salesforce, HubSpot), ERPs (SAP, NetSuite), email (Gmail, Outlook), Slack, databases, and custom APIs. We build connectors as needed."
+                q: t("serviceAgentic.faqs.2.question"),
+                a: t("serviceAgentic.faqs.2.answer")
               },
               {
-                q: "How do you handle errors and edge cases?",
-                a: "Agents can retry with backoff, escalate to human review queues, or fail gracefully with detailed error logs. We design workflows for resilience."
+                q: t("serviceAgentic.faqs.3.question"),
+                a: t("serviceAgentic.faqs.3.answer")
               }
             ].map((faq, i) => (
               <details key={i} className="group rounded-xl bg-white/5 p-6 ring-1 ring-white/10 transition-all hover:bg-white/10">
@@ -366,10 +369,10 @@ export default function AgenticAutomationPage() {
       <section className="py-20 px-6 bg-gradient-to-br from-blue-600/10 via-purple-600/10 to-transparent">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-black mb-4 text-white">
-            Ready to Automate with Intelligence?
+            {t("serviceAgentic.cta.title")}
           </h2>
           <p className="mb-8 text-lg text-gray-300">
-            Let's discuss your workflows and design an agentic solution that delivers measurable ROI.
+            {t("serviceAgentic.cta.subtitle")}
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <a
@@ -378,14 +381,14 @@ export default function AgenticAutomationPage() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-4 font-semibold text-white shadow-lg shadow-blue-500/25 transition-all hover:shadow-xl hover:shadow-blue-500/40 hover:-translate-y-0.5"
             >
-              Book a Consultation
+              {t("serviceAgentic.cta.primary")}
               <ArrowRight className="h-5 w-5" />
             </a>
             <Link
               to="/pricing"
               className="inline-flex items-center gap-2 rounded-xl bg-white/5 px-8 py-4 font-semibold text-white ring-1 ring-white/10 transition-all hover:bg-white/10"
             >
-              View Pricing
+              {t("serviceAgentic.cta.secondary")}
             </Link>
           </div>
         </div>
@@ -394,7 +397,7 @@ export default function AgenticAutomationPage() {
       {/* Related Services */}
       <section className="py-16 px-6 border-t border-white/10">
         <div className="max-w-6xl mx-auto">
-          <h3 className="text-xl font-bold text-gray-400 mb-6">Related Services</h3>
+          <h3 className="text-xl font-bold text-gray-400 mb-6">{t("serviceAgentic.related.title")}</h3>
           <div className="grid md:grid-cols-2 gap-4">
             <Link
               to="/services/document-intelligence"
@@ -405,9 +408,9 @@ export default function AgenticAutomationPage() {
               </div>
               <div>
                 <div className="font-semibold text-white group-hover:text-blue-400 transition-colors">
-                  Document Intelligence
+                  {t("serviceAgentic.related.0.title")}
                 </div>
-                <div className="text-sm text-gray-400">OCR + NLP for invoices, contracts, and compliance</div>
+                <div className="text-sm text-gray-400">{t("serviceAgentic.related.0.description")}</div>
               </div>
             </Link>
             <Link
@@ -419,9 +422,9 @@ export default function AgenticAutomationPage() {
               </div>
               <div>
                 <div className="font-semibold text-white group-hover:text-blue-400 transition-colors">
-                  MLOps & Platform Engineering
+                  {t("serviceAgentic.related.1.title")}
                 </div>
-                <div className="text-sm text-gray-400">Production-grade ML with CI/CD and monitoring</div>
+                <div className="text-sm text-gray-400">{t("serviceAgentic.related.1.description")}</div>
               </div>
             </Link>
           </div>

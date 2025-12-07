@@ -18,7 +18,7 @@ const XIcon = ({ className = "h-5 w-5" }) => (
 );
 
 const Footer = () => {
-  const { region } = useI18n();
+  const { region, t } = useI18n();
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
@@ -139,14 +139,14 @@ const Footer = () => {
               </span>
             </div>
             <p className="text-gray-400 text-sm mb-6 leading-relaxed">
-              Unlock the Real Value of Your Data
+              {t("footer.newsletter.headline")}
             </p>
             
             {/* Newsletter Form */}
             <form onSubmit={handleNewsletterSubmit} className="space-y-3">
               <input
                 type="email"
-                placeholder="Enter your email"
+                placeholder={t("footer.newsletter.placeholder")}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={isSubmitting}
@@ -161,10 +161,10 @@ const Footer = () => {
                 {isSubmitting ? (
                   <>
                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                    Subscribing...
+                    {t("footer.newsletter.subscribing")}
                   </>
                 ) : (
-                  "Subscribe"
+                  t("footer.newsletter.button")
                 )}
               </button>
               
@@ -183,31 +183,31 @@ const Footer = () => {
 
           {/* Column 2: Links */}
           <div>
-            <h3 className="text-white font-semibold mb-4">Links</h3>
+            <h3 className="text-white font-semibold mb-4">{t("footer.links.title")}</h3>
             <ul className="space-y-3">
               <li>
                 <Link to={rp("/services")} className="text-gray-400 hover:text-white transition-colors duration-300">
-                  Services
+                  {t("footer.links.services")}
                 </Link>
               </li>
               <li>
                 <Link to={rp("/case-studies")} className="text-gray-400 hover:text-white transition-colors duration-300">
-                  Case Studies
+                  {t("footer.links.caseStudies")}
                 </Link>
               </li>
               <li>
                 <Link to={rp("/about")} className="text-gray-400 hover:text-white transition-colors duration-300">
-                  Benefits
+                  {t("footer.links.benefits")}
                 </Link>
               </li>
               <li>
                 <Link to={rp("/pricing")} className="text-gray-400 hover:text-white transition-colors duration-300">
-                  Pricing
+                  {t("footer.links.pricing")}
                 </Link>
               </li>
               <li>
                 <Link to={rp("/pricing") + "#calculator"} className="text-gray-400 hover:text-white transition-colors duration-300">
-                  ROI (Return On Investment) calculator
+                  {t("footer.links.roiCalculator")}
                 </Link>
               </li>
             </ul>
@@ -215,26 +215,26 @@ const Footer = () => {
 
           {/* Column 3: Pages */}
           <div>
-            <h3 className="text-white font-semibold mb-4">Pages</h3>
+            <h3 className="text-white font-semibold mb-4">{t("footer.pages.title")}</h3>
             <ul className="space-y-3">
               <li>
                 <Link to={rp("/")} className="text-gray-400 hover:text-white transition-colors duration-300">
-                  Home
+                  {t("footer.pages.home")}
                 </Link>
               </li>
               <li>
                 <Link to={rp("/about")} className="text-gray-400 hover:text-white transition-colors duration-300">
-                  About
+                  {t("footer.pages.about")}
                 </Link>
               </li>
               <li>
                 <Link to={rp("/blog")} className="text-gray-400 hover:text-white transition-colors duration-300">
-                  Blog
+                  {t("footer.pages.blog")}
                 </Link>
               </li>
               <li>
                 <Link to={rp("/contact")} className="text-gray-400 hover:text-white transition-colors duration-300">
-                  Contact
+                  {t("footer.pages.contact")}
                 </Link>
               </li>
             </ul>
@@ -242,7 +242,7 @@ const Footer = () => {
 
           {/* Column 4: Follow Us + Contact Button */}
           <div>
-            <h3 className="text-white font-semibold mb-4">Follow Us</h3>
+            <h3 className="text-white font-semibold mb-4">{t("footer.followUs.title")}</h3>
             
             {/* Icon Buttons Row */}
             <div className="flex flex-wrap gap-2 mb-4">
@@ -286,7 +286,7 @@ const Footer = () => {
               to="/contact"
               className="inline-flex items-center px-4 py-2 border border-white/20 rounded-xl text-white hover:bg-gradient-to-r hover:from-purple-600/20 hover:to-pink-600/20 hover:border-white/40 transition-all duration-300 text-sm"
             >
-              Contact Us →
+              {t("footer.contactUs")}
             </Link>
           </div>
         </div>
@@ -297,13 +297,13 @@ const Footer = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm">
             <div className="text-white font-semibold">
-              Algorythmos
+              {t("footer.brandName")}
             </div>
             <div className="text-gray-400 text-center">
-              Visioned and Crafted by Algorythmos
+              {t("footer.craftedBy")}
             </div>
             <div className="text-gray-500 text-center md:text-right">
-              © 2025 Algorythmos. All rights reserved.
+              {t("footer.copyright").replace("{year}", "2025")}
             </div>
           </div>
         </div>

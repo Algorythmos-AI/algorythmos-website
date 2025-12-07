@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo, Suspense, lazy } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronDown, ArrowRight, Star, Users, Zap, Shield, CheckCircle, Play, MousePointer2, Sparkles, Globe, Rocket, Brain, Eye } from 'lucide-react';
+import { useI18n } from '../../app/i18n/I18nContext.jsx';
 
 // Lazy-load heavy UI components (below-the-fold content)
 const PartnersCarousel = lazy(() => import('../../components/ui/PartnersCarousel.jsx'));
@@ -8,6 +9,7 @@ const HeroIllustration = lazy(() => import('../../components/ui/HeroIllustration
 const ServicesShowcase = lazy(() => import('../../components/ui/ServicesShowcase.jsx'));
 
 const AdvancedBusinessWebsite = () => {
+  const { t } = useI18n();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const [scrollY, setScrollY] = useState(0);
@@ -130,71 +132,71 @@ const AdvancedBusinessWebsite = () => {
   const features = [
     {
       icon: <Brain className="w-8 h-8" />,
-      title: "Agentic Automation 🤖",
-      description: "Deploy AI agents that handle repetitive workflows, integrate APIs, and streamline operations to increase productivity.",
+      title: t("home.features.0.title"),
+      description: t("home.features.0.description"),
       gradient: "from-purple-500 to-pink-500"
     },
     {
       icon: <Rocket className="w-8 h-8" />,
-      title: "Document Intelligence 📄",
-      description: "Extract insights from contracts, invoices, and business documents with next-gen OCR (Optical Character Recognition) and NLP (Natural Language Processing).",
+      title: t("home.features.1.title"),
+      description: t("home.features.1.description"),
       gradient: "from-blue-500 to-cyan-500"
     },
     {
       icon: <Eye className="w-8 h-8" />,
-      title: "SQL-Based Dashboards 📊",
-      description: "Transform raw data into clear, actionable dashboards so leaders can make faster, smarter decisions.",
+      title: t("home.features.2.title"),
+      description: t("home.features.2.description"),
       gradient: "from-green-500 to-teal-500"
     },
     {
       icon: <Globe className="w-8 h-8" />,
-      title: "MLOps Platform Engineering ⚙️",
-      description: "Productionize AI with CI/CD (Continuous Integration/Continuous Delivery) on Kubernetes and Docker, automated evaluations, observability, and safe rollbacks—with governance and DevSecOps (Development, Security & Operations) baked in.",
+      title: t("home.features.3.title"),
+      description: t("home.features.3.description"),
       gradient: "from-orange-500 to-red-500"
     },
     {
       icon: <Shield className="w-8 h-8" />,
-      title: "AI Security & Compliance 🔐",
-      description: "Ensure your AI systems are safe, compliant, and trustworthy with AppSec, OWASP Top 10 for LLMs, and LLMSecOps integration.",
+      title: t("home.features.4.title"),
+      description: t("home.features.4.description"),
       gradient: "from-indigo-500 to-purple-500"
     },
     {
       icon: <Sparkles className="w-8 h-8" />,
-      title: "AI Strategy & Roadmapping 🚀",
-      description: "From prototypes to enterprise rollouts, we guide you with a clear AI roadmap aligned with measurable ROI and long-term goals.",
+      title: t("home.features.5.title"),
+      description: t("home.features.5.description"),
       gradient: "from-pink-500 to-rose-500"
     }
   ];
 
   const testimonials = [
     {
-      name: "Dr. Sarah Chen",
-      role: "Chief Data Officer – Financial Services",
-      content: "Algorythmos helped us automate reporting and streamline compliance. What used to take days is now done in minutes, with complete accuracy.",
+      name: t("home.testimonials.0.name"),
+      role: t("home.testimonials.0.role"),
+      content: t("home.testimonials.0.content"),
       rating: 5,
       avatar: "🧬"
     },
     {
-      name: "Marcus Rodriguez",
-      role: "Head of Operations – Manufacturing Group",
-      content: "Their Document Intelligence solution transformed how we process contracts and invoices. We reduced manual effort by over 40% while improving data quality.",
+      name: t("home.testimonials.1.name"),
+      role: t("home.testimonials.1.role"),
+      content: t("home.testimonials.1.content"),
       rating: 5,
       avatar: "🚀"
     },
     {
-      name: "Dr. Emma Nakamura",
-      role: "CTO – Healthcare Startup",
-      content: "Thanks to Algorythmos, we deployed AI models into production securely with MLOps and CI/CD pipelines. Downtime dropped, and our time-to-market was cut in half",
+      name: t("home.testimonials.2.name"),
+      role: t("home.testimonials.2.role"),
+      content: t("home.testimonials.2.content"),
       rating: 5,
       avatar: "⚡"
     }
   ];
 
   const stats = [
-    { number: "∞", label: "Scalability", suffix: "" },
-    { number: "99.999%", label: "Uptime", suffix: "" },
-    { number: "100+", label: "Integrations", suffix: "" },
-    { number: "<1ms", label: "Response Time", suffix: "" }
+    { number: "∞", label: t("home.stats.scalability"), suffix: "" },
+    { number: "99.999%", label: t("home.stats.uptime"), suffix: "" },
+    { number: "100+", label: t("home.stats.integrations"), suffix: "" },
+    { number: "<1ms", label: t("home.stats.responseTime"), suffix: "" }
   ];
 
   return (
@@ -269,21 +271,21 @@ const AdvancedBusinessWebsite = () => {
             {/* Left: Copy */}
             <div className="text-center md:text-left">
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black leading-tight mb-6">
-                <span className="block">Unlock the Real Value</span>
-                <span className="block bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">Of Your Data</span>
+                <span className="block">{t("home.hero.title1")}</span>
+                <span className="block bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">{t("home.hero.title2")}</span>
               </h1>
 
               <p className="text-base sm:text-lg md:text-xl text-gray-300 leading-relaxed mb-8 max-w-xl mx-auto md:mx-0">
-                AI consultancy for enterprises and SMEs across France and Australia. Algorythmos delivers secure, production-ready AI solutions—from automation and MLOps to document intelligence—with measurable ROI and strategic guidance from Sydney to Suresnes.
+                {t("home.hero.subtitle")}
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
                 <Link to="/contact" className="group relative inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 rounded-2xl font-semibold text-base sm:text-lg bg-gradient-to-r from-blue-600 to-purple-600 hover:scale-105 hover:shadow-lg transition w-full sm:w-auto">
                   <span className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
-                  <span className="relative flex items-center justify-center">Start Your AI Journey <ArrowRight className="ml-3 w-5 h-5" /></span>
+                  <span className="relative flex items-center justify-center">{t("home.hero.cta.primary")} <ArrowRight className="ml-3 w-5 h-5" /></span>
                 </Link>
                 <Link to="/services" className="relative inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 rounded-2xl font-semibold text-base sm:text-lg border-2 border-gray-600 hover:border-white hover:scale-105 hover:shadow-lg transition backdrop-blur-sm w-full sm:w-auto">
-                  <span className="relative flex items-center justify-center"><Play className="mr-3 w-5 h-5" />Explore Our Services</span>
+                  <span className="relative flex items-center justify-center"><Play className="mr-3 w-5 h-5" />{t("home.hero.cta.secondary")}</span>
                 </Link>
               </div>
 
@@ -340,14 +342,13 @@ const AdvancedBusinessWebsite = () => {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="text-center mb-20 animate-fade-in-up">
             <h2 className="text-5xl md:text-7xl font-black mb-8">
-              Our
+              {t("home.capabilities.title")}
               <span className="block bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                Capabilities
+                {t("home.capabilities.titleHighlight")}
               </span>
             </h2>
             <p className="text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
-              Comprehensive AI solutions for businesses in France and Australia—reducing costs, saving time, and delivering measurable impact. 
-              From agentic automation to secure MLOps, we provide the strategic foundation for smarter, safer, and faster AI-driven decisions.
+              {t("home.capabilities.subtitle")}
             </p>
           </div>
 
@@ -396,13 +397,13 @@ const AdvancedBusinessWebsite = () => {
         <div className="max-w-7xl mx-auto px-6 lg:px-8 relative">
           <div className="text-center mb-20 animate-fade-in-up">
             <h2 className="text-5xl md:text-7xl font-black mb-8">
-              What Our
+              {t("home.testimonials.title")}
               <span className="block bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                Clients Say
+                {t("home.testimonials.titleHighlight")}
               </span>
             </h2>
             <p className="text-2xl text-gray-300 max-w-3xl mx-auto">
-              Trusted by forward-thinking leaders who turned AI into measurable business results.
+              {t("home.testimonials.subtitle")}
 
             </p>
           </div>
@@ -471,22 +472,22 @@ const AdvancedBusinessWebsite = () => {
         <div className="relative max-w-5xl mx-auto text-center px-6 lg:px-8">
           <div className="animate-fade-in-up">
             <h2 className="text-6xl md:text-8xl font-black mb-8 leading-tight">
-              Ready to Start
+              {t("home.cta.title")}
               <span className="block bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                Your AI Journey?
+                {t("home.cta.titleHighlight")}
               </span>
             </h2>
             
             <p className="text-2xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">
-              Unlock secure, ROI-driven AI solutions that reduce costs, save time, and empower smarter decisions.
-              <span className="block mt-2 text-blue-400">Move beyond experimentation.</span>
+              {t("home.cta.subtitle")}
+              <span className="block mt-2 text-blue-400">{t("home.cta.subtitleHighlight")}</span>
             </p>
             
             <div className="flex flex-col sm:flex-row gap-6 justify-center mb-12">
               <Link to="/contact" className="group relative px-12 py-6 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl font-bold text-2xl overflow-hidden transform hover:scale-105 transition-all duration-500">
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-left" />
                 <div className="relative flex items-center justify-center">
-                  Begin Evolution
+                  {t("home.cta.primary")}
                   <Rocket className="ml-3 w-7 h-7 group-hover:translate-x-2 group-hover:-translate-y-1 transition-transform duration-300" />
                 </div>
                 <div className="absolute -inset-2 rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 blur-2xl opacity-50 group-hover:opacity-100 transition-opacity duration-500" />
@@ -496,7 +497,7 @@ const AdvancedBusinessWebsite = () => {
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-left" />
                 <div className="relative flex items-center justify-center">
                   <MousePointer2 className="mr-3 w-7 h-7 group-hover:rotate-12 transition-transform duration-300" />
-                  Interactive Tour
+                  {t("home.cta.secondary")}
                 </div>
               </Link>
             </div>
@@ -504,11 +505,11 @@ const AdvancedBusinessWebsite = () => {
             <div className="flex items-center justify-center text-gray-400 space-x-8">
               <div className="flex items-center">
                 <CheckCircle className="w-6 h-6 mr-3 text-green-400 animate-pulse" />
-                Secure & Compliant (GDPR + EU AI Act) • Rapid Prototyping to Scalable Rollouts
+                {t("home.cta.badge")}
               </div>
               <div className="hidden sm:flex items-center">
                 <Sparkles className="w-6 h-6 mr-3 text-purple-400 animate-spin" />
-                AI-powered Automation
+                {t("home.cta.badgeSecondary")}
               </div>
             </div>
           </div>
