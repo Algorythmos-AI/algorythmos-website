@@ -1,56 +1,67 @@
 import React from "react";
+import { Helmet } from "react-helmet-async";
 import { BarChart2, FileText, Zap, Users } from "lucide-react";
 import { Link } from "react-router-dom";
-
-const caseStudies = [
-  {
-    icon: BarChart2,
-    title: "Financial Services – Compliance Automation",
-    challenge: "Manual compliance reporting took days and was error-prone.",
-    solution: "We deployed an AI-powered compliance engine integrated with client systems.",
-    result: "Reports generated in minutes with 99% accuracy, saving 40% in costs.",
-    gradient: "from-blue-500 to-purple-500",
-    link: "/case-studies/financial-compliance"
-  },
-  {
-    icon: FileText,
-    title: "Manufacturing – Document Intelligence",
-    challenge: "Processing thousands of invoices manually slowed operations.",
-    solution: "OCR + NLP pipeline for automated invoice and contract extraction.",
-    result: "Cut manual effort by 50% and improved data accuracy by 30%.",
-    gradient: "from-pink-500 to-rose-500",
-    link: "/case-studies/manufacturing-docs"
-  },
-  {
-    icon: Zap,
-    title: "Healthcare – MLOps Platform Engineering",
-    challenge: "AI models took weeks to move from prototype to production.",
-    solution: "Implemented CI/CD pipelines with Docker, Kubernetes & GitHub Actions.",
-    result: "Deployment time reduced by 60%, downtime cut in half.",
-    gradient: "from-green-500 to-emerald-500",
-    link: "/case-studies/healthcare-mlops"
-  },
-  {
-    icon: Users,
-    title: "Retail – SQL Dashboards",
-    challenge: "Leaders lacked visibility across multi-region operations.",
-    solution: "Real-time SQL dashboards integrated with ERP & CRM systems.",
-    result: "Decision-making accelerated, boosting revenue by 15%.",
-    gradient: "from-yellow-500 to-orange-500",
-    link: "/case-studies/retail-sql"
-  }
-];
+import { useI18n } from "../../app/i18n/I18nContext.jsx";
 
 const CaseStudiesPage = () => {
+  const { t, region } = useI18n();
+
+  const caseStudies = [
+    {
+      icon: BarChart2,
+      title: t("caseStudies.items.0.title"),
+      challenge: t("caseStudies.items.0.challenge"),
+      solution: t("caseStudies.items.0.solution"),
+      result: t("caseStudies.items.0.result"),
+      gradient: "from-blue-500 to-purple-500",
+      link: "/case-studies/financial-compliance"
+    },
+    {
+      icon: FileText,
+      title: t("caseStudies.items.1.title"),
+      challenge: t("caseStudies.items.1.challenge"),
+      solution: t("caseStudies.items.1.solution"),
+      result: t("caseStudies.items.1.result"),
+      gradient: "from-pink-500 to-rose-500",
+      link: "/case-studies/manufacturing-docs"
+    },
+    {
+      icon: Zap,
+      title: t("caseStudies.items.2.title"),
+      challenge: t("caseStudies.items.2.challenge"),
+      solution: t("caseStudies.items.2.solution"),
+      result: t("caseStudies.items.2.result"),
+      gradient: "from-green-500 to-emerald-500",
+      link: "/case-studies/healthcare-mlops"
+    },
+    {
+      icon: Users,
+      title: t("caseStudies.items.3.title"),
+      challenge: t("caseStudies.items.3.challenge"),
+      solution: t("caseStudies.items.3.solution"),
+      result: t("caseStudies.items.3.result"),
+      gradient: "from-yellow-500 to-orange-500",
+      link: "/case-studies/retail-sql"
+    }
+  ];
+
   return (
     <div className="min-h-screen bg-black text-white overflow-hidden relative">
+      <Helmet>
+        <title>{t("caseStudies.meta.title")}</title>
+        <meta name="description" content={t("caseStudies.meta.description")} />
+        <meta property="og:title" content={t("caseStudies.meta.title")} />
+        <meta property="og:description" content={t("caseStudies.meta.description")} />
+        <meta property="og:locale" content={region === "FR" ? "fr_FR" : "en_US"} />
+      </Helmet>
+
       <main className="pt-32 md:pt-40 pb-20 px-4 sm:px-6 md:px-12 max-w-6xl mx-auto text-center">
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-6 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-          Case Studies
+          {t("caseStudies.hero.title")}
         </h1>
         <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 mb-16 leading-relaxed">
-          Discover how Algorythmos has helped enterprises unlock measurable ROI 
-          with practical, secure AI solutions.
+          {t("caseStudies.hero.subtitle")}
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8 lg:gap-12">
@@ -70,9 +81,9 @@ const CaseStudiesPage = () => {
                     <Icon className="w-10 h-10 sm:w-12 sm:h-12" />
                   </div>
                   <h3 className="text-2xl sm:text-3xl font-bold mb-4">{study.title}</h3>
-                  <p className="text-base sm:text-lg text-gray-400"><strong>Challenge:</strong> {study.challenge}</p>
-                  <p className="text-base sm:text-lg text-gray-400"><strong>Solution:</strong> {study.solution}</p>
-                  <p className="text-base sm:text-lg text-gray-400"><strong>Result:</strong> {study.result}</p>
+                  <p className="text-base sm:text-lg text-gray-400"><strong>{t("caseStudies.labels.challenge")}</strong> {study.challenge}</p>
+                  <p className="text-base sm:text-lg text-gray-400"><strong>{t("caseStudies.labels.solution")}</strong> {study.solution}</p>
+                  <p className="text-base sm:text-lg text-gray-400"><strong>{t("caseStudies.labels.result")}</strong> {study.result}</p>
                 </div>
               </Link>
             );

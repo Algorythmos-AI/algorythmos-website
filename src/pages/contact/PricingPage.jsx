@@ -6,8 +6,10 @@
 // ================================================
 
 import React, { useEffect, useState, useMemo } from "react";
+import { Helmet } from "react-helmet-async";
 import { track } from "../../app/utils/analytics";
 import { withUtm, persistUtmFromLocation, readStoredUtm, recordLastCta } from "../../app/utils/utm";
+import { useI18n } from "../../app/i18n/I18nContext.jsx";
 import AlgorythmosCalculator from "../../components/charts/AlgorythmosCalculator";
 
 const Check = (props) => (
@@ -18,7 +20,7 @@ const Check = (props) => (
 
 const CALENDLY_URL = "https://calendly.com/algorythmos-france/30min";
 
-function InfoTip() {
+function InfoTip({ t }) {
   const tipId = "tmc-tip";
   const [open, setOpen] = useState(false);
 
@@ -26,7 +28,7 @@ function InfoTip() {
     <div className="relative inline-block">
       <button
         type="button"
-        aria-label="Compare to DIY and agency assumptions"
+        aria-label={t("pricing.tooltip.title")}
         aria-expanded={open}
         aria-controls={tipId}
         aria-describedby={open ? tipId : undefined}
@@ -40,7 +42,7 @@ function InfoTip() {
         onBlur={() => setOpen(false)}
         onKeyDown={(e) => e.key === "Escape" && setOpen(false)}
         className="ml-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-slate-800 text-slate-300 ring-1 ring-white/10 text-[11px] font-semibold"
-        title="Compare to DIY & agency"
+        title={t("pricing.tooltip.title")}
       >
         i
       </button>
@@ -54,27 +56,25 @@ function InfoTip() {
           onMouseLeave={() => setOpen(false)}
         >
           <div className="text-[11px] font-semibold text-slate-100">
-            Compare to DIY & agency
+            {t("pricing.tooltip.title")}
           </div>
           <ul className="mt-2 space-y-1 leading-relaxed">
             <li>
-              <span className="font-semibold">DIY (Internal build)</span>: 3 FTE
-              in Paris (ML/Full-stack/DevOps) incl. employer charges & tools —
-              <span className="font-semibold"> ≈ €24,500/mo</span>.
+              <span className="font-semibold">{t("pricing.tooltip.diy.label")}</span>: {t("pricing.tooltip.diy.detail")}
+              <span className="font-semibold"> {t("pricing.tooltip.diy.cost")}</span>.
             </li>
             <li>
-              <span className="font-semibold">Traditional agency</span>:
-              1–1.5 FTE senior consultants @ €600–€900/day —
-              <span className="font-semibold"> ≈ €18,000/mo</span>.
+              <span className="font-semibold">{t("pricing.tooltip.agency.label")}</span>:
+              {" "}{t("pricing.tooltip.agency.detail")}
+              <span className="font-semibold"> {t("pricing.tooltip.agency.cost")}</span>.
             </li>
             <li>
-              <span className="font-semibold">Algorythmos</span>:
-              platform & delivery from <span className="font-semibold">€4,500/mo</span> +
-              <span className="font-semibold"> run</span> (usage).
+              <span className="font-semibold">{t("pricing.tooltip.algorythmos.label")}</span>:
+              {" "}{t("pricing.tooltip.algorythmos.detail")}.
             </li>
           </ul>
           <p className="mt-2 text-[11px] text-slate-400">
-            Illustrative only — use the <a href="#calculator" className="underline">calculator</a> for ROI and payback.
+            {t("pricing.tooltip.footnote")}
           </p>
         </div>
       )}
@@ -82,7 +82,7 @@ function InfoTip() {
   );
 }
 
-function StickyCTA(){
+function StickyCTA({ t }){
   const calendlyUrl = useMemo(() => {
     return withUtm(CALENDLY_URL, {
       utm_source: "pricing",
@@ -102,8 +102,7 @@ function StickyCTA(){
         >
           <div className="flex flex-col items-start gap-3 md:flex-row md:items-center md:justify-between">
             <div className="text-sm text-slate-300">
-              Ready to estimate impact? Book a 30-min discovery. We'll review ROI (Return On Investment),
-              accuracy targets, and deployment options.
+              {t("pricing.stickyCta.text")}
             </div>
             <div className="flex items-center gap-3 w-full md:w-auto">
               <a
@@ -115,16 +114,16 @@ function StickyCTA(){
                   track("click_calendly", { source: "sticky_cta" });
                 }}
                 className="flex-1 md:flex-none inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-[#6D00FF] via-[#7658E7] to-[#3715E0] px-4 py-2 text-sm font-semibold text-white shadow-brand focus:outline-none focus:ring-4 focus:ring-violet-500/40"
-                aria-label="Book a meeting on Calendly"
+                aria-label={t("pricing.stickyCta.bookCalendly")}
               >
-                Book on Calendly
+                {t("pricing.stickyCta.bookCalendly")}
               </a>
               <a
                 href="#calculator"
                 onClick={() => track("click_open_calculator", { source: "sticky_cta" })}
                 className="flex-1 md:flex-none inline-flex items-center justify-center rounded-xl bg-slate-800/80 px-4 py-2 text-sm font-semibold ring-1 ring-white/10"
               >
-                Open calculator
+                {t("pricing.stickyCta.openCalculator")}
               </a>
             </div>
           </div>
@@ -135,6 +134,8 @@ function StickyCTA(){
 }
 
 export default function PricingPage(){
+  const { t, region } = useI18n();
+  
   useEffect(() => {
     // Capture UTMs on initial render
     persistUtmFromLocation();
@@ -157,18 +158,24 @@ export default function PricingPage(){
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 pb-24">
+      <Helmet>
+        <title>{t("pricing.meta.title")}</title>
+        <meta name="description" content={t("pricing.meta.description")} />
+        <meta property="og:title" content={t("pricing.meta.title")} />
+        <meta property="og:description" content={t("pricing.meta.description")} />
+        <meta property="og:locale" content={region === "FR" ? "fr_FR" : "en_US"} />
+      </Helmet>
+
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 -z-10 bg-gradient-to-br from-[#6D00FF] via-[#7658E7] to-[#3715E0] opacity-20"/>
         <div className="mx-auto max-w-6xl px-4 py-16">
           <div className="rounded-3xl bg-slate-900/60 ring-1 ring-white/10 p-8 md:p-12 shadow-[0_10px_40px_-10px_rgba(109,0,255,0.55)]">
             <h1 className="text-3xl md:text-5xl font-bold tracking-tight">
-              Pricing that scales with your impact
+              {t("pricing.hero.title")}
             </h1>
             <p className="mt-3 max-w-2xl text-slate-300">
-              Transparent tiers and a live calculator to estimate your ROI (Return On Investment),
-              payback, and total cost. Built for secure AI (Artificial Intelligence) rollouts: RBAC (Role-Based Access Control),
-              PII (Personally Identifiable Information) redaction, GDPR (General Data Protection Regulation) alignment.
+              {t("pricing.hero.subtitle")}
             </p>
 
             {/* SEO: Organization + Offers schema */}
@@ -217,37 +224,37 @@ export default function PricingPage(){
             </script>
 
             <div className="mt-6 flex flex-wrap items-center gap-3 text-xs text-slate-400">
-              <span className="rounded-full bg-slate-800/80 px-3 py-1 ring-1 ring-white/10">SLA (Service-Level Agreement) options</span>
-              <span className="rounded-full bg-slate-800/80 px-3 py-1 ring-1 ring-white/10">Audit logs</span>
-              <span className="rounded-full bg-slate-800/80 px-3 py-1 ring-1 ring-white/10">SOC2-ready processes</span>
-              <span className="rounded-full bg-slate-800/80 px-3 py-1 ring-1 ring-white/10">API (Application Programming Interface) access</span>
+              <span className="rounded-full bg-slate-800/80 px-3 py-1 ring-1 ring-white/10">{t("pricing.hero.badges.sla")}</span>
+              <span className="rounded-full bg-slate-800/80 px-3 py-1 ring-1 ring-white/10">{t("pricing.hero.badges.audit")}</span>
+              <span className="rounded-full bg-slate-800/80 px-3 py-1 ring-1 ring-white/10">{t("pricing.hero.badges.soc2")}</span>
+              <span className="rounded-full bg-slate-800/80 px-3 py-1 ring-1 ring-white/10">{t("pricing.hero.badges.api")}</span>
             </div>
             <div className="mt-6 rounded-2xl bg-slate-900/70 ring-1 ring-white/10 p-4">
               <div className="mb-3 text-sm text-slate-300 flex items-center">
-                <span>Quick glance — TMC (Total Monthly Cost) estimates*</span>
-                <InfoTip />
+                <span>{t("pricing.hero.glance.title")}</span>
+                <InfoTip t={t} />
               </div>
               <div className="grid gap-3 md:grid-cols-3 text-sm">
                 <div className="rounded-xl border border-slate-800 p-4">
-                  <div className="font-semibold">Internal Build</div>
-                  <div className="text-slate-400">Amortized build + maintenance</div>
+                  <div className="font-semibold">{t("pricing.hero.glance.internal.title")}</div>
+                  <div className="text-slate-400">{t("pricing.hero.glance.internal.subtitle")}</div>
                   <div className="mt-1 text-xl font-bold">≈ €{Math.round((120000/6) + (120000*0.18/12) + 2000)}</div>
                 </div>
                 <div className="rounded-xl border border-slate-800 p-4">
-                  <div className="font-semibold">Traditional Agency</div>
-                  <div className="text-slate-400">Retainer + run</div>
+                  <div className="font-semibold">{t("pricing.hero.glance.agency.title")}</div>
+                  <div className="text-slate-400">{t("pricing.hero.glance.agency.subtitle")}</div>
                   <div className="mt-1 text-xl font-bold">≈ €{Math.round(12000 + 1000 + 30000/6)}</div>
                 </div>
                 <div className="rounded-xl border border-slate-800 p-4">
-                  <div className="font-semibold">Algorythmos</div>
-                  <div className="text-slate-400">Fee + AI (Artificial Intelligence) run</div>
-                  <div className="mt-1 text-xl font-bold">From €4,500 + run</div>
+                  <div className="font-semibold">{t("pricing.hero.glance.algorythmos.title")}</div>
+                  <div className="text-slate-400">{t("pricing.hero.glance.algorythmos.subtitle")}</div>
+                  <div className="mt-1 text-xl font-bold">{t("pricing.hero.glance.algorythmos.price")}</div>
                 </div>
               </div>
-              <div className="mt-3 text-xs text-slate-500">*Illustrative only. Use the calculator below for ROI (Return On Investment) and payback.</div>
+              <div className="mt-3 text-xs text-slate-500">{t("pricing.hero.glance.footnote")}</div>
               <div className="mt-4">
                 <a href="#calculator" className="inline-flex items-center rounded-xl bg-gradient-to-r from-[#6D00FF] via-[#7658E7] to-[#3715E0] px-4 py-2 text-sm font-semibold shadow-brand">
-                  See full breakdown
+                  {t("pricing.hero.glance.cta")}
                 </a>
               </div>
             </div>
@@ -260,73 +267,74 @@ export default function PricingPage(){
         <div className="grid gap-6 md:grid-cols-3">
           {[
             {
-              name: "Pilot",
-              price: "€2,000",
-              period: "/mo",
-              highlight: "For pilots and small teams",
+              name: t("pricing.tiers.pilot.name"),
+              price: t("pricing.tiers.pilot.price"),
+              period: t("pricing.tiers.pilot.period"),
+              highlight: t("pricing.tiers.pilot.highlight"),
               features: [
-                "Up to 10k items/mo",
-                "1 environment (dev/prod)",
-                "Basic RAG (Retrieval-Augmented Generation)",
-                "Shared multi-tenant infrastructure",
-                "No SSO (Single Sign-On)",
-                "Email support (24–48h)",
+                t("pricing.tiers.pilot.features.0"),
+                t("pricing.tiers.pilot.features.1"),
+                t("pricing.tiers.pilot.features.2"),
+                t("pricing.tiers.pilot.features.3"),
+                t("pricing.tiers.pilot.features.4"),
+                t("pricing.tiers.pilot.features.5"),
               ],
-              cta: "Start a pilot",
+              cta: t("pricing.tiers.pilot.cta"),
               id: "pilot"
             },
             {
-              name: "Operations",
-              price: "€4,500",
-              period: "/mo",
-              highlight: "Most popular",
+              name: t("pricing.tiers.operations.name"),
+              price: t("pricing.tiers.operations.price"),
+              period: t("pricing.tiers.operations.period"),
+              highlight: t("pricing.tiers.operations.highlight"),
+              badge: t("pricing.tiers.operations.badge"),
               features: [
-                "Up to 50k items/mo",
-                "Dual env + staging",
-                "Audit logs + redaction guardrails",
-                "SLA (Service-Level Agreement) 99.5%",
-                "Priority support (same business day)",
+                t("pricing.tiers.operations.features.0"),
+                t("pricing.tiers.operations.features.1"),
+                t("pricing.tiers.operations.features.2"),
+                t("pricing.tiers.operations.features.3"),
+                t("pricing.tiers.operations.features.4"),
               ],
-              cta: "Scale operations",
+              cta: t("pricing.tiers.operations.cta"),
               popular: true,
               id: "operations"
             },
             {
-              name: "Custom",
-              price: "Custom",
-              period: "/mo + run",
-              highlight: "For regulated & high-volume",
+              name: t("pricing.tiers.custom.name"),
+              price: t("pricing.tiers.custom.price"),
+              period: t("pricing.tiers.custom.period"),
+              highlight: t("pricing.tiers.custom.highlight"),
               features: [
-                "> 50k items/mo",
-                "Private VPC (Virtual Private Cloud)",
-                "SAML SSO (Single Sign-On)",
-                "Custom KPIs & reporting",
-                "Dedicated TAM (Technical Account Manager)",
+                t("pricing.tiers.custom.features.0"),
+                t("pricing.tiers.custom.features.1"),
+                t("pricing.tiers.custom.features.2"),
+                t("pricing.tiers.custom.features.3"),
+                t("pricing.tiers.custom.features.4"),
               ],
-              cta: "Talk to sales",
+              cta: t("pricing.tiers.custom.cta"),
               id: "custom"
             },
-          ].map((t) => (
+          ].map((tier) => (
             <div
-              key={t.name}
+              key={tier.name}
               className={`relative rounded-3xl border p-6 shadow-2xl ${
-                t.popular
+                tier.popular
                   ? "border-violet-500/50 bg-slate-900/70"
                   : "border-slate-800 bg-slate-900/60"
               }`}
-              id={t.id ? t.id : undefined}
+              id={tier.id ? tier.id : undefined}
             >
-              {t.popular && (
-                <div className="absolute -top-3 left-6 rounded-full bg-gradient-to-r from-[#6D00FF] to-[#3715E0] px-3 py-1 text-xs font-semibold">Popular</div>
+              {tier.popular && (
+                <div className="absolute -top-3 left-6 rounded-full bg-gradient-to-r from-[#6D00FF] to-[#3715E0] px-3 py-1 text-xs font-semibold">{tier.badge}</div>
               )}
-              <div className="text-sm text-slate-400">{t.highlight}</div>
+              <div className="text-sm text-slate-400">{tier.highlight}</div>
               <div className="mt-1 flex items-end gap-1">
-                <div className="text-3xl font-bold">{t.price}</div>
-                <div className="pb-1 text-slate-400">{t.period}</div>
+                <div className="text-3xl font-bold">{tier.price}</div>
+                <div className="pb-1 text-slate-400">{tier.period}</div>
               </div>
               <div className="mt-4 h-px bg-slate-800" />
               <ul className="mt-4 space-y-2 text-sm">
-                {t.features.map((f) => (
+                {tier.features.map((f) => (
                   <li key={f} className="flex items-start gap-2">
                     <span className="text-emerald-400"><Check/></span>
                     <span>{f}</span>
@@ -335,14 +343,14 @@ export default function PricingPage(){
               </ul>
               <button
                 className="mt-6 w-full rounded-xl bg-gradient-to-r from-[#6D00FF] via-[#7658E7] to-[#3715E0] px-4 py-2 font-semibold text-white shadow-lg transition hover:scale-[1.01] focus:outline-none focus:ring-4 focus:ring-violet-500/40"
-                aria-label={`${t.cta} for ${t.name}`}
+                aria-label={`${tier.cta} for ${tier.name}`}
                 onClick={() => {
-                  const id = `${t.name.toLowerCase()}_cta`.replace(/\s+/g, "_");
+                  const id = `${tier.name.toLowerCase()}_cta`.replace(/\s+/g, "_");
                   recordLastCta(id);
-                  track("click_plan_cta", { plan: t.name, utm_content: id });
+                  track("click_plan_cta", { plan: tier.name, utm_content: id });
                 }}
               >
-                {t.cta}
+                {tier.cta}
               </button>
             </div>
           ))}
@@ -350,23 +358,21 @@ export default function PricingPage(){
 
         {/* Pricing note */}
         <p className="mt-4 text-xs text-slate-500">
-          Prices exclude VAT. Month-to-month billing; cancel anytime before renewal. If item volume exceeds your tier for 2 consecutive months, we'll recommend a tier upgrade to maintain SLA and cost efficiency.
+          {t("pricing.notes.vatExcluded")}
         </p>
         
         <div className="mt-4 space-y-1 text-xs text-slate-400">
           <p>
-            <span className="font-semibold">Definitions.</span>{" "}
-            <span className="font-semibold">Item</span> = one processed unit
-            (document, message, or API call).{" "}
-            <span className="font-semibold">Run</span> = usage costs (LLM tokens,
-            GPUs, vector DB) billed at provider rates (pass-through, no markup).
+            <span className="font-semibold">{t("pricing.notes.definitionsLabel")}</span>{" "}
+            {t("pricing.notes.itemDef")}{" "}
+            {t("pricing.notes.runDef")}
           </p>
           <p>
-            <span className="font-semibold">Add-ons.</span>{" "}
-            SAML SSO: <span className="font-semibold">€500/mo</span> ·
-            Private VPC: <span className="font-semibold">€1,000/mo</span> ·
-            Dedicated TAM: <span className="font-semibold">€1,500/mo</span>.{" "}
-            Reference pricing:{" "}
+            <span className="font-semibold">{t("pricing.notes.addonsLabel")}</span>{" "}
+            {t("pricing.notes.addonSso")} ·{" "}
+            {t("pricing.notes.addonVpc")} ·{" "}
+            {t("pricing.notes.addonTam")}.{" "}
+            {t("pricing.notes.referenceLabel")}{" "}
             <a
               href="https://www.vantage.sh/pricing"
               target="_blank"
@@ -398,10 +404,8 @@ export default function PricingPage(){
             </a>
           </p>
           <p>
-            <span className="font-semibold">Billing.</span>{" "}
-            Month-to-month; cancel anytime before renewal. If item volume exceeds
-            your tier for 2 consecutive months, we'll recommend a tier upgrade to
-            ensure SLA and cost efficiency.
+            <span className="font-semibold">{t("pricing.notes.billingLabel")}</span>{" "}
+            {t("pricing.notes.billingDetail")}
           </p>
         </div>
       </section>
@@ -412,15 +416,15 @@ export default function PricingPage(){
           <div className="rounded-3xl bg-slate-900 p-6 md:p-8">
             <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
               <div>
-                <h2 className="text-2xl font-bold tracking-tight">Calculate your savings</h2>
-                <p className="mt-1 text-sm text-slate-300">Use the model to estimate monthly savings, ROI (Return On Investment), and payback. Adjust inputs to match your workload.</p>
+                <h2 className="text-2xl font-bold tracking-tight">{t("pricing.calculator.title")}</h2>
+                <p className="mt-1 text-sm text-slate-300">{t("pricing.calculator.subtitle")}</p>
               </div>
               <a
                 href="#contact"
                 onClick={() => track("click_contact_from_calculator")}
                 className="mt-3 inline-flex items-center justify-center rounded-xl bg-slate-800/80 px-4 py-2 text-sm font-semibold ring-1 ring-white/10 hover:bg-slate-800"
               >
-                Need help? Book a consult
+                {t("pricing.calculator.helpCta")}
               </a>
             </div>
             <div className="mt-6">
@@ -434,43 +438,37 @@ export default function PricingPage(){
       <section className="mx-auto max-w-6xl px-4 pb-16">
         <div className="grid gap-6 md:grid-cols-2">
           <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6">
-            <h3 className="text-lg font-semibold">How do you measure accuracy?</h3>
+            <h3 className="text-lg font-semibold">{t("pricing.faq.0.question")}</h3>
             <p className="mt-2 text-sm text-slate-300">
-              We track exact-match and semantic-match metrics on sampled outputs.
-              For regulated flows, we add human review until targets are consistently
-              above the agreed KPI (Key Performance Indicator).
+              {t("pricing.faq.0.answer")}
             </p>
           </div>
 
           <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6">
-            <h3 className="text-lg font-semibold">Can you deploy in our cloud?</h3>
+            <h3 className="text-lg font-semibold">{t("pricing.faq.1.question")}</h3>
             <p className="mt-2 text-sm text-slate-300">
-              Yes — private VPC (Virtual Private Cloud) with customer-managed keys.
-              We support SSO (Single Sign-On) via SAML (Security Assertion Markup Language)
-              and granular RBAC (Role-Based Access Control).
+              {t("pricing.faq.1.answer")}
             </p>
           </div>
 
           <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6">
-            <h3 className="text-lg font-semibold">Do you mark up cloud/LLM costs?</h3>
+            <h3 className="text-lg font-semibold">{t("pricing.faq.2.question")}</h3>
             <p className="mt-2 text-sm text-slate-300">
-              No. <span className="font-semibold">Run</span> is pass-through at provider rates
-              (LLM tokens, GPUs, vector DB). You pay exactly what the providers charge; no markup.
+              {t("pricing.faq.2.answer")}
             </p>
           </div>
 
           <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6">
-            <h3 className="text-lg font-semibold">What is an "Item"?</h3>
+            <h3 className="text-lg font-semibold">{t("pricing.faq.3.question")}</h3>
             <p className="mt-2 text-sm text-slate-300">
-              An <span className="font-semibold">Item</span> is one processed unit — for example, a
-              document, a chat message, or an API call — used to measure monthly volume.
+              {t("pricing.faq.3.answer")}
             </p>
           </div>
         </div>
       </section>
 
       {/* Sticky CTA */}
-      <StickyCTA />
+      <StickyCTA t={t} />
     </div>
   );
 }
