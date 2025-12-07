@@ -3,8 +3,12 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { I18nProvider } from './app/i18n/I18nContext.jsx';
+import { injectSpeedInsights } from '@vercel/speed-insights';
 import './index.css'
 import App from './App.jsx'
+
+// Initialize Vercel Speed Insights (client-side only)
+injectSpeedInsights();
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
