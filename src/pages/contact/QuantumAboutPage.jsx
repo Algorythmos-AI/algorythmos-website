@@ -1,11 +1,13 @@
 // src/pages/contact/QuantumAboutPage.jsx
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, Suspense, lazy } from "react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
-import TeamGrid from "../../components/ui/TeamGrid";
 import { track } from "../../app/utils/analytics";
 import { persistUtmFromLocation, readStoredUtm } from "../../app/utils/utm";
+
+// Lazy-load heavy components
+const TeamGrid = lazy(() => import("../../components/ui/TeamGrid"));
 
 import {
   Brain,
@@ -550,7 +552,9 @@ const QuantumAboutPage = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-blue-900/5 via-purple-900/5 to-black" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="mt-24 md:mt-28">
-            <TeamGrid />
+            <Suspense fallback={null}>
+              <TeamGrid />
+            </Suspense>
           </div>
         </div>
       </section>

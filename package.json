@@ -12,7 +12,8 @@
     "test": "vitest --exclude 'e2e/**' --exclude 'tests/**'",
     "test:e2e": "playwright test",
     "test:e2e:acronyms": "playwright test e2e/acronym-expansions.spec.ts",
-    "seo:check": "node scripts/seo-validate.js"
+    "seo:check": "node scripts/seo-validate.js",
+    "perf": "node scripts/perf-report.js"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",

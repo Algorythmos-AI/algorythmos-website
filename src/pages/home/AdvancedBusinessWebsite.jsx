@@ -1,9 +1,11 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo, Suspense, lazy } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronDown, Menu, X, ArrowRight, Star, Users, Zap, Shield, CheckCircle, Play, MousePointer2, Sparkles, Globe, Rocket, Brain, Eye } from 'lucide-react';
-import PartnersCarousel from '../../components/ui/PartnersCarousel.jsx';
-import HeroIllustration from '../../components/ui/HeroIllustration.jsx';
-import ServicesShowcase from '../../components/ui/ServicesShowcase.jsx';
+import { ChevronDown, ArrowRight, Star, Users, Zap, Shield, CheckCircle, Play, MousePointer2, Sparkles, Globe, Rocket, Brain, Eye } from 'lucide-react';
+
+// Lazy-load heavy UI components (below-the-fold content)
+const PartnersCarousel = lazy(() => import('../../components/ui/PartnersCarousel.jsx'));
+const HeroIllustration = lazy(() => import('../../components/ui/HeroIllustration.jsx'));
+const ServicesShowcase = lazy(() => import('../../components/ui/ServicesShowcase.jsx'));
 
 const AdvancedBusinessWebsite = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -287,13 +289,17 @@ const AdvancedBusinessWebsite = () => {
 
               {/* Services Showcase - Mobile */}
               <div className="mt-12 md:hidden">
-                <ServicesShowcase />
+                <Suspense fallback={null}>
+                  <ServicesShowcase />
+                </Suspense>
               </div>
             </div>
 
             {/* Right: Services Showcase (desktop) */}
             <div className="hidden md:block">
-              <ServicesShowcase />
+              <Suspense fallback={null}>
+                <ServicesShowcase />
+              </Suspense>
             </div>
           </div>
 
@@ -316,7 +322,9 @@ const AdvancedBusinessWebsite = () => {
           </div>
 
           {/* Partners Carousel */}
-          <PartnersCarousel />
+          <Suspense fallback={null}>
+            <PartnersCarousel />
+          </Suspense>
         </div>
 
         {/* Scroll Indicator */}
