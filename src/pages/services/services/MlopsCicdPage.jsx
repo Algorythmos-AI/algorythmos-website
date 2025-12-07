@@ -4,10 +4,12 @@ import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { Layers, ArrowRight, CheckCircle, GitBranch, Activity, Shield, Gauge, AlertTriangle, Package } from "lucide-react";
 import { withUtm } from "../../../app/utils/utm";
+import { useI18n } from "../../../app/i18n/I18nContext";
 
 const CALENDLY_URL = "https://calendly.com/algorythmos-france/30min";
 
 export default function MlopsCicdPage() {
+  const { t, region } = useI18n();
   const contactUrl = useMemo(() => {
     return withUtm(CALENDLY_URL, {
       utm_source: "services",
@@ -20,22 +22,22 @@ export default function MlopsCicdPage() {
   return (
     <div className="min-h-screen bg-black text-white">
       <Helmet>
-        <title>MLOps & Platform Engineering | Algorythmos™</title>
+        <title>{t("serviceMlops.meta.title")}</title>
         <meta
           name="description"
-          content="Production-grade ML with CI/CD on Kubernetes and Docker. Automated evaluations, observability, drift monitoring, safe rollbacks, and DevSecOps governance for AI that survives production."
+          content={t("serviceMlops.meta.description")}
         />
         <link rel="canonical" href="https://www.algorythmos.fr/services/mlops-cicd" />
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="MLOps & Platform Engineering | Algorythmos™" />
-        <meta property="og:description" content="Production-grade ML with CI/CD on Kubernetes and Docker. Automated evaluations, observability, drift monitoring, safe rollbacks, and DevSecOps governance for AI that survives production." />
+        <meta property="og:title" content={t("serviceMlops.meta.title")} />
+        <meta property="og:description" content={t("serviceMlops.meta.description")} />
         <meta property="og:url" content="https://www.algorythmos.fr/services/mlops-cicd" />
         <meta property="og:image" content="https://www.algorythmos.fr/Algorythmos.png" />
         <meta property="og:site_name" content="Algorythmos" />
-        <meta property="og:locale" content="en_US" />
+        <meta property="og:locale" content={region === "FR" ? "fr_FR" : "en_US"} />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="MLOps & Platform Engineering | Algorythmos™" />
-        <meta name="twitter:description" content="Production-grade ML with CI/CD on Kubernetes and Docker. Automated evaluations, observability, drift monitoring, safe rollbacks, and DevSecOps governance for AI that survives production." />
+        <meta name="twitter:title" content={t("serviceMlops.meta.title")} />
+        <meta name="twitter:description" content={t("serviceMlops.meta.description")} />
         <meta name="twitter:image" content="https://www.algorythmos.fr/Algorythmos.png" />
         <script type="application/ld+json">
           {JSON.stringify({
@@ -87,10 +89,10 @@ export default function MlopsCicdPage() {
           {/* Breadcrumb */}
           <nav className="mb-8 text-sm text-gray-400">
             <Link to="/services" className="hover:text-blue-400 transition-colors">
-              Services
+              {t("serviceMlops.breadcrumb.services")}
             </Link>
             <span className="mx-2">/</span>
-            <span className="text-white">MLOps & Platform Engineering</span>
+            <span className="text-white">{t("serviceMlops.breadcrumb.current")}</span>
           </nav>
 
           {/* Icon & Badge */}
@@ -100,32 +102,32 @@ export default function MlopsCicdPage() {
             </div>
             <div className="inline-flex items-center gap-2 rounded-full bg-purple-500/10 px-4 py-1.5 text-xs font-semibold text-purple-400 ring-1 ring-purple-500/20">
               <GitBranch className="h-3 w-3" />
-              Production-Grade ML
+              {t("serviceMlops.hero.badge")}
             </div>
           </div>
 
           {/* Title */}
           <h1 className="mb-6 text-4xl md:text-6xl font-black leading-tight">
             <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
-              MLOps & Platform Engineering
+              {t("serviceMlops.hero.title1")}
             </span>
             <br />
             <span className="text-white">
-              AI That Survives Production
+              {t("serviceMlops.hero.title2")}
             </span>
           </h1>
 
           {/* Subtitle */}
           <p className="mb-8 max-w-3xl text-lg md:text-xl text-gray-300 leading-relaxed">
-            MLOps consultancy for AI-driven businesses in France and Australia. Productionize AI with CI/CD on Kubernetes and Docker—automated evaluations, observability, drift monitoring, safe rollbacks, and governance with DevSecOps baked in. Deploy on-prem, in VPC, or cloud with confidence, supported by expert engineers from Suresnes and Sydney.
+            {t("serviceMlops.hero.subtitle")}
           </p>
 
           {/* Key Points */}
           <div className="mb-10 grid md:grid-cols-3 gap-4 max-w-3xl">
             {[
-              { icon: Package, text: "Model registry & packaging" },
-              { icon: Activity, text: "Automated evals & drift monitoring" },
-              { icon: GitBranch, text: "Rollbacks and canary deployments" }
+              { icon: Package, text: t("serviceMlops.hero.keyPoints.0") },
+              { icon: Activity, text: t("serviceMlops.hero.keyPoints.1") },
+              { icon: GitBranch, text: t("serviceMlops.hero.keyPoints.2") }
             ].map((item, i) => (
               <div key={i} className="flex items-start gap-3 text-sm text-gray-300">
                 <item.icon className="h-5 w-5 text-purple-400 flex-shrink-0 mt-0.5" />
@@ -142,14 +144,14 @@ export default function MlopsCicdPage() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-3 font-semibold text-white shadow-lg shadow-purple-500/25 transition-all hover:shadow-xl hover:shadow-purple-500/40 hover:-translate-y-0.5"
             >
-              Book a Consultation
+              {t("serviceMlops.hero.cta.book")}
               <ArrowRight className="h-5 w-5" />
             </a>
             <Link
               to="/contact"
               className="inline-flex items-center gap-2 rounded-xl bg-white/5 px-6 py-3 font-semibold text-white ring-1 ring-white/10 transition-all hover:bg-white/10"
             >
-              Contact Us
+              {t("serviceMlops.hero.cta.contact")}
             </Link>
           </div>
         </div>
@@ -160,21 +162,21 @@ export default function MlopsCicdPage() {
         <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-8 text-center">
           <div>
             <div className="text-4xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">
-              10x
+              {t("serviceMlops.metrics.0.value")}
             </div>
-            <div className="text-sm text-gray-400">Faster deployments with CI/CD automation</div>
+            <div className="text-sm text-gray-400">{t("serviceMlops.metrics.0.label")}</div>
           </div>
           <div>
             <div className="text-4xl font-black bg-gradient-to-r from-pink-400 to-blue-400 bg-clip-text text-transparent mb-2">
-              99.9%
+              {t("serviceMlops.metrics.1.value")}
             </div>
-            <div className="text-sm text-gray-400">Uptime with monitoring and rollback strategies</div>
+            <div className="text-sm text-gray-400">{t("serviceMlops.metrics.1.label")}</div>
           </div>
           <div>
             <div className="text-4xl font-black bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-2">
-              100%
+              {t("serviceMlops.metrics.2.value")}
             </div>
-            <div className="text-sm text-gray-400">Audit-ready lineage and governance</div>
+            <div className="text-sm text-gray-400">{t("serviceMlops.metrics.2.label")}</div>
           </div>
         </div>
       </section>
@@ -183,14 +185,14 @@ export default function MlopsCicdPage() {
       <section className="py-20 px-6">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-black mb-6 text-white">
-            What It Is
+            {t("serviceMlops.whatItIs.title")}
           </h2>
           <div className="space-y-4 text-lg text-gray-300 leading-relaxed">
             <p>
-              MLOps (Machine Learning Operations) is the practice of deploying, monitoring, and maintaining ML models in production with the same rigor as traditional software engineering. Think DevOps, but for AI.
+              {t("serviceMlops.whatItIs.p1")}
             </p>
             <p>
-              We build opinionated paths to production covering testing, evaluation, deployment patterns, observability, and governance—ensuring your models survive the real world and deliver consistent value.
+              {t("serviceMlops.whatItIs.p2")}
             </p>
           </div>
         </div>
@@ -200,36 +202,36 @@ export default function MlopsCicdPage() {
       <section className="py-20 px-6 bg-gradient-to-br from-slate-900/50 to-slate-800/30">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-black mb-6 text-white">
-            How It Works
+            {t("serviceMlops.howItWorks.title")}
           </h2>
           <div className="space-y-6">
             <div className="rounded-2xl bg-white/5 p-6 ring-1 ring-white/10">
               <h3 className="text-xl font-bold text-purple-400 mb-3 flex items-center gap-2">
                 <GitBranch className="h-5 w-5" />
-                CI/CD Pipelines with Quality Gates
+                {t("serviceMlops.howItWorks.cicd.title")}
               </h3>
               <p className="text-gray-300 leading-relaxed">
-                Automated testing, evaluation, bias checks, and performance SLOs at every commit. Models are versioned, packaged, and deployed only when they meet quality thresholds.
+                {t("serviceMlops.howItWorks.cicd.description")}
               </p>
             </div>
 
             <div className="rounded-2xl bg-white/5 p-6 ring-1 ring-white/10">
               <h3 className="text-xl font-bold text-pink-400 mb-3 flex items-center gap-2">
                 <Activity className="h-5 w-5" />
-                Observability & Drift Monitoring
+                {t("serviceMlops.howItWorks.observability.title")}
               </h3>
               <p className="text-gray-300 leading-relaxed">
-                Track prediction latency, error rates, feature distributions, and model drift in production. Get alerted before performance degrades and retrain proactively.
+                {t("serviceMlops.howItWorks.observability.description")}
               </p>
             </div>
 
             <div className="rounded-2xl bg-white/5 p-6 ring-1 ring-white/10">
               <h3 className="text-xl font-bold text-blue-400 mb-3 flex items-center gap-2">
                 <Shield className="h-5 w-5" />
-                Governance & Security
+                {t("serviceMlops.howItWorks.governance.title")}
               </h3>
               <p className="text-gray-300 leading-relaxed">
-                RBAC, SSO, audit logs, and data lineage for compliance. Deploy on your infrastructure (on-prem, VPC, or cloud) with private networking and secrets management.
+                {t("serviceMlops.howItWorks.governance.description")}
               </p>
             </div>
           </div>
@@ -240,28 +242,28 @@ export default function MlopsCicdPage() {
       <section className="py-20 px-6">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-black mb-8 text-white">
-            Deployment Patterns
+            {t("serviceMlops.deploymentPatterns.title")}
           </h2>
           <div className="grid md:grid-cols-2 gap-6">
             {[
               { 
-                title: "On-Premises / VPC", 
-                desc: "Full control over data and infrastructure. Deploy on your Kubernetes cluster with private networking, air-gapped if needed.",
+                title: t("serviceMlops.deploymentPatterns.0.title"), 
+                desc: t("serviceMlops.deploymentPatterns.0.description"),
                 icon: Shield
               },
               { 
-                title: "Cloud-Native (AWS, GCP, Azure)", 
-                desc: "Leverage managed services like SageMaker, Vertex AI, or Azure ML for faster iteration and lower ops overhead.",
+                title: t("serviceMlops.deploymentPatterns.1.title"), 
+                desc: t("serviceMlops.deploymentPatterns.1.description"),
                 icon: Layers
               },
               { 
-                title: "Hybrid & Edge", 
-                desc: "Deploy models at the edge (IoT, retail stores) with centralized management, updates, and monitoring.",
+                title: t("serviceMlops.deploymentPatterns.2.title"), 
+                desc: t("serviceMlops.deploymentPatterns.2.description"),
                 icon: Package
               },
               { 
-                title: "Canary & Blue-Green Deployments", 
-                desc: "Roll out new models gradually with traffic splitting. Rollback instantly if performance drops.",
+                title: t("serviceMlops.deploymentPatterns.3.title"), 
+                desc: t("serviceMlops.deploymentPatterns.3.description"),
                 icon: GitBranch
               }
             ].map((item, i) => (
@@ -283,14 +285,14 @@ export default function MlopsCicdPage() {
       <section className="py-20 px-6 bg-gradient-to-br from-slate-900/50 to-slate-800/30">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-black mb-8 text-white">
-            Business Impact
+            {t("serviceMlops.businessImpact.title")}
           </h2>
           <div className="grid md:grid-cols-2 gap-6">
             {[
-              { title: "10x faster deployments", desc: "Automate testing, packaging, and deployment. Ship models in minutes, not weeks." },
-              { title: "99.9% uptime with monitoring", desc: "Proactive drift detection and rollback strategies prevent outages and performance degradation." },
-              { title: "Lower total cost of ownership", desc: "Right-size compute, optimize inference costs, and reduce manual ops overhead." },
-              { title: "Audit-ready lineage", desc: "Track every model version, training run, and deployment with full traceability for compliance." }
+              { title: t("serviceMlops.businessImpact.0.title"), desc: t("serviceMlops.businessImpact.0.description") },
+              { title: t("serviceMlops.businessImpact.1.title"), desc: t("serviceMlops.businessImpact.1.description") },
+              { title: t("serviceMlops.businessImpact.2.title"), desc: t("serviceMlops.businessImpact.2.description") },
+              { title: t("serviceMlops.businessImpact.3.title"), desc: t("serviceMlops.businessImpact.3.description") }
             ].map((item, i) => (
               <div key={i} className="flex items-start gap-4 rounded-xl bg-white/5 p-6 ring-1 ring-white/10">
                 <CheckCircle className="h-6 w-6 text-purple-400 flex-shrink-0 mt-1" />
@@ -308,24 +310,24 @@ export default function MlopsCicdPage() {
       <section className="py-20 px-6">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-black mb-6 text-white">
-            Reference Architecture
+            {t("serviceMlops.architecture.title")}
           </h2>
           <div className="rounded-2xl bg-black/30 p-8 ring-1 ring-white/10">
             <div className="space-y-4 text-gray-300">
               <p className="font-mono text-sm leading-relaxed">
-                <span className="text-purple-400">Git Repo</span> → <span className="text-pink-400">CI/CD (GitHub Actions / GitLab CI)</span> → <span className="text-blue-400">Model Registry (MLflow / Weights & Biases)</span> → <span className="text-green-400">Container Registry (Docker / ECR)</span> → <span className="text-orange-400">Kubernetes / Serverless</span> → <span className="text-red-400">Monitoring (Prometheus / Grafana / Datadog)</span>
+                {t("serviceMlops.architecture.pipeline")}
               </p>
               <p className="text-sm leading-relaxed">
-                <strong>Training:</strong> Experiments tracked in MLflow/W&B. Models versioned and validated before promotion.
+                <strong>{t("serviceMlops.architecture.trainingLabel")}</strong> {t("serviceMlops.architecture.training")}
               </p>
               <p className="text-sm leading-relaxed">
-                <strong>Deployment:</strong> Containerized with Docker, deployed to Kubernetes (on-prem or cloud) or serverless (Lambda, Cloud Run).
+                <strong>{t("serviceMlops.architecture.deploymentLabel")}</strong> {t("serviceMlops.architecture.deployment")}
               </p>
               <p className="text-sm leading-relaxed">
-                <strong>Monitoring:</strong> Latency, error rates, feature drift, and model performance tracked in real-time with alerts.
+                <strong>{t("serviceMlops.architecture.monitoringLabel")}</strong> {t("serviceMlops.architecture.monitoring")}
               </p>
               <p className="text-sm leading-relaxed">
-                <strong>Governance:</strong> RBAC, audit logs, data lineage, and compliance checks baked into every step.
+                <strong>{t("serviceMlops.architecture.governanceLabel")}</strong> {t("serviceMlops.architecture.governance")}
               </p>
             </div>
           </div>
@@ -336,29 +338,29 @@ export default function MlopsCicdPage() {
       <section className="py-20 px-6 bg-gradient-to-br from-slate-900/50 to-slate-800/30">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-black mb-8 text-white">
-            Frequently Asked Questions
+            {t("serviceMlops.faqs.title")}
           </h2>
           <div className="space-y-4">
             {[
               {
-                q: "Do you support on-premises deployment?",
-                a: "Yes. We can deploy the full ML stack on your Kubernetes cluster with SSO, RBAC, private networking, and air-gapped operation if required."
+                q: t("serviceMlops.faqs.0.question"),
+                a: t("serviceMlops.faqs.0.answer")
               },
               {
-                q: "How do you handle model drift?",
-                a: "We monitor feature distributions, prediction patterns, and model performance in production. Automated alerts trigger retraining workflows when drift is detected."
+                q: t("serviceMlops.faqs.1.question"),
+                a: t("serviceMlops.faqs.1.answer")
               },
               {
-                q: "What about LLM-specific MLOps?",
-                a: "We specialize in LLM deployment: prompt versioning, evaluation pipelines, cost tracking, guardrails, and human-in-the-loop feedback loops."
+                q: t("serviceMlops.faqs.2.question"),
+                a: t("serviceMlops.faqs.2.answer")
               },
               {
-                q: "Can you integrate with our existing tools?",
-                a: "Absolutely. We work with your existing infrastructure: cloud providers, CI/CD tools, model registries, and monitoring stacks."
+                q: t("serviceMlops.faqs.3.question"),
+                a: t("serviceMlops.faqs.3.answer")
               },
               {
-                q: "How long does it take to set up?",
-                a: "Depends on your stack and requirements. A basic CI/CD pipeline can be live in 2-3 weeks. Full production setup with monitoring and governance takes 1-2 months."
+                q: t("serviceMlops.faqs.4.question"),
+                a: t("serviceMlops.faqs.4.answer")
               }
             ].map((faq, i) => (
               <details key={i} className="group rounded-xl bg-white/5 p-6 ring-1 ring-white/10 transition-all hover:bg-white/10">
@@ -377,10 +379,10 @@ export default function MlopsCicdPage() {
       <section className="py-20 px-6 bg-gradient-to-br from-purple-600/10 via-pink-600/10 to-transparent">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-black mb-4 text-white">
-            Ready to Deploy AI with Confidence?
+            {t("serviceMlops.cta.title")}
           </h2>
           <p className="mb-8 text-lg text-gray-300">
-            Let's design an MLOps platform that scales with your business and survives production.
+            {t("serviceMlops.cta.subtitle")}
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <a
@@ -389,14 +391,14 @@ export default function MlopsCicdPage() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 px-8 py-4 font-semibold text-white shadow-lg shadow-purple-500/25 transition-all hover:shadow-xl hover:shadow-purple-500/40 hover:-translate-y-0.5"
             >
-              Book a Consultation
+              {t("serviceMlops.cta.book")}
               <ArrowRight className="h-5 w-5" />
             </a>
             <Link
               to="/pricing"
               className="inline-flex items-center gap-2 rounded-xl bg-white/5 px-8 py-4 font-semibold text-white ring-1 ring-white/10 transition-all hover:bg-white/10"
             >
-              View Pricing
+              {t("serviceMlops.cta.pricing")}
             </Link>
           </div>
         </div>
@@ -405,7 +407,7 @@ export default function MlopsCicdPage() {
       {/* Related Services */}
       <section className="py-16 px-6 border-t border-white/10">
         <div className="max-w-6xl mx-auto">
-          <h3 className="text-xl font-bold text-gray-400 mb-6">Related Services</h3>
+          <h3 className="text-xl font-bold text-gray-400 mb-6">{t("serviceMlops.related.title")}</h3>
           <div className="grid md:grid-cols-2 gap-4">
             <Link
               to="/services/agentic-automation"
@@ -416,9 +418,9 @@ export default function MlopsCicdPage() {
               </div>
               <div>
                 <div className="font-semibold text-white group-hover:text-blue-400 transition-colors">
-                  Agentic Automation
+                  {t("serviceMlops.related.agentic.title")}
                 </div>
-                <div className="text-sm text-gray-400">Multi-agent workflows with full observability</div>
+                <div className="text-sm text-gray-400">{t("serviceMlops.related.agentic.description")}</div>
               </div>
             </Link>
             <Link
@@ -430,9 +432,9 @@ export default function MlopsCicdPage() {
               </div>
               <div>
                 <div className="font-semibold text-white group-hover:text-blue-400 transition-colors">
-                  SQL Dashboards & Analytics
+                  {t("serviceMlops.related.sql.title")}
                 </div>
-                <div className="text-sm text-gray-400">Model performance metrics and monitoring dashboards</div>
+                <div className="text-sm text-gray-400">{t("serviceMlops.related.sql.description")}</div>
               </div>
             </Link>
           </div>
