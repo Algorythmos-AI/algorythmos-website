@@ -137,16 +137,17 @@ const NavBar = () => {
   return (
     <>
       <nav
+      <nav
         role="navigation"
         aria-label={t("ui.aria.primaryNavigation")}
-        className={`fixed top-0 w-full z-50 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]
+        className={`fixed top-0 w-full z-50 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]
           ${showNavbar ? "translate-y-0" : "-translate-y-full"} 
           ${isScrolled
-            ? "bg-neural-950/90 backdrop-blur-md border-b border-white/5 shadow-lg"
+            ? "bg-neural-950/70 backdrop-blur-xl border-b border-white/5 shadow-[0_4px_30px_rgba(0,0,0,0.1)]"
             : "bg-transparent border-b border-transparent"
           }`}
       >
-        <div className="container mx-auto flex items-center justify-between px-4 lg:px-8 h-16 lg:h-[72px]">
+        <div className="container mx-auto flex items-center justify-between px-4 lg:px-6 xl:px-8 h-16 lg:h-[72px]">
 
           {/* 1. LEFT: Logo */}
           <Link
