@@ -43,17 +43,6 @@
       ],
       "destination": "https://algorythmos.com/fr-fr/:path*",
       "permanent": true
-    },
-    {
-      "source": "/",
-      "has": [
-        {
-          "type": "host",
-          "value": "(www\\.)?algorythmos\\.com"
-        }
-      ],
-      "destination": "https://algorythmos.com",
-      "permanent": true
     }
   ]
 }
