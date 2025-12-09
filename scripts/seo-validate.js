@@ -14,7 +14,7 @@
 
 import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
-import { getSeoConfig } from './regionSeoConfig.js';
+import { getRegionSeoConfig as getSeoConfig } from '../src/app/seo/RegionSeoConfig.js';
 
 // ANSI colors for terminal output
 const colors = {
@@ -38,12 +38,12 @@ const log = {
 
 const ACTIVE_SEO = getSeoConfig();
 
-const EXPECTED_DOMAIN = ACTIVE_SEO.expectedDomain;
+const EXPECTED_DOMAIN = ACTIVE_SEO.domain;
 const EXPECTED_TITLE = 'Algorythmos™ — AI Consultancy for SMEs | AI That Deliver';
-const EXPECTED_OG_IMAGE = ACTIVE_SEO.expectedOgImage;
+const EXPECTED_OG_IMAGE = 'https://algorythmos.com/Algorythmos.png';
 
 // sitemap file under /public
-const SITEMAP_FILE = ACTIVE_SEO.sitemapFile;
+const SITEMAP_FILE = 'sitemap.xml';
 
 // Brand keywords remain global
 const BRAND_KEYWORDS = [
