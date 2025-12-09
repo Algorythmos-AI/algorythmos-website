@@ -6,7 +6,6 @@
  */
 const REGION_PREFIXES = {
   GLOBAL: '',
-  AU: '/au-en',
   FR: '/fr-fr',
   // Future regions:
   // IN: '/in-en',

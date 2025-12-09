@@ -57,8 +57,8 @@ const I18nContext = createContext(null);
  * Detect region from URL pathname
  */
 function detectRegionFromPath(pathname) {
-  if (pathname.startsWith('/au-en')) return 'AU';
-  if (pathname.startsWith('/fr-fr')) return 'FR';
+  if (pathname.startsWith(REGIONS.AU.pathPrefix)) return 'AU';
+  if (pathname.startsWith(REGIONS.FR.pathPrefix)) return 'FR';
   return 'GLOBAL';
 }
 

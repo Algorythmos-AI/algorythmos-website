@@ -117,7 +117,7 @@ buildSingleSitemap(
 // AU (.com/au)
 buildSingleSitemap(
     "https://algorythmos.com",           // base domain
-    "/au",                               // region path
+    "/au-en",                            // region path
     REGION_CONFIG.AU.sitemapFile         // sitemap-au.xml
 );
 

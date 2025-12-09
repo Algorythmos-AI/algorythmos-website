@@ -9,31 +9,27 @@
   "nav.industries": "Industries",
   "nav.careers": "Careers",
   "nav.openCalculator": "Open calculator",
-
+  "nav.servicesDesc": "End-to-end AI capabilities delivered by senior engineers.",
   "region.selector.label": "Select Region",
   "region.global": "Global (English)",
   "region.au": "Australia (English)",
   "region.fr": "France (Français)",
-
   "hero.title": "AI That Delivers",
   "hero.subtitle": "Algorythmos is a boutique AI consultancy delivering agentic automation, document intelligence, SQL analytics, and MLOps engineering for SMEs.",
   "hero.cta.primary": "Book a Discovery Call",
   "hero.cta.secondary": "View Pricing",
-
   "services.title": "Our Services",
   "services.subtitle": "End-to-end AI capabilities delivered by senior engineers.",
   "services.agenticAutomation": "Agentic Automation",
   "services.documentIntelligence": "Document Intelligence",
   "services.sqlDashboards": "SQL Analytics Dashboards",
   "services.mlops": "MLOps & CI/CD",
-
   "contact.title": "Get in Touch",
   "contact.subtitle": "Book a consultation or send us a message.",
   "contact.form.name": "Your Name",
   "contact.form.email": "Email Address",
   "contact.form.message": "Message",
   "contact.form.submit": "Send Message",
-
   "footer.tagline": "AI That Delivers",
   "footer.description": "Boutique AI consultancy delivering agentic automation, document intelligence, and MLOps for SMEs across Europe and Australia.",
   "footer.services": "Services",
@@ -63,7 +59,6 @@
   "footer.copyright": "© {year} Algorythmos. All rights reserved.",
   "footer.privacy": "Privacy Policy",
   "footer.terms": "Terms of Service",
-
   "cta.bookCall": "Book a Discovery Call",
   "cta.bookConsultation": "Book a Consultation",
   "cta.viewPricing": "View Pricing",
@@ -71,15 +66,12 @@
   "cta.getStarted": "Get Started",
   "cta.calculateRoi": "Calculate Your ROI",
   "cta.exploreServices": "Explore Our Services",
-
   "about.meta.title": "About | Algorythmos™",
   "about.meta.description": "Algorythmos is a boutique AI consultancy founded in 2025, delivering secure, ROI-driven AI solutions for SMEs and enterprises across France and Australia. Learn about our mission, values, and team supporting clients from Suresnes to Sydney.",
-
   "about.hero.badge": "Driving AI Innovations",
   "about.hero.title1": "Beyond",
   "about.hero.title2": "Business as Usual",
   "about.hero.subtitle": "At Algorythmos, we transform complex data challenges into <highlight>practical AI solutions</highlight> for enterprises and SMEs across France and Australia. Our mission is clear: to deliver secure, ROI-driven innovation that helps businesses from Suresnes to Sydney scale, adapt, and thrive.",
-  
   "about.meaning.title": "What Does Algorythmos Mean?",
   "about.meaning.algorithm.title": "Algorithm",
   "about.meaning.algorithm.tagline": "Logic, structure, precision",
@@ -93,7 +85,6 @@
   "about.meaning.p1": "Algorythmos is born from two worlds. <blue>\"Algorithm\"</blue>, the domain of logic and structured intelligence. And <purple>\"Rhythmos\"</purple>, the Greek idea of flow, harmony, and natural pattern. Together, they form a brand built on balance: rigorous reasoning paired with the rhythm of real business life.",
   "about.meaning.p2": "For us, the algorithm represents precision, automation, and the intelligence behind every decision. The rhythm represents timing, human context, and the way every organisation moves at its own pace.",
   "about.meaning.p3": "Algorythmos stands for AI that doesn't fight your workflow but moves with it – learning your patterns, adapting to your tempo, and becoming a natural part of how your team operates every day.",
-
   "about.tabs.mission": "mission",
   "about.tabs.vision": "vision",
   "about.tabs.impact": "impact",
@@ -103,12 +94,10 @@
   "about.vision.content": "A world where AI is trustworthy by design—compliant with GDPR and the EU AI Act, engineered with AppSec and LLMSecOps, and built to augment people, not replace them.",
   "about.impact.title": "Our Impact",
   "about.impact.content": "From rapid prototypes to production systems, we deliver measurable outcomes: faster cycles, fewer manual steps, and clearer decisions. We partner end‑to‑end—from strategy to MLOps with CI/CD.",
-
   "about.stats.founded": "Founded",
   "about.stats.headquarters": "Headquarters",
   "about.stats.teamSize": "Team Size",
   "about.stats.complianceReady": "Compliance Ready",
-
   "about.values.title": "Our",
   "about.values.titleHighlight": "Values",
   "about.values.subtitle": "These principles guide every solution we deliver — ensuring innovation, trust, and measurable business impact.",
@@ -120,7 +109,6 @@
   "about.values.2.description": "Our solutions transcend borders, cultures, and limitations. We think globally while acting with precision and purpose.",
   "about.values.3.title": "Quantum Excellence",
   "about.values.3.description": "Excellence isn't a destination—it's our quantum state. We exist in a superposition of continuous improvement and breakthrough innovation.",
-
   "about.journey.title": "Our",
   "about.journey.titleHighlight": "Journey",
   "about.journey.subtitle": "Milestones from first prototype to secure, production‑ready AI for enterprises.",
@@ -163,29 +151,24 @@
   "about.journey.12.year": "2025 Aug",
   "about.journey.12.title": "Scale & Seed Readiness",
   "about.journey.12.description": "Active pilots in 3 verticals; preparing for seed with delivery playbooks and compliance posture.",
-
   "about.cta.title": "Ready to",
   "about.cta.titleHighlight": "Start Your AI Journey?",
   "about.cta.subtitle": "Move beyond experimentation. Unlock secure, ROI-driven AI solutions that reduce costs, save time, and empower smarter decisions.",
   "about.cta.badge1": "✅ GDPR & EU AI Act Ready",
   "about.cta.badge2": "⚙️ MLOps with CI/CD",
   "about.cta.badge3": "🤖 Agentic Automation",
-
   "home.hero.title1": "Unlock the Real Value",
   "home.hero.title2": "Of Your Data",
   "home.hero.subtitle": "AI consultancy for enterprises and SMEs across France and Australia. Algorythmos delivers secure, production-ready AI solutions—from automation and MLOps to document intelligence—with measurable ROI and strategic guidance from Sydney to Suresnes.",
   "home.hero.cta.primary": "Start Your AI Journey",
   "home.hero.cta.secondary": "Explore Our Services",
-
   "home.stats.scalability": "Scalability",
   "home.stats.uptime": "Uptime",
   "home.stats.integrations": "Integrations",
   "home.stats.responseTime": "Response Time",
-
   "home.capabilities.title": "Our",
   "home.capabilities.titleHighlight": "Capabilities",
   "home.capabilities.subtitle": "Comprehensive AI solutions for businesses in France and Australia—reducing costs, saving time, and delivering measurable impact. From agentic automation to secure MLOps, we provide the strategic foundation for smarter, safer, and faster AI-driven decisions.",
-
   "home.features.0.title": "Agentic Automation 🤖",
   "home.features.0.description": "Deploy AI agents that handle repetitive workflows, integrate APIs, and streamline operations to increase productivity.",
   "home.features.1.title": "Document Intelligence 📄",
@@ -198,7 +181,6 @@
   "home.features.4.description": "Ensure your AI systems are safe, compliant, and trustworthy with AppSec, OWASP Top 10 for LLMs, and LLMSecOps integration.",
   "home.features.5.title": "AI Strategy & Roadmapping 🚀",
   "home.features.5.description": "From prototypes to enterprise rollouts, we guide you with a clear AI roadmap aligned with measurable ROI and long-term goals.",
-
   "home.testimonials.title": "What Our",
   "home.testimonials.titleHighlight": "Clients Say",
   "home.testimonials.subtitle": "Trusted by forward-thinking leaders who turned AI into measurable business results.",
@@ -211,7 +193,6 @@
   "home.testimonials.2.name": "Dr. Emma Nakamura",
   "home.testimonials.2.role": "CTO – Healthcare Startup",
   "home.testimonials.2.content": "Thanks to Algorythmos, we deployed AI models into production securely with MLOps and CI/CD pipelines. Downtime dropped, and our time-to-market was cut in half.",
-
   "home.cta.title": "Ready to Start",
   "home.cta.titleHighlight": "Your AI Journey?",
   "home.cta.subtitle": "Unlock secure, ROI-driven AI solutions that reduce costs, save time, and empower smarter decisions.",
@@ -220,7 +201,6 @@
   "home.cta.secondary": "Interactive Tour",
   "home.cta.badge": "Secure & Compliant (GDPR + EU AI Act) • Rapid Prototyping to Scalable Rollouts",
   "home.cta.badgeSecondary": "AI-powered Automation",
-
   "services.meta.title": "Services | Algorythmos",
   "services.meta.description": "AI services by Algorythmos: Agentic Automation, Document Intelligence, SQL Dashboards, and MLOps Platform Engineering.",
   "services.hero.title": "What we build for you",
@@ -234,7 +214,6 @@
   "services.cards.2.excerpt": "Unified metrics and AI-assisted insights on modern SQL stacks.",
   "services.cards.3.title": "MLOps Platform Engineering",
   "services.cards.3.excerpt": "Productionize AI with CI/CD on Kubernetes and Docker, automated evaluations, observability, and safe rollbacks—with governance and DevSecOps baked in.",
-
   "serviceAgentic.meta.title": "Agentic Automation | Algorythmos™",
   "serviceAgentic.meta.description": "Multi-agent AI workflows that orchestrate tools and APIs safely. Reduce repetitive work by 40-60% with auditability, guardrails, and human-in-the-loop controls.",
   "serviceAgentic.breadcrumb.services": "Services",
@@ -294,7 +273,6 @@
   "serviceAgentic.related.0.description": "OCR + NLP for invoices, contracts, and compliance",
   "serviceAgentic.related.1.title": "MLOps & Platform Engineering",
   "serviceAgentic.related.1.description": "Production-grade ML with CI/CD and monitoring",
-
   "serviceDocument.meta.title": "Document Intelligence | Algorythmos™",
   "serviceDocument.meta.description": "AI-powered document intelligence for SMEs. Extract structured data from invoices, contracts, and compliance documents using enterprise OCR, NLP, and human-in-the-loop validation.",
   "serviceDocument.breadcrumb.services": "Services",
@@ -362,7 +340,6 @@
   "serviceDocument.related.agentic.description": "Multi-agent workflows that orchestrate tools and APIs",
   "serviceDocument.related.sql.title": "SQL Dashboards & Analytics",
   "serviceDocument.related.sql.description": "Unified metrics and insights on modern SQL stacks",
-
   "serviceSqlDashboards.meta.title": "SQL Dashboards & Analytics | Algorythmos™",
   "serviceSqlDashboards.meta.description": "Unified metrics and AI-assisted insights on modern SQL stacks. Modeled data, executive-ready dashboards with alerts, RBAC, and self-serve analytics for data-driven decisions.",
   "serviceSqlDashboards.breadcrumb.services": "Services",
@@ -439,7 +416,6 @@
   "serviceSqlDashboards.related.mlops.description": "Production-grade ML with CI/CD and monitoring",
   "serviceSqlDashboards.related.document.title": "Document Intelligence",
   "serviceSqlDashboards.related.document.description": "OCR + NLP for invoices, contracts, and compliance",
-
   "serviceMlops.meta.title": "MLOps & Platform Engineering | Algorythmos™",
   "serviceMlops.meta.description": "Production-grade ML with CI/CD on Kubernetes and Docker. Automated evaluations, observability, drift monitoring, safe rollbacks, and DevSecOps governance for AI that survives production.",
   "serviceMlops.breadcrumb.services": "Services",
@@ -517,10 +493,8 @@
   "serviceMlops.related.agentic.description": "Multi-agent workflows with full observability",
   "serviceMlops.related.sql.title": "SQL Dashboards & Analytics",
   "serviceMlops.related.sql.description": "Model performance metrics and monitoring dashboards",
-
   "pricing.meta.title": "Pricing | Algorythmos™",
   "pricing.meta.description": "Transparent AI consulting pricing with live ROI calculator. Pilot from €2,000/mo, Operations from €4,500/mo. RBAC, PII redaction, GDPR alignment included.",
-
   "pricing.tooltip.title": "Compare to DIY & agency",
   "pricing.tooltip.diy.label": "DIY (Internal build)",
   "pricing.tooltip.diy.detail": "3 FTE in Paris (ML/Full-stack/DevOps) incl. employer charges & tools —",
@@ -531,11 +505,9 @@
   "pricing.tooltip.algorythmos.label": "Algorythmos",
   "pricing.tooltip.algorythmos.detail": "platform & delivery from €4,500/mo + run (usage)",
   "pricing.tooltip.footnote": "Illustrative only — use the calculator for ROI and payback.",
-
   "pricing.stickyCta.text": "Ready to estimate impact? Book a 30-min discovery. We'll review ROI, accuracy targets, and deployment options.",
   "pricing.stickyCta.bookCalendly": "Book on Calendly",
   "pricing.stickyCta.openCalculator": "Open calculator",
-
   "pricing.hero.title": "Pricing that scales with your impact",
   "pricing.hero.subtitle": "Transparent tiers and a live calculator to estimate your ROI, payback, and total cost. Built for secure AI rollouts: RBAC, PII redaction, GDPR alignment.",
   "pricing.hero.badges.sla": "SLA options",
@@ -552,7 +524,6 @@
   "pricing.hero.glance.algorythmos.price": "From €4,500 + run",
   "pricing.hero.glance.footnote": "*Illustrative only. Use the calculator below for ROI and payback.",
   "pricing.hero.glance.cta": "See full breakdown",
-
   "pricing.tiers.pilot.name": "Pilot",
   "pricing.tiers.pilot.price": "€2,000",
   "pricing.tiers.pilot.period": "/mo",
@@ -564,7 +535,6 @@
   "pricing.tiers.pilot.features.4": "No SSO",
   "pricing.tiers.pilot.features.5": "Email support (24–48h)",
   "pricing.tiers.pilot.cta": "Start a pilot",
-
   "pricing.tiers.operations.name": "Operations",
   "pricing.tiers.operations.price": "€4,500",
   "pricing.tiers.operations.period": "/mo",
@@ -576,7 +546,6 @@
   "pricing.tiers.operations.features.3": "SLA 99.5%",
   "pricing.tiers.operations.features.4": "Priority support (same business day)",
   "pricing.tiers.operations.cta": "Scale operations",
-
   "pricing.tiers.custom.name": "Custom",
   "pricing.tiers.custom.price": "Custom",
   "pricing.tiers.custom.period": "/mo + run",
@@ -587,7 +556,6 @@
   "pricing.tiers.custom.features.3": "Custom KPIs & reporting",
   "pricing.tiers.custom.features.4": "Dedicated TAM",
   "pricing.tiers.custom.cta": "Talk to sales",
-
   "pricing.notes.vatExcluded": "Prices exclude VAT. Month-to-month billing; cancel anytime before renewal. If item volume exceeds your tier for 2 consecutive months, we'll recommend a tier upgrade to maintain SLA and cost efficiency.",
   "pricing.notes.definitionsLabel": "Definitions.",
   "pricing.notes.itemDef": "Item = one processed unit (document, message, or API call).",
@@ -599,11 +567,9 @@
   "pricing.notes.referenceLabel": "Reference pricing:",
   "pricing.notes.billingLabel": "Billing.",
   "pricing.notes.billingDetail": "Month-to-month; cancel anytime before renewal. If item volume exceeds your tier for 2 consecutive months, we'll recommend a tier upgrade to ensure SLA and cost efficiency.",
-
   "pricing.calculator.title": "Calculate your savings",
   "pricing.calculator.subtitle": "Use the model to estimate monthly savings, ROI, and payback. Adjust inputs to match your workload.",
   "pricing.calculator.helpCta": "Need help? Book a consult",
-
   "pricing.faq.0.question": "How do you measure accuracy?",
   "pricing.faq.0.answer": "We track exact-match and semantic-match metrics on sampled outputs. For regulated flows, we add human review until targets are consistently above the agreed KPI.",
   "pricing.faq.1.question": "Can you deploy in our cloud?",
@@ -612,59 +578,45 @@
   "pricing.faq.2.answer": "No. Run is pass-through at provider rates (LLM tokens, GPUs, vector DB). You pay exactly what the providers charge; no markup.",
   "pricing.faq.3.question": "What is an 'Item'?",
   "pricing.faq.3.answer": "An Item is one processed unit — for example, a document, a chat message, or an API call — used to measure monthly volume.",
-
   "caseStudies.meta.title": "Case Studies | Algorythmos™",
   "caseStudies.meta.description": "Discover how Algorythmos has helped enterprises unlock measurable ROI with practical, secure AI solutions.",
-
   "caseStudies.hero.title": "Case Studies",
   "caseStudies.hero.subtitle": "Discover how Algorythmos has helped enterprises unlock measurable ROI with practical, secure AI solutions.",
-
   "caseStudies.labels.challenge": "Challenge:",
   "caseStudies.labels.solution": "Solution:",
   "caseStudies.labels.result": "Result:",
-
   "caseStudies.items.0.title": "Financial Services – Compliance Automation",
   "caseStudies.items.0.challenge": "Manual compliance reporting took days and was error-prone.",
   "caseStudies.items.0.solution": "We deployed an AI-powered compliance engine integrated with client systems.",
   "caseStudies.items.0.result": "Reports generated in minutes with 99% accuracy, saving 40% in costs.",
-
   "caseStudies.items.1.title": "Manufacturing – Document Intelligence",
   "caseStudies.items.1.challenge": "Processing thousands of invoices manually slowed operations.",
   "caseStudies.items.1.solution": "OCR + NLP pipeline for automated invoice and contract extraction.",
   "caseStudies.items.1.result": "Cut manual effort by 50% and improved data accuracy by 30%.",
-
   "caseStudies.items.2.title": "Healthcare – MLOps Platform Engineering",
   "caseStudies.items.2.challenge": "AI models took weeks to move from prototype to production.",
   "caseStudies.items.2.solution": "Implemented CI/CD pipelines with Docker, Kubernetes & GitHub Actions.",
   "caseStudies.items.2.result": "Deployment time reduced by 60%, downtime cut in half.",
-
   "caseStudies.items.3.title": "Retail – SQL Dashboards",
   "caseStudies.items.3.challenge": "Leaders lacked visibility across multi-region operations.",
   "caseStudies.items.3.solution": "Real-time SQL dashboards integrated with ERP & CRM systems.",
   "caseStudies.items.3.result": "Decision-making accelerated, boosting revenue by 15%.",
-
   "blog.meta.title": "Blog | Algorythmos™",
   "blog.meta.description": "Insights, frameworks, and strategies from the Algorythmos team on AI, security, and data innovation.",
-
   "blog.hero.title": "Blog",
   "blog.hero.subtitle": "Insights, frameworks, and strategies from the Algorythmos team on AI, security, and data innovation.",
-
   "blog.posts.0.title": "GDPR & AI: What SMEs Need to Know",
   "blog.posts.0.snippet": "How to ensure your AI systems are GDPR-ready and compliant with the upcoming EU AI Act.",
   "blog.posts.0.date": "Aug 2025",
-
   "blog.posts.1.title": "MLOps: From Prototype to Production",
   "blog.posts.1.snippet": "Best practices for scaling AI securely using CI/CD pipelines, Docker, and Kubernetes.",
   "blog.posts.1.date": "Jul 2025",
-
   "blog.posts.2.title": "Agentic AI: Moving Beyond Chatbots",
   "blog.posts.2.snippet": "Why the future of AI lies in multi-step, goal-driven automation rather than simple Q&A bots.",
   "blog.posts.2.date": "Jun 2025",
-
   "blog.posts.3.title": "LLMSecOps: Securing Large Language Models",
   "blog.posts.3.snippet": "Introducing LLMSecOps — a lifecycle approach to safe, trustworthy AI adoption.",
   "blog.posts.3.date": "May 2025",
-
   "contactPage.meta.title": "Contact | Algorythmos™",
   "contactPage.meta.description": "Contact Algorythmos for AI consultancy and automation across France and Australia. Get in touch with our team in Suresnes or Sydney for collaboration, support, or inquiries.",
   "contactPage.hero.title": "Contact",
@@ -679,11 +631,9 @@
   "contactPage.validation.messageMin": "Message must be at least 10 characters",
   "contactPage.snackbar.success": "Message sent successfully!",
   "contactPage.snackbar.closeLabel": "Close notification",
-
   "blogDetail.notFound.title": "Blog post not found",
   "blogDetail.notFound.message": "We couldn't find the blog you requested.",
   "blogDetail.cta.text": "Speak with our team",
-
   "blogDetail.posts.gdpr-ai.title": "GDPR & AI: What SMEs Need to Know",
   "blogDetail.posts.gdpr-ai.meta": "How to ensure AI systems are GDPR-ready and aligned with the EU AI Act.",
   "blogDetail.posts.gdpr-ai.date": "Aug 2025",
@@ -698,7 +648,6 @@
   "blogDetail.posts.gdpr-ai.content.2.heading": "Action Plan",
   "blogDetail.posts.gdpr-ai.content.2.paragraphs.0": "Start with a data inventory, map flows, and identify risks. Establish governance with clear owners, versioning, and review cadences.",
   "blogDetail.posts.gdpr-ai.content.2.paragraphs.1": "Adopt secure MLOps practices with automated testing, bias checks, and drift detection to ensure continuous compliance.",
-
   "blogDetail.posts.mlops-production.title": "MLOps: From Prototype to Production",
   "blogDetail.posts.mlops-production.meta": "Best practices for scaling AI securely using CI/CD, Docker, and Kubernetes.",
   "blogDetail.posts.mlops-production.date": "Jul 2025",
@@ -712,7 +661,6 @@
   "blogDetail.posts.mlops-production.content.1.list.3": "Blue/green or canary rollouts with rollback",
   "blogDetail.posts.mlops-production.content.2.heading": "Tooling Stack",
   "blogDetail.posts.mlops-production.content.2.paragraphs.0": "Combine Docker, Kubernetes, and CI/CD to standardize packaging and deployments. Add feature stores, experiment tracking, and policy-as-code for guardrails.",
-
   "blogDetail.posts.agentic-ai.title": "Agentic AI: Moving Beyond Chatbots",
   "blogDetail.posts.agentic-ai.meta": "Multi-step, goal-driven automation for real business outcomes.",
   "blogDetail.posts.agentic-ai.date": "Jun 2025",
@@ -723,7 +671,6 @@
   "blogDetail.posts.agentic-ai.content.1.list.1": "Deterministic tool interfaces",
   "blogDetail.posts.agentic-ai.content.1.list.2": "Safety rails and audit trails",
   "blogDetail.posts.agentic-ai.content.1.list.3": "Cost-aware planning and retries",
-
   "blogDetail.posts.llmsecops.title": "LLMSecOps: Securing Large Language Models",
   "blogDetail.posts.llmsecops.meta": "A lifecycle approach to safe, trustworthy AI adoption.",
   "blogDetail.posts.llmsecops.date": "May 2025",
@@ -734,14 +681,12 @@
   "blogDetail.posts.llmsecops.content.1.list.1": "Secrets handling and token hygiene",
   "blogDetail.posts.llmsecops.content.1.list.2": "Red-teaming and adversarial testing",
   "blogDetail.posts.llmsecops.content.1.list.3": "Monitoring and incident response playbooks",
-
   "caseStudyDetail.notFound.title": "Case study not found",
   "caseStudyDetail.notFound.message": "We couldn't find the case study you requested.",
   "caseStudyDetail.sections.challenge": "Challenge",
   "caseStudyDetail.sections.solution": "Solution",
   "caseStudyDetail.sections.results": "Results",
   "caseStudyDetail.cta.button": "Book a Consultation",
-
   "caseStudyDetail.studies.financial-compliance.title": "AI in Financial Services – Compliance Automation",
   "caseStudyDetail.studies.financial-compliance.meta": "AI compliance automation in financial services. Faster reporting, fewer errors, 40% cost savings.",
   "caseStudyDetail.studies.financial-compliance.challenge": "Manual compliance reporting took days and was error-prone.",
@@ -750,7 +695,6 @@
   "caseStudyDetail.studies.financial-compliance.results.1": "99% accuracy",
   "caseStudyDetail.studies.financial-compliance.results.2": "40% cost savings",
   "caseStudyDetail.studies.financial-compliance.cta": "Contact Algorythmos to explore AI for compliance automation.",
-
   "caseStudyDetail.studies.manufacturing-docs.title": "AI Automation in Manufacturing – Document Intelligence",
   "caseStudyDetail.studies.manufacturing-docs.meta": "AI document intelligence in manufacturing. Faster invoice processing, fewer errors, automated validation.",
   "caseStudyDetail.studies.manufacturing-docs.challenge": "Processing thousands of invoices manually caused backlogs and errors.",
@@ -759,7 +703,6 @@
   "caseStudyDetail.studies.manufacturing-docs.results.1": "30% better data accuracy",
   "caseStudyDetail.studies.manufacturing-docs.results.2": "2x faster invoice cycle",
   "caseStudyDetail.studies.manufacturing-docs.cta": "Contact Algorythmos to explore AI for manufacturing operations.",
-
   "caseStudyDetail.studies.healthcare-mlops.title": "AI for Healthcare – MLOps Platform Engineering",
   "caseStudyDetail.studies.healthcare-mlops.meta": "MLOps in healthcare. Deploy AI models faster with CI/CD and compliance.",
   "caseStudyDetail.studies.healthcare-mlops.challenge": "Healthcare models stalled moving from prototype to production.",
@@ -768,7 +711,6 @@
   "caseStudyDetail.studies.healthcare-mlops.results.1": "50% fewer failures",
   "caseStudyDetail.studies.healthcare-mlops.results.2": "Traceable model lifecycle",
   "caseStudyDetail.studies.healthcare-mlops.cta": "Contact Algorythmos to explore MLOps for healthcare.",
-
   "caseStudyDetail.studies.retail-sql.title": "AI for Retail Analytics – SQL Dashboards",
   "caseStudyDetail.studies.retail-sql.meta": "Retail analytics with AI dashboards. Real-time KPIs and demand insights.",
   "caseStudyDetail.studies.retail-sql.challenge": "Retailers lacked unified demand visibility across regions.",
@@ -777,13 +719,11 @@
   "caseStudyDetail.studies.retail-sql.results.1": "Faster planning cycles",
   "caseStudyDetail.studies.retail-sql.results.2": "Consistent multi-region metrics",
   "caseStudyDetail.studies.retail-sql.cta": "Contact Algorythmos to explore AI for retail analytics.",
-
   "regionAu.hero.badge": "🇦🇺 Serving Australian Businesses",
   "regionAu.hero.title": "Algorythmos Australia",
   "regionAu.hero.subtitle": "AI consultancy delivering agentic automation, document intelligence, and MLOps for Australian SMEs and enterprises — from Sydney to Perth, Melbourne to Brisbane.",
   "regionAu.hero.cta.primary": "Book a Discovery Call",
   "regionAu.hero.cta.secondary": "View Pricing",
-
   "regionAu.whyUs.title": "Why Choose Algorythmos in Australia?",
   "regionAu.whyUs.subtitle": "We bring European AI engineering excellence to Australian businesses, combining global best practices with local market understanding.",
   "regionAu.whyUs.items.0.title": "Local Expertise, Global Standards",
@@ -794,7 +734,6 @@
   "regionAu.whyUs.items.2.description": "From discovery to production in weeks, not months. We focus on measurable ROI, not endless pilots.",
   "regionAu.whyUs.items.3.title": "Boutique Partnership Model",
   "regionAu.whyUs.items.3.description": "Direct access to senior AI engineers who understand your business, not layers of account managers.",
-
   "regionAu.useCases.title": "Typical Use Cases",
   "regionAu.useCases.subtitle": "AI solutions tailored for key Australian industry sectors.",
   "regionAu.useCases.items.0.title": "Healthcare",
@@ -805,7 +744,6 @@
   "regionAu.useCases.items.2.description": "Deploy AI-powered analytics for operational efficiency, safety compliance reporting, and predictive maintenance across remote sites.",
   "regionAu.useCases.items.3.title": "Financial Services",
   "regionAu.useCases.items.3.description": "Accelerate loan processing, automate compliance checks, and extract insights from financial documents with enterprise-grade security.",
-
   "regionAu.services.title": "Our Services",
   "regionAu.services.subtitle": "End-to-end AI capabilities delivered by senior engineers who understand Australian business.",
   "regionAu.services.items.0.title": "Agentic Automation",
@@ -816,7 +754,6 @@
   "regionAu.services.items.2.description": "Transform raw data into executive-ready dashboards that drive decisions across your organisation.",
   "regionAu.services.items.3.title": "MLOps & CI/CD",
   "regionAu.services.items.3.description": "Production-grade machine learning pipelines with continuous integration, monitoring, and governance.",
-
   "regionAu.howWeWork.title": "How We Work",
   "regionAu.howWeWork.subtitle": "A structured approach that delivers measurable results, fast.",
   "regionAu.howWeWork.steps.0.title": "Discovery & Assessment",
@@ -827,12 +764,10 @@
   "regionAu.howWeWork.steps.2.description": "Deploy to production with CI/CD pipelines, monitoring, and security controls tailored to your infrastructure.",
   "regionAu.howWeWork.steps.3.title": "Ongoing Partnership",
   "regionAu.howWeWork.steps.3.description": "Continuous improvement, model retraining, and expansion to new use cases as your needs evolve.",
-
   "regionAu.cta.title": "Ready to Transform Your Business with AI?",
   "regionAu.cta.subtitle": "Book a free 30-minute discovery call to discuss your automation opportunities and see how we can help you achieve measurable ROI.",
   "regionAu.cta.primary": "Book Discovery Call",
   "regionAu.cta.secondary": "Calculate Your ROI",
-
   "regionFr.hero.badge": "🇫🇷 Basé à Suresnes, Île-de-France",
   "regionFr.hero.title": "Algorythmos France",
   "regionFr.hero.subtitle": "Cabinet de conseil en IA pour les PME et ETI françaises. Automatisation agentique, intelligence documentaire, dashboards SQL et MLOps — conforme RGPD et EU AI Act.",
@@ -840,7 +775,6 @@
   "regionFr.hero.cta.secondary": "Voir les Tarifs",
   "regionFr.hero.ctaPrimary": "Réserver un Appel Découverte",
   "regionFr.hero.ctaSecondary": "Voir les Tarifs",
-
   "regionFr.compliance.title": "Conformité RGPD & EU AI Act",
   "regionFr.compliance.titlePrefix": "Conformité",
   "regionFr.compliance.titleHighlight": "RGPD & EU AI Act",
@@ -853,7 +787,6 @@
   "regionFr.compliance.items.2.description": "Sécurité applicative et contrôles spécifiques pour les systèmes basés sur les grands modèles de langage.",
   "regionFr.compliance.items.3.title": "Gouvernance & Audit",
   "regionFr.compliance.items.3.description": "Traçabilité complète, documentation et audit trail pour vos déploiements IA.",
-
   "regionFr.whyUs.title": "Pourquoi Algorythmos ?",
   "regionFr.whyUs.titlePrefix": "Pourquoi",
   "regionFr.whyUs.titleHighlight": "Algorythmos ?",
@@ -866,7 +799,6 @@
   "regionFr.whyUs.items.2.description": "Du POC à la production en semaines. Nous privilégions le ROI mesurable.",
   "regionFr.whyUs.items.3.title": "Modèle Boutique",
   "regionFr.whyUs.items.3.description": "Accès direct à des ingénieurs IA seniors, pas des couches de commerciaux.",
-
   "regionFr.useCases.title": "Cas d'Usage Sectoriels",
   "regionFr.useCases.titlePrefix": "Cas d'Usage",
   "regionFr.useCases.titleHighlight": "Sectoriels",
@@ -883,7 +815,6 @@
   "regionFr.useCases.items.3.title": "Retail & E-commerce",
   "regionFr.useCases.items.3.titleEn": "Retail & E-commerce",
   "regionFr.useCases.items.3.description": "Analysez vos données clients, automatisez la gestion documentaire et créez des tableaux de bord décisionnels.",
-
   "regionFr.services.title": "Nos Services",
   "regionFr.services.titlePrefix": "Nos",
   "regionFr.services.titleHighlight": "Services",
@@ -900,7 +831,6 @@
   "regionFr.services.items.3.title": "MLOps & CI/CD",
   "regionFr.services.items.3.titleEn": "MLOps & CI/CD",
   "regionFr.services.items.3.description": "Pipelines ML production-ready avec intégration continue, monitoring et gouvernance.",
-
   "regionFr.howWeWork.title": "Notre Méthodologie",
   "regionFr.howWeWork.titlePrefix": "Notre",
   "regionFr.howWeWork.titleHighlight": "Méthodologie",
@@ -913,14 +843,12 @@
   "regionFr.howWeWork.steps.2.description": "Déploiement avec CI/CD, monitoring et contrôles de sécurité adaptés à votre infrastructure.",
   "regionFr.howWeWork.steps.3.title": "Partenariat Continu",
   "regionFr.howWeWork.steps.3.description": "Amélioration continue, ré-entraînement des modèles et extension à de nouveaux cas d'usage.",
-
   "regionFr.cta.title": "Prêt à Transformer Votre Entreprise avec l'IA ?",
   "regionFr.cta.subtitle": "Réservez un appel découverte gratuit de 30 minutes pour discuter de vos opportunités d'automatisation et calculer votre ROI potentiel.",
   "regionFr.cta.primary": "Réserver un Appel",
   "regionFr.cta.secondary": "Calculer Votre ROI",
   "regionFr.cta.ctaPrimary": "Réserver un Appel",
   "regionFr.cta.ctaSecondary": "Calculer Votre ROI",
-
   "notFoundPage.meta.title": "Page Not Found | Algorythmos",
   "notFoundPage.meta.description": "The page you're looking for doesn't exist or has been moved.",
   "notFoundPage.errorCode": "404",
@@ -929,15 +857,11 @@
   "notFoundPage.description": "It might have been moved, deleted, or perhaps never existed. Let's get you back on track.",
   "notFoundPage.cta.home": "Back to Home",
   "notFoundPage.cta.contact": "Contact Us",
-
   "ui.alt.logo": "Algorythmos logo",
   "ui.alt.partnerLogo": "Partner logo",
-
   "ui.countrySelector.global": "Global",
-
   "ui.partners.headline": "Trusted by 50+ businesses worldwide",
   "ui.partners.logoAlt": "Technology partner logo",
-
   "ui.servicesShowcase.services.0.title": "Agentic Automation",
   "ui.servicesShowcase.services.0.bullets.0": "API integrations",
   "ui.servicesShowcase.services.0.bullets.1": "Orchestrated workflows",
@@ -962,11 +886,9 @@
   "ui.servicesShowcase.services.3.bullets.2": "Model registry",
   "ui.servicesShowcase.services.3.metric": "½ deployment errors",
   "ui.servicesShowcase.services.3.cta": "Ship Models Faster",
-
   "ui.team.title.prefix": "Our",
   "ui.team.title.highlight": "Team",
   "ui.team.subtitle": "A boutique group of AI and Data Science experts dedicated to secure, practical, and ROI-driven outcomes.",
-
   "team.sam-kalaliya.role": "Founder & Chief Executive Officer",
   "team.sam-kalaliya.tagline": "Data and AI",
   "team.sam-kalaliya.blurb": "6+ years revolutionizing data and artificial intelligence.",
@@ -980,7 +902,6 @@
   "team.alex-velocity.tagline": "UX/UI Evolutionary",
   "team.alex-velocity.blurb": "Design thinking expert with 5+ years in human-computer interaction.",
   "team.photo.alt": "{name} headshot",
-
   "ui.serviceDetail.breadcrumb.home": "Home",
   "ui.serviceDetail.breadcrumb.services": "Services",
   "ui.serviceDetail.notFound.title": "Service not found",
@@ -988,18 +909,14 @@
   "ui.serviceDetail.backToServices": "Back to Services",
   "ui.serviceDetail.sidebar.contents": "Contents",
   "ui.serviceDetail.sidebar.related": "Related services",
-
   "ui.serviceCard.learnMore": "Learn more",
-
   "ui.contactForm.name": "Name",
   "ui.contactForm.email": "Email",
   "ui.contactForm.message": "Message",
   "ui.contactForm.submit": "Send Message",
-
   "ui.newsletter.success": "Thanks for subscribing!",
   "ui.newsletter.alreadySubscribed": "You're already subscribed!",
   "ui.newsletter.error": "Subscription failed. Please try again later.",
-
   "ui.calculator.title": "ROI Calculator",
   "ui.calculator.mode.simple": "Simple",
   "ui.calculator.mode.advanced": "Advanced",
@@ -1045,7 +962,6 @@
   "ui.calculator.breakdown.speedImprovement": "Speed Improvement",
   "ui.calculator.chart.loading": "Loading chart...",
   "ui.calculator.chart.title": "Monthly Savings Over Time",
-
   "ui.aria.closeMenu": "Close menu",
   "ui.aria.openMenu": "Open menu",
   "ui.aria.toggleNavigation": "Toggle navigation",
@@ -1072,18 +988,15 @@
   "ui.aria.goToSlide": "Go to slide {number}",
   "ui.aria.openExternalPricing": "Open {name} pricing in a new tab",
   "ui.aria.siteFooter": "Site footer",
-
   "ui.breadcrumb.home": "Home",
   "ui.breadcrumb.services": "Services",
   "ui.breadcrumb.blog": "Blog",
   "ui.breadcrumb.caseStudies": "Case Studies",
   "ui.breadcrumb.backToServices": "Back to Services",
   "ui.breadcrumb.backToHome": "Back to Home",
-
   "ui.serviceLayout.faqs": "FAQs",
   "ui.serviceLayout.contents": "Contents",
   "ui.serviceLayout.relatedServices": "Related services",
-
   "seo.blog.title": "AI Insights & Engineering Blog | Algorythmos",
   "seo.blog.description": "Deep dives into agentic automation, MLOps, and document intelligence. Technical insights for engineering leaders.",
   "seo.caseStudies.title": "AI Case Studies & Success Stories | Algorythmos",
