@@ -147,8 +147,13 @@ jobs:
         run: |
           echo "🗺️ Checking sitemap.xml..."
           test -f public/sitemap.xml || (echo "❌ sitemap.xml missing!" && exit 1)
-          grep -q "<urlset" public/sitemap.xml || (echo "❌ Invalid sitemap structure!" && exit 1)
-          grep -q "algorythmos.fr" public/sitemap.xml || (echo "❌ Wrong domain in sitemap!" && exit 1)
+          if grep -q "<sitemapindex" public/sitemap.xml || grep -q "<urlset" public/sitemap.xml; then
+            echo "✅ Structure valid (Index or Urlset)"
+          else
+            echo "❌ Invalid sitemap structure (neither urlset nor index)!" && exit 1
+          fi
+          # Check for canonical domain (we now enforce .com everywhere)
+          grep -q "algorythmos.com" public/sitemap.xml || (echo "❌ Missing canonical domain .com in sitemap!" && exit 1)
           ! grep -q "www.algorythmos" public/sitemap.xml || (echo "❌ sitemap.xml contains www. - should use bare domain!" && exit 1)
           echo "✅ sitemap.xml is valid"
       

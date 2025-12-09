@@ -7,7 +7,7 @@
 import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { REGIONS } from "../app/i18n/I18nContext.jsx";
-import { getRegionPath } from "../app/i18n/navConfig.js";
+
 
 const STORAGE_KEY = "algorythmos_region_pref";
 
