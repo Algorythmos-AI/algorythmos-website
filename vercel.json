@@ -47,6 +47,14 @@
   ],
   "rewrites": [
     {
+      "source": "/au-en(.*)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/fr-fr(.*)",
+      "destination": "/index.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

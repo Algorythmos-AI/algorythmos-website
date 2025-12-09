@@ -25,18 +25,18 @@ export const REGIONS = {
     language: 'en',
     label: 'region.au',
     flag: '🇦🇺',
-    pathPrefix: '/au',
+    pathPrefix: '/au-en',
     locale: 'en_AU',
-    domain: 'https://algorythmos.com/au',
+    domain: 'https://algorythmos.com/au-en',
   },
   FR: {
     code: 'FR',
     language: 'fr',
     label: 'region.fr',
     flag: '🇫🇷',
-    pathPrefix: '/fr',
+    pathPrefix: '/fr-fr',
     locale: 'fr_FR',
-    domain: 'https://algorythmos.com/fr',
+    domain: 'https://algorythmos.com/fr-fr',
   },
 };
 
@@ -57,8 +57,8 @@ const I18nContext = createContext(null);
  * Detect region from URL pathname
  */
 function detectRegionFromPath(pathname) {
-  if (pathname.startsWith('/au')) return 'AU';
-  if (pathname.startsWith('/fr')) return 'FR';
+  if (pathname.startsWith('/au-en')) return 'AU';
+  if (pathname.startsWith('/fr-fr')) return 'FR';
   return 'GLOBAL';
 }
 
@@ -68,14 +68,14 @@ function detectRegionFromPath(pathname) {
 export function I18nProvider({ children }) {
   const location = useLocation();
   const navigate = useNavigate();
-  
+
   // Detect initial region from URL
   const initialRegion = detectRegionFromPath(location.pathname);
   const [region, setRegion] = useState(initialRegion);
-  
+
   // Derive language from region config
   const language = REGIONS[region]?.language || 'en';
-  
+
   // Get merged translations for current region
   const translations = useMemo(() => {
     const key = `${language}-${region}`;
@@ -104,7 +104,7 @@ export function I18nProvider({ children }) {
     if (location.pathname === '/') {
       try {
         const stored = localStorage.getItem(STORAGE_KEY);
-        
+
         if (stored && REGIONS[stored] && stored !== 'GLOBAL') {
           // Returning user: redirect to their stored preference
           const targetPath = REGIONS[stored].pathPrefix || '/';
@@ -114,10 +114,10 @@ export function I18nProvider({ children }) {
         } else if (!stored) {
           // First-time visitor: auto-detect from browser locale
           const { shouldRedirect, targetPath, detectedRegion } = getAutoRedirectInfo(
-            location.pathname, 
+            location.pathname,
             STORAGE_KEY
           );
-          
+
           if (shouldRedirect && targetPath) {
             // Store the detected region so we don't auto-detect again
             localStorage.setItem(STORAGE_KEY, detectedRegion);
@@ -136,12 +136,12 @@ export function I18nProvider({ children }) {
    */
   const t = useCallback((key, params = {}) => {
     let text = translations[key] || key;
-    
+
     // Simple interpolation: {variable}
     Object.keys(params).forEach((param) => {
       text = text.replace(new RegExp(`\\{${param}\\}`, 'g'), params[param]);
     });
-    
+
     return text;
   }, [translations]);
 
@@ -150,25 +150,25 @@ export function I18nProvider({ children }) {
    */
   const setLanguageAndRegion = useCallback((newRegion) => {
     if (!REGIONS[newRegion]) return;
-    
+
     const currentRegionConfig = REGIONS[region];
     const newRegionConfig = REGIONS[newRegion];
-    
+
     // Calculate new path by replacing the region prefix
     let currentPath = location.pathname;
-    
+
     // Remove current region prefix if present
     if (currentRegionConfig.pathPrefix && currentPath.startsWith(currentRegionConfig.pathPrefix)) {
       currentPath = currentPath.slice(currentRegionConfig.pathPrefix.length) || '/';
     }
-    
+
     // Add new region prefix
     let newPath = newRegionConfig.pathPrefix + currentPath;
-    
+
     // Clean up double slashes and ensure valid path
     newPath = newPath.replace(/\/+/g, '/');
     if (newPath === '') newPath = '/';
-    
+
     setRegion(newRegion);
     navigate(newPath);
   }, [region, location.pathname, navigate]);
@@ -190,16 +190,16 @@ export function I18nProvider({ children }) {
     language,
     region,
     locale: REGIONS[region]?.locale || 'en_US',
-    
+
     // Region config
     regionConfig: REGIONS[region],
     allRegions: REGIONS,
-    
+
     // Functions
     t,
     setLanguageAndRegion,
     getRegionPath,
-    
+
     // Helpers
     isGlobal: region === 'GLOBAL',
     isAustralia: region === 'AU',
