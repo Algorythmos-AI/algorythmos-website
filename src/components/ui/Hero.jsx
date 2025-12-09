@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ArrowRight, ChevronRight, Play } from 'lucide-react';
 import { useI18n } from '../../app/i18n/I18nContext.jsx';
 import Button from './Button.jsx';
+import BackgroundVideo from './BackgroundVideo.jsx';
+import heroPoster from '../../assets/video/hero-poster.png';
 
 /**
  * Global Consultancy Hero (Accenture Style)
@@ -129,19 +131,27 @@ const Hero = () => {
 
             {/* 1. Background Layer */}
             <div className="absolute inset-0 z-0">
-                {/* Canvas */}
+                {/* Video Background (New) */}
+                <BackgroundVideo
+                    posterSrc={heroPoster}
+                    videoSrc="/assets/video/hero-loop.mp4" // Placeholder for when the user generates the video
+                    opacity={0.5}
+                    className="z-0"
+                />
+
+                {/* Canvas (Overlayed at reduced opacity or standard) */}
                 <canvas
                     ref={canvasRef}
-                    className={`absolute inset-0 transition-opacity duration-1000 ${isLoaded ? 'opacity-60' : 'opacity-0'}`}
+                    className={`absolute inset-0 transition-opacity duration-1000 z-10 ${isLoaded ? 'opacity-40' : 'opacity-0'}`}
                 />
 
                 {/* Gradient Video/Flares (Simulated with div) */}
-                <div className="absolute top-[-20%] right-[-10%] w-[70vw] h-[70vw] bg-neon-violet/10 rounded-full blur-[150px] animate-pulse-slow" />
-                <div className="absolute bottom-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-neon-blue/5 rounded-full blur-[150px]" />
+                <div className="absolute top-[-20%] right-[-10%] w-[70vw] h-[70vw] bg-neon-violet/10 rounded-full blur-[150px] animate-pulse-slow z-20" />
+                <div className="absolute bottom-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-neon-blue/5 rounded-full blur-[150px] z-20" />
 
                 {/* Contrast Mesh Overlay (Ensures text readablity) */}
-                <div className="absolute inset-0 bg-gradient-to-r from-neural-950 via-neural-950/80 to-transparent" />
-                <div className="absolute inset-0 bg-black/20" /> {/* General dim */}
+                <div className="absolute inset-0 bg-gradient-to-r from-neural-950 via-neural-950/80 to-transparent z-30" />
+                <div className="absolute inset-0 bg-black/20 z-30" /> {/* General dim */}
             </div>
 
             {/* 2. Content Layer */}
