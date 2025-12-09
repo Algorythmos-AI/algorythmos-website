@@ -1,0 +1,15 @@
+src/pages/insights/CaseStudiesPage.jsx
+src/pages/insights/BlogPage.jsx
+src/pages/insights/BlogDetailPage.jsx
+src/pages/insights/CaseStudyPage.jsx
+src/pages/services/ServiceDetailPage.jsx
+src/pages/services/ServicesPage.jsx
+src/pages/services/services/MlopsCicdPage.jsx
+src/pages/services/services/SqlDashboardsPage.jsx
+src/pages/services/services/AgenticAutomationPage.jsx
+src/pages/services/services/DocumentIntelligencePage.jsx
+src/pages/services/ServiceLayout.jsx
+src/pages/NotFoundPage.jsx
+src/pages/contact/QuantumContactPage.jsx
+src/pages/contact/QuantumAboutPage.jsx
+src/pages/contact/PricingPage.jsx
