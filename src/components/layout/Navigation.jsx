@@ -137,7 +137,6 @@ const NavBar = () => {
   return (
     <>
       <nav
-      <nav
         role="navigation"
         aria-label={t("ui.aria.primaryNavigation")}
         className={`fixed top-0 w-full z-50 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]
