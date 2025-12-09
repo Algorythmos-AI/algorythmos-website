@@ -77,40 +77,40 @@ function App() {
           <Route path="/pricing" element={<PricingPage />} />
 
           {/* ========================================
-              AUSTRALIA /au/* routes
+              AUSTRALIA /au-en/* routes
           ======================================== */}
-          <Route path="/au" element={<RegionLayout region="AU"><AustraliaPage /></RegionLayout>} />
-          <Route path="/au/services" element={<RegionLayout region="AU"><ServicesPage /></RegionLayout>} />
-          <Route path="/au/services/agentic-automation" element={<RegionLayout region="AU"><AgenticAutomationPage /></RegionLayout>} />
-          <Route path="/au/services/document-intelligence" element={<RegionLayout region="AU"><DocumentIntelligencePage /></RegionLayout>} />
-          <Route path="/au/services/sql-dashboards" element={<RegionLayout region="AU"><SqlDashboardsPage /></RegionLayout>} />
-          <Route path="/au/services/mlops-cicd" element={<RegionLayout region="AU"><MlopsCicdPage /></RegionLayout>} />
-          <Route path="/au/services/:slug" element={<RegionLayout region="AU"><ServiceDetailPage /></RegionLayout>} />
-          <Route path="/au/about" element={<RegionLayout region="AU"><QuantumAboutPage /></RegionLayout>} />
-          <Route path="/au/contact" element={<RegionLayout region="AU"><QuantumContactPage /></RegionLayout>} />
-          <Route path="/au/pricing" element={<RegionLayout region="AU"><PricingPage /></RegionLayout>} />
-          <Route path="/au/case-studies" element={<RegionLayout region="AU"><CaseStudiesPage /></RegionLayout>} />
-          <Route path="/au/case-studies/:slug" element={<RegionLayout region="AU"><CaseStudyPage /></RegionLayout>} />
-          <Route path="/au/blog" element={<RegionLayout region="AU"><BlogPage /></RegionLayout>} />
-          <Route path="/au/blog/:slug" element={<RegionLayout region="AU"><BlogDetailPage /></RegionLayout>} />
+          <Route path="/au-en" element={<RegionLayout region="AU"><AustraliaPage /></RegionLayout>} />
+          <Route path="/au-en/services" element={<RegionLayout region="AU"><ServicesPage /></RegionLayout>} />
+          <Route path="/au-en/services/agentic-automation" element={<RegionLayout region="AU"><AgenticAutomationPage /></RegionLayout>} />
+          <Route path="/au-en/services/document-intelligence" element={<RegionLayout region="AU"><DocumentIntelligencePage /></RegionLayout>} />
+          <Route path="/au-en/services/sql-dashboards" element={<RegionLayout region="AU"><SqlDashboardsPage /></RegionLayout>} />
+          <Route path="/au-en/services/mlops-cicd" element={<RegionLayout region="AU"><MlopsCicdPage /></RegionLayout>} />
+          <Route path="/au-en/services/:slug" element={<RegionLayout region="AU"><ServiceDetailPage /></RegionLayout>} />
+          <Route path="/au-en/about" element={<RegionLayout region="AU"><QuantumAboutPage /></RegionLayout>} />
+          <Route path="/au-en/contact" element={<RegionLayout region="AU"><QuantumContactPage /></RegionLayout>} />
+          <Route path="/au-en/pricing" element={<RegionLayout region="AU"><PricingPage /></RegionLayout>} />
+          <Route path="/au-en/case-studies" element={<RegionLayout region="AU"><CaseStudiesPage /></RegionLayout>} />
+          <Route path="/au-en/case-studies/:slug" element={<RegionLayout region="AU"><CaseStudyPage /></RegionLayout>} />
+          <Route path="/au-en/blog" element={<RegionLayout region="AU"><BlogPage /></RegionLayout>} />
+          <Route path="/au-en/blog/:slug" element={<RegionLayout region="AU"><BlogDetailPage /></RegionLayout>} />
 
           {/* ========================================
-              FRANCE /fr/* routes
+              FRANCE /fr-fr/* routes
           ======================================== */}
-          <Route path="/fr" element={<RegionLayout region="FR"><FrancePage /></RegionLayout>} />
-          <Route path="/fr/services" element={<RegionLayout region="FR"><ServicesPage /></RegionLayout>} />
-          <Route path="/fr/services/agentic-automation" element={<RegionLayout region="FR"><AgenticAutomationPage /></RegionLayout>} />
-          <Route path="/fr/services/document-intelligence" element={<RegionLayout region="FR"><DocumentIntelligencePage /></RegionLayout>} />
-          <Route path="/fr/services/sql-dashboards" element={<RegionLayout region="FR"><SqlDashboardsPage /></RegionLayout>} />
-          <Route path="/fr/services/mlops-cicd" element={<RegionLayout region="FR"><MlopsCicdPage /></RegionLayout>} />
-          <Route path="/fr/services/:slug" element={<RegionLayout region="FR"><ServiceDetailPage /></RegionLayout>} />
-          <Route path="/fr/about" element={<RegionLayout region="FR"><QuantumAboutPage /></RegionLayout>} />
-          <Route path="/fr/contact" element={<RegionLayout region="FR"><QuantumContactPage /></RegionLayout>} />
-          <Route path="/fr/pricing" element={<RegionLayout region="FR"><PricingPage /></RegionLayout>} />
-          <Route path="/fr/case-studies" element={<RegionLayout region="FR"><CaseStudiesPage /></RegionLayout>} />
-          <Route path="/fr/case-studies/:slug" element={<RegionLayout region="FR"><CaseStudyPage /></RegionLayout>} />
-          <Route path="/fr/blog" element={<RegionLayout region="FR"><BlogPage /></RegionLayout>} />
-          <Route path="/fr/blog/:slug" element={<RegionLayout region="FR"><BlogDetailPage /></RegionLayout>} />
+          <Route path="/fr-fr" element={<RegionLayout region="FR"><FrancePage /></RegionLayout>} />
+          <Route path="/fr-fr/services" element={<RegionLayout region="FR"><ServicesPage /></RegionLayout>} />
+          <Route path="/fr-fr/services/agentic-automation" element={<RegionLayout region="FR"><AgenticAutomationPage /></RegionLayout>} />
+          <Route path="/fr-fr/services/document-intelligence" element={<RegionLayout region="FR"><DocumentIntelligencePage /></RegionLayout>} />
+          <Route path="/fr-fr/services/sql-dashboards" element={<RegionLayout region="FR"><SqlDashboardsPage /></RegionLayout>} />
+          <Route path="/fr-fr/services/mlops-cicd" element={<RegionLayout region="FR"><MlopsCicdPage /></RegionLayout>} />
+          <Route path="/fr-fr/services/:slug" element={<RegionLayout region="FR"><ServiceDetailPage /></RegionLayout>} />
+          <Route path="/fr-fr/about" element={<RegionLayout region="FR"><QuantumAboutPage /></RegionLayout>} />
+          <Route path="/fr-fr/contact" element={<RegionLayout region="FR"><QuantumContactPage /></RegionLayout>} />
+          <Route path="/fr-fr/pricing" element={<RegionLayout region="FR"><PricingPage /></RegionLayout>} />
+          <Route path="/fr-fr/case-studies" element={<RegionLayout region="FR"><CaseStudiesPage /></RegionLayout>} />
+          <Route path="/fr-fr/case-studies/:slug" element={<RegionLayout region="FR"><CaseStudyPage /></RegionLayout>} />
+          <Route path="/fr-fr/blog" element={<RegionLayout region="FR"><BlogPage /></RegionLayout>} />
+          <Route path="/fr-fr/blog/:slug" element={<RegionLayout region="FR"><BlogDetailPage /></RegionLayout>} />
 
           {/* ========================================
               404 Catch-all route
