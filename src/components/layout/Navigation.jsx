@@ -8,6 +8,8 @@ import RegionSwitcher from "../navigation/RegionSwitcher.jsx";
 import MobileMenu from "../navigation/MobileMenu.jsx";
 import BottomNavBar from "../navigation/BottomNavBar.jsx";
 import AnimatedHamburger from "../navigation/AnimatedHamburger.jsx";
+import LogoPulse from '../microanimations/LogoPulse.jsx';
+import MenuHoverAnimation from '../microanimations/MenuHoverAnimation.jsx';
 
 /**
  * Premium Navigation Bar - Enterprise-grade sticky navbar
@@ -147,11 +149,6 @@ const NavBar = () => {
           }`}
       >
         <div className="container mx-auto flex items-center justify-between px-4 lg:px-6 xl:px-8 h-16 lg:h-[72px]">
-
-          import LogoPulse from '../microanimations/LogoPulse.jsx';
-          import MenuHoverAnimation from '../microanimations/MenuHoverAnimation.jsx';
-
-          // ... (Nav component code)
 
           {/* 1. LEFT: Logo */}
           <Link
