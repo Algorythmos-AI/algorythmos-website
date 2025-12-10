@@ -1,14 +1,16 @@
-import BaseAnimation from './BaseAnimation';
-import transitionLottie from '../../assets/lottie/page-transition.json?url';
+import React from 'react';
 
-const PageTransitionFX = ({ className }) => (
-    <BaseAnimation
-        videoSrc="/assets/microanimations/page-transition.webm"
-        lottieSrc={transitionLottie}
-        fallbackSrc="/assets/microanimations/transition-fallback.png"
-        className={className}
-        alt="Page transition effect"
-    />
-);
+/**
+ * PageTransitionFX Component
+ * Subtle page transition effect
+ * Uses CSS instead of Lottie for reliability
+ */
+const PageTransitionFX = ({ className = "" }) => {
+    return (
+        <div className={`fixed inset-0 pointer-events-none z-50 ${className}`} aria-hidden="true">
+            <div className="absolute inset-0 bg-neural-950 opacity-0 transition-opacity duration-300" />
+        </div>
+    );
+};
 
 export default PageTransitionFX;

@@ -1,14 +1,16 @@
-import BaseAnimation from './BaseAnimation';
-import logoLottie from '../../assets/lottie/logo_pulse.json';
+import React from 'react';
 
-const LogoPulse = ({ className }) => (
-    <BaseAnimation
-        videoSrc="/assets/microanimations/logo-pulse.webm"
-        lottieSrc={logoLottie}
-        fallbackSrc="/assets/microanimations/logo-fallback.png"
-        className={className}
-        alt="Logo heartbeat pulse"
-    />
-);
+/**
+ * LogoPulse Component
+ * Subtle pulse effect for logo
+ * Uses CSS for reliability (no external assets needed)
+ */
+const LogoPulse = ({ className = "" }) => {
+    return (
+        <div className={`absolute inset-0 pointer-events-none ${className}`} aria-hidden="true">
+            <div className="absolute inset-0 bg-neon-violet/10 rounded-full blur-xl animate-pulse" />
+        </div>
+    );
+};
 
 export default LogoPulse;

@@ -1,14 +1,18 @@
-import BaseAnimation from './BaseAnimation';
-import shimmerLottie from '../../assets/lottie/menu_shimmer.json';
+import React from 'react';
 
-const MenuHoverAnimation = ({ className }) => (
-    <BaseAnimation
-        videoSrc="/assets/microanimations/menu-shimmer.webm"
-        lottieSrc={shimmerLottie}
-        fallbackSrc="/assets/microanimations/menu-fallback.png"
-        className={className}
-        alt="Menu shimmer effect"
-    />
-);
+/**
+ * MenuHoverAnimation Component
+ * Subtle shimmer effect for menu items
+ * Uses CSS for reliability (no external assets needed)
+ */
+const MenuHoverAnimation = ({ className = "" }) => {
+    return (
+        <div className={`absolute inset-0 pointer-events-none ${className}`} aria-hidden="true">
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+            </div>
+        </div>
+    );
+};
 
 export default MenuHoverAnimation;
