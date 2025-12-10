@@ -102,7 +102,7 @@ const AdvancedBusinessWebsite = () => {
       <Hero />
 
       {/* 2. Advanced Features Section */}
-      <section className="py-32 relative z-10">
+      <section className="py-16 md:py-24 relative z-10">
         <div className="container-main">
 
           <ScrollReveal>
@@ -148,7 +148,7 @@ const AdvancedBusinessWebsite = () => {
       </section>
 
       {/* Partners Marquee (Lazy Loaded) */}
-      <div className="py-12 border-y border-white/5 bg-neural-900/50 backdrop-blur-sm">
+      <div className="border-y border-white/5 bg-neural-900/50 backdrop-blur-sm">
         <Suspense fallback={<div className="h-20" />}>
           <PartnersCarousel />
         </Suspense>
@@ -193,7 +193,7 @@ const AdvancedBusinessWebsite = () => {
       )}
 
       {/* 3. Neural Testimonials */}
-      <section className="py-32 relative overflow-hidden">
+      <section className="py-16 md:py-20 relative overflow-hidden">
         {/* Background Atmosphere */}
         <div className="absolute inset-0 bg-neural-900/50" />
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-neon-blue/5 blur-[120px] rounded-full" />
@@ -245,7 +245,7 @@ const AdvancedBusinessWebsite = () => {
       </section>
 
       {/* 4. Ultimate CTA */}
-      <section className="py-32 relative overflow-hidden">
+      <section className="py-16 md:py-24 relative overflow-hidden">
         <div className="absolute inset-0 bg-neural-gradient opacity-90" />
 
         <div className="container-narrow relative text-center z-10">

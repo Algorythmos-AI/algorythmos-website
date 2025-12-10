@@ -4,6 +4,7 @@ import { Youtube, Linkedin, Twitter, Github, Instagram, Globe, Book, Layout, Arr
 import logo from "../../assets/Algorythmos.png";
 import { useI18n } from "../../app/i18n/I18nContext.jsx";
 import { withRegionPath } from "../../app/i18n/navConfig.js";
+import FooterGlow from '../microanimations/FooterGlow.jsx';
 
 // Custom X Icon
 const XIcon = ({ className = "h-5 w-5" }) => (
@@ -80,11 +81,10 @@ const Footer = () => {
   };
 
   return (
-    <footer className="w-full bg-neural-950 border-t border-white/5 relative" aria-label={t("ui.aria.siteFooter")}>
+    <footer className="w-full bg-neural-950 border-t border-white/5 relative overflow-hidden" aria-label={t("ui.aria.siteFooter")}>
 
       {/* Background Ambient Glows */}
-      <div className="absolute bottom-0 left-0 w-[800px] h-[600px] bg-neon-violet/5 rounded-full blur-[150px] pointer-events-none opacity-40" />
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-neon-blue/5 rounded-full blur-[150px] pointer-events-none opacity-40" />
+      <FooterGlow className="absolute inset-0 w-full h-full opacity-60 pointer-events-none" />
 
       <div className="container mx-auto px-6 lg:px-12 py-20 relative z-10">
 
