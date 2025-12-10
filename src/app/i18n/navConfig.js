@@ -51,6 +51,7 @@ const BASE_NAV_ITEMS = [
       { key: "services.documentIntelligence", path: "/services/document-intelligence" },
       { key: "services.sqlDashboards", path: "/services/sql-dashboards" },
       { key: "services.mlops", path: "/services/mlops-cicd" },
+      { key: "services.aiWebsites", path: "/services/ai-websites" },
     ]
   },
   { key: "nav.pricing", path: "/pricing" },
@@ -94,6 +95,7 @@ export const FOOTER_NAV = {
     { key: "services.documentIntelligence", path: "/services/document-intelligence" },
     { key: "services.sqlDashboards", path: "/services/sql-dashboards" },
     { key: "services.mlops", path: "/services/mlops-cicd" },
+    { key: "services.aiWebsites", path: "/services/ai-websites" },
   ],
   company: [
     { key: "nav.about", path: "/about" },
