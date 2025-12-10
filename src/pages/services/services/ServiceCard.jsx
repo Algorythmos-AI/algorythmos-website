@@ -3,6 +3,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { useI18n } from "../../../app/i18n/I18nContext";
+import ServiceCardFX from "../../../components/microanimations/ServiceCardFX.jsx";
 
 /**
  * ServiceCard - Reusable card component for service listings
@@ -35,13 +36,16 @@ export default function ServiceCard({ title, href, icon: Icon, excerpt }) {
       </p>
 
       {/* Learn More Link */}
-      <div className="flex items-center text-sm font-semibold text-blue-400 group-hover:text-blue-300 transition-colors">
+      <div className="flex items-center text-sm font-semibold text-blue-400 group-hover:text-blue-300 transition-colors relative z-10">
         {t("ui.serviceCard.learnMore")}
         <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
       </div>
 
-      {/* Hover glow effect */}
+      {/* Hover glow effect (CSS Fallback) */}
       <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-500/0 to-purple-500/0 opacity-0 group-hover:opacity-10 transition-opacity duration-300 pointer-events-none" />
+
+      {/* Micro-Animation Overlay */}
+      <ServiceCardFX className="absolute inset-0 w-full h-full rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
     </Link>
   );
 }

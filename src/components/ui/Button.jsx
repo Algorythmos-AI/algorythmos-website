@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 
+import ButtonAnimation from '../microanimations/ButtonAnimation.jsx';
+
 /**
  * Premium Button Component
  * - "Neural" gradient glow
@@ -19,7 +21,7 @@ const Button = ({
 }) => {
 
     // Base physics and finish
-    const baseStyles = "relative group inline-flex items-center justify-center font-semibold transition-all duration-300 ease-quint active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none";
+    const baseStyles = "relative group inline-flex items-center justify-center font-semibold transition-all duration-300 ease-quint active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none overflow-hidden";
 
     // Variants
     const variants = {
@@ -40,10 +42,17 @@ const Button = ({
 
     // Content Wrapper
     const content = (
-        <span className="flex items-center gap-3 relative z-10">
-            {children}
-            {icon || (variant !== 'ghost' && <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />)}
-        </span>
+        <>
+            {/* Micro Animation Overlay (Primary/Glow only) */}
+            {(variant === 'primary' || variant === 'glow') && (
+                <ButtonAnimation className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            )}
+
+            <span className="flex items-center gap-3 relative z-10">
+                {children}
+                {icon || (variant !== 'ghost' && <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />)}
+            </span>
+        </>
     );
 
     // Render as Link

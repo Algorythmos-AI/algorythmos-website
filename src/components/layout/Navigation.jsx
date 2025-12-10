@@ -148,16 +148,24 @@ const NavBar = () => {
       >
         <div className="container mx-auto flex items-center justify-between px-4 lg:px-6 xl:px-8 h-16 lg:h-[72px]">
 
+          import LogoPulse from '../microanimations/LogoPulse.jsx';
+          import MenuHoverAnimation from '../microanimations/MenuHoverAnimation.jsx';
+
+          // ... (Nav component code)
+
           {/* 1. LEFT: Logo */}
           <Link
             to={homePath}
-            className="flex items-center gap-3 shrink-0 mr-8 focus-visible:ring-2 rounded-lg"
+            className="flex items-center gap-3 shrink-0 mr-8 focus-visible:ring-2 rounded-lg relative group"
           >
-            <img
-              src={logo}
-              alt={t("ui.alt.logo")}
-              className="h-8 w-auto object-contain"
-            />
+            <div className="relative">
+              <LogoPulse className="absolute inset-[-10px] w-[140%] h-[140%] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <img
+                src={logo}
+                alt={t("ui.alt.logo")}
+                className="h-8 w-auto object-contain relative z-10"
+              />
+            </div>
             <span className="text-lg font-bold text-white tracking-tight hidden sm:block">
               Algorythmos
             </span>
@@ -182,12 +190,15 @@ const NavBar = () => {
                 {/* Mega Menu Logic (Same as before, simplified structure) */}
                 {item.children && activeMega === item.key && (
                   <div className="absolute top-full left-0 pt-4 w-[500px] animate-in fade-in slide-in-from-top-2 duration-200">
-                    <div className="bg-neural-900/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl p-6 grid grid-cols-12 gap-6">
-                      <div className="col-span-5 border-r border-white/10 pr-6">
+                    <div className="relative bg-neural-900/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl p-6 grid grid-cols-12 gap-6 overflow-hidden">
+                      {/* Menu Shimmer FX */}
+                      <MenuHoverAnimation className="absolute inset-0 pointer-events-none opacity-20" />
+
+                      <div className="col-span-5 border-r border-white/10 pr-6 relative z-10">
                         <h3 className="text-base font-bold text-white mb-2">{t(item.key)}</h3>
                         <p className="text-xs text-gray-400 leading-relaxed mb-4">{item.description ? t(item.description) : t("nav.exploreServices")}</p>
                       </div>
-                      <div className="col-span-7 flex flex-col gap-1">
+                      <div className="col-span-7 flex flex-col gap-1 relative z-10">
                         {item.children.map(child => (
                           <Link key={child.key} to={child.path} className="block p-2 rounded-lg hover:bg-white/5 transition-colors group/link">
                             <div className="text-sm font-medium text-gray-200 group-hover/link:text-white">{t(child.key)}</div>

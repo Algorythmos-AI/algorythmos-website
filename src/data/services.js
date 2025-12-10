@@ -1,5 +1,5 @@
 // src/data/services.js
-import { Bot, FileText, BarChart2, Layers } from "lucide-react";
+import { Bot, FileText, BarChart2, Layers, Globe } from "lucide-react";
 
 export const servicesList = [
   {
@@ -156,7 +156,50 @@ export const servicesList = [
     faqs: [{ q: "Tooling options?", a: "MLflow, Weights & Biases, Argo, Kubeflow, BentoML, FastAPI, Prometheus/Grafana." }],
     related: ["agentic-automation", "sql-dashboards"],
     callToAction: "Talk to an Engineer"
+  },
+  {
+    slug: "ai-websites",
+    title: "AI-Powered Website Development",
+    tagline: "Custom-engineered websites with embedded AI for SMEs who demand more than templates.",
+    meta:
+      "High-performance AI-enhanced websites for Australian and European SMEs. Intelligent chatbots, voice AI, enterprise speed, and local engineering support.",
+    icon: Globe,
+    heroPoints: [
+      "Custom engineering, not templates",
+      "AI chatbots & voice interfaces",
+      "Sub-second load times & 99.9% uptime"
+    ],
+    sections: [
+      {
+        id: "what-it-is",
+        heading: "What it is",
+        paragraphs: [
+          "A premium website development service that combines enterprise-grade engineering with AI capabilities.",
+          "We build fast, secure, intelligent websites that convert visitors into customers."
+        ]
+      },
+      {
+        id: "how-it-works",
+        heading: "How it works",
+        paragraphs: [
+          "Custom design and architecture tailored to your brand. AI features integrated from day one.",
+          "Managed hosting with monitoring, security updates, and performance optimization."
+        ]
+      },
+      {
+        id: "business-impact",
+        heading: "Business impact",
+        bullets: ["3x lead conversion increase", "24/7 AI-powered customer support", "Reduced bounce rates and higher engagement"]
+      }
+    ],
+    faqs: [
+      { q: "How long does it take?", a: "Typically 4-8 weeks depending on complexity. We prioritize speed without compromising quality." },
+      { q: "Do you handle hosting?", a: "Yes. Enterprise-grade hosting with 99.9% uptime, automatic backups, and security monitoring." }
+    ],
+    related: ["agentic-automation", "sql-dashboards"],
+    callToAction: "Book a Discovery Call"
   }
 ];
 
 export const servicesBySlug = Object.fromEntries(servicesList.map(s => [s.slug, s]));
+

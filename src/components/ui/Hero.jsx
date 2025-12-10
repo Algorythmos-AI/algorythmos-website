@@ -3,6 +3,7 @@ import { ArrowRight, ChevronRight, Play } from 'lucide-react';
 import { useI18n } from '../../app/i18n/I18nContext.jsx';
 import Button from './Button.jsx';
 import BackgroundVideo from './BackgroundVideo.jsx';
+import ScrollRevealFX from '../microanimations/ScrollRevealFX.jsx';
 import heroPoster from '../../assets/video/hero-poster.png';
 
 /**
@@ -148,6 +149,9 @@ const Hero = () => {
                 {/* Gradient Video/Flares (Simulated with div) */}
                 <div className="absolute top-[-20%] right-[-10%] w-[70vw] h-[70vw] bg-neon-violet/10 rounded-full blur-[150px] animate-pulse-slow z-20" />
                 <div className="absolute bottom-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-neon-blue/5 rounded-full blur-[150px] z-20" />
+
+                {/* Micro-Animation: Scroll/Particle Reveal */}
+                <ScrollRevealFX className="absolute inset-0 z-20 opacity-60 pointer-events-none mix-blend-screen" />
 
                 {/* Contrast Mesh Overlay (Ensures text readablity) */}
                 <div className="absolute inset-0 bg-gradient-to-r from-neural-950 via-neural-950/80 to-transparent z-30" />

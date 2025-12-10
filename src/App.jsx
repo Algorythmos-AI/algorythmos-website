@@ -28,6 +28,7 @@ const AgenticAutomationPage = lazy(() => import('./pages/services/services/Agent
 const DocumentIntelligencePage = lazy(() => import('./pages/services/services/DocumentIntelligencePage.jsx'));
 const SqlDashboardsPage = lazy(() => import('./pages/services/services/SqlDashboardsPage.jsx'));
 const MlopsCicdPage = lazy(() => import('./pages/services/services/MlopsCicdPage.jsx'));
+const AiWebsitesPage = lazy(() => import('./pages/services/services/AiWebsitesPage.jsx'));
 
 // Contact & Company
 const QuantumAboutPage = lazy(() => import('./pages/contact/QuantumAboutPage.jsx'));
@@ -67,6 +68,7 @@ function App() {
           <Route path="/services/document-intelligence" element={<DocumentIntelligencePage />} />
           <Route path="/services/sql-dashboards" element={<SqlDashboardsPage />} />
           <Route path="/services/mlops-cicd" element={<MlopsCicdPage />} />
+          <Route path="/services/ai-websites" element={<AiWebsitesPage />} />
           <Route path="/services/:slug" element={<ServiceDetailPage />} />
           <Route path="/about" element={<QuantumAboutPage />} />
           <Route path="/contact" element={<QuantumContactPage />} />
@@ -85,6 +87,7 @@ function App() {
           <Route path="/au-en/services/document-intelligence" element={<RegionLayout region="AU"><DocumentIntelligencePage /></RegionLayout>} />
           <Route path="/au-en/services/sql-dashboards" element={<RegionLayout region="AU"><SqlDashboardsPage /></RegionLayout>} />
           <Route path="/au-en/services/mlops-cicd" element={<RegionLayout region="AU"><MlopsCicdPage /></RegionLayout>} />
+          <Route path="/au-en/services/ai-websites" element={<RegionLayout region="AU"><AiWebsitesPage /></RegionLayout>} />
           <Route path="/au-en/services/:slug" element={<RegionLayout region="AU"><ServiceDetailPage /></RegionLayout>} />
           <Route path="/au-en/about" element={<RegionLayout region="AU"><QuantumAboutPage /></RegionLayout>} />
           <Route path="/au-en/contact" element={<RegionLayout region="AU"><QuantumContactPage /></RegionLayout>} />
@@ -103,6 +106,7 @@ function App() {
           <Route path="/fr-fr/services/document-intelligence" element={<RegionLayout region="FR"><DocumentIntelligencePage /></RegionLayout>} />
           <Route path="/fr-fr/services/sql-dashboards" element={<RegionLayout region="FR"><SqlDashboardsPage /></RegionLayout>} />
           <Route path="/fr-fr/services/mlops-cicd" element={<RegionLayout region="FR"><MlopsCicdPage /></RegionLayout>} />
+          <Route path="/fr-fr/services/ai-websites" element={<RegionLayout region="FR"><AiWebsitesPage /></RegionLayout>} />
           <Route path="/fr-fr/services/:slug" element={<RegionLayout region="FR"><ServiceDetailPage /></RegionLayout>} />
           <Route path="/fr-fr/about" element={<RegionLayout region="FR"><QuantumAboutPage /></RegionLayout>} />
           <Route path="/fr-fr/contact" element={<RegionLayout region="FR"><QuantumContactPage /></RegionLayout>} />
