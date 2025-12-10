@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense, lazy, useEffect, useState } from 'react';
 import { Brain, Rocket, Eye, Globe, Shield, Sparkles, CheckCircle, MousePointer2, Star } from 'lucide-react';
 import { useI18n } from '../../app/i18n/I18nContext.jsx';
 import { RegionHelmet } from '../../app/seo';
@@ -9,9 +9,27 @@ import Button from '../../components/ui/Button.jsx';
 // Lazy-load heavy UI components
 const PartnersCarousel = lazy(() => import('../../components/ui/PartnersCarousel.jsx'));
 const ServicesShowcase = lazy(() => import('../../components/ui/ServicesShowcase.jsx'));
+const ScrollSequence = lazy(() => import('../../components/microanimations/ScrollSequence.jsx'));
 
 const AdvancedBusinessWebsite = () => {
   const { t, getRegionPath } = useI18n();
+
+  // Mobile detection for performance optimization
+  const [isMobile, setIsMobile] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    const checkMotion = () => setPrefersReducedMotion(
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    );
+
+    checkMobile();
+    checkMotion();
+    window.addEventListener('resize', checkMobile);
+
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const features = [
     {
@@ -135,6 +153,44 @@ const AdvancedBusinessWebsite = () => {
           <PartnersCarousel />
         </Suspense>
       </div>
+
+      {/* 2.5 Neural Genesis — Scroll Animation Cinematic Section */}
+      {!isMobile && !prefersReducedMotion && (
+        <section className="relative bg-neural-950 overflow-hidden">
+          <Suspense fallback={<div className="h-screen bg-neural-950" />}>
+            <ScrollSequence />
+          </Suspense>
+          {/* Overlay Text */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
+            <div className="text-center px-6">
+              <h2 className="text-4xl md:text-6xl lg:text-7xl font-black text-white/80 tracking-tight drop-shadow-2xl">
+                How AI <span className="bg-gradient-to-r from-neon-violet to-neon-cyan bg-clip-text text-transparent">Transforms</span>
+              </h2>
+              <p className="text-xl md:text-2xl text-neural-300 mt-4">Your Business Intelligence</p>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Mobile fallback - static frame */}
+      {(isMobile || prefersReducedMotion) && (
+        <section className="relative py-24 bg-neural-950 overflow-hidden">
+          <div className="absolute inset-0 opacity-40">
+            <img
+              src="/assets/lottie/scroll/scroll_0025.png"
+              alt="Neural network visualization"
+              className="w-full h-full object-cover"
+              loading="lazy"
+            />
+          </div>
+          <div className="relative z-10 text-center px-6">
+            <h2 className="text-4xl md:text-5xl font-black text-white tracking-tight">
+              How AI <span className="bg-gradient-to-r from-neon-violet to-neon-cyan bg-clip-text text-transparent">Transforms</span>
+            </h2>
+            <p className="text-lg text-neural-300 mt-4">Your Business Intelligence</p>
+          </div>
+        </section>
+      )}
 
       {/* 3. Neural Testimonials */}
       <section className="py-32 relative overflow-hidden">
