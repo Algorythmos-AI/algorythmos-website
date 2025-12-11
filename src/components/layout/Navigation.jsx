@@ -25,7 +25,7 @@ import MenuHoverAnimation from '../microanimations/MenuHoverAnimation.jsx';
 // Actually, I will replace the component definition.
 
 const NavBar = () => {
-  const [scrollY, setScrollY] = useState(0);
+  const [, setScrollY] = useState(0);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
   const lastScrollYRef = useRef(0);
@@ -34,7 +34,7 @@ const NavBar = () => {
   const [isEcosystemOpen, setIsEcosystemOpen] = useState(false);
   const [activeMega, setActiveMega] = useState(null);
   const ecosystemRef = useRef(null);
-  const { t, region, getRegionPath } = useI18n();
+  const { t, region } = useI18n();
 
   // Get navigation items for current region
   const navItems = getNavItems(region);

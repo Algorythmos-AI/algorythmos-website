@@ -4,9 +4,8 @@
  * Interactive world map showing Algorythmos offices in France and Australia.
  * Uses i18n for EN/FR localization.
  */
-
 import React from "react";
-import { motion } from "framer-motion";
+import { motion } from "framer-motion"; // Used for map card and marker animations
 import { useI18n } from "../app/i18n/I18nContext";
 
 const GlobalMap = () => {

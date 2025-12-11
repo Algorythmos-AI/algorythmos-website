@@ -54,7 +54,6 @@ const QuantumAboutPage = () => {
   const { t, getRegionPath, region } = useI18n();
   const [scrollY, setScrollY] = useState(0);
   const [activeTab, setActiveTab] = useState("mission");
-  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
 
   // Build dynamic data from translations
   const STATS = [
@@ -172,7 +171,7 @@ const QuantumAboutPage = () => {
 
     const draw = () => {
       if (!isActive || !canvasRef.current) return;
-      
+
       const { width, height } = canvas;
       ctx.clearRect(0, 0, width, height);
 
@@ -239,7 +238,7 @@ const QuantumAboutPage = () => {
         <meta name="twitter:description" content={t("about.meta.description")} />
         <meta name="twitter:image" content={`${canonicalBase}/Algorythmos.png`} />
       </Helmet>
-      
+
       {/* Global Navbar is rendered by App.jsx */}
 
       {/* Canvas Background */}
@@ -284,12 +283,12 @@ const QuantumAboutPage = () => {
             <p className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-gray-200 mb-10 sm:mb-12 md:mb-14 max-w-5xl mx-auto leading-relaxed px-2 sm:px-4">
               {t("about.hero.subtitle").split("<highlight>")[0]}
               <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent font-bold">
-                {t("about.hero.subtitle").includes("<highlight>") 
-                  ? t("about.hero.subtitle").split("<highlight>")[1]?.split("</highlight>")[0] 
+                {t("about.hero.subtitle").includes("<highlight>")
+                  ? t("about.hero.subtitle").split("<highlight>")[1]?.split("</highlight>")[0]
                   : "practical AI solutions"}
               </span>
-              {t("about.hero.subtitle").includes("</highlight>") 
-                ? t("about.hero.subtitle").split("</highlight>")[1] 
+              {t("about.hero.subtitle").includes("</highlight>")
+                ? t("about.hero.subtitle").split("</highlight>")[1]
                 : ""}
             </p>
           </AnimatedSection>
@@ -300,7 +299,7 @@ const QuantumAboutPage = () => {
       <section className="py-16 sm:py-20 md:py-28 lg:py-32 xl:py-36 relative z-10">
         <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
           {/* Section Header */}
-          <AnimatedSection 
+          <AnimatedSection
             className="text-center mb-12 sm:mb-16 md:mb-20 lg:mb-24 xl:mb-28"
           >
             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-extrabold mb-6 sm:mb-8 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent tracking-tight leading-[1.1] px-4">
@@ -311,13 +310,13 @@ const QuantumAboutPage = () => {
           {/* Two-Card Fusion Layout */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 md:gap-10 lg:gap-12 xl:gap-14 mb-12 sm:mb-16 md:mb-20 lg:mb-24 xl:mb-28">
             {/* Card 1: Algorithm */}
-            <AnimatedSection 
-              className="group relative overflow-hidden rounded-2xl sm:rounded-3xl lg:rounded-[2.5rem] bg-white/[0.02] backdrop-blur-3xl border border-white/[0.08] p-6 sm:p-8 md:p-10 lg:p-12 xl:p-14 transition-all duration-700 hover:scale-[1.012] hover:border-blue-400/30 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.4)] hover:shadow-[0_24px_64px_-12px_rgba(59,130,246,0.25)]"  
+            <AnimatedSection
+              className="group relative overflow-hidden rounded-2xl sm:rounded-3xl lg:rounded-[2.5rem] bg-white/[0.02] backdrop-blur-3xl border border-white/[0.08] p-6 sm:p-8 md:p-10 lg:p-12 xl:p-14 transition-all duration-700 hover:scale-[1.012] hover:border-blue-400/30 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.4)] hover:shadow-[0_24px_64px_-12px_rgba(59,130,246,0.25)]"
               delay={100}
             >
               {/* Refined gradient overlay */}
               <div className="absolute inset-0 bg-gradient-to-br from-blue-500/[0.08] via-blue-600/[0.04] to-purple-600/[0.06] opacity-80" />
-              
+
               {/* Geometric Pattern Background */}
               <div className="absolute inset-0 opacity-[0.06]">
                 <div className="absolute top-0 left-0 w-full h-full" style={{
@@ -355,13 +354,13 @@ const QuantumAboutPage = () => {
             </AnimatedSection>
 
             {/* Card 2: Rhythmos */}
-            <AnimatedSection 
-              className="group relative overflow-hidden rounded-2xl sm:rounded-3xl lg:rounded-[2.5rem] bg-white/[0.02] backdrop-blur-3xl border border-white/[0.08] p-6 sm:p-8 md:p-10 lg:p-12 xl:p-14 transition-all duration-700 hover:scale-[1.012] hover:border-purple-400/30 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.4)] hover:shadow-[0_24px_64px_-12px_rgba(168,85,247,0.25)]"  
+            <AnimatedSection
+              className="group relative overflow-hidden rounded-2xl sm:rounded-3xl lg:rounded-[2.5rem] bg-white/[0.02] backdrop-blur-3xl border border-white/[0.08] p-6 sm:p-8 md:p-10 lg:p-12 xl:p-14 transition-all duration-700 hover:scale-[1.012] hover:border-purple-400/30 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.4)] hover:shadow-[0_24px_64px_-12px_rgba(168,85,247,0.25)]"
               delay={200}
             >
               {/* Refined gradient overlay */}
               <div className="absolute inset-0 bg-gradient-to-br from-purple-500/[0.08] via-pink-600/[0.04] to-rose-600/[0.06] opacity-80" />
-              
+
               {/* Wavy Pattern Background */}
               <div className="absolute inset-0 opacity-[0.07]">
                 <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
@@ -407,13 +406,13 @@ const QuantumAboutPage = () => {
 
           {/* Explanation Text - Three Paragraphs */}
           <div className="max-w-4xl mx-auto mt-10 sm:mt-12 md:mt-16 lg:mt-20 xl:mt-24">
-            <AnimatedSection 
+            <AnimatedSection
               className="relative rounded-2xl sm:rounded-3xl lg:rounded-[2.5rem] bg-gradient-to-br from-gray-900/95 via-gray-850/90 to-gray-900/95 border border-white/[0.06] backdrop-blur-3xl px-6 py-10 sm:px-10 sm:py-12 md:px-12 md:py-14 lg:px-14 lg:py-16 xl:px-16 xl:py-20 shadow-[0_24px_88px_-12px_rgba(0,0,0,0.5)] overflow-hidden"
               delay={300}
             >
               {/* Top accent line */}
               <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-blue-400/40 via-purple-400/40 to-transparent" />
-              
+
               {/* Subtle background accent blobs */}
               <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-blue-500/[0.06] via-purple-500/[0.04] to-transparent rounded-full blur-3xl -z-10" />
               <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-purple-500/[0.06] via-pink-500/[0.04] to-transparent rounded-full blur-3xl -z-10" />
@@ -452,9 +451,8 @@ const QuantumAboutPage = () => {
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`px-6 sm:px-8 py-3.5 sm:py-4 rounded-lg sm:rounded-xl font-medium text-sm md:text-base transition-all duration-500 relative min-h-[44px] flex items-center justify-center ${
-                    activeTab === tab ? "text-white" : "text-gray-400 hover:text-white"
-                  }`}
+                  className={`px-6 sm:px-8 py-3.5 sm:py-4 rounded-lg sm:rounded-xl font-medium text-sm md:text-base transition-all duration-500 relative min-h-[44px] flex items-center justify-center ${activeTab === tab ? "text-white" : "text-gray-400 hover:text-white"
+                    }`}
                   aria-pressed={activeTab === tab}
                 >
                   {activeTab === tab && (
@@ -481,12 +479,12 @@ const QuantumAboutPage = () => {
       <section aria-label={t("ui.aria.companyFacts")} className="py-12 sm:py-16 md:py-20">
         <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 md:gap-8">
-            {STATS.map(({ icon: Icon, value, label }) => (
+            {STATS.map(({ icon: StatIcon, value, label }) => (
               <div
                 key={label}
                 className="rounded-2xl sm:rounded-3xl bg-white/5 ring-1 ring-white/10 p-6 sm:p-7 md:p-8 flex flex-col gap-3 sm:gap-4 hover:-translate-y-1 transition-all duration-300 min-h-[160px] sm:min-h-[180px]"
               >
-                <Icon className="w-6 h-6 sm:w-7 sm:h-7 text-white/70" aria-hidden="true" />
+                <StatIcon className="w-6 h-6 sm:w-7 sm:h-7 text-white/70" aria-hidden="true" />
                 <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-none tracking-tight text-white">
                   {value}
                 </div>

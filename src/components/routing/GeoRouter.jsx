@@ -73,7 +73,7 @@ export const GeoRouter = () => {
                 navigate(`${targetPath}${search}${hash}`, { replace: true });
                 return;
             }
-        } catch (e) {
+        } catch {
             // localStorage error
         }
 

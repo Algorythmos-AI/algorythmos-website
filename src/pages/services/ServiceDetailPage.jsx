@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet-async";
 import { CheckCircle } from "lucide-react";
 import { servicesBySlug, servicesList } from "../../data/services";
 import { useI18n } from "../../app/i18n/I18nContext";
-import { getCanonicalUrl, getOgLocale, generateHreflangLinks, getCanonicalBase } from "../../app/utils/seoHelpers.js";
+import { getCanonicalUrl, getOgLocale, generateHreflangLinks } from "../../app/utils/seoHelpers.js";
 
 function Breadcrumbs({ title, t, getRegionPath }) {
   return (
@@ -25,11 +25,31 @@ export default function ServiceDetailPage() {
   const { slug } = useParams();
   const service = servicesBySlug[slug];
 
-  // SEO helpers
+  // SEO helpers - computed regardless of service existence
   const canonicalUrl = getCanonicalUrl(region, `/services/${slug}`);
-  const canonicalBase = getCanonicalBase(region);
   const ogLocale = getOgLocale(region);
   const hreflangLinks = generateHreflangLinks(`/services/${slug}`);
+
+  // useMemo must be called unconditionally (before any early returns)
+  const jsonLd = useMemo(() => {
+    if (!service) return null;
+    return {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      name: service.title,
+      description: service.meta,
+      provider: { "@type": "Organization", name: "Algorythmos" },
+      areaServed: "Global",
+      url: canonicalUrl,
+      category: "Artificial Intelligence"
+    };
+  }, [service, canonicalUrl]);
+
+  // Related services computed before early return
+  const related = useMemo(() => {
+    if (!service) return [];
+    return servicesList.filter(s => service.related?.includes(s.slug));
+  }, [service]);
 
   if (!service) {
     return (
@@ -48,19 +68,6 @@ export default function ServiceDetailPage() {
   }
 
   const Icon = service.icon;
-
-  const jsonLd = useMemo(() => ({
-    "@context": "https://schema.org",
-    "@type": "Service",
-    name: service.title,
-    description: service.meta,
-    provider: { "@type": "Organization", name: "Algorythmos" },
-    areaServed: "Global",
-    url: canonicalUrl,
-    category: "Artificial Intelligence"
-  }), [service, slug, canonicalUrl]);
-
-  const related = servicesList.filter(s => service.related?.includes(s.slug));
 
   return (
     <div className="min-h-screen bg-black text-white overflow-hidden relative">

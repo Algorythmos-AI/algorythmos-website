@@ -28,9 +28,9 @@ const Footer = () => {
     setMessage({ type: "", text: "" });
 
     try {
-      const { REACT_APP_MAILCHIMP_API_KEY, REACT_APP_MAILCHIMP_LIST_ID, REACT_APP_MAILCHIMP_SERVER_PREFIX } = process.env;
+      const MAILCHIMP_API_KEY = import.meta.env.VITE_MAILCHIMP_API_KEY;
 
-      if (!REACT_APP_MAILCHIMP_API_KEY) {
+      if (!MAILCHIMP_API_KEY) {
         // Mock success for dev/demo if no API key
         await new Promise(r => setTimeout(r, 1000));
         setMessage({ type: "success", text: t("ui.newsletter.success") });

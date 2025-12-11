@@ -13,7 +13,7 @@ import heroPoster from '../../assets/video/hero-poster.png';
  * - High-Contrast Actions
  */
 const Hero = () => {
-    const { t, getRegionPath } = useI18n();
+    const { getRegionPath } = useI18n();
     const canvasRef = useRef(null);
     const [isLoaded, setIsLoaded] = useState(false);
 

@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { useScroll, useTransform, useSpring, motion } from 'framer-motion';
+import { useScroll, useSpring } from 'framer-motion';
 
 /**
  * ScrollSequence Component
