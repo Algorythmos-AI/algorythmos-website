@@ -87,7 +87,7 @@ const GlobalMap = () => {
                         >
                             {/* Animated dashed arc */}
                             <path
-                                d="M48 16 Q69.65 15.225 91.3 34.45"
+                                d="M50 16 Q69.65 15.225 91.3 34.45"
                                 stroke="rgba(255,255,255,0.75)"
                                 strokeWidth="0.6"
                                 strokeDasharray="3 3"
