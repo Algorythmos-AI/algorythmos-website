@@ -17,8 +17,8 @@ const GlobalMap = () => {
             id: "fr",
             titleKey: "contactPage.globalMap.france.title",
             roleKey: "contactPage.globalMap.france.role",
-            top: "31%",
-            left: "44%",
+            top: "32%",
+            left: "46%",
             isHQ: true,
         },
         {
@@ -83,46 +83,43 @@ const GlobalMap = () => {
                                         />
                                     ))}
 
-                                    {/* Simplified continent blobs to suggest a world map */}
-                                    <div className="pointer-events-none absolute inset-0 z-[1]">
-                                        {/* Europe / Africa */}
-                                        <div className="absolute left-[38%] top-[32%] h-32 w-40 rounded-[40%] bg-violet-400/50 blur-2xl" />
-                                        {/* Americas */}
-                                        <div className="absolute left-[12%] top-[30%] h-36 w-48 rounded-[45%] bg-indigo-400/45 blur-2xl" />
-                                        {/* Asia */}
-                                        <div className="absolute left-[55%] top-[28%] h-36 w-52 rounded-[45%] bg-purple-400/40 blur-2xl" />
-                                        {/* Australia */}
-                                        <div className="absolute left-[78%] top-[64%] h-20 w-24 rounded-[50%] bg-blue-400/50 blur-2xl" />
-                                    </div>
-
-                                    {/* Connection arcs (static dashed lines) */}
+                                    {/* SVG World Map with continents and connections */}
                                     <svg
-                                        className="pointer-events-none absolute inset-0 z-[3] h-full w-full"
+                                        className="pointer-events-none absolute inset-0 z-[2] h-full w-full"
                                         viewBox="0 0 100 50"
                                         preserveAspectRatio="xMidYMid meet"
                                         aria-hidden="true"
                                     >
-                                        {/* France → Sydney */}
-                                        <path
-                                            d="M45 20 C 60 10, 75 20, 85 35"
-                                            className="fill-none stroke-violet-300/80"
-                                            strokeWidth="0.7"
-                                            strokeDasharray="2 2"
-                                        />
-                                        {/* France → North America */}
-                                        <path
-                                            d="M45 20 C 35 10, 25 15, 18 22"
-                                            className="fill-none stroke-violet-200/70"
-                                            strokeWidth="0.6"
-                                            strokeDasharray="2 2"
-                                        />
-                                        {/* France → Asia */}
-                                        <path
-                                            d="M45 20 C 55 15, 65 18, 75 18"
-                                            className="fill-none stroke-violet-200/70"
-                                            strokeWidth="0.6"
-                                            strokeDasharray="2 2"
-                                        />
+                                        {/* Continent outlines - simplified shapes */}
+                                        <g className="fill-violet-500/30 stroke-violet-400/50" strokeWidth="0.3">
+                                            {/* North America */}
+                                            <path d="M10 12 L20 10 L25 15 L22 22 L18 25 L12 23 L8 18 Z" />
+                                            {/* South America */}
+                                            <path d="M18 28 L22 27 L24 32 L22 40 L18 42 L16 38 L17 32 Z" />
+                                            {/* Europe */}
+                                            <path d="M42 12 L48 10 L52 12 L50 18 L46 20 L42 18 Z" />
+                                            {/* Africa */}
+                                            <path d="M44 22 L52 20 L55 26 L52 38 L46 40 L42 34 L43 26 Z" />
+                                            {/* Asia */}
+                                            <path d="M54 8 L75 6 L82 12 L78 22 L68 25 L58 22 L52 16 Z" />
+                                            {/* Australia */}
+                                            <path d="M78 32 L86 30 L90 34 L88 40 L82 42 L78 38 Z" />
+                                        </g>
+
+                                        {/* Connection arcs */}
+                                        <g className="fill-none stroke-violet-300/60" strokeWidth="0.5" strokeDasharray="1.5 1">
+                                            {/* France → Sydney */}
+                                            <path d="M46 16 C 60 8, 75 18, 84 36" />
+                                            {/* France → North America */}
+                                            <path d="M44 16 C 35 10, 25 12, 18 18" />
+                                            {/* France → Asia */}
+                                            <path d="M48 14 C 58 10, 68 12, 75 15" />
+                                        </g>
+
+                                        {/* Glow behind France */}
+                                        <circle cx="46" cy="16" r="6" className="fill-violet-400/30" />
+                                        {/* Glow behind Sydney */}
+                                        <circle cx="84" cy="36" r="4" className="fill-blue-400/30" />
                                     </svg>
 
                                     {/* Location markers */}
