@@ -67,6 +67,12 @@ const AdvancedBusinessWebsite = () => {
       title: t("home.features.5.title"),
       description: t("home.features.5.description"),
       gradient: "from-neon-pink to-rose-500"
+    },
+    {
+      icon: <Globe className="w-8 h-8" />,
+      title: t("home.features.6.title"),
+      description: t("home.features.6.description"),
+      gradient: "from-emerald-400 to-cyan-500"
     }
   ];
 
