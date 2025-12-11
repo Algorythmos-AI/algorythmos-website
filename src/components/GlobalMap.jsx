@@ -82,8 +82,8 @@ const GlobalMap = () => {
                         {/* Dashed connection arc overlay with animation */}
                         <svg
                             viewBox="0 0 100 50"
-                            className="absolute inset-0 h-full w-full pointer-events-none"
-                            preserveAspectRatio="xMidYMid meet"
+                            className="absolute inset-0 w-full h-full pointer-events-none"
+                            preserveAspectRatio="none"
                         >
                             {/* Animated dashed arc */}
                             <path
@@ -96,12 +96,15 @@ const GlobalMap = () => {
                                 className="animate-[dash_3s_linear_infinite]"
                             />
 
-                            {/* Travelling dot */}
-                            <circle
-                                r="1.2"
-                                fill="rgba(56,189,248,0.95)"
-                                className="travel-dot"
-                            />
+                            {/* Flying plane icon */}
+                            <text
+                                className="plane-icon"
+                                fontSize="3"
+                                textAnchor="middle"
+                                dominantBaseline="middle"
+                            >
+                                ✈️
+                            </text>
                         </svg>
                     </div>
 
@@ -169,19 +172,20 @@ const GlobalMap = () => {
                         stroke-dashoffset: -20;
                     }
                 }
-                @keyframes travel {
-                    0%   { offset-distance: 0%; }
-                    100% { offset-distance: 100%; }
+                @keyframes planeTravel {
+                    from { offset-distance: 0%; }
+                    to   { offset-distance: 100%; }
                 }
                 @keyframes fadeIn {
                     from { opacity: 0; transform: translateY(20px); }
                     to   { opacity: 1; transform: translateY(0); }
                 }
-                .travel-dot {
+                .plane-icon {
                     offset-path: path("M48 16 Q69.65 15.225 91.3 34.45");
                     offset-rotate: auto;
-                    animation: travel 3s linear infinite;
-                    filter: drop-shadow(0 0 6px rgb(56,189,248));
+                    offset-distance: 0%;
+                    animation: planeTravel 4s linear infinite;
+                    filter: drop-shadow(0 0 4px rgba(255,255,255,0.9));
                 }
             `}
             </style>
