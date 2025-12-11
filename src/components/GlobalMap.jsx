@@ -57,7 +57,7 @@ const GlobalMap = () => {
                         {/* Australia marker */}
                         <div
                             className="absolute h-5 w-5 rounded-full bg-sky-400 ring-2 ring-white/90 shadow-[0_0_20px_rgba(56,189,248,0.9)] animate-pulse"
-                            style={{ left: "82%", top: "77%" }}
+                            style={{ left: "79%", top: "71%" }}
                             aria-label={t("contactPage.globalMap.australia.title")}
                         />
 
