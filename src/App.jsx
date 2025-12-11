@@ -1,6 +1,7 @@
 import React, { Suspense, lazy } from 'react';
 import './App.css';
 import { Routes, Route } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 
 // ============================================
 // EAGER IMPORTS - Always loaded (shell components)
@@ -48,11 +49,44 @@ const FrancePage = lazy(() => import('./pages/regions/fr/FrancePage.jsx'));
 // Error Pages
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage.jsx'));
 
+// Organisation JSON-LD schema (global)
+const ORGANISATION_SCHEMA = {
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "name": "Algorythmos",
+  "url": "https://algorythmos.com",
+  "logo": "https://algorythmos.com/Algorythmos.png",
+  "description": "AI consultancy delivering secure, ROI-driven AI solutions for SMEs and enterprises in Australia and France.",
+  "areaServed": ["Australia", "France"],
+  "sameAs": [
+    "https://www.linkedin.com/company/algorythmos",
+    "https://twitter.com/algorythmos",
+    "https://github.com/algorythmos"
+  ],
+  "address": [
+    {
+      "@type": "PostalAddress",
+      "addressCountry": "AU",
+      "addressLocality": "Sydney"
+    },
+    {
+      "@type": "PostalAddress",
+      "addressCountry": "FR",
+      "addressLocality": "Suresnes"
+    }
+  ]
+};
+
 function App() {
   return (
     <>
       <GeoRouter />
       <SeoHead />
+      <Helmet>
+        <script type="application/ld+json">
+          {JSON.stringify(ORGANISATION_SCHEMA)}
+        </script>
+      </Helmet>
       <GlobalCtaTracker />
       <NavBar />
 

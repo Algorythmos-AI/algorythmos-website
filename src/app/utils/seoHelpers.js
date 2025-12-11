@@ -9,9 +9,9 @@
 export function getCanonicalBase(region) {
   switch (region) {
     case 'FR':
-      return 'https://algorythmos.com/fr';
+      return 'https://algorythmos.com/fr-fr';
     case 'AU':
-      return 'https://algorythmos.com/au';
+      return 'https://algorythmos.com/au-en';
     default:
       return 'https://algorythmos.com';
   }
@@ -56,11 +56,12 @@ export function getOgLocale(region) {
 export function generateHreflangLinks(path = '') {
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
   const cleanPath = normalizedPath === '/' ? '' : normalizedPath.replace(/\/$/, '');
-  
+
   return [
     { hreflang: 'x-default', href: `https://algorythmos.com${cleanPath}` },
     { hreflang: 'en', href: `https://algorythmos.com${cleanPath}` },
-    { hreflang: 'en-AU', href: `https://algorythmos.com/au${cleanPath}` },
-    { hreflang: 'fr-FR', href: `https://algorythmos.com/fr${cleanPath}` },
+    { hreflang: 'en-AU', href: `https://algorythmos.com/au-en${cleanPath}` },
+    { hreflang: 'fr-FR', href: `https://algorythmos.com/fr-fr${cleanPath}` },
   ];
 }
+

@@ -106,6 +106,32 @@ export default function AiWebsitesPage() {
                         "areaServed": region === "AU" ? ["Australia"] : region === "FR" ? ["France", "Europe"] : ["Worldwide"]
                     })}
                 </script>
+                <script type="application/ld+json">
+                    {JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "BreadcrumbList",
+                        "itemListElement": [
+                            {
+                                "@type": "ListItem",
+                                "position": 1,
+                                "name": "Home",
+                                "item": canonicalBase
+                            },
+                            {
+                                "@type": "ListItem",
+                                "position": 2,
+                                "name": "Services",
+                                "item": `${canonicalBase}/services`
+                            },
+                            {
+                                "@type": "ListItem",
+                                "position": 3,
+                                "name": "AI-Powered Websites",
+                                "item": canonicalUrl
+                            }
+                        ]
+                    })}
+                </script>
             </Helmet>
 
             {/* Hero Section */}
