@@ -25,7 +25,7 @@ const QuantumContactPage = () => {
   const hreflangLinks = generateHreflangLinks("/contact");
 
   const [scrollY, setScrollY] = useState(0);
-  const [showNav, setShowNav] = useState(false);
+  // scrollY used for parallax effects below
 
   // Page view tracking with UTM context
   useEffect(() => {

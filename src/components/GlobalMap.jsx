@@ -84,15 +84,15 @@ const GlobalMap = () => {
                                     ))}
 
                                     {/* Simplified continent blobs to suggest a world map */}
-                                    <div className="pointer-events-none absolute inset-0 z-[1] opacity-70">
+                                    <div className="pointer-events-none absolute inset-0 z-[1]">
                                         {/* Europe / Africa */}
-                                        <div className="absolute left-[38%] top-[32%] h-24 w-32 rounded-[40%] bg-violet-400/25 blur-xl" />
+                                        <div className="absolute left-[38%] top-[32%] h-32 w-40 rounded-[40%] bg-violet-400/50 blur-2xl" />
                                         {/* Americas */}
-                                        <div className="absolute left-[12%] top-[30%] h-28 w-40 rounded-[45%] bg-indigo-400/25 blur-xl" />
+                                        <div className="absolute left-[12%] top-[30%] h-36 w-48 rounded-[45%] bg-indigo-400/45 blur-2xl" />
                                         {/* Asia */}
-                                        <div className="absolute left-[55%] top-[28%] h-28 w-44 rounded-[45%] bg-purple-300/24 blur-xl" />
+                                        <div className="absolute left-[55%] top-[28%] h-36 w-52 rounded-[45%] bg-purple-400/40 blur-2xl" />
                                         {/* Australia */}
-                                        <div className="absolute left-[78%] top-[64%] h-16 w-20 rounded-[50%] bg-blue-400/26 blur-xl" />
+                                        <div className="absolute left-[78%] top-[64%] h-20 w-24 rounded-[50%] bg-blue-400/50 blur-2xl" />
                                     </div>
 
                                     {/* Connection arcs (static dashed lines) */}
