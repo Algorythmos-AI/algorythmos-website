@@ -52,7 +52,7 @@ const GlobalMap = () => {
                         {/* France marker with tooltip */}
                         <div
                             className="group absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer"
-                            style={{ left: "46%", top: "32%" }}
+                            style={{ left: "49%", top: "32%" }}
                             onClick={() => setActiveOffice("fr")}
                         >
                             <div
