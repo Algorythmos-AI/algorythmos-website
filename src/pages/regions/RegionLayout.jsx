@@ -3,8 +3,7 @@
 // Ensures consistent SEO, region context, and error boundaries
 
 import React from 'react';
-import { Outlet, useParams, useLocation } from 'react-router-dom';
-import { useI18n } from '../../app/i18n/I18nContext.jsx';
+import { Outlet, useLocation } from 'react-router-dom';
 
 /**
  * RegionLayout - Wrapper for region-specific routes
@@ -22,7 +21,6 @@ import { useI18n } from '../../app/i18n/I18nContext.jsx';
  * </Route>
  */
 const RegionLayout = ({ region, children }) => {
-  const { region: currentRegion } = useI18n();
   const location = useLocation();
 
   // Debug logging in development

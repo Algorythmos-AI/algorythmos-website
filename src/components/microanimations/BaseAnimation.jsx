@@ -1,6 +1,5 @@
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, Suspense } from 'react';
 import { useDeviceCapabilities } from '../../hooks/useDeviceCapabilities';
-import { motion } from 'framer-motion';
 
 // Lazy load Lottie to save bundle size
 const Lottie = React.lazy(() => import('lottie-react'));

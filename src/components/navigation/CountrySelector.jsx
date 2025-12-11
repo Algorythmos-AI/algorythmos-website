@@ -1,7 +1,6 @@
 // src/components/navigation/CountrySelector.jsx
 import React, { useState, useRef, useEffect } from "react";
 import { ChevronDown, Check } from "lucide-react";
-import { useNavigate, useLocation } from "react-router-dom";
 import { useI18n, REGIONS } from "../../app/i18n/I18nContext.jsx";
 import { FlagGlobal, FlagFR, FlagAU } from "./RegionFlags.jsx";
 import { useRegionPersistence } from "../../hooks/useRegionPersistence.js";
@@ -14,9 +13,7 @@ import { useRegionPersistence } from "../../hooks/useRegionPersistence.js";
  * - Layout Persistence
  */
 const CountrySelector = ({ variant = "desktop" }) => {
-  const { region, setLanguageAndRegion, t } = useI18n();
-  const navigate = useNavigate();
-  const location = useLocation();
+  const { region, setLanguageAndRegion } = useI18n();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
   const buttonRef = useRef(null);

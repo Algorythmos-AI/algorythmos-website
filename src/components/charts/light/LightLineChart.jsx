@@ -26,7 +26,7 @@ export default function LightLineChart({
 }) {
   const svgRef = useRef(null);
   const [tooltip, setTooltip] = useState(null);
-  const [hoveredIndex, setHoveredIndex] = useState(null);
+  // hoveredIndex state removed - not currently used
 
   // Calculate chart dimensions
   const chartWidth = typeof width === 'number' ? width : 600;
@@ -35,19 +35,17 @@ export default function LightLineChart({
   const innerHeight = chartHeight - margin.top - margin.bottom;
 
   // Calculate data bounds
-  const { xMin, xMax, yMin, yMax, xValues, yValues } = useMemo(() => {
-    if (!data.length) return { xMin: 0, xMax: 100, yMin: 0, yMax: 100, xValues: [], yValues: [] };
-    
+  const { xMin, xMax, yMin, yMax } = useMemo(() => {
+    if (!data.length) return { xMin: 0, xMax: 100, yMin: 0, yMax: 100 };
+
     const xVals = data.map(d => d[xKey]);
     const yVals = data.map(d => d[yKey]);
-    
+
     return {
       xMin: Math.min(...xVals),
       xMax: Math.max(...xVals),
       yMin: Math.min(0, Math.min(...yVals)),
       yMax: Math.max(...yVals) * 1.1, // 10% padding
-      xValues: xVals,
-      yValues: yVals,
     };
   }, [data, xKey, yKey]);
 
@@ -63,13 +61,13 @@ export default function LightLineChart({
   // Generate path for line
   const linePath = useMemo(() => {
     if (!data.length) return '';
-    
+
     const points = data.map((d, i) => {
       const x = scaleX(d[xKey]);
       const y = scaleY(d[yKey]);
       return `${i === 0 ? 'M' : 'L'} ${x} ${y}`;
     });
-    
+
     return points.join(' ');
   }, [data, xKey, yKey, scaleX, scaleY]);
 
@@ -78,19 +76,19 @@ export default function LightLineChart({
     const lines = [];
     const yTickCount = 5;
     const xTickCount = 5;
-    
+
     // Horizontal grid lines
     for (let i = 0; i <= yTickCount; i++) {
       const y = margin.top + (innerHeight / yTickCount) * i;
       lines.push({ x1: margin.left, y1: y, x2: margin.left + innerWidth, y2: y, type: 'h' });
     }
-    
+
     // Vertical grid lines
     for (let i = 0; i <= xTickCount; i++) {
       const x = margin.left + (innerWidth / xTickCount) * i;
       lines.push({ x1: x, y1: margin.top, x2: x, y2: margin.top + innerHeight, type: 'v' });
     }
-    
+
     return lines;
   }, [margin, innerWidth, innerHeight]);
 
@@ -98,33 +96,33 @@ export default function LightLineChart({
   const { xTicks, yTicks } = useMemo(() => {
     const xTickCount = 5;
     const yTickCount = 5;
-    
+
     const xTicks = [];
     for (let i = 0; i <= xTickCount; i++) {
       const value = xMin + ((xMax - xMin) / xTickCount) * i;
       xTicks.push({ value, x: scaleX(value), y: chartHeight - 5 });
     }
-    
+
     const yTicks = [];
     for (let i = 0; i <= yTickCount; i++) {
       const value = yMin + ((yMax - yMin) / yTickCount) * i;
       yTicks.push({ value, x: margin.left - 8, y: scaleY(value) });
     }
-    
+
     return { xTicks, yTicks };
   }, [xMin, xMax, yMin, yMax, scaleX, scaleY, chartHeight, margin.left]);
 
   // Handle mouse move for tooltip
   const handleMouseMove = useCallback((e) => {
     if (!svgRef.current || !data.length) return;
-    
+
     const rect = svgRef.current.getBoundingClientRect();
     const mouseX = e.clientX - rect.left;
-    
+
     // Find closest data point
     let closestIndex = 0;
     let closestDist = Infinity;
-    
+
     data.forEach((d, i) => {
       const x = scaleX(d[xKey]);
       const dist = Math.abs(x - mouseX);
@@ -133,23 +131,20 @@ export default function LightLineChart({
         closestIndex = i;
       }
     });
-    
+
     if (closestDist < 50) {
       const d = data[closestIndex];
-      setHoveredIndex(closestIndex);
       setTooltip({
         x: scaleX(d[xKey]),
         y: scaleY(d[yKey]),
         data: tooltipFormatter(d[xKey], d[yKey]),
       });
     } else {
-      setHoveredIndex(null);
       setTooltip(null);
     }
   }, [data, xKey, yKey, scaleX, scaleY, tooltipFormatter]);
 
   const handleMouseLeave = useCallback(() => {
-    setHoveredIndex(null);
     setTooltip(null);
   }, []);
 

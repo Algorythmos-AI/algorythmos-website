@@ -3,7 +3,6 @@ import { NavLink } from "react-router-dom";
 import { Home, Grid, Mail, MoreHorizontal, DollarSign } from "lucide-react"; // Icons for bottom nav
 import { useI18n } from "../../app/i18n/I18nContext";
 import { getNavItems } from "../../app/i18n/navConfig";
-import MobileMenu from "./MobileMenu";
 
 export default function BottomNavBar({ onOpenMenu }) {
     const { region, t } = useI18n();
@@ -28,7 +27,7 @@ export default function BottomNavBar({ onOpenMenu }) {
     return (
         <div className="fixed bottom-0 left-0 w-full z-40 bg-black/80 backdrop-blur-xl border-t border-white/10 lg:hidden pb-safe">
             <div className="flex items-center justify-around h-16 px-2">
-                {bottomLinks.map(({ item, icon: Icon, label }) => {
+                {bottomLinks.map(({ item, icon: IconComponent }) => {
                     if (!item) return null;
                     return (
                         <NavLink
@@ -40,7 +39,7 @@ export default function BottomNavBar({ onOpenMenu }) {
                  ${isActive ? "text-violet-400" : "text-gray-400 hover:text-gray-200"}`
                             }
                         >
-                            <Icon className="w-5 h-5" strokeWidth={2} />
+                            <IconComponent className="w-5 h-5" strokeWidth={2} />
                             <span className="text-[10px] font-medium">{t(item.key).split(" ")[0]}</span>
                         </NavLink>
                     );

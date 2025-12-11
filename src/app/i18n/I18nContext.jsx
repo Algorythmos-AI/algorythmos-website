@@ -2,7 +2,7 @@
 // Enterprise-grade i18n context for multi-region localisation
 import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { getAutoRedirectInfo, detectRegionFromBrowser } from '../routing/regionDetection';
+import { getAutoRedirectInfo } from '../routing/regionDetection';
 
 // Import translation files
 import enGlobal from './en.global.json';
@@ -94,7 +94,7 @@ export function I18nProvider({ children }) {
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, region);
-    } catch (e) {
+    } catch {
       // localStorage not available
     }
   }, [region]);
@@ -124,7 +124,7 @@ export function I18nProvider({ children }) {
             navigate(targetPath, { replace: true });
           }
         }
-      } catch (e) {
+      } catch {
         // localStorage not available
       }
     }

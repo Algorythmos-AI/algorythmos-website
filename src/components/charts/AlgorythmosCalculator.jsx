@@ -108,7 +108,9 @@ export default function AlgorythmosCalculator() {
 
     const ls = localStorage.getItem("alg_calc_v1");
     if (!Array.from(p.keys()).length && ls) {
-      try { Object.assign(draft, JSON.parse(ls)); } catch {}
+      try { Object.assign(draft, JSON.parse(ls)); } catch {
+        // Intentionally empty: malformed JSON should be ignored
+      }
     }
     setS(draft);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -153,8 +155,8 @@ export default function AlgorythmosCalculator() {
   const applyPreset = (name) => {
     const presets = {
       Starter: { coverage: 0.4, hourly: 32, aiCost: 0.005, algFee: 2000, setup: 6000 },
-      Growth:  { coverage: 0.6, hourly: 38, aiCost: 0.006, algFee: 4500, setup: 8000 },
-      Scale:   { coverage: 0.75, hourly: 45, aiCost: 0.0055, algFee: 0, setup: 12000 },
+      Growth: { coverage: 0.6, hourly: 38, aiCost: 0.006, algFee: 4500, setup: 8000 },
+      Scale: { coverage: 0.75, hourly: 45, aiCost: 0.0055, algFee: 0, setup: 12000 },
     };
     setS((x) => ({ ...x, ...presets[name] }));
     track("preset_applied", { name, state: { ...s, ...presets[name] } });
@@ -181,50 +183,50 @@ export default function AlgorythmosCalculator() {
     track("share_copied", { url: u.toString() });
   };
 
-           const exportCSV = () => {
-           const rows = [
-             ["currency", s.currency],
-             ["volume (V)", s.volume],
-             ["manualCost (M)", baselineM],
-             ["coverage (c)", s.coverage],
-             ["reviewMin (r)", s.reviewMin],
-             ["handleMin (h)", s.handleMin],
-             ["hourly (w)", s.hourly],
-             ["aiCost (a)", s.aiCost],
-             ["algFee (F)", s.algFee],
-             ["setup (S)", s.setup],
-             ["overheadPct", s.overheadPct],
-             ["H_review (h)", out.H_review],
-             ["H_residual (h)", out.H_residual],
-             ["C_labor", out.C_labor],
-             ["C_AI", out.C_AI],
-             ["C_proposed", out.C_proposed],
-             ["Savings", out.Savings],
-             ["Invest", out.Invest],
-             ["ROI (ratio)", out.ROI],
-             ["ROI %", out.ROI * 100],
-             ["Payback (months)", out.Payback],
-           ];
-           
-           // Harden CSV export: wrap cells in quotes and escape double quotes
-           const escapeCSV = (value) => {
-             const str = String(value);
-             // Escape double quotes by doubling them
-             const escaped = str.replace(/"/g, '""');
-             // Wrap in quotes to handle commas, newlines, and quotes
-             return `"${escaped}"`;
-           };
-           
-           const csv = "key,value\n" + rows.map(([k, v]) => `${escapeCSV(k)},${escapeCSV(v)}`).join("\n");
-           const blob = new Blob([csv], { type: "text/csv" });
-           const a = document.createElement("a");
-           a.href = URL.createObjectURL(blob);
-           a.download = "algorythmos-roi.csv";
-           document.body.appendChild(a);
-           a.click();
-           a.remove();
-           track("export_csv", { rows: rows.length });
-         };
+  const exportCSV = () => {
+    const rows = [
+      ["currency", s.currency],
+      ["volume (V)", s.volume],
+      ["manualCost (M)", baselineM],
+      ["coverage (c)", s.coverage],
+      ["reviewMin (r)", s.reviewMin],
+      ["handleMin (h)", s.handleMin],
+      ["hourly (w)", s.hourly],
+      ["aiCost (a)", s.aiCost],
+      ["algFee (F)", s.algFee],
+      ["setup (S)", s.setup],
+      ["overheadPct", s.overheadPct],
+      ["H_review (h)", out.H_review],
+      ["H_residual (h)", out.H_residual],
+      ["C_labor", out.C_labor],
+      ["C_AI", out.C_AI],
+      ["C_proposed", out.C_proposed],
+      ["Savings", out.Savings],
+      ["Invest", out.Invest],
+      ["ROI (ratio)", out.ROI],
+      ["ROI %", out.ROI * 100],
+      ["Payback (months)", out.Payback],
+    ];
+
+    // Harden CSV export: wrap cells in quotes and escape double quotes
+    const escapeCSV = (value) => {
+      const str = String(value);
+      // Escape double quotes by doubling them
+      const escaped = str.replace(/"/g, '""');
+      // Wrap in quotes to handle commas, newlines, and quotes
+      return `"${escaped}"`;
+    };
+
+    const csv = "key,value\n" + rows.map(([k, v]) => `${escapeCSV(k)},${escapeCSV(v)}`).join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "algorythmos-roi.csv";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    track("export_csv", { rows: rows.length });
+  };
 
   return (
     <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-5">
@@ -353,16 +355,16 @@ export default function AlgorythmosCalculator() {
         </div>
       </div>
 
-                   {/* Sensitivity chart (desktop) - lazy loaded */}
-             <Suspense fallback={<div className="mt-6 hidden md:block rounded-xl border border-slate-800 bg-slate-900/60 p-4"><div className="h-56 flex items-center justify-center text-slate-400">{t("ui.calculator.chart.loading")}</div></div>}>
-               <RoiCoverageChart chartData={chartData} currentCoverage={s.coverage} />
-             </Suspense>
+      {/* Sensitivity chart (desktop) - lazy loaded */}
+      <Suspense fallback={<div className="mt-6 hidden md:block rounded-xl border border-slate-800 bg-slate-900/60 p-4"><div className="h-56 flex items-center justify-center text-slate-400">{t("ui.calculator.chart.loading")}</div></div>}>
+        <RoiCoverageChart chartData={chartData} currentCoverage={s.coverage} />
+      </Suspense>
 
       {/* Equations & breakdown */}
       <details className="mt-6 rounded-xl border border-slate-800 bg-slate-900/60 p-4">
         <summary className="cursor-pointer select-none text-sm font-semibold text-slate-200">{t("ui.calculator.actions.showEquations")}</summary>
         <pre className="mt-3 whitespace-pre-wrap break-words text-xs text-slate-300">
-{`H_review = (V × c × r) / 60 = (${s.volume} × ${s.coverage.toFixed(2)} × ${s.reviewMin}) / 60 = ${out.H_review.toFixed(2)} h
+          {`H_review = (V × c × r) / 60 = (${s.volume} × ${s.coverage.toFixed(2)} × ${s.reviewMin}) / 60 = ${out.H_review.toFixed(2)} h
 H_residual = (V × (1 - c) × h) / 60 = (${s.volume} × ${(1 - s.coverage).toFixed(2)} × ${s.handleMin}) / 60 = ${out.H_residual.toFixed(2)} h
 C_labor = (H_review + H_residual) × w = (${out.H_review.toFixed(2)} + ${out.H_residual.toFixed(2)}) × ${s.hourly} = ${fmtC(out.C_labor)}
 C_AI = V × c × a = ${s.volume} × ${s.coverage.toFixed(2)} × ${s.aiCost} = ${fmtC(out.C_AI)}

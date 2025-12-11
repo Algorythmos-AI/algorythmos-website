@@ -36,7 +36,9 @@ export function persistUtmFromLocation() {
       });
       sessionStorage.setItem(STORE_KEY, JSON.stringify(found));
     }
-  } catch {}
+  } catch {
+    // Intentionally empty: localStorage failures should not break UTM tracking
+  }
 }
 
 /** Read stored UTMs. */
@@ -58,7 +60,9 @@ export function recordLastCta(name) {
       LAST_CTA_KEY,
       JSON.stringify({ id: String(name), ts: Date.now() })
     );
-  } catch {}
+  } catch {
+    // Intentionally empty: localStorage failures should not break CTA tracking
+  }
 }
 
 /** Read the last clicked CTA name, if any. */

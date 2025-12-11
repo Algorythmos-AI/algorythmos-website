@@ -23,14 +23,14 @@ export default function AnimatedSection({
   delay = 0,
   animation = 'fadeUp',
   threshold = 0.1,
-  as: Component = 'div',
+  as: Tag = 'div',
   style = {},
   ...rest
 }) {
   const [ref, isInView] = useInView({ threshold, once: true });
-  
+
   // Check for reduced motion preference
-  const prefersReducedMotion = typeof window !== 'undefined' 
+  const prefersReducedMotion = typeof window !== 'undefined'
     && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
   const animationClass = {
@@ -42,7 +42,7 @@ export default function AnimatedSection({
   const combinedClassName = `${animationClass} ${isInView ? 'in-view' : ''} ${className}`.trim();
 
   return (
-    <Component
+    <Tag
       ref={ref}
       className={prefersReducedMotion ? className : combinedClassName}
       style={{
@@ -52,7 +52,7 @@ export default function AnimatedSection({
       {...rest}
     >
       {children}
-    </Component>
+    </Tag>
   );
 }
 
