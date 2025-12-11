@@ -1,6 +1,6 @@
 import React from "react";
 import { Helmet } from "react-helmet-async";
-import { PenTool, Shield, Cpu, Layers } from "lucide-react";
+import { PenTool, Shield, Cpu, Layers, Globe, Mic, Bot, Zap, BarChart3, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useI18n } from "../../app/i18n/I18nContext.jsx";
 import { getCanonicalUrl, getOgLocale, generateHreflangLinks } from "../../app/utils/seoHelpers.js";
@@ -12,6 +12,54 @@ const BlogPage = () => {
   const hreflangLinks = generateHreflangLinks('/blog');
 
   const blogPosts = [
+    {
+      icon: Globe,
+      title: t("blog.posts.4.title"),
+      snippet: t("blog.posts.4.snippet"),
+      date: t("blog.posts.4.date"),
+      gradient: "from-emerald-500 to-teal-500",
+      slug: "ai-websites-advantage"
+    },
+    {
+      icon: Mic,
+      title: t("blog.posts.5.title"),
+      snippet: t("blog.posts.5.snippet"),
+      date: t("blog.posts.5.date"),
+      gradient: "from-blue-500 to-indigo-500",
+      slug: "voice-ai-automation"
+    },
+    {
+      icon: Bot,
+      title: t("blog.posts.6.title"),
+      snippet: t("blog.posts.6.snippet"),
+      date: t("blog.posts.6.date"),
+      gradient: "from-purple-500 to-pink-500",
+      slug: "chatbots-agents-rag"
+    },
+    {
+      icon: Zap,
+      title: t("blog.posts.7.title"),
+      snippet: t("blog.posts.7.snippet"),
+      date: t("blog.posts.7.date"),
+      gradient: "from-orange-500 to-red-500",
+      slug: "future-sme-websites"
+    },
+    {
+      icon: BarChart3,
+      title: t("blog.posts.8.title"),
+      snippet: t("blog.posts.8.snippet"),
+      date: t("blog.posts.8.date"),
+      gradient: "from-cyan-500 to-blue-500",
+      slug: "core-web-vitals"
+    },
+    {
+      icon: Users,
+      title: t("blog.posts.9.title"),
+      snippet: t("blog.posts.9.snippet"),
+      date: t("blog.posts.9.date"),
+      gradient: "from-amber-500 to-orange-500",
+      slug: "ai-consultancy-australia"
+    },
     {
       icon: Shield,
       title: t("blog.posts.0.title"),
