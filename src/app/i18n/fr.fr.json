@@ -1,5 +1,5 @@
 {
-  "_AI_AGENT_NOTE": "Read /docs/AI_AGENT_WORKFLOW.md before editing. Always update en.global.json in sync.",
+  "_AI_AGENT_NOTE": "🚨 AVERTISSEMENT IA : Ce fichier doit toujours refléter en.global.json. Exécutez : npm run i18n:check avant chaque commit. Ne supprimez ni ne renommez les clés sans mettre à jour EN. Voir /docs/AI_AGENT_WORKFLOW.md",
   "nav.home": "Accueil",
   "nav.services": "Services",
   "nav.pricing": "Tarifs",

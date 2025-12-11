@@ -1,5 +1,5 @@
 {
-  "_AI_AGENT_NOTE": "Read /docs/AI_AGENT_WORKFLOW.md before editing. Always update fr.fr.json in sync.",
+  "_AI_AGENT_NOTE": "🚨 AI WARNING: This file must always mirror fr.fr.json. Run: npm run i18n:check before committing. Never remove or rename keys without updating FR equivalents. See /docs/AI_AGENT_WORKFLOW.md",
   "nav.home": "Home",
   "nav.services": "Services",
   "nav.pricing": "Pricing",
