@@ -10,6 +10,7 @@ import {
 import { withUtm } from "../../../app/utils/utm";
 import { useI18n } from "../../../app/i18n/I18nContext.jsx";
 import { getCanonicalUrl, getOgLocale, generateHreflangLinks, getCanonicalBase } from "../../../app/utils/seoHelpers.js";
+import LocalizedCTA from "../../../components/ui/LocalizedCTA.jsx";
 
 const CALENDLY_URL = "https://calendly.com/algorythmos-france/30min";
 
@@ -409,6 +410,9 @@ export default function AiWebsitesPage() {
                     </div>
                 </div>
             </section>
+
+            {/* Region-specific CTA */}
+            <LocalizedCTA />
         </div>
     );
 }

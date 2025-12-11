@@ -6,6 +6,7 @@ import ServiceCard from "./services/ServiceCard";
 import { servicesList } from "../../data/services";
 import { useI18n } from "../../app/i18n/I18nContext.jsx";
 import { getCanonicalUrl, getOgLocale, generateHreflangLinks } from "../../app/utils/seoHelpers.js";
+import LocalizedCTA from "../../components/ui/LocalizedCTA.jsx";
 
 // Lazy load ScrollSequence for performance
 const ScrollSequence = lazy(() => import("../../components/microanimations/ScrollSequence.jsx"));
@@ -148,6 +149,9 @@ export default function ServicesPage() {
             />
           ))}
         </section>
+
+        {/* Region-specific CTA */}
+        <LocalizedCTA />
       </main>
     </div>
   );

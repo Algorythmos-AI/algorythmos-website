@@ -4,6 +4,7 @@ import { PenTool, Shield, Cpu, Layers, Globe, Mic, Bot, Zap, BarChart3, Users } 
 import { Link } from "react-router-dom";
 import { useI18n } from "../../app/i18n/I18nContext.jsx";
 import { getCanonicalUrl, getOgLocale, generateHreflangLinks } from "../../app/utils/seoHelpers.js";
+import LocalizedCTA from "../../components/ui/LocalizedCTA.jsx";
 
 const BlogPage = () => {
   const { t, region, getRegionPath } = useI18n();
@@ -141,6 +142,9 @@ const BlogPage = () => {
             );
           })}
         </div>
+
+        {/* Region-specific CTA */}
+        <LocalizedCTA />
       </main>
     </div>
   );
