@@ -7,6 +7,7 @@ import { track } from "../../app/utils/analytics";
 import { persistUtmFromLocation, readStoredUtm } from "../../app/utils/utm";
 import { useI18n } from "../../app/i18n/I18nContext";
 import { getCanonicalUrl, getOgLocale, generateHreflangLinks, getCanonicalBase } from "../../app/utils/seoHelpers.js";
+import GlobalMap from "../../components/GlobalMap";
 // Footer is global via App.jsx
 
 const SERVICE_ID = "service_m5jcw4i";
@@ -136,7 +137,7 @@ const QuantumContactPage = () => {
         <meta name="twitter:description" content={t("contactPage.meta.description")} />
         <meta name="twitter:image" content={`${canonicalBase}/Algorythmos.png`} />
       </Helmet>
-      
+
       {/* Global Navbar is rendered by App.jsx */}
 
       {/* Decorative background (optional) */}
@@ -171,6 +172,9 @@ const QuantumContactPage = () => {
           {t("contactPage.hero.subtitle")}
         </p>
 
+        {/* Global Map Section */}
+        <GlobalMap />
+
         <div className="flex justify-center">
           <form
             className="w-full max-w-lg mx-auto bg-white/5 rounded-2xl p-6 sm:p-8 shadow-lg border border-gray-800 flex flex-col gap-4 sm:gap-6 backdrop-blur-md"
@@ -202,9 +206,8 @@ const QuantumContactPage = () => {
                 onChange={handleChange}
                 required
                 aria-invalid={!!errors.name}
-                className={`w-full pl-4 pr-4 py-3 rounded-lg bg-gray-900/80 text-white text-base focus:outline-none focus:ring-2 focus:ring-blue-400 border border-gray-700 transition-all duration-300 ${
-                  errors.name ? "border-red-500 ring-red-400" : ""
-                }`}
+                className={`w-full pl-4 pr-4 py-3 rounded-lg bg-gray-900/80 text-white text-base focus:outline-none focus:ring-2 focus:ring-blue-400 border border-gray-700 transition-all duration-300 ${errors.name ? "border-red-500 ring-red-400" : ""
+                  }`}
                 autoComplete="name"
               />
               {errors.name && (
@@ -225,9 +228,8 @@ const QuantumContactPage = () => {
                 onChange={handleChange}
                 required
                 aria-invalid={!!errors.email}
-                className={`w-full pl-4 pr-4 py-3 rounded-lg bg-gray-900/80 text-white text-base focus:outline-none focus:ring-2 focus:ring-purple-400 border border-gray-700 transition-all duration-300 ${
-                  errors.email ? "border-red-500 ring-red-400" : ""
-                }`}
+                className={`w-full pl-4 pr-4 py-3 rounded-lg bg-gray-900/80 text-white text-base focus:outline-none focus:ring-2 focus:ring-purple-400 border border-gray-700 transition-all duration-300 ${errors.email ? "border-red-500 ring-red-400" : ""
+                  }`}
                 autoComplete="email"
                 inputMode="email"
               />
@@ -249,9 +251,8 @@ const QuantumContactPage = () => {
                 onChange={handleChange}
                 required
                 aria-invalid={!!errors.message}
-                className={`w-full pl-4 pr-4 py-3 rounded-lg bg-gray-900/80 text-white text-base focus:outline-none focus:ring-2 focus:ring-pink-400 border border-gray-700 transition-all duration-300 resize-none ${
-                  errors.message ? "border-red-500 ring-red-400" : ""
-                }`}
+                className={`w-full pl-4 pr-4 py-3 rounded-lg bg-gray-900/80 text-white text-base focus:outline-none focus:ring-2 focus:ring-pink-400 border border-gray-700 transition-all duration-300 resize-none ${errors.message ? "border-red-500 ring-red-400" : ""
+                  }`}
                 autoComplete="off"
               />
               {errors.message && (
