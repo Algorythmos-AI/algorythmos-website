@@ -1,5 +1,11 @@
 # Algorythmos
 
+> ## ⚠️ IMPORTANT FOR AI AGENTS
+> Before making ANY code changes, you **MUST** read:
+> **[/docs/AI_AGENT_WORKFLOW.md](./docs/AI_AGENT_WORKFLOW.md)**
+>
+> This file defines the translation (EN/FR), SEO, UX, routing, and content rules for the Algorythmos platform.
+
 <!-- Deployment trigger: Ensuring latest stable version is deployed -->
 
 A professional website for **Algorythmos**, a boutique AI consultancy delivering agentic automation, document intelligence, SQL analytics, and MLOps engineering for SMEs across Europe and Australia.

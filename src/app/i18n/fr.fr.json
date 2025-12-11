@@ -1,4 +1,5 @@
 {
+  "_AI_AGENT_NOTE": "Read /docs/AI_AGENT_WORKFLOW.md before editing. Always update en.global.json in sync.",
   "nav.home": "Accueil",
   "nav.services": "Services",
   "nav.pricing": "Tarifs",
