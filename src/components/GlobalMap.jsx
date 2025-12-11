@@ -3,7 +3,7 @@
  * 
  * Interactive world map showing Algorythmos offices in France and Australia.
  * Uses i18n for EN/FR localization.
- * Features a real SVG world map with continent outlines.
+ * Features a recognizable SVG world map with continent silhouettes.
  */
 import React from "react";
 import { motion } from "framer-motion"; // Used for map card and marker animations
@@ -17,8 +17,8 @@ const GlobalMap = () => {
             id: "fr",
             titleKey: "contactPage.globalMap.france.title",
             roleKey: "contactPage.globalMap.france.role",
-            top: "33%",
-            left: "47%",
+            top: "32%",
+            left: "48%",
             isHQ: true,
         },
         {
@@ -53,135 +53,201 @@ const GlobalMap = () => {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, amount: 0.3 }}
                     transition={{ duration: 0.6, ease: "easeOut" }}
-                    className="relative z-[2] rounded-[2rem] bg-gradient-to-br from-violet-600/60 via-indigo-700/60 to-slate-900/80 p-[1.5px] shadow-[0_32px_90px_rgba(0,0,0,0.55)]"
+                    className="relative z-[2] rounded-[2rem] bg-gradient-to-br from-violet-600/50 via-indigo-700/50 to-slate-900/70 p-[1.5px] shadow-[0_32px_90px_rgba(0,0,0,0.55)]"
                 >
-                    <div className="relative overflow-hidden rounded-[1.4rem] bg-slate-950/80 px-4 py-6 sm:px-8 sm:py-8">
-                        {/* Glows */}
-                        <div className="pointer-events-none absolute inset-0">
-                            <div className="absolute -left-24 top-10 h-72 w-72 rounded-full bg-violet-500/20 blur-[110px]" />
-                            <div className="absolute right-0 bottom-0 h-80 w-80 rounded-full bg-blue-400/20 blur-[120px]" />
+                    <div className="relative overflow-hidden rounded-[1.4rem] bg-slate-950/95 px-4 py-6 sm:px-8 sm:py-8">
+                        {/* Background glows - BEHIND the map with -z-10 */}
+                        <div className="pointer-events-none absolute inset-0 -z-10">
+                            <div className="absolute -left-24 top-10 h-72 w-72 rounded-full bg-violet-500/15 blur-[110px]" />
+                            <div className="absolute right-0 bottom-0 h-80 w-80 rounded-full bg-blue-400/15 blur-[120px]" />
                         </div>
 
-                        {/* Real World Map Area */}
+                        {/* World Map Container */}
                         <div className="mx-auto max-w-[1200px] w-full">
-                            <div className="relative w-full aspect-[16/9] min-h-[300px] sm:min-h-[380px] lg:min-h-[420px] rounded-[1.25rem] bg-gradient-to-br from-slate-900/90 via-slate-900/70 to-slate-900/95 border border-slate-700/60 overflow-hidden">
+                            <div className="relative w-full aspect-[16/9] min-h-[300px] sm:min-h-[380px] lg:min-h-[420px] rounded-[1.4rem] bg-slate-950/90 overflow-hidden border border-slate-800/60">
 
                                 {/* SVG World Map */}
                                 <svg
-                                    viewBox="0 0 1000 500"
+                                    viewBox="0 0 1200 600"
                                     className="absolute inset-0 h-full w-full"
                                     preserveAspectRatio="xMidYMid slice"
                                     aria-hidden="true"
                                 >
+                                    {/* Grid pattern */}
                                     <defs>
-                                        {/* Grid pattern */}
                                         <pattern
-                                            id="global-map-grid"
+                                            id="map-grid"
                                             x="0"
                                             y="0"
-                                            width="40"
-                                            height="40"
+                                            width="50"
+                                            height="50"
                                             patternUnits="userSpaceOnUse"
                                         >
                                             <path
-                                                d="M 40 0 L 0 0 0 40"
-                                                stroke="rgba(100,116,139,0.2)"
+                                                d="M 50 0 L 0 0 0 50"
+                                                stroke="rgba(148,163,184,0.18)"
                                                 strokeWidth="0.5"
                                                 fill="none"
                                             />
                                         </pattern>
-
-                                        {/* Center glow gradient */}
-                                        <radialGradient id="global-map-glow" cx="50%" cy="50%" r="70%">
-                                            <stop offset="0%" stopColor="#6366F1" stopOpacity="0.08" />
-                                            <stop offset="100%" stopColor="#0F172A" stopOpacity="0" />
-                                        </radialGradient>
                                     </defs>
 
                                     {/* Grid background */}
-                                    <rect width="1000" height="500" fill="url(#global-map-grid)" />
-                                    <rect width="1000" height="500" fill="url(#global-map-glow)" />
+                                    <rect width="1200" height="600" fill="url(#map-grid)" />
 
-                                    {/* World Map Continents - HIGH VISIBILITY VERSION */}
+                                    {/* ACTUAL WORLD MAP CONTINENTS - Recognizable silhouettes */}
                                     <g
-                                        fill="rgba(139,92,246,0.55)"
-                                        stroke="rgba(255,255,255,0.3)"
-                                        strokeWidth="1.5"
+                                        className="world-map"
+                                        fill="rgba(168, 85, 247, 0.75)"
+                                        stroke="rgba(15, 23, 42, 0.65)"
+                                        strokeWidth="2"
                                         strokeLinejoin="round"
                                     >
-                                        {/* North America - Large prominent shape */}
-                                        <path d="M 60 60 Q 85 50, 130 55 L 175 65 Q 210 75, 235 95 L 255 120 Q 270 145, 265 175 L 245 205 Q 220 235, 185 250 L 145 260 Q 110 265, 85 245 L 60 215 Q 45 185, 42 150 L 45 110 Q 48 80, 60 60 Z" />
+                                        {/* NORTH AMERICA - Distinctive shape with east coast, Florida, Mexico */}
+                                        <path d="
+                                            M 120 80 
+                                            L 180 60 L 260 55 L 320 70 L 340 90
+                                            L 350 120 L 340 150 L 320 170
+                                            L 290 200 L 280 240 L 295 280 L 280 310
+                                            L 250 330 L 260 360 L 240 380 L 220 370
+                                            L 200 340 L 180 300 L 160 260
+                                            L 140 220 L 120 180 L 100 140
+                                            L 95 110 L 105 90 Z
+                                        " />
 
-                                        {/* Central America */}
-                                        <path d="M 180 255 Q 195 260, 210 275 L 225 300 Q 232 315, 225 330 L 210 340 Q 195 345, 185 330 L 178 305 Q 175 280, 180 255 Z" />
+                                        {/* GREENLAND */}
+                                        <path d="
+                                            M 380 50 L 420 40 L 470 50 L 490 80 
+                                            L 480 120 L 440 140 L 395 130 
+                                            L 370 100 L 375 65 Z
+                                        " />
 
-                                        {/* South America - Distinctive shape */}
-                                        <path d="M 225 340 Q 250 335, 280 350 L 310 385 Q 325 420, 318 465 L 295 505 Q 270 535, 240 545 L 210 538 Q 185 520, 178 480 L 185 430 Q 195 380, 210 350 Q 218 342, 225 340 Z" />
+                                        {/* CENTRAL AMERICA & CARIBBEAN */}
+                                        <path d="
+                                            M 240 385 L 265 395 L 285 420 
+                                            L 290 450 L 275 465 L 255 455 
+                                            L 240 430 L 235 400 Z
+                                        " />
 
-                                        {/* Greenland */}
-                                        <path d="M 310 35 Q 340 28, 375 40 L 400 60 Q 410 82, 395 100 L 360 108 Q 325 105, 305 85 L 298 55 Q 300 40, 310 35 Z" />
+                                        {/* SOUTH AMERICA - Distinctive triangular shape */}
+                                        <path d="
+                                            M 290 470 L 340 450 L 380 480 
+                                            L 400 530 L 390 600 L 360 650
+                                            L 320 680 L 280 660 L 260 600
+                                            L 270 540 L 280 490 Z
+                                        " />
 
-                                        {/* Iceland */}
-                                        <path d="M 400 65 Q 415 58, 428 68 L 432 82 Q 428 92, 415 95 L 402 88 Q 395 78, 400 65 Z" />
+                                        {/* EUROPE - Clear UK, Iberia, Italy boot, Scandinavia */}
+                                        <path d="
+                                            M 520 100 L 560 80 L 600 90 L 640 100
+                                            L 680 120 L 700 150 L 690 190
+                                            L 660 220 L 620 230 L 580 225
+                                            L 550 210 L 530 180 L 510 150
+                                            L 515 120 Z
+                                        " />
 
-                                        {/* UK & Ireland */}
-                                        <path d="M 430 100 Q 448 92, 460 108 L 458 130 Q 450 142, 435 140 L 425 125 Q 422 110, 430 100 Z" />
+                                        {/* UK & IRELAND */}
+                                        <path d="
+                                            M 490 120 L 510 110 L 525 125 
+                                            L 520 150 L 500 160 L 485 145 L 488 125 Z
+                                        " />
 
-                                        {/* Europe - Clear distinct shape */}
-                                        <path d="M 460 85 Q 490 72, 530 80 L 575 95 Q 600 110, 608 135 L 600 165 Q 585 185, 555 195 L 510 202 Q 475 205, 455 185 L 440 155 Q 435 120, 460 85 Z" />
+                                        {/* SCANDINAVIA */}
+                                        <path d="
+                                            M 580 50 L 620 40 L 660 60 L 680 90
+                                            L 670 120 L 640 110 L 600 90 L 580 65 Z
+                                        " />
 
-                                        {/* Scandinavia */}
-                                        <path d="M 510 40 Q 535 32, 565 48 L 585 75 Q 595 95, 580 115 L 555 108 Q 525 95, 515 72 L 510 40 Z" />
+                                        {/* AFRICA - Large distinctive shape */}
+                                        <path d="
+                                            M 560 245 L 620 235 L 680 260 L 720 300
+                                            L 740 360 L 730 430 L 700 490
+                                            L 650 540 L 590 550 L 540 520
+                                            L 510 470 L 500 400 L 510 340
+                                            L 530 290 L 550 255 Z
+                                        " />
 
-                                        {/* Africa - Large prominent shape */}
-                                        <path d="M 480 210 Q 520 200, 565 218 L 608 255 Q 635 300, 628 360 L 605 425 Q 575 475, 535 498 L 490 510 Q 450 502, 430 465 L 422 405 Q 430 340, 455 280 L 475 235 Q 478 218, 480 210 Z" />
+                                        {/* MIDDLE EAST */}
+                                        <path d="
+                                            M 700 200 L 760 190 L 810 210 L 830 250
+                                            L 810 290 L 760 300 L 720 280 L 700 240 Z
+                                        " />
 
-                                        {/* Middle East */}
-                                        <path d="M 595 175 Q 630 168, 668 182 L 695 210 Q 705 238, 690 260 L 655 268 Q 618 265, 600 240 L 590 205 Q 592 182, 595 175 Z" />
+                                        {/* RUSSIA / ASIA - Large spanning shape */}
+                                        <path d="
+                                            M 700 60 L 800 45 L 920 50 L 1020 70
+                                            L 1100 100 L 1130 150 L 1100 190
+                                            L 1020 210 L 920 200 L 820 180
+                                            L 750 160 L 710 130 L 700 90 Z
+                                        " />
 
-                                        {/* Russia & Central Asia - Large sprawling shape */}
-                                        <path d="M 575 35 Q 660 22, 770 30 L 880 50 Q 940 65, 965 92 L 950 128 Q 920 155, 870 168 L 775 175 Q 700 172, 625 155 L 565 135 Q 545 115, 550 88 L 575 35 Z" />
+                                        {/* INDIA - Distinctive triangular peninsula */}
+                                        <path d="
+                                            M 840 280 L 890 270 L 930 300
+                                            L 940 360 L 910 420 L 870 440
+                                            L 830 410 L 820 350 L 830 300 Z
+                                        " />
 
-                                        {/* South Asia (India subcontinent) */}
-                                        <path d="M 685 215 Q 725 208, 765 228 L 790 268 Q 805 315, 785 365 L 750 392 Q 710 400, 685 370 L 670 320 Q 665 265, 685 215 Z" />
+                                        {/* CHINA / EAST ASIA */}
+                                        <path d="
+                                            M 950 180 L 1020 170 L 1080 200
+                                            L 1100 260 L 1070 320 L 1010 340
+                                            L 960 310 L 940 260 L 945 210 Z
+                                        " />
 
-                                        {/* Southeast Asia */}
-                                        <path d="M 805 245 Q 845 238, 885 258 L 915 295 Q 930 335, 910 375 L 865 398 Q 825 405, 800 372 L 790 325 Q 795 280, 805 245 Z" />
+                                        {/* JAPAN - Archipelago shape */}
+                                        <path d="
+                                            M 1100 180 L 1120 170 L 1140 190
+                                            L 1150 240 L 1135 280 L 1110 270
+                                            L 1095 230 L 1100 195 Z
+                                        " />
 
-                                        {/* East Asia (China, Korea) */}
-                                        <path d="M 820 115 Q 870 102, 930 118 L 975 158 Q 998 195, 985 235 L 945 262 Q 895 275, 845 250 L 815 210 Q 798 160, 820 115 Z" />
+                                        {/* SOUTHEAST ASIA */}
+                                        <path d="
+                                            M 980 360 L 1030 350 L 1070 380
+                                            L 1080 430 L 1050 470 L 1000 480
+                                            L 960 450 L 955 400 L 970 365 Z
+                                        " />
 
-                                        {/* Japan */}
-                                        <path d="M 945 125 Q 968 118, 982 140 L 988 178 Q 985 202, 968 210 L 952 198 Q 940 172, 945 125 Z" />
+                                        {/* INDONESIA / PHILIPPINES */}
+                                        <path d="
+                                            M 1000 490 L 1060 480 L 1120 510
+                                            L 1140 550 L 1100 570 L 1040 560
+                                            L 990 530 L 990 500 Z
+                                        " />
 
-                                        {/* Indonesia & Malaysia */}
-                                        <path d="M 855 385 Q 895 378, 940 398 L 978 425 Q 992 452, 972 478 L 928 492 Q 882 488, 855 458 L 845 425 Q 848 398, 855 385 Z" />
+                                        {/* AUSTRALIA - Iconic shape */}
+                                        <path d="
+                                            M 1020 480 L 1100 460 L 1160 500
+                                            L 1180 560 L 1160 620 L 1100 650
+                                            L 1030 630 L 990 580 L 1000 520 Z
+                                        " />
 
-                                        {/* Australia - Prominent and correctly positioned */}
-                                        <path d="M 850 420 Q 900 408, 960 428 L 1010 468 Q 1035 510, 1020 560 L 980 592 Q 925 605, 865 588 L 825 545 Q 805 498, 820 455 Q 832 432, 850 420 Z" />
-
-                                        {/* New Zealand */}
-                                        <path d="M 1015 545 Q 1030 538, 1042 555 L 1048 582 Q 1045 598, 1030 602 L 1015 592 Q 1008 572, 1015 545 Z" />
+                                        {/* NEW ZEALAND */}
+                                        <path d="
+                                            M 1200 580 L 1220 570 L 1235 600
+                                            L 1225 640 L 1200 650 L 1190 620 Z
+                                        " />
                                     </g>
 
-                                    {/* France marker glow - subtle halo */}
-                                    <circle cx="475" cy="130" r="35" fill="rgba(244,114,182,0.25)" />
-
-                                    {/* Australia marker glow - subtle halo */}
-                                    <circle cx="920" cy="490" r="30" fill="rgba(56,189,248,0.25)" />
-
-                                    {/* Dashed great-circle arc from France to Australia */}
+                                    {/* Connection arc - ABOVE continents, high visibility */}
                                     <path
-                                        d="M 475 140 Q 600 90, 750 220 Q 850 350, 915 480"
-                                        stroke="rgba(255,255,255,0.6)"
-                                        strokeWidth="2.5"
-                                        strokeDasharray="10 8"
+                                        d="M 580 175 Q 720 100, 900 280 Q 1020 420, 1080 540"
+                                        stroke="rgba(248, 250, 252, 0.9)"
+                                        strokeWidth="3"
+                                        strokeDasharray="8 10"
                                         strokeLinecap="round"
                                         fill="none"
                                     />
+
+                                    {/* France marker glow */}
+                                    <circle cx="580" cy="175" r="25" fill="rgba(244,114,182,0.4)" />
+
+                                    {/* Australia marker glow */}
+                                    <circle cx="1080" cy="560" r="22" fill="rgba(56,189,248,0.4)" />
                                 </svg>
 
-                                {/* Location markers */}
+                                {/* Location markers - positioned on real geographic locations */}
                                 {locations.map((loc) => (
                                     <motion.button
                                         key={loc.id}
@@ -194,14 +260,14 @@ const GlobalMap = () => {
                                         type="button"
                                         aria-label={t(loc.titleKey)}
                                     >
-                                        {/* Pulse dot */}
+                                        {/* Pulsing marker */}
                                         <span className="relative flex h-10 w-10 items-center justify-center">
-                                            <span className={`absolute inline-flex h-8 w-8 animate-ping rounded-full ${loc.isHQ ? "bg-pink-400/50" : "bg-sky-400/50"
+                                            <span className={`absolute inline-flex h-8 w-8 animate-ping rounded-full ${loc.isHQ ? "bg-pink-400/60" : "bg-sky-400/60"
                                                 }`} />
                                             <span
-                                                className={`relative inline-flex h-5 w-5 rounded-full border-2 border-white/80 shadow-lg ${loc.isHQ
-                                                    ? "bg-gradient-to-br from-pink-400 to-orange-400 shadow-pink-500/50"
-                                                    : "bg-gradient-to-br from-sky-400 to-blue-500 shadow-sky-500/50"
+                                                className={`relative inline-flex h-5 w-5 rounded-full ring-2 ring-white/80 shadow-lg ${loc.isHQ
+                                                    ? "bg-pink-400 shadow-pink-500/60"
+                                                    : "bg-sky-400 shadow-sky-500/60"
                                                     }`}
                                             />
                                         </span>
@@ -229,11 +295,11 @@ const GlobalMap = () => {
                         <div className="mt-5 flex flex-wrap items-center justify-between gap-4 text-xs sm:text-sm text-slate-300/85">
                             <div className="flex flex-wrap items-center gap-4">
                                 <div className="flex items-center gap-2">
-                                    <span className="inline-flex h-3.5 w-3.5 rounded-full bg-gradient-to-br from-pink-400 to-orange-400 shadow-sm shadow-pink-500/30" />
+                                    <span className="inline-flex h-3.5 w-3.5 rounded-full bg-pink-400 ring-2 ring-white/60 shadow-sm shadow-pink-500/40" />
                                     <span>{t("contactPage.globalMap.legend.hq")}</span>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <span className="inline-flex h-3.5 w-3.5 rounded-full bg-gradient-to-br from-sky-400 to-blue-500 shadow-sm shadow-sky-500/30" />
+                                    <span className="inline-flex h-3.5 w-3.5 rounded-full bg-sky-400 ring-2 ring-white/60 shadow-sm shadow-sky-500/40" />
                                     <span>{t("contactPage.globalMap.legend.regional")}</span>
                                 </div>
                             </div>
