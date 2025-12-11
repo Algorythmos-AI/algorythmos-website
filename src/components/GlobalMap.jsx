@@ -52,7 +52,7 @@ const GlobalMap = () => {
                         {/* France marker with tooltip */}
                         <div
                             className="group absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer"
-                            style={{ left: "48%", top: "32%" }}
+                            style={{ left: "46%", top: "32%" }}
                             onClick={() => setActiveOffice("fr")}
                         >
                             <div
@@ -126,8 +126,8 @@ const GlobalMap = () => {
             <div className="mx-auto max-w-[1200px] mt-10 grid gap-6 sm:grid-cols-2">
                 <div
                     className={`mx-auto max-w-xl sm:max-w-none rounded-2xl border bg-slate-950/70 p-4 sm:p-5 cursor-pointer transition-all duration-300 ${activeOffice === "fr"
-                            ? "border-pink-400 shadow-[0_0_25px_rgba(248,113,181,0.4)]"
-                            : "border-slate-700/70 hover:border-slate-600/80"
+                        ? "border-pink-400 shadow-[0_0_25px_rgba(248,113,181,0.4)]"
+                        : "border-slate-700/70 hover:border-slate-600/80"
                         }`}
                     onClick={() => setActiveOffice("fr")}
                 >
@@ -144,8 +144,8 @@ const GlobalMap = () => {
 
                 <div
                     className={`mx-auto max-w-xl sm:max-w-none rounded-2xl border bg-slate-950/70 p-4 sm:p-5 cursor-pointer transition-all duration-300 ${activeOffice === "au"
-                            ? "border-sky-400 shadow-[0_0_25px_rgba(56,189,248,0.4)]"
-                            : "border-slate-700/70 hover:border-slate-600/80"
+                        ? "border-sky-400 shadow-[0_0_25px_rgba(56,189,248,0.4)]"
+                        : "border-slate-700/70 hover:border-slate-600/80"
                         }`}
                     onClick={() => setActiveOffice("au")}
                 >
