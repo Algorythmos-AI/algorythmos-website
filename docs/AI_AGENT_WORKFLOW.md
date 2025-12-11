@@ -9,6 +9,18 @@ Locales: **EN**, **FR**
 
 ---
 
+## 🚨 **QUICK START — Run Before Committing**
+
+```bash
+npm run i18n:check   # ← MANDATORY: Verify EN/FR translations match
+npm run lint         # Validate code quality
+npm run build        # Confirm production build works
+```
+
+⚠️ **Do NOT commit if `i18n:check` fails.** Fix all missing translations first.
+
+---
+
 ## **1. Purpose of This Document**
 
 This file is a **permanent protocol** for any AI coding agent (Claude Code, Gemini Code Assist, Copilot Workspace, GPT-Engineer, etc.) working on the Algorythmos codebase.
