@@ -16,7 +16,8 @@
     "seo:check": "node scripts/seo-validate.js",
     "perf": "node scripts/perf-report.js",
     "compress:videos": "node scripts/compress-video.mjs",
-    "i18n:check": "node scripts/i18nCheck.mjs"
+    "i18n:check": "node scripts/i18nCheck.mjs",
+    "health:check": "node scripts/healthCheck.mjs"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
