@@ -1,3 +1,20 @@
+/**
+ * 🚨 IMPORTANT FOR AI AGENTS
+ *
+ * This project is bilingual EN/FR.
+ * Routing MUST respect locale prefixes:
+ *   /services/...           → EN
+ *   /au-en/services/...     → EN (AU)
+ *   /fr-fr/services/...     → FR
+ *
+ * Do NOT hardcode English or French strings.
+ * Always use:   const { t } = useI18n();
+ * And:          t('your.key.here')
+ *
+ * Full rules:
+ * /docs/AI_AGENT_WORKFLOW.md
+ */
+
 import React, { Suspense, lazy } from 'react';
 import './App.css';
 import { Routes, Route } from 'react-router-dom';
