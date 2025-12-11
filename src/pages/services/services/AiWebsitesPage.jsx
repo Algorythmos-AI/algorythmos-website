@@ -1,4 +1,6 @@
 // /src/pages/services/services/AiWebsitesPage.jsx
+// AI Agents: read /docs/AI_AGENT_WORKFLOW.md before editing this file.
+// This ensures EN/FR translation consistency and SEO correctness.
 import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
@@ -19,9 +21,9 @@ export default function AiWebsitesPage() {
 
     // SEO helpers
     const canonicalUrl = getCanonicalUrl(region, "/services/ai-websites");
-    const canonicalBase = getCanonicalBase(region);
     const ogLocale = getOgLocale(region);
     const hreflangLinks = generateHreflangLinks("/services/ai-websites");
+    const canonicalBase = getCanonicalBase(region);
 
     const contactUrl = useMemo(() => {
         return withUtm(CALENDLY_URL, {
@@ -32,79 +34,73 @@ export default function AiWebsitesPage() {
         });
     }, []);
 
-    const capabilities = [
-        { icon: MessageSquare, title: "AI Chatbots", desc: "24/7 intelligent customer support embedded directly into your site" },
-        { icon: Mic, title: "Voice AI Integration", desc: "Natural voice interfaces for accessibility and modern UX" },
-        { icon: Users, title: "Lead Qualification", desc: "Automated scoring and routing of high-intent prospects" },
-        { icon: Database, title: "CRM Integration", desc: "Seamless sync with HubSpot, Salesforce, and custom systems" },
-        { icon: Search, title: "SEO Optimised", desc: "Built for search visibility with structured data and speed" },
-        { icon: Smartphone, title: "Mobile-First", desc: "Responsive design that performs on every device" },
-        { icon: Languages, title: "Multilingual (AU/FR)", desc: "Native support for Australian and French markets" },
-        { icon: Server, title: "Hosting & Monitoring", desc: "Enterprise-grade uptime with real-time performance tracking" }
-    ];
+    // Capabilities from i18n
+    const capabilityIcons = [MessageSquare, Mic, Users, Database, Search, Smartphone, Languages, Server];
+    const capabilities = capabilityIcons.map((icon, i) => ({
+        icon,
+        title: t(`serviceAiWebsites.capabilities.${i}.title`),
+        desc: t(`serviceAiWebsites.capabilities.${i}.desc`)
+    }));
 
-    const differentiators = [
-        { title: "Custom Engineering, Not Templates", desc: "Every site is architected from scratch to match your brand and business logic." },
-        { title: "Enterprise-Grade Performance", desc: "Sub-second load times, 99.9% uptime, and infrastructure built for scale." },
-        { title: "Local AU + EU Engineering", desc: "Sydney and Paris-based engineers who understand your market." },
-        { title: "Clear Communication", desc: "Weekly updates, transparent timelines, and no black-box pricing." },
-        { title: "AI-Enhanced Features", desc: "Chatbots, voice AI, and intelligent forms that convert visitors into customers." },
-        { title: "Security-First Mindset", desc: "HTTPS, GDPR compliance, regular audits, and enterprise auth options." }
-    ];
+    // Differentiators from i18n
+    const differentiators = [0, 1, 2, 3, 4, 5].map(i => ({
+        title: t(`serviceAiWebsites.differentiators.${i}.title`),
+        desc: t(`serviceAiWebsites.differentiators.${i}.desc`)
+    }));
 
-    const comparisonRows = [
-        { aspect: "Design", conventional: "Template-based, generic", ai: "Custom-engineered for your brand" },
-        { aspect: "Load Speed", conventional: "2-5 seconds", ai: "Under 1 second (Core Web Vitals optimised)" },
-        { aspect: "Lead Capture", conventional: "Static forms", ai: "AI chatbots + intelligent qualification" },
-        { aspect: "SEO", conventional: "Basic meta tags", ai: "Structured data, schema markup, speed-optimised" },
-        { aspect: "Support", conventional: "Contact forms only", ai: "24/7 AI-powered instant responses" },
-        { aspect: "Analytics", conventional: "Page views only", ai: "Conversion tracking, heatmaps, AI insights" },
-        { aspect: "Maintenance", conventional: "Manual updates", ai: "Automated monitoring and updates" }
-    ];
+    // Comparison rows from i18n
+    const comparisonRows = [0, 1, 2, 3, 4, 5, 6].map(i => ({
+        aspect: t(`serviceAiWebsites.comparison.${i}.aspect`),
+        conventional: t(`serviceAiWebsites.comparison.${i}.conventional`),
+        ai: t(`serviceAiWebsites.comparison.${i}.ai`)
+    }));
 
-    const faqs = [
-        { q: "How long does it take to build an AI-powered website?", a: "Typically 4-8 weeks depending on complexity. We prioritize speed without compromising quality." },
-        { q: "Do you work with existing brands or create new ones?", a: "Both. We can work with your existing brand guidelines or help you develop a fresh identity." },
-        { q: "What about ongoing maintenance?", a: "We offer monthly maintenance packages including hosting, updates, security monitoring, and content changes." },
-        { q: "Can you integrate with our existing CRM?", a: "Absolutely. We integrate with HubSpot, Salesforce, Pipedrive, and most modern CRMs via API." }
+    // FAQs from i18n
+    const faqs = [0, 1, 2, 3].map(i => ({
+        q: t(`serviceAiWebsites.faqs.${i}.q`),
+        a: t(`serviceAiWebsites.faqs.${i}.a`)
+    }));
+
+    // Hero key points
+    const heroPoints = [
+        { icon: Code, text: t("serviceAiWebsites.hero.point1") },
+        { icon: Shield, text: t("serviceAiWebsites.hero.point2") },
+        { icon: Zap, text: t("serviceAiWebsites.hero.point3") }
     ];
 
     return (
         <div className="min-h-screen bg-black text-white">
             <Helmet>
-                <title>AI-Powered Website Development for SMEs | Algorythmos</title>
-                <meta
-                    name="description"
-                    content="Custom AI-enhanced websites built for Australian and European SMEs. Intelligent chatbots, voice AI, enterprise performance, and local engineering support."
-                />
+                <title>{t("serviceAiWebsites.meta.title")}</title>
+                <meta name="description" content={t("serviceAiWebsites.meta.description")} />
                 <link rel="canonical" href={canonicalUrl} />
                 {hreflangLinks.map(({ hreflang, href }) => (
                     <link key={hreflang} rel="alternate" hreflang={hreflang} href={href} />
                 ))}
                 <meta property="og:type" content="website" />
-                <meta property="og:title" content="AI-Powered Website Development | Algorythmos" />
-                <meta property="og:description" content="Custom AI-enhanced websites for SMEs with intelligent chatbots, voice AI, and enterprise-grade performance." />
+                <meta property="og:title" content={t("serviceAiWebsites.meta.title")} />
+                <meta property="og:description" content={t("serviceAiWebsites.meta.description")} />
                 <meta property="og:url" content={canonicalUrl} />
                 <meta property="og:image" content={`${canonicalBase}/Algorythmos.png`} />
                 <meta property="og:site_name" content="Algorythmos" />
                 <meta property="og:locale" content={ogLocale} />
                 <meta name="twitter:card" content="summary_large_image" />
-                <meta name="twitter:title" content="AI-Powered Website Development | Algorythmos" />
-                <meta name="twitter:description" content="Custom AI-enhanced websites for SMEs." />
+                <meta name="twitter:title" content={t("serviceAiWebsites.meta.title")} />
+                <meta name="twitter:description" content={t("serviceAiWebsites.meta.description")} />
                 <meta name="twitter:image" content={`${canonicalBase}/Algorythmos.png`} />
                 <script type="application/ld+json">
                     {JSON.stringify({
                         "@context": "https://schema.org",
                         "@type": "Service",
-                        "name": "AI-Powered Website Development",
+                        "name": t("serviceAiWebsites.hero.title1"),
                         "provider": {
                             "@type": "Organization",
                             "name": "Algorythmos",
-                            "url": canonicalBase
+                            "url": "https://algorythmos.com"
                         },
-                        "description": "Custom AI-enhanced website development for SMEs with intelligent chatbots, voice AI, and enterprise-grade performance.",
-                        "url": canonicalUrl,
-                        "areaServed": region === "AU" ? ["Australia"] : region === "FR" ? ["France", "Europe"] : ["Worldwide"]
+                        "description": t("serviceAiWebsites.meta.description"),
+                        "areaServed": ["Australia", "France", "Europe"],
+                        "serviceType": "AI Website Development"
                     })}
                 </script>
                 <script type="application/ld+json">
@@ -112,24 +108,9 @@ export default function AiWebsitesPage() {
                         "@context": "https://schema.org",
                         "@type": "BreadcrumbList",
                         "itemListElement": [
-                            {
-                                "@type": "ListItem",
-                                "position": 1,
-                                "name": "Home",
-                                "item": canonicalBase
-                            },
-                            {
-                                "@type": "ListItem",
-                                "position": 2,
-                                "name": "Services",
-                                "item": `${canonicalBase}/services`
-                            },
-                            {
-                                "@type": "ListItem",
-                                "position": 3,
-                                "name": "AI-Powered Websites",
-                                "item": canonicalUrl
-                            }
+                            { "@type": "ListItem", "position": 1, "name": "Home", "item": canonicalBase },
+                            { "@type": "ListItem", "position": 2, "name": t("serviceAiWebsites.breadcrumb.services"), "item": `${canonicalBase}/services` },
+                            { "@type": "ListItem", "position": 3, "name": t("serviceAiWebsites.breadcrumb.current"), "item": canonicalUrl }
                         ]
                     })}
                 </script>
@@ -141,12 +122,12 @@ export default function AiWebsitesPage() {
 
                 <div className="relative max-w-6xl mx-auto">
                     {/* Breadcrumb */}
-                    <nav className="mb-8 text-sm text-gray-400">
+                    <nav className="mb-8 text-sm text-gray-400" aria-label="Breadcrumb">
                         <Link to={getRegionPath("/services")} className="hover:text-blue-400 transition-colors">
-                            Services
+                            {t("serviceAiWebsites.breadcrumb.services")}
                         </Link>
                         <span className="mx-2">/</span>
-                        <span className="text-white">AI-Powered Websites</span>
+                        <span className="text-white">{t("serviceAiWebsites.breadcrumb.current")}</span>
                     </nav>
 
                     {/* Icon & Badge */}
@@ -156,35 +137,29 @@ export default function AiWebsitesPage() {
                         </div>
                         <div className="inline-flex items-center gap-2 rounded-full bg-emerald-500/10 px-4 py-1.5 text-xs font-semibold text-emerald-400 ring-1 ring-emerald-500/20">
                             <Zap className="h-3 w-3" />
-                            Premium Web Development
+                            {t("serviceAiWebsites.hero.badge")}
                         </div>
                     </div>
 
                     {/* Title */}
                     <h1 className="mb-6 text-4xl md:text-6xl font-black leading-tight">
                         <span className="bg-gradient-to-r from-emerald-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
-                            AI-Powered Websites
+                            {t("serviceAiWebsites.hero.title1")}
                         </span>
                         <br />
                         <span className="text-white">
-                            Built for Business Growth
+                            {t("serviceAiWebsites.hero.title2")}
                         </span>
                     </h1>
 
                     {/* Subtitle */}
                     <p className="mb-8 max-w-3xl text-lg md:text-xl text-gray-300 leading-relaxed">
-                        We engineer high-performance websites with embedded AI capabilities—intelligent chatbots,
-                        voice interfaces, and automated lead qualification—designed for Australian and European SMEs
-                        who demand more than a templated solution.
+                        {t("serviceAiWebsites.hero.subtitle")}
                     </p>
 
                     {/* Key Points */}
                     <div className="mb-10 grid md:grid-cols-3 gap-4 max-w-3xl">
-                        {[
-                            { icon: Code, text: "Custom-engineered, not templated" },
-                            { icon: Shield, text: "Enterprise security & GDPR ready" },
-                            { icon: Zap, text: "Sub-second load times" }
-                        ].map((item, i) => (
+                        {heroPoints.map((item, i) => (
                             <div key={i} className="flex items-start gap-3 text-sm text-gray-300">
                                 <item.icon className="h-5 w-5 text-emerald-400 flex-shrink-0 mt-0.5" />
                                 <span>{item.text}</span>
@@ -200,14 +175,14 @@ export default function AiWebsitesPage() {
                             rel="noopener noreferrer"
                             className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-600 to-blue-600 px-6 py-3 font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all hover:shadow-xl hover:shadow-emerald-500/40 hover:-translate-y-0.5"
                         >
-                            Book a Discovery Call
+                            {t("serviceAiWebsites.cta.discovery")}
                             <ArrowRight className="h-5 w-5" />
                         </a>
                         <Link
                             to={getRegionPath("/pricing")}
                             className="inline-flex items-center gap-2 rounded-xl bg-white/5 px-6 py-3 font-semibold text-white ring-1 ring-white/10 transition-all hover:bg-white/10"
                         >
-                            View Pricing
+                            {t("serviceAiWebsites.cta.pricing")}
                         </Link>
                     </div>
                 </div>
@@ -218,21 +193,21 @@ export default function AiWebsitesPage() {
                 <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-8 text-center">
                     <div>
                         <div className="text-4xl font-black bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent mb-2">
-                            &lt;1s
+                            {t("serviceAiWebsites.metrics.loadTime.value")}
                         </div>
-                        <div className="text-sm text-gray-400">Average Load Time</div>
+                        <div className="text-sm text-gray-400">{t("serviceAiWebsites.metrics.loadTime.label")}</div>
                     </div>
                     <div>
                         <div className="text-4xl font-black bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-2">
-                            99.9%
+                            {t("serviceAiWebsites.metrics.uptime.value")}
                         </div>
-                        <div className="text-sm text-gray-400">Uptime Guarantee</div>
+                        <div className="text-sm text-gray-400">{t("serviceAiWebsites.metrics.uptime.label")}</div>
                     </div>
                     <div>
                         <div className="text-4xl font-black bg-gradient-to-r from-purple-400 to-emerald-400 bg-clip-text text-transparent mb-2">
-                            3x
+                            {t("serviceAiWebsites.metrics.conversion.value")}
                         </div>
-                        <div className="text-sm text-gray-400">Lead Conversion Increase</div>
+                        <div className="text-sm text-gray-400">{t("serviceAiWebsites.metrics.conversion.label")}</div>
                     </div>
                 </div>
             </section>
@@ -241,19 +216,11 @@ export default function AiWebsitesPage() {
             <section className="py-16 px-6">
                 <div className="max-w-4xl mx-auto">
                     <h2 className="text-3xl md:text-4xl font-black mb-6 text-white">
-                        Why Your Website Matters More Than Ever
+                        {t("serviceAiWebsites.whyMatters.title")}
                     </h2>
                     <div className="space-y-4 text-lg text-gray-300 leading-relaxed">
-                        <p>
-                            Your website is often the first—and most important—interaction a potential customer
-                            has with your business. In 2024, a slow, generic, or outdated site doesn't just look
-                            bad; it actively loses you revenue.
-                        </p>
-                        <p>
-                            Modern buyers expect instant responses, mobile-first experiences, and intelligent
-                            interfaces. They compare you to global brands, not just local competitors.
-                            A website that can't keep up becomes a liability, not an asset.
-                        </p>
+                        <p>{t("serviceAiWebsites.whyMatters.p1")}</p>
+                        <p>{t("serviceAiWebsites.whyMatters.p2")}</p>
                     </div>
                 </div>
             </section>
@@ -262,7 +229,7 @@ export default function AiWebsitesPage() {
             <section className="py-16 px-6 bg-gradient-to-br from-slate-900/50 to-slate-800/30">
                 <div className="max-w-6xl mx-auto">
                     <h2 className="text-3xl md:text-4xl font-black mb-10 text-white text-center">
-                        What Makes Algorythmos Different
+                        {t("serviceAiWebsites.differentiators.title")}
                     </h2>
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {differentiators.map((item, i) => (
@@ -282,7 +249,7 @@ export default function AiWebsitesPage() {
             <section className="py-16 px-6">
                 <div className="max-w-6xl mx-auto">
                     <h2 className="text-3xl md:text-4xl font-black mb-10 text-white text-center">
-                        Core Capabilities
+                        {t("serviceAiWebsites.capabilities.title")}
                     </h2>
                     <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
                         {capabilities.map((cap, i) => (
@@ -298,25 +265,25 @@ export default function AiWebsitesPage() {
 
             {/* Before vs After Comparison */}
             <section className="py-16 px-6 bg-gradient-to-br from-slate-900/50 to-slate-800/30">
-                <div className="max-w-4xl mx-auto">
+                <div className="max-w-5xl mx-auto">
                     <h2 className="text-3xl md:text-4xl font-black mb-10 text-white text-center">
-                        Conventional vs AI-Powered Website
+                        {t("serviceAiWebsites.comparison.title")}
                     </h2>
                     <div className="overflow-x-auto">
-                        <table className="w-full text-left">
+                        <table className="w-full text-left border-collapse">
                             <thead>
                                 <tr className="border-b border-white/10">
-                                    <th className="py-4 px-4 text-gray-400 font-semibold">Aspect</th>
-                                    <th className="py-4 px-4 text-gray-400 font-semibold">Conventional</th>
-                                    <th className="py-4 px-4 text-emerald-400 font-semibold">AI-Powered (Algorythmos)</th>
+                                    <th className="py-4 px-4 text-gray-400 font-semibold">{t("serviceAiWebsites.comparison.header.aspect")}</th>
+                                    <th className="py-4 px-4 text-gray-400 font-semibold">{t("serviceAiWebsites.comparison.header.conventional")}</th>
+                                    <th className="py-4 px-4 text-emerald-400 font-semibold">{t("serviceAiWebsites.comparison.header.ai")}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {comparisonRows.map((row, i) => (
-                                    <tr key={i} className="border-b border-white/5 hover:bg-white/5">
-                                        <td className="py-4 px-4 text-white font-medium">{row.aspect}</td>
-                                        <td className="py-4 px-4 text-gray-500">{row.conventional}</td>
-                                        <td className="py-4 px-4 text-gray-300">{row.ai}</td>
+                                    <tr key={i} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                        <td className="py-4 px-4 font-medium text-white">{row.aspect}</td>
+                                        <td className="py-4 px-4 text-gray-400">{row.conventional}</td>
+                                        <td className="py-4 px-4 text-emerald-300">{row.ai}</td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -325,34 +292,36 @@ export default function AiWebsitesPage() {
                 </div>
             </section>
 
-            {/* FAQs */}
+            {/* FAQ Section */}
             <section className="py-16 px-6">
                 <div className="max-w-4xl mx-auto">
-                    <h2 className="text-3xl md:text-4xl font-black mb-8 text-white">
-                        Frequently Asked Questions
+                    <h2 className="text-3xl md:text-4xl font-black mb-10 text-white text-center">
+                        {t("serviceAiWebsites.faqs.title")}
                     </h2>
                     <div className="space-y-4">
                         {faqs.map((faq, i) => (
-                            <details key={i} className="group rounded-xl bg-white/5 p-6 ring-1 ring-white/10 transition-all hover:bg-white/10">
-                                <summary className="cursor-pointer font-semibold text-white list-none flex items-center justify-between">
-                                    {faq.q}
+                            <details key={i} className="group rounded-xl bg-white/5 ring-1 ring-white/10 overflow-hidden">
+                                <summary className="flex items-center justify-between p-6 cursor-pointer">
+                                    <span className="font-semibold text-white pr-4">{faq.q}</span>
                                     <ChevronDown className="h-5 w-5 text-gray-400 transition-transform group-open:rotate-180" />
                                 </summary>
-                                <p className="mt-4 text-gray-400 leading-relaxed">{faq.a}</p>
+                                <div className="px-6 pb-6 text-gray-300 leading-relaxed">
+                                    {faq.a}
+                                </div>
                             </details>
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* CTA Section */}
-            <section className="py-16 px-6 bg-gradient-to-br from-emerald-600/10 via-blue-600/10 to-transparent">
+            {/* Final CTA */}
+            <section className="py-16 px-6 bg-gradient-to-br from-emerald-600/10 to-blue-600/10">
                 <div className="max-w-4xl mx-auto text-center">
                     <h2 className="text-3xl md:text-4xl font-black mb-4 text-white">
-                        Ready to Transform Your Website?
+                        {t("serviceAiWebsites.finalCta.title")}
                     </h2>
                     <p className="mb-8 text-lg text-gray-300">
-                        Let's discuss how an AI-powered website can accelerate your business growth.
+                        {t("serviceAiWebsites.finalCta.subtitle")}
                     </p>
                     <div className="flex flex-wrap justify-center gap-4">
                         <a
@@ -361,14 +330,14 @@ export default function AiWebsitesPage() {
                             rel="noopener noreferrer"
                             className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-600 to-blue-600 px-8 py-4 font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all hover:shadow-xl hover:shadow-emerald-500/40 hover:-translate-y-0.5"
                         >
-                            Book a Discovery Call
+                            {t("serviceAiWebsites.cta.discovery")}
                             <ArrowRight className="h-5 w-5" />
                         </a>
                         <Link
                             to={getRegionPath("/pricing")}
                             className="inline-flex items-center gap-2 rounded-xl bg-white/5 px-8 py-4 font-semibold text-white ring-1 ring-white/10 transition-all hover:bg-white/10"
                         >
-                            View Pricing
+                            {t("serviceAiWebsites.cta.pricing")}
                         </Link>
                     </div>
                 </div>
@@ -377,7 +346,7 @@ export default function AiWebsitesPage() {
             {/* Related Services */}
             <section className="py-12 px-6 border-t border-white/10">
                 <div className="max-w-6xl mx-auto">
-                    <h3 className="text-xl font-bold text-gray-400 mb-6">Related Services</h3>
+                    <h3 className="text-xl font-bold text-gray-400 mb-6">{t("serviceAiWebsites.related.title")}</h3>
                     <div className="grid md:grid-cols-2 gap-4">
                         <Link
                             to={getRegionPath("/services/agentic-automation")}
@@ -388,9 +357,9 @@ export default function AiWebsitesPage() {
                             </div>
                             <div>
                                 <div className="font-semibold text-white group-hover:text-emerald-400 transition-colors">
-                                    Agentic Automation
+                                    {t("serviceAiWebsites.related.agentic.title")}
                                 </div>
-                                <div className="text-sm text-gray-400">AI agents that work across your systems</div>
+                                <div className="text-sm text-gray-400">{t("serviceAiWebsites.related.agentic.desc")}</div>
                             </div>
                         </Link>
                         <Link
@@ -402,9 +371,9 @@ export default function AiWebsitesPage() {
                             </div>
                             <div>
                                 <div className="font-semibold text-white group-hover:text-emerald-400 transition-colors">
-                                    SQL-Based Dashboards
+                                    {t("serviceAiWebsites.related.sql.title")}
                                 </div>
-                                <div className="text-sm text-gray-400">Executive-ready analytics and insights</div>
+                                <div className="text-sm text-gray-400">{t("serviceAiWebsites.related.sql.desc")}</div>
                             </div>
                         </Link>
                     </div>
