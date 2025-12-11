@@ -1,31 +1,63 @@
-# ⚠️ AI Agent Rules
+# 🚨 STOP — AI AGENT RULES
 
-All AI coding agents (Claude Code, Gemini Code Assist, GPT-Engineer, Copilot Workspace, etc.) **MUST** follow the workflow defined in:
-
-**📄 `/docs/AI_AGENT_WORKFLOW.md`**
+> **You MUST read this before writing ANY code.**
 
 ---
 
-## Quick Summary
+## 📄 Full Documentation
 
-Before modifying this repository, ensure:
-
-1. **Two Languages Always** — Generate EN + FR for all content
-2. **SEO Schemas** — Add Article, BreadcrumbList, Organisation JSON-LD
-3. **URL Patterns** — Use `/au-en/` and `/fr-fr/` (not `/au/` or `/fr/`)
-4. **Heading Hierarchy** — One H1 per page, sections use H2
-5. **Localized CTAs** — Use `cta.regionAU.*` and `cta.regionFR.*` keys
+**Read First:** [/docs/AI_AGENT_WORKFLOW.md](./docs/AI_AGENT_WORKFLOW.md)
 
 ---
 
-## Do Not Proceed Until:
+## ✅ Pre-Commit Checklist
 
-- [ ] You have read `/docs/AI_AGENT_WORKFLOW.md` fully
-- [ ] You understand the translation requirements
-- [ ] You know where i18n files are located
-- [ ] You can generate compliant SEO schemas
+Before committing, run these commands:
+
+```bash
+npm run i18n:check   # ❌ FAILS if EN/FR translations out of sync
+npm run lint         # Check code quality
+npm run build        # Validate production build
+```
 
 ---
 
-**Owner:** Sam Kalaliya (Algorythmos)
+## 🌐 The Two-Language Rule
+
+| EN File | FR File |
+|---------|---------|
+| `src/app/i18n/en.global.json` | `src/app/i18n/fr.fr.json` |
+
+**Every string you add to EN must also be added to FR. No exceptions.**
+
+---
+
+## 🔗 URL Patterns
+
+| ❌ Wrong | ✅ Correct |
+|----------|-----------|
+| `/au/...` | `/au-en/...` |
+| `/fr/...` | `/fr-fr/...` |
+
+---
+
+## 📋 Quick Rules
+
+1. **i18n** — Generate EN + FR for all content
+2. **SEO** — Add Article, BreadcrumbList, Organisation JSON-LD
+3. **H1** — One H1 per page only
+4. **CTAs** — Use `cta.regionAU.*` and `cta.regionFR.*` keys
+
+---
+
+## 🚫 Do NOT Proceed Until
+
+- [ ] Read `/docs/AI_AGENT_WORKFLOW.md`
+- [ ] Understand EN/FR translation requirements
+- [ ] Know where `en.global.json` and `fr.fr.json` are
+- [ ] Prepared to run `npm run i18n:check` before committing
+
+---
+
+**Owner:** Sam Kalaliya (Algorythmos)  
 **Last Updated:** 2025-12-11

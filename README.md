@@ -1,10 +1,29 @@
 # Algorythmos
 
-> ## ⚠️ IMPORTANT FOR AI AGENTS
-> Before making ANY code changes, you **MUST** read:
-> **[/docs/AI_AGENT_WORKFLOW.md](./docs/AI_AGENT_WORKFLOW.md)**
->
-> This file defines the translation (EN/FR), SEO, UX, routing, and content rules for the Algorythmos platform.
+---
+
+## 🚨 STOP — READ THIS FIRST (AI Agents & Developers)
+
+> **⚠️ MANDATORY READING BEFORE ANY CODE CHANGES:**
+> 
+> | Document | Purpose |
+> |----------|---------|
+> | **[/docs/AI_AGENT_WORKFLOW.md](./docs/AI_AGENT_WORKFLOW.md)** | Full translation, SEO, UX, routing rules |
+> | **[/AI_RULES.md](./AI_RULES.md)** | Quick summary for AI agents |
+> 
+> **Before committing, you MUST run:**
+> ```bash
+> npm run i18n:check   # Verify EN/FR translations match
+> npm run lint         # Check code quality
+> npm run build        # Validate production build
+> ```
+> 
+> **Key Rules:**
+> - Every string must exist in BOTH `en.global.json` AND `fr.fr.json`
+> - URL patterns: `/au-en/...` and `/fr-fr/...` (NOT `/au/` or `/fr/`)
+> - One H1 per page, use region-aware CTAs
+
+---
 
 <!-- Deployment trigger: Ensuring latest stable version is deployed -->
 
