@@ -4,6 +4,7 @@
  * Interactive world map showing Algorythmos offices in France and Australia.
  * Uses a real SVG world map generated from Natural Earth geographic data.
  * Uses i18n for EN/FR localization.
+ * Features: animated arc, travelling dot, hover tooltips, click-to-highlight cards.
  */
 import React from "react";
 import { useI18n } from "../app/i18n/I18nContext";
@@ -12,6 +13,7 @@ const WORLD_MAP_SRC = "/media/maps/algorythmos_worldmap.svg";
 
 const GlobalMap = () => {
     const { t } = useI18n();
+    const [activeOffice, setActiveOffice] = React.useState(null);
 
     return (
         <section
@@ -34,9 +36,9 @@ const GlobalMap = () => {
                 </p>
             </div>
 
-            {/* Map card */}
+            {/* Map card with fade-in animation */}
             <div className="mx-auto max-w-[1200px]">
-                <div className="relative rounded-3xl bg-slate-950/70 border border-slate-800/60 shadow-[0_32px_90px_rgba(0,0,0,0.7)] overflow-hidden">
+                <div className="relative rounded-3xl bg-slate-950/70 border border-slate-800/60 shadow-[0_32px_90px_rgba(0,0,0,0.7)] overflow-hidden animate-[fadeIn_1.2s_ease_forwards] opacity-0">
 
                     {/* World map image */}
                     <div className="relative aspect-[16/9] w-full">
@@ -47,33 +49,58 @@ const GlobalMap = () => {
                             loading="lazy"
                         />
 
-                        {/* France marker */}
+                        {/* France marker with tooltip */}
                         <div
-                            className="absolute h-5 w-5 rounded-full bg-pink-400 ring-2 ring-white/90 shadow-[0_0_20px_rgba(248,113,181,0.9)] animate-pulse"
+                            className="group absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer"
                             style={{ left: "48%", top: "32%" }}
-                            aria-label={t("contactPage.globalMap.france.title")}
-                        />
+                            onClick={() => setActiveOffice("fr")}
+                        >
+                            <div
+                                className="h-5 w-5 rounded-full bg-pink-400 ring-2 ring-white/90 shadow-[0_0_20px_rgba(248,113,181,0.9)] animate-pulse"
+                                aria-label={t("contactPage.globalMap.france.title")}
+                            />
+                            <div className="absolute left-6 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-xs bg-slate-900/90 px-2 py-1 rounded-md border border-slate-700 text-white whitespace-nowrap z-10">
+                                Head Office — France
+                            </div>
+                        </div>
 
-                        {/* Australia marker */}
+                        {/* Australia marker with tooltip */}
                         <div
-                            className="absolute h-5 w-5 rounded-full bg-sky-400 ring-2 ring-white/90 shadow-[0_0_20px_rgba(56,189,248,0.9)] animate-pulse"
+                            className="group absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer"
                             style={{ left: "91.3%", top: "68.9%" }}
-                            aria-label={t("contactPage.globalMap.australia.title")}
-                        />
+                            onClick={() => setActiveOffice("au")}
+                        >
+                            <div
+                                className="h-5 w-5 rounded-full bg-sky-400 ring-2 ring-white/90 shadow-[0_0_20px_rgba(56,189,248,0.9)] animate-pulse"
+                                aria-label={t("contactPage.globalMap.australia.title")}
+                            />
+                            <div className="absolute left-6 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-xs bg-slate-900/90 px-2 py-1 rounded-md border border-slate-700 text-white whitespace-nowrap z-10">
+                                Head Office — Australia
+                            </div>
+                        </div>
 
-                        {/* Dashed connection arc overlay */}
+                        {/* Dashed connection arc overlay with animation */}
                         <svg
                             viewBox="0 0 100 50"
                             className="absolute inset-0 h-full w-full pointer-events-none"
                             preserveAspectRatio="xMidYMid meet"
                         >
+                            {/* Animated dashed arc */}
                             <path
-                                d="M48,16 Q60,8 72,28 Q80,38 82,38.5"
-                                stroke="rgba(255,255,255,0.7)"
-                                strokeWidth="0.3"
-                                strokeDasharray="1.5 1"
+                                d="M48 16 Q69.65 15.225 91.3 34.45"
+                                stroke="rgba(255,255,255,0.75)"
+                                strokeWidth="0.6"
+                                strokeDasharray="3 3"
                                 strokeLinecap="round"
                                 fill="none"
+                                className="animate-[dash_3s_linear_infinite]"
+                            />
+
+                            {/* Travelling dot */}
+                            <circle
+                                r="1.2"
+                                fill="rgba(56,189,248,0.95)"
+                                className="travel-dot"
                             />
                         </svg>
                     </div>
@@ -95,9 +122,15 @@ const GlobalMap = () => {
                 </div>
             </div>
 
-            {/* Location cards */}
+            {/* Location cards with click-to-highlight */}
             <div className="mx-auto max-w-[1200px] mt-10 grid gap-6 sm:grid-cols-2">
-                <div className="mx-auto max-w-xl sm:max-w-none rounded-2xl border border-slate-700/70 bg-slate-950/70 p-4 sm:p-5">
+                <div
+                    className={`mx-auto max-w-xl sm:max-w-none rounded-2xl border bg-slate-950/70 p-4 sm:p-5 cursor-pointer transition-all duration-300 ${activeOffice === "fr"
+                            ? "border-pink-400 shadow-[0_0_25px_rgba(248,113,181,0.4)]"
+                            : "border-slate-700/70 hover:border-slate-600/80"
+                        }`}
+                    onClick={() => setActiveOffice("fr")}
+                >
                     <p className="text-xs uppercase tracking-[0.18em] text-violet-300/80">
                         {t("contactPage.globalMap.locations.france.country")}
                     </p>
@@ -109,7 +142,13 @@ const GlobalMap = () => {
                     </p>
                 </div>
 
-                <div className="mx-auto max-w-xl sm:max-w-none rounded-2xl border border-slate-700/70 bg-slate-950/70 p-4 sm:p-5">
+                <div
+                    className={`mx-auto max-w-xl sm:max-w-none rounded-2xl border bg-slate-950/70 p-4 sm:p-5 cursor-pointer transition-all duration-300 ${activeOffice === "au"
+                            ? "border-sky-400 shadow-[0_0_25px_rgba(56,189,248,0.4)]"
+                            : "border-slate-700/70 hover:border-slate-600/80"
+                        }`}
+                    onClick={() => setActiveOffice("au")}
+                >
                     <p className="text-xs uppercase tracking-[0.18em] text-blue-300/80">
                         {t("contactPage.globalMap.locations.australia.country")}
                     </p>
@@ -121,6 +160,31 @@ const GlobalMap = () => {
                     </p>
                 </div>
             </div>
+
+            {/* Animation keyframes */}
+            <style>
+                {`
+                @keyframes dash {
+                    to {
+                        stroke-dashoffset: -20;
+                    }
+                }
+                @keyframes travel {
+                    0%   { offset-distance: 0%; }
+                    100% { offset-distance: 100%; }
+                }
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translateY(20px); }
+                    to   { opacity: 1; transform: translateY(0); }
+                }
+                .travel-dot {
+                    offset-path: path("M48 16 Q69.65 15.225 91.3 34.45");
+                    offset-rotate: auto;
+                    animation: travel 3s linear infinite;
+                    filter: drop-shadow(0 0 6px rgb(56,189,248));
+                }
+            `}
+            </style>
         </section>
     );
 };
