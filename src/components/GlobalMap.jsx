@@ -57,7 +57,7 @@ const GlobalMap = () => {
                         {/* Australia marker */}
                         <div
                             className="absolute h-5 w-5 rounded-full bg-sky-400 ring-2 ring-white/90 shadow-[0_0_20px_rgba(56,189,248,0.9)] animate-pulse"
-                            style={{ left: "86%", top: "72%" }}
+                            style={{ left: "82%", top: "77%" }}
                             aria-label={t("contactPage.globalMap.australia.title")}
                         />
 
@@ -68,7 +68,7 @@ const GlobalMap = () => {
                             preserveAspectRatio="xMidYMid meet"
                         >
                             <path
-                                d="M48,16 Q60,8 74,24 Q84,36 86,36"
+                                d="M48,16 Q60,8 72,28 Q80,38 82,38.5"
                                 stroke="rgba(255,255,255,0.7)"
                                 strokeWidth="0.3"
                                 strokeDasharray="1.5 1"
@@ -86,7 +86,7 @@ const GlobalMap = () => {
                         </div>
                         <div className="flex items-center gap-2">
                             <span className="h-3 w-3 rounded-full bg-sky-400 ring-1 ring-white/60" />
-                            <span className="font-medium">{t("contactPage.globalMap.legend.regional")}</span>
+                            <span className="font-medium">{t("contactPage.globalMap.legend.hq_au")}</span>
                         </div>
                         <span className="ml-auto text-[11px] sm:text-xs text-slate-500">
                             {t("contactPage.globalMap.legend.coverage")}
