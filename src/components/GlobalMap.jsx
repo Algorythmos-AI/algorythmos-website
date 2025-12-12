@@ -118,9 +118,6 @@ const GlobalMap = () => {
                             <span className="h-3 w-3 rounded-full bg-sky-400 ring-1 ring-white/60" />
                             <span className="font-medium">{t("contactPage.globalMap.legend.hq_au")}</span>
                         </div>
-                        <span className="ml-auto text-[11px] sm:text-xs text-slate-500">
-                            {t("contactPage.globalMap.legend.coverage")}
-                        </span>
                     </div>
 
                     {/* Premium Follow-the-sun card */}
