@@ -2,6 +2,7 @@
 // File: src/pages/contact/PricingPage.jsx
 // Refactored to Mifu style pricing layout – Algorythmos redesign 2025-12
 // Clean, modern pricing page with currency toggle, comparison table, FAQ accordion
+// Fully internationalized for EN and FR
 // ================================================
 
 import React, { useState, useMemo } from "react";
@@ -63,17 +64,17 @@ function ChevronDown({ className = "", rotated = false }) {
 // CURRENCY TOGGLE
 // ================================================
 
-function CurrencyToggle({ currencyCode, onSelect }) {
+function CurrencyToggle({ currencyCode, onSelect, t }) {
   return (
     <div className="flex items-center justify-center gap-2">
-      <span className="text-sm text-slate-400 mr-2">Currency</span>
+      <span className="text-sm text-slate-400 mr-2">{t("pricing.new.currency")}</span>
       <div className="inline-flex rounded-full bg-slate-800/80 p-1 ring-1 ring-white/10">
         <button
           type="button"
           onClick={() => onSelect("eur")}
           className={`px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 ${currencyCode === "eur"
-              ? "bg-gradient-to-r from-violet-600 to-purple-600 text-white shadow-lg"
-              : "text-slate-400 hover:text-white"
+            ? "bg-gradient-to-r from-violet-600 to-purple-600 text-white shadow-lg"
+            : "text-slate-400 hover:text-white"
             }`}
         >
           € EUR
@@ -82,8 +83,8 @@ function CurrencyToggle({ currencyCode, onSelect }) {
           type="button"
           onClick={() => onSelect("aud")}
           className={`px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 ${currencyCode === "aud"
-              ? "bg-gradient-to-r from-violet-600 to-purple-600 text-white shadow-lg"
-              : "text-slate-400 hover:text-white"
+            ? "bg-gradient-to-r from-violet-600 to-purple-600 text-white shadow-lg"
+            : "text-slate-400 hover:text-white"
             }`}
         >
           $ AUD
@@ -171,16 +172,56 @@ function PricingCard({
 // COMPARISON TABLE
 // ================================================
 
-function ComparisonTable() {
+function ComparisonTable({ t }) {
   const features = [
-    { name: "Items per month", starter: "Up to 10k", growth: "Up to 50k", enterprise: "Unlimited" },
-    { name: "Environments", starter: "1 (dev or prod)", growth: "Dual + staging", enterprise: "Unlimited" },
-    { name: "Support level", starter: "Email", growth: "Priority", enterprise: "Dedicated TAM" },
-    { name: "SLA availability", starter: "—", growth: "99.5%", enterprise: "99.9%" },
-    { name: "Audit logs", starter: "—", growth: "✓", enterprise: "✓" },
-    { name: "Private VPC", starter: "—", growth: "—", enterprise: "✓" },
-    { name: "SAML SSO", starter: "—", growth: "Add-on", enterprise: "✓" },
-    { name: "Compliance ready", starter: "GDPR", growth: "GDPR + SOC 2", enterprise: "Full suite" },
+    {
+      name: t("pricing.new.compare.features.items"),
+      starter: t("pricing.new.compare.starter.items"),
+      growth: t("pricing.new.compare.growth.items"),
+      enterprise: t("pricing.new.compare.enterprise.items")
+    },
+    {
+      name: t("pricing.new.compare.features.environments"),
+      starter: t("pricing.new.compare.starter.environments"),
+      growth: t("pricing.new.compare.growth.environments"),
+      enterprise: t("pricing.new.compare.enterprise.environments")
+    },
+    {
+      name: t("pricing.new.compare.features.support"),
+      starter: t("pricing.new.compare.starter.support"),
+      growth: t("pricing.new.compare.growth.support"),
+      enterprise: t("pricing.new.compare.enterprise.support")
+    },
+    {
+      name: t("pricing.new.compare.features.sla"),
+      starter: "—",
+      growth: "99.5%",
+      enterprise: "99.9%"
+    },
+    {
+      name: t("pricing.new.compare.features.auditLogs"),
+      starter: "—",
+      growth: "✓",
+      enterprise: "✓"
+    },
+    {
+      name: t("pricing.new.compare.features.vpc"),
+      starter: "—",
+      growth: "—",
+      enterprise: "✓"
+    },
+    {
+      name: t("pricing.new.compare.features.sso"),
+      starter: "—",
+      growth: t("pricing.new.compare.addon"),
+      enterprise: "✓"
+    },
+    {
+      name: t("pricing.new.compare.features.compliance"),
+      starter: "GDPR",
+      growth: "GDPR + SOC 2",
+      enterprise: t("pricing.new.compare.enterprise.compliance")
+    },
   ];
 
   return (
@@ -188,7 +229,7 @@ function ComparisonTable() {
       <table className="w-full text-left text-sm">
         <thead>
           <tr className="border-b border-slate-800">
-            <th className="py-4 pr-4 font-semibold text-slate-400">Feature</th>
+            <th className="py-4 pr-4 font-semibold text-slate-400">{t("pricing.new.compare.feature")}</th>
             <th className="py-4 px-4 font-semibold text-white text-center">Starter</th>
             <th className="py-4 px-4 font-semibold text-violet-400 text-center">Growth</th>
             <th className="py-4 pl-4 font-semibold text-white text-center">Enterprise</th>
@@ -224,8 +265,8 @@ function FAQAccordion({ items }) {
           <div
             key={idx}
             className={`rounded-2xl transition-all duration-300 ${isOpen
-                ? "bg-slate-800/60 ring-1 ring-violet-500/30 shadow-lg"
-                : "bg-slate-900/60 ring-1 ring-white/5"
+              ? "bg-slate-800/60 ring-1 ring-violet-500/30 shadow-lg"
+              : "bg-slate-900/60 ring-1 ring-white/5"
               }`}
           >
             <button
@@ -255,7 +296,7 @@ function FAQAccordion({ items }) {
 // STICKY CTA
 // ================================================
 
-function StickyCTA() {
+function StickyCTA({ t }) {
   const calendlyUrl = useMemo(() => {
     return withUtm(CALENDLY_URL, {
       utm_source: "pricing",
@@ -270,7 +311,7 @@ function StickyCTA() {
       <div className="mx-auto max-w-4xl pointer-events-auto">
         <div className="rounded-2xl bg-slate-900/95 backdrop-blur-xl ring-1 ring-white/10 p-4 shadow-2xl">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <span className="text-sm text-slate-300">Ready to estimate impact?</span>
+            <span className="text-sm text-slate-300">{t("pricing.new.stickyCta.text")}</span>
             <div className="flex items-center gap-3 w-full sm:w-auto">
               <a
                 href={calendlyUrl}
@@ -282,13 +323,13 @@ function StickyCTA() {
                 }}
                 className="flex-1 sm:flex-none inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg hover:shadow-violet-500/30 transition-all"
               >
-                Book a discovery call
+                {t("pricing.new.stickyCta.book")}
               </a>
               <a
                 href="/contact"
                 className="flex-1 sm:flex-none inline-flex items-center justify-center rounded-xl bg-slate-800 px-5 py-2.5 text-sm font-semibold text-white ring-1 ring-white/10 hover:bg-slate-700 transition-all"
               >
-                Contact us
+                {t("pricing.new.stickyCta.contact")}
               </a>
             </div>
           </div>
@@ -325,27 +366,27 @@ export default function PricingPage() {
     });
   }, []);
 
-  // FAQ data
+  // FAQ data - internationalized
   const faqItems = [
     {
-      question: "How does onboarding work?",
-      answer: "We start with a discovery call to understand your workflows, then design a pilot scope together. Our engineers deploy within 2–4 weeks, with iterative refinement based on your feedback. You get full documentation and training before handoff.",
+      question: t("pricing.new.faq.0.question"),
+      answer: t("pricing.new.faq.0.answer"),
     },
     {
-      question: "Do you mark up cloud or LLM costs?",
-      answer: "No. All infrastructure and API costs are passed through at cost. Our pricing covers engineering, support, and platform access only. You maintain full visibility into your cloud spend.",
+      question: t("pricing.new.faq.1.question"),
+      answer: t("pricing.new.faq.1.answer"),
     },
     {
-      question: "How do you measure accuracy?",
-      answer: "We use exact-match and semantic similarity metrics, plus human review sampling. Every deployment includes an accuracy dashboard so you can track performance against your KPIs in real-time.",
+      question: t("pricing.new.faq.2.question"),
+      answer: t("pricing.new.faq.2.answer"),
     },
     {
-      question: "Can you deploy in our cloud?",
-      answer: "Yes. We support private VPC deployments on AWS, GCP, or Azure. For highly regulated industries, we also offer fully on-premise setups with air-gapped security.",
+      question: t("pricing.new.faq.3.question"),
+      answer: t("pricing.new.faq.3.answer"),
     },
     {
-      question: "What counts as an 'item'?",
-      answer: "An item is one unit processed through the system — for example, one document, one email, one API call, or one chat message. Complex documents with multiple pages still count as one item.",
+      question: t("pricing.new.faq.4.question"),
+      answer: t("pricing.new.faq.4.answer"),
     },
   ];
 
@@ -373,7 +414,7 @@ export default function PricingPage() {
       </Helmet>
 
       {/* Breadcrumbs */}
-      <SeoBreadcrumbs items={[{ name: "Home", path: "/" }, { name: t("nav.pricing"), path: "/pricing" }]} />
+      <SeoBreadcrumbs items={[{ name: t("nav.home"), path: "/" }, { name: t("nav.pricing"), path: "/pricing" }]} />
 
       {/* OfferCatalog JSON-LD */}
       <script type="application/ld+json" suppressHydrationWarning>
@@ -419,53 +460,53 @@ export default function PricingPage() {
         <section className="text-center max-w-3xl mx-auto">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight mb-6">
             <span className="bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
-              Simple, Transparent
+              {t("pricing.new.hero.title1")}
             </span>
             <br />
             <span className="bg-gradient-to-r from-violet-400 via-purple-400 to-violet-600 bg-clip-text text-transparent">
-              Pricing
+              {t("pricing.new.hero.title2")}
             </span>
           </h1>
           <p className="text-lg md:text-xl text-slate-400 leading-relaxed">
-            Choose a plan that fits your scale. Built for secure AI deployments across France and Australia.
+            {t("pricing.new.hero.subtitle")}
           </p>
 
           {/* Trust badges */}
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <span className="rounded-full bg-slate-800/80 px-4 py-1.5 text-xs font-medium text-slate-300 ring-1 ring-white/10">
-              GDPR Compliant
+              {t("pricing.new.badges.gdpr")}
             </span>
             <span className="rounded-full bg-slate-800/80 px-4 py-1.5 text-xs font-medium text-slate-300 ring-1 ring-white/10">
-              SOC 2 Ready
+              {t("pricing.new.badges.soc2")}
             </span>
             <span className="rounded-full bg-slate-800/80 px-4 py-1.5 text-xs font-medium text-slate-300 ring-1 ring-white/10">
-              EU AI Act Ready
+              {t("pricing.new.badges.euAiAct")}
             </span>
           </div>
         </section>
 
         {/* Currency Toggle */}
         <section className="flex justify-center">
-          <CurrencyToggle currencyCode={currencyCode} onSelect={setCurrencyCode} />
+          <CurrencyToggle currencyCode={currencyCode} onSelect={setCurrencyCode} t={t} />
         </section>
 
         {/* Pricing Cards */}
         <section id="plans" className="grid gap-8 md:grid-cols-3">
           {/* Starter */}
           <PricingCard
-            title="Starter"
+            title={t("pricing.new.plans.starter.title")}
             price={currency.starter.toLocaleString()}
             currencySymbol={currency.symbol}
-            period="/mo"
-            description="For pilots and small teams"
+            period={t("pricing.new.period")}
+            description={t("pricing.new.plans.starter.description")}
             features={[
-              "Up to 10k items per month",
-              "1 environment (dev or prod)",
-              "Basic RAG flows",
-              "Shared infrastructure",
-              "Email support",
+              t("pricing.new.plans.starter.features.0"),
+              t("pricing.new.plans.starter.features.1"),
+              t("pricing.new.plans.starter.features.2"),
+              t("pricing.new.plans.starter.features.3"),
+              t("pricing.new.plans.starter.features.4"),
             ]}
-            buttonLabel="Get started"
+            buttonLabel={t("pricing.new.plans.starter.cta")}
             onButtonClick={() => {
               recordLastCta("starter_cta");
               track("click_plan_cta", { plan: "Starter" });
@@ -475,43 +516,43 @@ export default function PricingPage() {
 
           {/* Growth - Highlighted */}
           <PricingCard
-            title="Growth"
+            title={t("pricing.new.plans.growth.title")}
             price={currency.growth.toLocaleString()}
             currencySymbol={currency.symbol}
-            period="/mo"
-            description="For growing operations"
+            period={t("pricing.new.period")}
+            description={t("pricing.new.plans.growth.description")}
             features={[
-              "Up to 50k items per month",
-              "Dual environment + staging",
-              "Audit logs & redaction guardrails",
-              "99.5% SLA",
-              "Priority support",
+              t("pricing.new.plans.growth.features.0"),
+              t("pricing.new.plans.growth.features.1"),
+              t("pricing.new.plans.growth.features.2"),
+              t("pricing.new.plans.growth.features.3"),
+              t("pricing.new.plans.growth.features.4"),
             ]}
-            buttonLabel="Start scaling"
+            buttonLabel={t("pricing.new.plans.growth.cta")}
             onButtonClick={() => {
               recordLastCta("growth_cta");
               track("click_plan_cta", { plan: "Growth" });
               window.open(calendlyUrl, "_blank");
             }}
             highlight={true}
-            badgeLabel="Most popular"
+            badgeLabel={t("pricing.new.plans.growth.badge")}
           />
 
           {/* Enterprise */}
           <PricingCard
-            title="Enterprise"
-            price="Custom"
+            title={t("pricing.new.plans.enterprise.title")}
+            price={t("pricing.new.plans.enterprise.price")}
             currencySymbol=""
             period=""
-            description="For regulated & high-volume"
+            description={t("pricing.new.plans.enterprise.description")}
             features={[
-              "Unlimited items per month",
-              "Private VPC deployment",
-              "SAML SSO included",
-              "Custom KPIs & reporting",
-              "Dedicated technical account manager",
+              t("pricing.new.plans.enterprise.features.0"),
+              t("pricing.new.plans.enterprise.features.1"),
+              t("pricing.new.plans.enterprise.features.2"),
+              t("pricing.new.plans.enterprise.features.3"),
+              t("pricing.new.plans.enterprise.features.4"),
             ]}
-            buttonLabel="Contact sales"
+            buttonLabel={t("pricing.new.plans.enterprise.cta")}
             onButtonClick={() => {
               recordLastCta("enterprise_cta");
               track("click_plan_cta", { plan: "Enterprise" });
@@ -522,20 +563,20 @@ export default function PricingPage() {
 
         {/* VAT Note */}
         <p className="text-center text-xs text-slate-500">
-          All prices exclude VAT. Billed monthly. Cancel anytime.
+          {t("pricing.new.vatNote")}
         </p>
 
         {/* Comparison Table */}
         <section>
-          <h2 className="text-2xl md:text-3xl font-bold text-center mb-8">Compare plans</h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-8">{t("pricing.new.compare.title")}</h2>
           <div className="rounded-2xl bg-slate-900/60 ring-1 ring-white/10 p-6 md:p-8">
-            <ComparisonTable />
+            <ComparisonTable t={t} />
           </div>
         </section>
 
         {/* FAQ Section */}
         <section>
-          <h2 className="text-2xl md:text-3xl font-bold text-center mb-8">Frequently asked questions</h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-8">{t("pricing.new.faqTitle")}</h2>
           <div className="max-w-3xl mx-auto">
             <FAQAccordion items={faqItems} />
           </div>
@@ -544,7 +585,7 @@ export default function PricingPage() {
       </main>
 
       {/* Sticky CTA */}
-      <StickyCTA />
+      <StickyCTA t={t} />
     </div>
   );
 }
