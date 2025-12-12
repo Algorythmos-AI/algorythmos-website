@@ -2,6 +2,7 @@ import React, { Suspense, lazy, useEffect, useState } from 'react';
 import { Brain, Rocket, Eye, Globe, Shield, Sparkles, CheckCircle, MousePointer2, Star } from 'lucide-react';
 import { useI18n } from '../../app/i18n/I18nContext.jsx';
 import { RegionHelmet } from '../../app/seo';
+import SeoBreadcrumbs from '../../app/seo/SeoBreadcrumbs.jsx';
 import Hero from '../../components/ui/Hero.jsx';
 import ScrollReveal from '../../components/ui/ScrollReveal.jsx';
 import Button from '../../components/ui/Button.jsx';
@@ -103,6 +104,7 @@ const AdvancedBusinessWebsite = () => {
   return (
     <div className="min-h-screen bg-neural-950 text-white overflow-hidden relative selection:bg-neon-violet/30 selection:text-white">
       <RegionHelmet region="GLOBAL" />
+      <SeoBreadcrumbs items={[{ name: "Home", path: "/" }]} />
 
       {/* 1. Neural Particle Hero */}
       <Hero />
