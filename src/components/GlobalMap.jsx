@@ -8,6 +8,7 @@
  */
 import React from "react";
 import { useI18n } from "../app/i18n/I18nContext";
+import { FlagFR, FlagAU } from "./navigation/RegionFlags.jsx";
 
 const WORLD_MAP_SRC = "/media/maps/algorythmos_worldmap.svg";
 
@@ -194,9 +195,12 @@ const GlobalMap = () => {
                         }`}
                     onClick={() => setActiveOffice("fr")}
                 >
-                    <p className="text-xs uppercase tracking-[0.18em] text-violet-300/80">
-                        {t("contactPage.globalMap.locations.france.country")}
-                    </p>
+                    <div className="flex items-center gap-2 mb-0.5">
+                        <FlagFR className="w-5 h-3.5 rounded-[2px] shadow-sm opacity-90" />
+                        <p className="text-xs uppercase tracking-[0.18em] text-violet-300/80">
+                            {t("contactPage.globalMap.locations.france.country")}
+                        </p>
+                    </div>
                     <h3 className="mt-1 text-lg font-semibold text-slate-50">
                         {t("contactPage.globalMap.locations.france.title")}
                     </h3>
@@ -212,9 +216,12 @@ const GlobalMap = () => {
                         }`}
                     onClick={() => setActiveOffice("au")}
                 >
-                    <p className="text-xs uppercase tracking-[0.18em] text-blue-300/80">
-                        {t("contactPage.globalMap.locations.australia.country")}
-                    </p>
+                    <div className="flex items-center gap-2 mb-0.5">
+                        <FlagAU className="w-5 h-3.5 rounded-[2px] shadow-sm opacity-90" />
+                        <p className="text-xs uppercase tracking-[0.18em] text-blue-300/80">
+                            {t("contactPage.globalMap.locations.australia.country")}
+                        </p>
+                    </div>
                     <h3 className="mt-1 text-lg font-semibold text-slate-50">
                         {t("contactPage.globalMap.locations.australia.title")}
                     </h3>
