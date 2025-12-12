@@ -195,11 +195,13 @@ const GlobalMap = () => {
                         }`}
                     onClick={() => setActiveOffice("fr")}
                 >
-                    <div className="flex items-center gap-2 mb-0.5">
-                        <FlagFR className="w-5 h-3.5 rounded-[2px] shadow-sm opacity-90" />
-                        <p className="text-xs uppercase tracking-[0.18em] text-violet-300/80">
-                            {t("contactPage.globalMap.locations.france.country")}
-                        </p>
+                    <div className="flex justify-center mb-3">
+                        <div className="flex items-center gap-2">
+                            <FlagFR className="w-5 h-3.5 rounded-sm shadow-sm opacity-90" />
+                            <span className="text-xs uppercase tracking-widest text-violet-300/80">
+                                {t("contactPage.globalMap.locations.france.country")}
+                            </span>
+                        </div>
                     </div>
                     <h3 className="mt-1 text-lg font-semibold text-slate-50">
                         {t("contactPage.globalMap.locations.france.title")}
@@ -216,11 +218,13 @@ const GlobalMap = () => {
                         }`}
                     onClick={() => setActiveOffice("au")}
                 >
-                    <div className="flex items-center gap-2 mb-0.5">
-                        <FlagAU className="w-5 h-3.5 rounded-[2px] shadow-sm opacity-90" />
-                        <p className="text-xs uppercase tracking-[0.18em] text-blue-300/80">
-                            {t("contactPage.globalMap.locations.australia.country")}
-                        </p>
+                    <div className="flex justify-center mb-3">
+                        <div className="flex items-center gap-2">
+                            <FlagAU className="w-5 h-3.5 rounded-sm shadow-sm opacity-90" />
+                            <span className="text-xs uppercase tracking-widest text-blue-300/80">
+                                {t("contactPage.globalMap.locations.australia.country")}
+                            </span>
+                        </div>
                     </div>
                     <h3 className="mt-1 text-lg font-semibold text-slate-50">
                         {t("contactPage.globalMap.locations.australia.title")}
