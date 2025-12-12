@@ -13,6 +13,5 @@ Disallow: /admin/
 Disallow: /api/
 Disallow: /private/
 Disallow: /internal/
-Allow: /
 
 Crawl-delay: 1
