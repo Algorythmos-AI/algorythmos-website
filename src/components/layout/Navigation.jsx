@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { Menu, X, ChevronDown, ExternalLink, Globe, Book, Layout, Linkedin, Twitter, Instagram } from "lucide-react";
+import { ChevronDown, Globe, Book, Layout, Linkedin, Twitter, Instagram, Mail } from "lucide-react";
 import logo from "../../assets/Algorythmos.png";
 import { useI18n } from "../../app/i18n/I18nContext.jsx";
 import { getNavItems, withRegionPath } from "../../app/i18n/navConfig.js";
@@ -38,7 +38,7 @@ const NavBar = () => {
   const navItems = getNavItems(region);
 
   // Region-aware paths
-  const calculatorPath = withRegionPath(region, "/pricing") + "#calculator";
+  const contactPath = withRegionPath(region, "/contact");
   const homePath = withRegionPath(region, "/");
 
   // Apple-style scroll handler with debouncing
@@ -315,9 +315,9 @@ const NavBar = () => {
               <RegionSwitcher />
             </div>
 
-            {/* Primary CTA - Mifu-style pill with glow */}
+            {/* Primary CTA - Contact Us */}
             <Link
-              to={calculatorPath}
+              to={contactPath}
               className={`
                 group relative inline-flex items-center gap-2 
                 bg-gradient-to-r from-violet-600 via-purple-600 to-violet-600
@@ -330,8 +330,8 @@ const NavBar = () => {
                 ${isCompact ? "px-4 py-2 text-sm" : "px-5 py-2.5 text-sm"}
               `}
             >
-              <span>{t("nav.openCalculator")}</span>
-              <Book className="w-4 h-4 hidden xl:block group-hover:rotate-6 transition-transform" />
+              <span>{t("nav.contactUs")}</span>
+              <Mail className="w-4 h-4 hidden xl:block group-hover:rotate-6 transition-transform" />
             </Link>
           </div>
 
