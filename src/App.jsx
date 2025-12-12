@@ -136,6 +136,22 @@ const ORGANISATION_SCHEMA = {
   ]
 };
 
+// SiteNavigationElement JSON-LD for main nav (NVIDIA-style sitelinks)
+const SITE_NAVIGATION_SCHEMA = {
+  "@context": "https://schema.org",
+  "@type": "SiteNavigationElement",
+  "name": ["Home", "Services", "Pricing", "About", "Case Studies", "Blog", "Contact"],
+  "url": [
+    "https://algorythmos.com/",
+    "https://algorythmos.com/services",
+    "https://algorythmos.com/pricing",
+    "https://algorythmos.com/about",
+    "https://algorythmos.com/case-studies",
+    "https://algorythmos.com/blog",
+    "https://algorythmos.com/contact"
+  ]
+};
+
 function App() {
   return (
     <>
@@ -144,6 +160,9 @@ function App() {
       <Helmet>
         <script type="application/ld+json">
           {JSON.stringify(ORGANISATION_SCHEMA)}
+        </script>
+        <script type="application/ld+json">
+          {JSON.stringify(SITE_NAVIGATION_SCHEMA)}
         </script>
       </Helmet>
       <GlobalCtaTracker />

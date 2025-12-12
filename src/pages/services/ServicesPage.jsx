@@ -5,8 +5,9 @@ import { Layers, Bot, FileText, BarChart3, Globe } from "lucide-react";
 import ServiceCard from "./services/ServiceCard";
 import { servicesList } from "../../data/services";
 import { useI18n } from "../../app/i18n/I18nContext.jsx";
-import { getCanonicalUrl, getOgLocale, generateHreflangLinks } from "../../app/utils/seoHelpers.js";
+import { getCanonicalUrl, getOgLocale, generateHreflangLinks, getCanonicalBase } from "../../app/utils/seoHelpers.js";
 import LocalizedCTA from "../../components/ui/LocalizedCTA.jsx";
+import SeoBreadcrumbs from "../../app/seo/SeoBreadcrumbs.jsx";
 
 // Lazy load ScrollSequence for performance
 const ScrollSequence = lazy(() => import("../../components/microanimations/ScrollSequence.jsx"));
@@ -83,6 +84,7 @@ export default function ServicesPage() {
         <meta name="twitter:description" content={t("services.meta.description")} />
         <meta name="twitter:image" content={`${canonicalUrl.replace('/services', '')}/Algorythmos.png`} />
       </Helmet>
+      <SeoBreadcrumbs items={[{ name: "Home", path: "/" }, { name: t("nav.services"), path: "/services" }]} />
 
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 via-purple-600/5 to-transparent pointer-events-none" />

@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { useI18n } from "../../app/i18n/I18nContext";
 import { getCanonicalUrl, getOgLocale, generateHreflangLinks, getCanonicalBase } from "../../app/utils/seoHelpers.js";
+import SeoBreadcrumbs from "../../app/seo/SeoBreadcrumbs.jsx";
 
 // Blog structure definitions (content comes from i18n)
 const blogStructures = {
@@ -166,6 +167,11 @@ export default function BlogDetailPage() {
           })}
         </script>
       </Helmet>
+      <SeoBreadcrumbs items={[
+        { name: "Home", path: "/" },
+        { name: t("nav.blog"), path: "/blog" },
+        { name: post.title, path: `/blog/${slug}` }
+      ]} />
 
       <main className="pt-40 pb-24 px-6">
         <article className="max-w-3xl mx-auto">

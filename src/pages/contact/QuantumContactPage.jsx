@@ -8,6 +8,7 @@ import { persistUtmFromLocation, readStoredUtm } from "../../app/utils/utm";
 import { useI18n } from "../../app/i18n/I18nContext";
 import { getCanonicalUrl, getOgLocale, generateHreflangLinks, getCanonicalBase } from "../../app/utils/seoHelpers.js";
 import GlobalMap from "../../components/GlobalMap";
+import SeoBreadcrumbs from "../../app/seo/SeoBreadcrumbs.jsx";
 // Footer is global via App.jsx
 
 const SERVICE_ID = "service_m5jcw4i";
@@ -137,6 +138,7 @@ const QuantumContactPage = () => {
         <meta name="twitter:description" content={t("contactPage.meta.description")} />
         <meta name="twitter:image" content={`${canonicalBase}/Algorythmos.png`} />
       </Helmet>
+      <SeoBreadcrumbs items={[{ name: "Home", path: "/" }, { name: t("nav.contact"), path: "/contact" }]} />
 
       {/* Global Navbar is rendered by App.jsx */}
 

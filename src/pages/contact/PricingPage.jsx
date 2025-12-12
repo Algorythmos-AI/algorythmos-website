@@ -12,10 +12,11 @@ import { withUtm, persistUtmFromLocation, readStoredUtm, recordLastCta } from ".
 import { useI18n } from "../../app/i18n/I18nContext.jsx";
 import AlgorythmosCalculator from "../../components/charts/AlgorythmosCalculator";
 import { getCanonicalUrl, getOgLocale, generateHreflangLinks, getCanonicalBase } from "../../app/utils/seoHelpers.js";
+import SeoBreadcrumbs from "../../app/seo/SeoBreadcrumbs.jsx";
 
 const Check = (props) => (
   <svg viewBox="0 0 24 24" aria-hidden="true" className={`h-5 w-5 ${props.className || ""}`}>
-    <path fill="currentColor" d="M9 16.17l-3.88-3.88a1 1 0 10-1.41 1.41l4.59 4.59a1 1 0 001.41 0l10-10a1 1 0 10-1.41-1.41L9 16.17z"/>
+    <path fill="currentColor" d="M9 16.17l-3.88-3.88a1 1 0 10-1.41 1.41l4.59 4.59a1 1 0 001.41 0l10-10a1 1 0 10-1.41-1.41L9 16.17z" />
   </svg>
 );
 
@@ -83,7 +84,7 @@ function InfoTip({ t }) {
   );
 }
 
-function StickyCTA({ t }){
+function StickyCTA({ t }) {
   const calendlyUrl = useMemo(() => {
     return withUtm(CALENDLY_URL, {
       utm_source: "pricing",
@@ -134,7 +135,7 @@ function StickyCTA({ t }){
   );
 }
 
-export default function PricingPage(){
+export default function PricingPage() {
   const { t, region } = useI18n();
 
   // SEO helpers
@@ -142,7 +143,7 @@ export default function PricingPage(){
   const canonicalBase = getCanonicalBase(region);
   const ogLocale = getOgLocale(region);
   const hreflangLinks = generateHreflangLinks("/pricing");
-  
+
   useEffect(() => {
     // Capture UTMs on initial render
     persistUtmFromLocation();
@@ -168,10 +169,11 @@ export default function PricingPage(){
         <meta property="og:url" content={canonicalUrl} />
         <meta property="og:locale" content={ogLocale} />
       </Helmet>
+      <SeoBreadcrumbs items={[{ name: "Home", path: "/" }, { name: t("nav.pricing"), path: "/pricing" }]} />
 
       {/* Hero */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 -z-10 bg-gradient-to-br from-[#6D00FF] via-[#7658E7] to-[#3715E0] opacity-20"/>
+        <div className="absolute inset-0 -z-10 bg-gradient-to-br from-[#6D00FF] via-[#7658E7] to-[#3715E0] opacity-20" />
         <div className="mx-auto max-w-6xl px-4 py-16">
           <div className="rounded-3xl bg-slate-900/60 ring-1 ring-white/10 p-8 md:p-12 shadow-[0_10px_40px_-10px_rgba(109,0,255,0.55)]">
             <h1 className="text-3xl md:text-5xl font-bold tracking-tight">
@@ -181,21 +183,13 @@ export default function PricingPage(){
               {t("pricing.hero.subtitle")}
             </p>
 
-            {/* SEO: Organization + Offers schema */}
+            {/* SEO: Offers schema (Organization is global in App.jsx) */}
             <script type="application/ld+json" suppressHydrationWarning>
               {JSON.stringify({
                 "@context": "https://schema.org",
-                "@type": "Organization",
-                "name": "Algorythmos",
-                "url": canonicalBase,
-                "logo": `${canonicalBase}/favicon.ico`,
-                "description": "Boutique AI & Data Science consultancy delivering secure, ROI-driven automation, document intelligence, dashboards, and MLOps.",
-                "sameAs": [
-                  "https://www.linkedin.com/company/algorythmos",
-                  "https://x.com/algorythmos",
-                  "https://github.com/algorythmos"
-                ],
-                "makesOffer": [
+                "@type": "OfferCatalog",
+                "name": "Algorythmos Pricing Plans",
+                "itemListElement": [
                   {
                     "@type": "Offer",
                     "name": "Pilot",
@@ -241,12 +235,12 @@ export default function PricingPage(){
                 <div className="rounded-xl border border-slate-800 p-4">
                   <div className="font-semibold">{t("pricing.hero.glance.internal.title")}</div>
                   <div className="text-slate-400">{t("pricing.hero.glance.internal.subtitle")}</div>
-                  <div className="mt-1 text-xl font-bold">≈ €{Math.round((120000/6) + (120000*0.18/12) + 2000)}</div>
+                  <div className="mt-1 text-xl font-bold">≈ €{Math.round((120000 / 6) + (120000 * 0.18 / 12) + 2000)}</div>
                 </div>
                 <div className="rounded-xl border border-slate-800 p-4">
                   <div className="font-semibold">{t("pricing.hero.glance.agency.title")}</div>
                   <div className="text-slate-400">{t("pricing.hero.glance.agency.subtitle")}</div>
-                  <div className="mt-1 text-xl font-bold">≈ €{Math.round(12000 + 1000 + 30000/6)}</div>
+                  <div className="mt-1 text-xl font-bold">≈ €{Math.round(12000 + 1000 + 30000 / 6)}</div>
                 </div>
                 <div className="rounded-xl border border-slate-800 p-4">
                   <div className="font-semibold">{t("pricing.hero.glance.algorythmos.title")}</div>
@@ -320,11 +314,10 @@ export default function PricingPage(){
           ].map((tier) => (
             <div
               key={tier.name}
-              className={`relative rounded-3xl border p-6 shadow-2xl ${
-                tier.popular
-                  ? "border-violet-500/50 bg-slate-900/70"
-                  : "border-slate-800 bg-slate-900/60"
-              }`}
+              className={`relative rounded-3xl border p-6 shadow-2xl ${tier.popular
+                ? "border-violet-500/50 bg-slate-900/70"
+                : "border-slate-800 bg-slate-900/60"
+                }`}
               id={tier.id ? tier.id : undefined}
             >
               {tier.popular && (
@@ -339,7 +332,7 @@ export default function PricingPage(){
               <ul className="mt-4 space-y-2 text-sm">
                 {tier.features.map((f) => (
                   <li key={f} className="flex items-start gap-2">
-                    <span className="text-emerald-400 flex-shrink-0"><Check/></span>
+                    <span className="text-emerald-400 flex-shrink-0"><Check /></span>
                     <span className="break-words hyphens-auto">{f}</span>
                   </li>
                 ))}
@@ -363,7 +356,7 @@ export default function PricingPage(){
         <p className="mt-4 text-xs text-slate-500">
           {t("pricing.notes.vatExcluded")}
         </p>
-        
+
         <div className="mt-4 space-y-1 text-xs text-slate-400">
           <p>
             <span className="font-semibold">{t("pricing.notes.definitionsLabel")}</span>{" "}

@@ -7,6 +7,7 @@ import { track } from "../../app/utils/analytics";
 import { persistUtmFromLocation, readStoredUtm } from "../../app/utils/utm";
 import { useI18n } from "../../app/i18n/I18nContext";
 import { getCanonicalUrl, getOgLocale, generateHreflangLinks, getCanonicalBase } from "../../app/utils/seoHelpers.js";
+import SeoBreadcrumbs from "../../app/seo/SeoBreadcrumbs.jsx";
 
 // Lazy-load heavy components
 const TeamGrid = lazy(() => import("../../components/ui/TeamGrid"));
@@ -238,6 +239,7 @@ const QuantumAboutPage = () => {
         <meta name="twitter:description" content={t("about.meta.description")} />
         <meta name="twitter:image" content={`${canonicalBase}/Algorythmos.png`} />
       </Helmet>
+      <SeoBreadcrumbs items={[{ name: "Home", path: "/" }, { name: t("nav.about"), path: "/about" }]} />
 
       {/* Global Navbar is rendered by App.jsx */}
 

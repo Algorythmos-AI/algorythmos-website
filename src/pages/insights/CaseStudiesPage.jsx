@@ -3,11 +3,13 @@ import { Helmet } from "react-helmet-async";
 import { BarChart2, FileText, Zap, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useI18n } from "../../app/i18n/I18nContext.jsx";
-import { getCanonicalUrl, getOgLocale, generateHreflangLinks } from "../../app/utils/seoHelpers.js";
+import { getCanonicalUrl, getOgLocale, generateHreflangLinks, getCanonicalBase } from "../../app/utils/seoHelpers.js";
+import SeoBreadcrumbs from "../../app/seo/SeoBreadcrumbs.jsx";
 
 const CaseStudiesPage = () => {
   const { t, region, getRegionPath } = useI18n();
   const canonicalUrl = getCanonicalUrl(region, '/case-studies');
+  const canonicalBase = getCanonicalBase(region);
   const ogLocale = getOgLocale(region);
   const hreflangLinks = generateHreflangLinks('/case-studies');
 
@@ -62,8 +64,16 @@ const CaseStudiesPage = () => {
         <meta property="og:title" content={t("caseStudies.meta.title")} />
         <meta property="og:description" content={t("caseStudies.meta.description")} />
         <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content={`${canonicalBase}/Algorythmos.png`} />
+        <meta property="og:site_name" content="Algorythmos" />
         <meta property="og:locale" content={ogLocale} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={t("caseStudies.meta.title")} />
+        <meta name="twitter:description" content={t("caseStudies.meta.description")} />
+        <meta name="twitter:image" content={`${canonicalBase}/Algorythmos.png`} />
       </Helmet>
+      <SeoBreadcrumbs items={[{ name: "Home", path: "/" }, { name: t("nav.caseStudies"), path: "/case-studies" }]} />
 
       <main className="pt-32 md:pt-40 pb-20 px-4 sm:px-6 md:px-12 max-w-6xl mx-auto text-center">
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-6 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
