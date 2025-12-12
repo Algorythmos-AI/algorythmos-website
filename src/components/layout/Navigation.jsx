@@ -144,7 +144,7 @@ const NavBar = () => {
           transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]
           ${showNavbar ? "translate-y-0" : "-translate-y-full"}
           ${isScrolled
-            ? "bg-slate-950/80 backdrop-blur-2xl shadow-[0_4px_30px_rgba(0,0,0,0.3)] border-b border-white/5"
+            ? "bg-slate-950/85 backdrop-blur-2xl shadow-[0_4px_30px_rgba(0,0,0,0.4),0_0_40px_rgba(139,92,246,0.08),inset_0_-1px_0_rgba(139,92,246,0.15)] border-b border-violet-500/10"
             : "bg-transparent border-b border-transparent"
           }
         `}
