@@ -51,10 +51,12 @@ const GlobalMap = () => {
 
                         {/* France marker with tooltip */}
                         <div
-                            className="group absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer"
+                            className="group absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer hq-ripple text-pink-400"
                             style={{ left: "50.5%", top: "32%" }}
                             onClick={() => setActiveOffice("fr")}
                         >
+                            {/* Ambient glow */}
+                            <div className="absolute inset-0 -z-10 rounded-full bg-[radial-gradient(circle,rgba(248,113,181,0.25),transparent_70%)] animate-[hqGlow_4s_ease-in-out_infinite]" />
                             <div
                                 className="h-5 w-5 rounded-full bg-pink-400 ring-2 ring-white/90 shadow-[0_0_20px_rgba(248,113,181,0.9)] animate-pulse"
                                 aria-label={t("contactPage.globalMap.france.title")}
@@ -66,10 +68,12 @@ const GlobalMap = () => {
 
                         {/* Australia marker with tooltip */}
                         <div
-                            className="group absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer"
+                            className="group absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer hq-ripple text-sky-400"
                             style={{ left: "91.3%", top: "68.9%" }}
                             onClick={() => setActiveOffice("au")}
                         >
+                            {/* Ambient glow */}
+                            <div className="absolute inset-0 -z-10 rounded-full bg-[radial-gradient(circle,rgba(56,189,248,0.25),transparent_70%)] animate-[hqGlow_4s_ease-in-out_infinite]" />
                             <div
                                 className="h-5 w-5 rounded-full bg-sky-400 ring-2 ring-white/90 shadow-[0_0_20px_rgba(56,189,248,0.9)] animate-pulse"
                                 aria-label={t("contactPage.globalMap.australia.title")}
@@ -96,15 +100,12 @@ const GlobalMap = () => {
                                 className="animate-[dash_3s_linear_infinite]"
                             />
 
-                            {/* Flying plane icon */}
-                            <text
-                                className="plane-icon"
-                                fontSize="3"
-                                textAnchor="middle"
-                                dominantBaseline="middle"
-                            >
-                                ✈️
-                            </text>
+                            {/* Soft travelling dot */}
+                            <circle
+                                r="1"
+                                fill="rgba(56,189,248,0.9)"
+                                className="travel-dot"
+                            />
                         </svg>
                     </div>
 
@@ -231,7 +232,7 @@ const GlobalMap = () => {
                         stroke-dashoffset: -20;
                     }
                 }
-                @keyframes planeTravel {
+                @keyframes travel {
                     from { offset-distance: 0%; }
                     to   { offset-distance: 100%; }
                 }
@@ -239,12 +240,12 @@ const GlobalMap = () => {
                     from { opacity: 0; transform: translateY(20px); }
                     to   { opacity: 1; transform: translateY(0); }
                 }
-                .plane-icon {
+                .travel-dot {
                     offset-path: path("M50 16 Q69.65 15.225 91.3 34.45");
                     offset-rotate: auto;
-                    offset-distance: 0%;
-                    animation: planeTravel 4s linear infinite;
-                    filter: drop-shadow(0 0 4px rgba(255,255,255,0.9));
+                    animation: travel 3s linear infinite;
+                    filter: drop-shadow(0 0 6px rgba(56,189,248,0.7))
+                            drop-shadow(0 0 12px rgba(56,189,248,0.5));
                 }
 
                 @keyframes shine {
@@ -255,6 +256,35 @@ const GlobalMap = () => {
                 @keyframes slowGlow {
                     0%, 100% { opacity: 0.25; }
                     50% { opacity: 0.55; }
+                }
+
+                @keyframes hqGlow {
+                    0%, 100% { opacity: 0.3; transform: scale(1); }
+                    50% { opacity: 0.6; transform: scale(1.1); }
+                }
+
+                @keyframes ripple {
+                    0% {
+                        transform: scale(1);
+                        opacity: 0.35;
+                    }
+                    70% {
+                        transform: scale(2.4);
+                        opacity: 0;
+                    }
+                    100% {
+                        opacity: 0;
+                    }
+                }
+
+                .hq-ripple::after {
+                    content: "";
+                    position: absolute;
+                    inset: 0;
+                    border-radius: 50%;
+                    border: 1px solid currentColor;
+                    opacity: 0;
+                    animation: ripple 3.5s ease-out infinite;
                 }
 
                 .animate-spin-slow {
