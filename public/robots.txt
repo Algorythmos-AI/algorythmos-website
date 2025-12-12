@@ -1,5 +1,18 @@
 User-agent: *
 Allow: /
-Sitemap: https://algorythmos.com/sitemap.xml
-Sitemap: https://algorythmos.fr/sitemap.xml
-Sitemap: https://algorythmos.com.au/sitemap.xml
+
+Sitemap: https://algorythmos.com/sitemap-index.xml
+Sitemap: https://algorythmos.fr/sitemap-index.xml
+Sitemap: https://algorythmos.com.au/sitemap-index.xml
+
+Sitemap: https://algorythmos.com/sitemap-com.xml
+Sitemap: https://algorythmos.com.au/sitemap-au.xml
+Sitemap: https://algorythmos.fr/sitemap-fr.xml
+
+Disallow: /admin/
+Disallow: /api/
+Disallow: /private/
+Disallow: /internal/
+Allow: /
+
+Crawl-delay: 1
