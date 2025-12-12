@@ -122,6 +122,61 @@ const GlobalMap = () => {
                             {t("contactPage.globalMap.legend.coverage")}
                         </span>
                     </div>
+
+                    {/* Premium Follow-the-sun card */}
+                    <div className="w-full flex justify-center mt-4 pb-4">
+                        <div className="
+                            relative
+                            px-5 py-2.5 
+                            rounded-full 
+                            bg-slate-900/60 
+                            border border-slate-700/60 
+                            backdrop-blur-md 
+                            flex items-center gap-3 
+                            text-[11px] sm:text-xs 
+                            text-slate-200 
+                            shadow-[0_0_20px_rgba(0,0,0,0.35)]
+                            overflow-hidden
+                        ">
+                            {/* Animated purple gradient ring */}
+                            <div className="
+                                absolute inset-0 
+                                rounded-full 
+                                pointer-events-none
+                                bg-gradient-to-r from-violet-500/20 via-fuchsia-400/10 to-blue-400/20
+                                animate-[slowGlow_4s_ease-in-out_infinite]
+                            " />
+
+                            {/* Rotating globe icon */}
+                            <svg
+                                width="14"
+                                height="14"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                className="text-violet-300/90 animate-spin-slow"
+                            >
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M2 12h20M12 2a15.3 15.3 0 0 1 0 20 15.3 15.3 0 0 1 0-20Z"></path>
+                            </svg>
+
+                            {/* Text */}
+                            <span className="relative font-medium tracking-wide whitespace-nowrap">
+                                Follow-the-sun delivery across France, EU, UK, Australia & APAC
+                            </span>
+
+                            {/* Animated shine overlay */}
+                            <div className="
+                                absolute inset-0 
+                                pointer-events-none
+                                bg-gradient-to-r from-transparent via-white/10 to-transparent 
+                                animate-[shine_3s_linear_infinite]
+                            " />
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -181,11 +236,30 @@ const GlobalMap = () => {
                     to   { opacity: 1; transform: translateY(0); }
                 }
                 .plane-icon {
-                    offset-path: path("M48 16 Q69.65 15.225 91.3 34.45");
+                    offset-path: path("M50 16 Q69.65 15.225 91.3 34.45");
                     offset-rotate: auto;
                     offset-distance: 0%;
                     animation: planeTravel 4s linear infinite;
                     filter: drop-shadow(0 0 4px rgba(255,255,255,0.9));
+                }
+
+                @keyframes shine {
+                    0% { transform: translateX(-150%); }
+                    100% { transform: translateX(150%); }
+                }
+
+                @keyframes slowGlow {
+                    0%, 100% { opacity: 0.25; }
+                    50% { opacity: 0.55; }
+                }
+
+                .animate-spin-slow {
+                    animation: spinSlow 6s linear infinite;
+                }
+
+                @keyframes spinSlow {
+                    from { transform: rotate(0deg); }
+                    to { transform: rotate(360deg); }
                 }
             `}
             </style>
