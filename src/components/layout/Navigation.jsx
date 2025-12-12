@@ -135,24 +135,32 @@ const NavBar = () => {
 
   return (
     <>
-      {/* Main Navigation Header */}
+      {/* Main Navigation Header - Floating Glass Card */}
       <header
         role="navigation"
         aria-label={t("ui.aria.primaryNavigation")}
         className={`
-          fixed top-0 w-full z-50 
+          fixed z-50 
           transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]
           ${showNavbar ? "translate-y-0" : "-translate-y-full"}
           ${isScrolled
-            ? "bg-slate-950/85 backdrop-blur-2xl shadow-[0_4px_30px_rgba(0,0,0,0.4),0_0_40px_rgba(139,92,246,0.08),inset_0_-1px_0_rgba(139,92,246,0.15)] border-b border-violet-500/10"
-            : "bg-transparent border-b border-transparent"
+            ? "top-3 left-4 right-4 rounded-2xl bg-[#0a0a12]/92 backdrop-blur-2xl border border-white/20 shadow-[0_0_0_1px_rgba(255,255,255,0.08),0_20px_50px_rgba(0,0,0,0.5),0_8px_24px_rgba(0,0,0,0.4)]"
+            : "top-0 left-0 right-0 bg-transparent border-b border-transparent"
           }
         `}
       >
-        {/* Inner Container - Floating bar feel on larger screens */}
+        {/* Inner Glass Highlight - Top reflection */}
+        {isScrolled && (
+          <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none">
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-b from-white/[0.07] to-transparent" />
+          </div>
+        )}
+
+        {/* Inner Container */}
         <div className={`
           max-w-7xl mx-auto px-4 md:px-6 lg:px-8
-          flex items-center justify-between
+          flex items-center justify-between relative z-10
           transition-all duration-300
           ${isCompact ? "h-14" : "h-16 lg:h-[72px]"}
         `}>
