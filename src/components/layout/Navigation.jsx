@@ -12,22 +12,20 @@ import LogoPulse from '../microanimations/LogoPulse.jsx';
 import MenuHoverAnimation from '../microanimations/MenuHoverAnimation.jsx';
 
 /**
- * Premium Navigation Bar - Enterprise-grade sticky navbar
+ * Premium Navigation Bar - Mifu-inspired, Apple-style scroll
  * Features:
- * - Ecosystem dropdown menu
- * - Social icons
- * - Smooth shadow transition on scroll
- * - Premium mobile menu animation
- * - Touch-friendly tap targets
+ * - Floating blur bar with shadow
+ * - Apple-style hide/show on scroll
+ * - Underline animation on links
+ * - Premium pill CTA with glow
+ * - Condensed mode after scroll threshold
  * - Accessible keyboard navigation
  */
-// ... imports remain the same, I will keep the imports from lines 1-11 unchanged effectively by targeting the component code ...
-// Actually, I will replace the component definition.
 
 const NavBar = () => {
-  const [, setScrollY] = useState(0);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
+  const [isCompact, setIsCompact] = useState(false);
   const lastScrollYRef = useRef(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -43,7 +41,7 @@ const NavBar = () => {
   const calculatorPath = withRegionPath(region, "/pricing") + "#calculator";
   const homePath = withRegionPath(region, "/");
 
-  // Scroll Handler (Premium feel with jitter protection)
+  // Apple-style scroll handler with debouncing
   useEffect(() => {
     let ticking = false;
     lastScrollYRef.current = window.scrollY;
@@ -54,19 +52,23 @@ const NavBar = () => {
           const currentY = window.scrollY;
           const delta = currentY - lastScrollYRef.current;
 
+          // Compact mode threshold
+          setIsCompact(currentY > 80);
+
           // Always show at top
           if (currentY < 10) {
             setShowNavbar(true);
             setIsScrolled(false);
           } else {
             setIsScrolled(true);
-            // Hide on scroll down, show on scroll up
-            if (Math.abs(delta) > 10) {
-              setShowNavbar(delta < 0);
+            // Hide on scroll down (>15px), show on scroll up
+            if (delta > 15) {
+              setShowNavbar(false);
+            } else if (delta < -10) {
+              setShowNavbar(true);
             }
           }
 
-          setScrollY(currentY);
           lastScrollYRef.current = currentY;
           ticking = false;
         });
@@ -117,88 +119,123 @@ const NavBar = () => {
     return () => { document.body.style.overflow = ''; };
   }, [isMenuOpen]);
 
-  // Links Data
+  // Ecosystem Links
   const ecosystemLinks = [
     { label: 'Website', href: 'https://algorythmos.com', icon: Globe },
     { label: 'Documentation', href: 'https://docs.algorythmos.fr', icon: Book },
     { label: 'App Console', href: 'https://app.algorythmos.fr', icon: Layout },
   ];
 
+  // Social Links
   const socialLinks = [
     { label: 'LinkedIn', href: 'https://www.linkedin.com/company/algorythmos', icon: Linkedin },
     { label: 'X', href: 'https://x.com/algorythmos', icon: Twitter },
     { label: 'Instagram', href: 'https://www.instagram.com/algorythmos_ai', icon: Instagram },
   ];
 
-  // Nav Link Classes
-  const getDesktopNavClass = ({ isActive }) =>
-    `relative px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 
-     whitespace-nowrap tracking-tight
-     ${isActive ? "text-white bg-white/10" : "text-gray-400 hover:text-white hover:bg-white/5"}`;
-
   return (
     <>
-      <nav
+      {/* Main Navigation Header */}
+      <header
         role="navigation"
         aria-label={t("ui.aria.primaryNavigation")}
-        className={`fixed top-0 w-full z-50 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]
-          ${showNavbar ? "translate-y-0" : "-translate-y-full"} 
+        className={`
+          fixed top-0 w-full z-50 
+          transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]
+          ${showNavbar ? "translate-y-0" : "-translate-y-full"}
           ${isScrolled
-            ? "bg-neural-950/70 backdrop-blur-xl border-b border-white/5 shadow-[0_4px_30px_rgba(0,0,0,0.1)]"
+            ? "bg-slate-950/80 backdrop-blur-2xl shadow-[0_4px_30px_rgba(0,0,0,0.3)] border-b border-white/5"
             : "bg-transparent border-b border-transparent"
-          }`}
+          }
+        `}
       >
-        <div className="container mx-auto flex items-center justify-between px-4 lg:px-6 xl:px-8 h-16 lg:h-[72px]">
+        {/* Inner Container - Floating bar feel on larger screens */}
+        <div className={`
+          max-w-7xl mx-auto px-4 md:px-6 lg:px-8
+          flex items-center justify-between
+          transition-all duration-300
+          ${isCompact ? "h-14" : "h-16 lg:h-[72px]"}
+        `}>
 
-          {/* 1. LEFT: Logo */}
+          {/* LEFT: Logo */}
           <Link
             to={homePath}
-            className="flex items-center gap-3 shrink-0 mr-8 focus-visible:ring-2 rounded-lg relative group"
+            className="flex items-center gap-2.5 shrink-0 focus-visible:ring-2 focus-visible:ring-violet-500 rounded-lg relative group"
           >
             <div className="relative">
               <LogoPulse className="absolute inset-[-10px] w-[140%] h-[140%] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <img
                 src={logo}
                 alt={t("ui.alt.logo")}
-                className="h-8 w-auto object-contain relative z-10"
+                className={`object-contain relative z-10 transition-all duration-300 ${isCompact ? "h-7" : "h-8"}`}
               />
             </div>
-            <span className="text-lg font-bold text-white tracking-tight hidden sm:block">
+            <span className={`font-bold text-white tracking-tight hidden sm:block transition-all duration-300 ${isCompact ? "text-base" : "text-lg"}`}>
               Algorythmos
             </span>
           </Link>
 
-          {/* 2. CENTER: Navigation Links (Desktop) */}
-          <div className="hidden lg:flex items-center gap-1 xl:gap-2 flex-1 min-w-0">
+          {/* CENTER: Navigation Links (Desktop) */}
+          <nav className="hidden lg:flex items-center gap-1 xl:gap-2 flex-1 justify-center min-w-0 ml-8">
             {navItems.map((item) => (
-              <div key={item.key} className="relative group shrink-0"
+              <div
+                key={item.key}
+                className="relative group shrink-0"
                 onMouseEnter={() => setActiveMega(item.key)}
-                onMouseLeave={() => setActiveMega(null)}>
-
-                {/* Link Item */}
+                onMouseLeave={() => setActiveMega(null)}
+              >
+                {/* Nav Link with Underline Animation */}
                 <NavLink
                   to={item.path}
-                  className={({ isActive }) => getDesktopNavClass({ isActive }) + (item.children ? " flex items-center gap-1" : "")}
+                  className={({ isActive }) => `
+                    relative px-3 py-2 text-sm font-medium rounded-lg
+                    transition-colors duration-200 whitespace-nowrap
+                    ${item.children ? "flex items-center gap-1" : ""}
+                    ${isActive
+                      ? "text-white"
+                      : "text-gray-400 hover:text-white"
+                    }
+                  `}
                 >
-                  {t(item.key)}
-                  {item.children && <ChevronDown className={`w-3 h-3 transition-transform ${activeMega === item.key ? 'rotate-180' : ''}`} />}
+                  {({ isActive }) => (
+                    <>
+                      <span className="relative">
+                        {t(item.key)}
+                        {/* Underline animation */}
+                        <span className={`
+                          absolute left-0 -bottom-0.5 h-0.5 bg-gradient-to-r from-violet-500 to-purple-500 rounded-full
+                          transition-all duration-300 ease-out
+                          ${isActive ? "w-full" : "w-0 group-hover:w-full"}
+                        `} />
+                      </span>
+                      {item.children && (
+                        <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${activeMega === item.key ? 'rotate-180' : ''}`} />
+                      )}
+                    </>
+                  )}
                 </NavLink>
 
-                {/* Mega Menu Logic (Same as before, simplified structure) */}
+                {/* Mega Menu Dropdown */}
                 {item.children && activeMega === item.key && (
-                  <div className="absolute top-full left-0 pt-4 w-[500px] animate-in fade-in slide-in-from-top-2 duration-200">
-                    <div className="relative bg-neural-900/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl p-6 grid grid-cols-12 gap-6 overflow-hidden">
+                  <div className="absolute top-full left-0 pt-3 w-[480px] animate-in fade-in slide-in-from-top-2 duration-200">
+                    <div className="relative bg-slate-900/95 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl shadow-black/40 p-5 grid grid-cols-12 gap-5 overflow-hidden">
                       {/* Menu Shimmer FX */}
                       <MenuHoverAnimation className="absolute inset-0 pointer-events-none opacity-20" />
 
-                      <div className="col-span-5 border-r border-white/10 pr-6 relative z-10">
-                        <h3 className="text-base font-bold text-white mb-2">{t(item.key)}</h3>
-                        <p className="text-xs text-gray-400 leading-relaxed mb-4">{item.description ? t(item.description) : t("nav.exploreServices")}</p>
+                      <div className="col-span-5 border-r border-white/10 pr-5 relative z-10">
+                        <h3 className="text-sm font-bold text-white mb-2">{t(item.key)}</h3>
+                        <p className="text-xs text-gray-400 leading-relaxed">{item.description ? t(item.description) : t("nav.exploreServices")}</p>
                       </div>
-                      <div className="col-span-7 flex flex-col gap-1 relative z-10">
+                      <div className="col-span-7 flex flex-col gap-0.5 relative z-10">
                         {item.children.map(child => (
-                          <Link key={child.key} to={child.path} className="block p-2 rounded-lg hover:bg-white/5 transition-colors group/link">
-                            <div className="text-sm font-medium text-gray-200 group-hover/link:text-white">{t(child.key)}</div>
+                          <Link
+                            key={child.key}
+                            to={child.path}
+                            className="block px-3 py-2 rounded-lg hover:bg-white/5 transition-colors group/link"
+                          >
+                            <div className="text-sm font-medium text-gray-300 group-hover/link:text-white transition-colors">
+                              {t(child.key)}
+                            </div>
                           </Link>
                         ))}
                       </div>
@@ -212,56 +249,81 @@ const NavBar = () => {
             <div className="relative shrink-0" ref={ecosystemRef}>
               <button
                 onClick={() => setIsEcosystemOpen(!isEcosystemOpen)}
-                className={`flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-lg transition-colors ${isEcosystemOpen ? 'text-white bg-white/10' : 'text-gray-400 hover:text-white hover:bg-white/5'
-                  }`}
+                className={`
+                  flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-lg
+                  transition-colors duration-200
+                  ${isEcosystemOpen ? 'text-white' : 'text-gray-400 hover:text-white'}
+                `}
               >
-                Ecosystem <ChevronDown className={`w-3 h-3 transition-transform ${isEcosystemOpen ? 'rotate-180' : ''}`} />
+                <span className="relative">
+                  Ecosystem
+                  <span className={`
+                    absolute left-0 -bottom-0.5 h-0.5 bg-gradient-to-r from-violet-500 to-purple-500 rounded-full
+                    transition-all duration-300 ease-out
+                    ${isEcosystemOpen ? "w-full" : "w-0 group-hover:w-full"}
+                  `} />
+                </span>
+                <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${isEcosystemOpen ? 'rotate-180' : ''}`} />
               </button>
-              {// Dropdown logic...
-                isEcosystemOpen && (
-                  <div className="absolute top-full left-0 mt-2 w-56 py-1 bg-neural-900/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-                    {ecosystemLinks.map((link) => (
-                      <a key={link.href} href={link.href} target="_blank" rel="noopener noreferrer"
-                        className="flex items-center gap-3 px-4 py-3 text-sm text-gray-300 hover:text-white hover:bg-white/5">
-                        <link.icon className="w-4 h-4 text-violet-400" />
-                        {link.label}
-                      </a>
-                    ))}
-                  </div>
-                )
-              }
+
+              {isEcosystemOpen && (
+                <div className="absolute top-full left-0 mt-2 w-52 py-2 bg-slate-900/95 backdrop-blur-2xl border border-white/10 rounded-xl shadow-2xl shadow-black/40 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+                  {ecosystemLinks.map((link) => (
+                    <a
+                      key={link.href}
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
+                    >
+                      <link.icon className="w-4 h-4 text-violet-400" />
+                      {link.label}
+                    </a>
+                  ))}
+                </div>
+              )}
             </div>
-          </div>
+          </nav>
 
-          {/* 3. RIGHT: Actions Cluster (Desktop) */}
-          <div className="hidden lg:flex items-center gap-3 xl:gap-5 shrink-0 ml-4">
-
-            {/* Socials (hidden on text-heavy screens 1024-1536px) */}
+          {/* RIGHT: Actions (Desktop) */}
+          <div className="hidden lg:flex items-center gap-4 shrink-0 ml-4">
+            {/* Social Icons (2XL screens only) */}
             <div className="hidden 2xl:flex items-center gap-1 border-r border-white/10 pr-4">
               {socialLinks.map((social) => (
-                <a key={social.href} href={social.href} target="_blank" rel="noopener noreferrer"
-                  className="p-2 text-gray-500 hover:text-white transition-colors">
+                <a
+                  key={social.href}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 text-gray-500 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+                >
                   <social.icon className="w-4 h-4" />
                 </a>
               ))}
             </div>
 
+            {/* Region Switcher - Pill style */}
             <div className="shrink-0">
               <RegionSwitcher />
             </div>
 
-            {/* CTA Button */}
+            {/* Primary CTA - Mifu-style pill with glow */}
             <Link
               to={calculatorPath}
-              className="group relative inline-flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-white 
-                         bg-gradient-to-r from-neon-violet to-neon-blue rounded-full
-                         shadow-[0_0_15px_rgba(124,58,237,0.3)]
-                         hover:shadow-[0_0_25px_rgba(124,58,237,0.5)] 
-                         hover:scale-[1.02] active:scale-[0.98]
-                         transition-all duration-300 ease-quint shrink-0 whitespace-nowrap"
+              className={`
+                group relative inline-flex items-center gap-2 
+                bg-gradient-to-r from-violet-600 via-purple-600 to-violet-600
+                text-white rounded-full font-semibold
+                shadow-[0_0_20px_rgba(139,92,246,0.4)]
+                hover:shadow-[0_0_30px_rgba(139,92,246,0.6)]
+                hover:scale-[1.03] active:scale-[0.98]
+                transition-all duration-300 ease-out
+                shrink-0 whitespace-nowrap
+                ${isCompact ? "px-4 py-2 text-sm" : "px-5 py-2.5 text-sm"}
+              `}
             >
               <span>{t("nav.openCalculator")}</span>
-              <Book className="w-4 h-4 hidden xl:block" />
+              <Book className="w-4 h-4 hidden xl:block group-hover:rotate-6 transition-transform" />
             </Link>
           </div>
 
@@ -271,7 +333,7 @@ const NavBar = () => {
           </div>
 
         </div>
-      </nav>
+      </header>
 
       {/* Mobile Menu Overlay */}
       <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
