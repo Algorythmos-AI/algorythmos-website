@@ -51,33 +51,36 @@ export const FlagAU = ({ className = "w-6 h-4" }) => (
         className={`rounded-sm shadow-sm ${className}`}
         aria-hidden="true"
     >
-        <path fill="#00008b" d="M0 0h640v480H0z" />
-        <path fill="#fff" d="M0 0h640v480H0z" mask="url(#a)" />
-        <defs>
-            <mask id="a">
-                <path fill="#fff" d="M0 0h640v480H0z" />
-                <path d="M0 0l333.3 480h-90L0 129.6zM0 480l333.3-480h-90L0 350.4z" />
-                <path d="M298.6 0L0 430.1v-86L238.9 0zM0 0l298.6 430.1v-86L59.7 0z" />
-                <path fill="#00008b" d="M0 0h360v240H0z" />
-                <path fill="#fff" d="M0 0l360 240H184L0 117.3zM0 240L360 0h-97.2L0 175.2z" />
-                <path d="M322.6 0L0 215v-43L257.8 0zM0 0l322.6 215v-43L64.8 0z" />
-                <path
-                    fill="none"
-                    stroke="#fff"
-                    strokeWidth="38.4"
-                    d="M0 120h360M180 0v240"
-                />
-                <path
-                    fill="none"
-                    stroke="red"
-                    strokeWidth="24"
-                    d="M0 120h360M180 0v240"
-                />
-            </mask>
-        </defs>
-        <path
-            fill="#fff"
-            d="M166.7 348l13-40 13.1 40-34-24.7h42zM480 129.6l17-52.4 17 52.4-44.5-32.3h55zM560 64.8l7-21.5 7 21.5-18.3-13.3h22.6zM466.7 312l9.1-28 9.2 28-23.9-17.3h29.5zM546.7 264l5-15.3 5 15.3-13-9.5h16zM466.7 416l25-77 25 77-65.5-47.6H532z"
-        />
+        {/* Blue background */}
+        <path fill="#00008B" d="M0 0h640v480H0z" />
+
+        {/* Union Jack in canton */}
+        <g transform="scale(0.5)">
+            {/* White diagonals */}
+            <path fill="#FFF" d="M0 0l360 240h-45L0 22.5V0zM360 0L0 240v-22.5l315-217.5h45z" />
+            {/* Red diagonals */}
+            <path fill="#C8102E" d="M0 0l360 240h-22.5L0 11.25V0zM360 0L0 240v-11.25l337.5-228.75h22.5z" />
+            {/* White cross */}
+            <path fill="#FFF" d="M150 0v240h60V0H150zM0 90v60h360V90H0z" />
+            {/* Red cross */}
+            <path fill="#C8102E" d="M165 0v240h30V0H165zM0 105v30h360v-30H0z" />
+        </g>
+
+        {/* Commonwealth Star (7-pointed) */}
+        <path fill="#FFF" d="M166.7 340.4l8.8-27.2 8.8 27.2-23-16.7h28.4z" />
+        <path fill="#FFF" d="M166.7 340.4l-14.2-19.5 25.4 4.9-25.4 4.8 14.2-19.4z" transform="rotate(25.7 166.7 326)" />
+
+        {/* Southern Cross */}
+        {/* Alpha Crucis (bottom) */}
+        <path fill="#FFF" d="M466.7 415l16.6-51.3 16.6 51.3-43.5-31.6h53.8z" />
+        {/* Beta Crucis (left) */}
+        <path fill="#FFF" d="M366.7 312l9.1-28 9.1 28-23.8-17.3h29.4z" />
+        {/* Gamma Crucis (top) */}
+        <path fill="#FFF" d="M480 129.6l10.8-33.4 10.8 33.4-28.3-20.6h35z" />
+        {/* Delta Crucis (right) */}
+        <path fill="#FFF" d="M546.7 264l8-24.7 8 24.7-21-15.2h26z" />
+        {/* Epsilon Crucis (small, center) */}
+        <path fill="#FFF" d="M560 180l5-15.3 5 15.3-13-9.5h16z" />
     </svg>
 );
+
