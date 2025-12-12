@@ -66,30 +66,72 @@ const FrancePage = lazy(() => import('./pages/regions/fr/FrancePage.jsx'));
 // Error Pages
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage.jsx'));
 
-// Organisation JSON-LD schema (global)
+// Organisation JSON-LD schema (global) — World-class enhanced for Google Knowledge Panel
 const ORGANISATION_SCHEMA = {
   "@context": "https://schema.org",
   "@type": "ProfessionalService",
   "name": "Algorythmos",
+  "alternateName": "Algorythmos™",
   "url": "https://algorythmos.com",
   "logo": "https://algorythmos.com/Algorythmos.png",
-  "description": "AI consultancy delivering secure, ROI-driven AI solutions for SMEs and enterprises in Australia and France.",
-  "areaServed": ["Australia", "France"],
+  "image": "https://algorythmos.com/Algorythmos.png",
+  "description": "Algorythmos is a global AI consultancy delivering agentic automation, document intelligence, SQL dashboards, and MLOps for SMEs and enterprises in Australia and France.",
+  "foundingDate": "2025",
+  "foundingLocation": {
+    "@type": "Place",
+    "name": "Suresnes, France"
+  },
+  "areaServed": [
+    { "@type": "Country", "name": "Australia" },
+    { "@type": "Country", "name": "France" },
+    { "@type": "Continent", "name": "Europe" },
+    { "@type": "GeoShape", "name": "APAC" }
+  ],
+  "knowsAbout": [
+    "Artificial Intelligence",
+    "Agentic Automation",
+    "Document Intelligence",
+    "OCR",
+    "MLOps",
+    "SQL Dashboards",
+    "LLM Engineering",
+    "AI Consulting"
+  ],
   "sameAs": [
     "https://www.linkedin.com/company/algorythmos",
     "https://twitter.com/algorythmos",
-    "https://github.com/algorythmos"
+    "https://github.com/algorythmos",
+    "https://medium.com/@algorythmos"
+  ],
+  "contactPoint": [
+    {
+      "@type": "ContactPoint",
+      "contactType": "sales",
+      "areaServed": ["AU", "APAC"],
+      "availableLanguage": "English",
+      "url": "https://algorythmos.com/au-en/contact"
+    },
+    {
+      "@type": "ContactPoint",
+      "contactType": "sales",
+      "areaServed": ["FR", "Europe"],
+      "availableLanguage": ["French", "English"],
+      "url": "https://algorythmos.com/fr-fr/contact"
+    }
   ],
   "address": [
     {
       "@type": "PostalAddress",
       "addressCountry": "AU",
-      "addressLocality": "Sydney"
+      "addressLocality": "Sydney",
+      "addressRegion": "NSW"
     },
     {
       "@type": "PostalAddress",
       "addressCountry": "FR",
-      "addressLocality": "Suresnes"
+      "addressLocality": "Suresnes",
+      "addressRegion": "Île-de-France",
+      "postalCode": "92150"
     }
   ]
 };
