@@ -196,9 +196,9 @@ const GlobalMap = () => {
                     onClick={() => setActiveOffice("fr")}
                 >
                     <div className="flex justify-center mb-3">
-                        <div className="flex items-center gap-2">
-                            <FlagFR className="w-5 h-3.5 rounded-sm shadow-sm opacity-90" />
-                            <span className="text-xs uppercase tracking-widest text-violet-300/80">
+                        <div className="flex items-center gap-2.5">
+                            <FlagFR className="w-6 h-4 rounded-sm shadow-sm" />
+                            <span className="text-sm font-semibold uppercase tracking-wider text-violet-200">
                                 {t("contactPage.globalMap.locations.france.country")}
                             </span>
                         </div>
@@ -219,9 +219,9 @@ const GlobalMap = () => {
                     onClick={() => setActiveOffice("au")}
                 >
                     <div className="flex justify-center mb-3">
-                        <div className="flex items-center gap-2">
-                            <FlagAU className="w-5 h-3.5 rounded-sm shadow-sm opacity-90" />
-                            <span className="text-xs uppercase tracking-widest text-blue-300/80">
+                        <div className="flex items-center gap-2.5">
+                            <FlagAU className="w-6 h-4 rounded-sm shadow-sm" />
+                            <span className="text-sm font-semibold uppercase tracking-wider text-sky-200">
                                 {t("contactPage.globalMap.locations.australia.country")}
                             </span>
                         </div>
