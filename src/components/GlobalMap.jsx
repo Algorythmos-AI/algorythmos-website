@@ -109,7 +109,7 @@ const GlobalMap = () => {
                     </div>
 
                     {/* Legend */}
-                    <div className="flex flex-wrap items-center gap-4 px-6 py-4 text-xs sm:text-sm text-slate-300 border-t border-slate-800/60 bg-slate-950/80">
+                    <div className="flex flex-wrap items-center justify-center gap-6 px-6 py-4 text-xs sm:text-sm text-slate-300 border-t border-slate-800/60 bg-slate-950/80">
                         <div className="flex items-center gap-2">
                             <span className="h-3 w-3 rounded-full bg-pink-400 ring-1 ring-white/60" />
                             <span className="font-medium">{t("contactPage.globalMap.legend.hq")}</span>
