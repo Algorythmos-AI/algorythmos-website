@@ -124,16 +124,23 @@ const GlobalMap = () => {
                     <div className="w-full flex justify-center mt-4 pb-4">
                         <div className="
                             relative
-                            px-5 py-2.5 
+                            px-4 sm:px-5 
+                            py-2.5 
                             rounded-full 
                             bg-slate-900/60 
                             border border-slate-700/60 
                             backdrop-blur-md 
-                            flex items-center gap-3 
-                            text-[11px] sm:text-xs 
+                            flex 
+                            items-center 
+                            gap-2 sm:gap-3 
+                            text-[10px] sm:text-xs 
                             text-slate-200 
                             shadow-[0_0_20px_rgba(0,0,0,0.35)]
                             overflow-hidden
+                            max-w-full 
+                            whitespace-normal 
+                            break-words 
+                            text-center
                         ">
                             {/* Animated purple gradient ring */}
                             <div className="
