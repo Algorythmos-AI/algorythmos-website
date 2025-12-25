@@ -10,6 +10,9 @@ import BottomNavBar from "../navigation/BottomNavBar.jsx";
 import AnimatedHamburger from "../navigation/AnimatedHamburger.jsx";
 import LogoPulse from '../microanimations/LogoPulse.jsx';
 import MenuHoverAnimation from '../microanimations/MenuHoverAnimation.jsx';
+import { useAuth } from '../../app/auth/AuthContext.jsx';
+import GoogleSignInButton from '../auth/GoogleSignInButton.jsx';
+import UserMenu from '../auth/UserMenu.jsx';
 
 /**
  * Premium Navigation Bar - Mifu-inspired, Apple-style scroll
@@ -33,6 +36,7 @@ const NavBar = () => {
   const [activeMega, setActiveMega] = useState(null);
   const ecosystemRef = useRef(null);
   const { t, region } = useI18n();
+  const { user, isAuthenticated } = useAuth();
 
   // Get navigation items for current region
   const navItems = getNavItems(region);
@@ -313,6 +317,15 @@ const NavBar = () => {
             {/* Region Switcher - Pill style */}
             <div className="shrink-0">
               <RegionSwitcher />
+            </div>
+
+            {/* Auth: Sign In or User Menu */}
+            <div className="shrink-0">
+              {isAuthenticated ? (
+                <UserMenu />
+              ) : (
+                <GoogleSignInButton variant="navbar" />
+              )}
             </div>
 
             {/* Primary CTA - Contact Us */}

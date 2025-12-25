@@ -30,6 +30,7 @@ import PageLoader from './components/common/PageLoader.jsx';
 import RegionLayout from './pages/regions/RegionLayout.jsx';
 import { GeoRouter } from './components/routing/GeoRouter.jsx';
 import { SeoHead } from './components/seo/SeoHead.jsx';
+import { AuthProvider } from './app/auth/AuthContext.jsx';
 
 // ============================================
 // LAZY IMPORTS - Route-level code splitting
@@ -158,7 +159,7 @@ const SITE_NAVIGATION_SCHEMA = {
 
 function App() {
   return (
-    <>
+    <AuthProvider>
       <GeoRouter />
       <SeoHead />
       <Helmet>
@@ -250,7 +251,7 @@ function App() {
       </Suspense>
 
       <Footer />
-    </>
+    </AuthProvider>
   );
 }
 
