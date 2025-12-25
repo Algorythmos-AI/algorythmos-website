@@ -66,6 +66,10 @@ const FrancePage = lazy(() => import('./pages/regions/fr/FrancePage.jsx'));
 // Error Pages
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage.jsx'));
 
+// Legal Pages
+const PrivacyPolicyPage = lazy(() => import('./pages/legal/PrivacyPolicyPage.jsx'));
+const TermsOfServicePage = lazy(() => import('./pages/legal/TermsOfServicePage.jsx'));
+
 // Organisation JSON-LD schema (global) — World-class enhanced for Google Knowledge Panel
 const ORGANISATION_SCHEMA = {
   "@context": "https://schema.org",
@@ -189,6 +193,8 @@ function App() {
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/blog/:slug" element={<BlogDetailPage />} />
           <Route path="/pricing" element={<PricingPage />} />
+          <Route path="/privacy" element={<PrivacyPolicyPage />} />
+          <Route path="/terms" element={<TermsOfServicePage />} />
 
           {/* ========================================
               AUSTRALIA /au-en/* routes
@@ -208,6 +214,8 @@ function App() {
           <Route path="/au-en/case-studies/:slug" element={<RegionLayout region="AU"><CaseStudyPage /></RegionLayout>} />
           <Route path="/au-en/blog" element={<RegionLayout region="AU"><BlogPage /></RegionLayout>} />
           <Route path="/au-en/blog/:slug" element={<RegionLayout region="AU"><BlogDetailPage /></RegionLayout>} />
+          <Route path="/au-en/privacy" element={<RegionLayout region="AU"><PrivacyPolicyPage /></RegionLayout>} />
+          <Route path="/au-en/terms" element={<RegionLayout region="AU"><TermsOfServicePage /></RegionLayout>} />
 
           {/* ========================================
               FRANCE /fr-fr/* routes
@@ -227,6 +235,8 @@ function App() {
           <Route path="/fr-fr/case-studies/:slug" element={<RegionLayout region="FR"><CaseStudyPage /></RegionLayout>} />
           <Route path="/fr-fr/blog" element={<RegionLayout region="FR"><BlogPage /></RegionLayout>} />
           <Route path="/fr-fr/blog/:slug" element={<RegionLayout region="FR"><BlogDetailPage /></RegionLayout>} />
+          <Route path="/fr-fr/privacy" element={<RegionLayout region="FR"><PrivacyPolicyPage /></RegionLayout>} />
+          <Route path="/fr-fr/terms" element={<RegionLayout region="FR"><TermsOfServicePage /></RegionLayout>} />
 
           {/* ========================================
               404 Catch-all route
