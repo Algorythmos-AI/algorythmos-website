@@ -61,22 +61,28 @@ const Footer = () => {
 
   const footerLinks = {
     company: [
-      { label: "About Us", path: "/about" },
-      { label: "Careers", path: "/careers" }, // Placeholder if not real
-      { label: "Blog", path: "/blog" },
-      { label: "Contact", path: "/contact" },
+      { label: t("footer.links.aboutUs") || "About Us", path: "/about" },
+      { label: t("footer.links.careers") || "Careers", path: "/careers" },
+      { label: t("footer.links.blog") || "Blog", path: "/blog" },
+      { label: t("footer.links.contact") || "Contact", path: "/contact" },
     ],
     services: [
-      { label: "Overview", path: "/services" },
-      { label: "AI Automation", path: "/services/agentic-automation" },
-      { label: "Data Intelligence", path: "/services/document-intelligence" },
-      { label: "Cloud Platforms", path: "/services/mlops-cicd" },
+      { label: t("footer.links.overview") || "Overview", path: "/services" },
+      { label: t("footer.links.aiAutomation") || "AI Automation", path: "/services/agentic-automation" },
+      { label: t("footer.links.dataIntelligence") || "Data Intelligence", path: "/services/document-intelligence" },
+      { label: t("footer.links.cloudPlatforms") || "Cloud Platforms", path: "/services/mlops-cicd" },
     ],
     resources: [
-      { label: "Case Studies", path: "/case-studies" },
-      { label: "Pricing", path: "/pricing" },
-      { label: "ROI Calculator", path: "/pricing#calculator" },
-      { label: "Documentation", url: "https://docs.algorythmos.fr", external: true },
+      { label: t("footer.links.caseStudies") || "Case Studies", path: "/case-studies" },
+      { label: t("footer.links.pricing") || "Pricing", path: "/pricing" },
+      { label: t("footer.links.roiCalculator") || "ROI Calculator", path: "/pricing#calculator" },
+      { label: t("footer.links.documentation") || "Documentation", url: "https://docs.algorythmos.fr", external: true },
+    ],
+    legal: [
+      { label: t("nav.privacy") || "Privacy Policy", path: "/privacy" },
+      { label: t("nav.terms") || "Terms of Service", path: "/terms" },
+      { label: t("footer.links.cookies") || "Cookie Policy", path: "/privacy#cookies" },
+      { label: t("footer.links.sitemap") || "Sitemap", path: "/sitemap" },
     ]
   };
 
@@ -86,10 +92,10 @@ const Footer = () => {
       {/* Background Ambient Glows */}
       <FooterGlow className="absolute inset-0 w-full h-full opacity-60 pointer-events-none" />
 
-      <div className="container mx-auto px-6 lg:px-12 py-20 relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-12 py-12 sm:py-16 lg:py-20 relative z-10">
 
         {/* Main Grid Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-8">
 
           {/* Brand & Newsletter (Span 4 columns on large) */}
           <div className="lg:col-span-4 flex flex-col gap-6">
@@ -109,7 +115,7 @@ const Footer = () => {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email"
+                  placeholder={t("footer.newsletter.placeholder") || "Enter your email"}
                   className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-4 pr-12 text-sm text-white focus:outline-none focus:border-neon-violet/50 focus:ring-1 focus:ring-neon-violet/50 transition-all placeholder:text-neutral-600"
                 />
                 <button
@@ -129,12 +135,12 @@ const Footer = () => {
           </div>
 
           {/* Links Grid (Span 8 columns on large) */}
-          <div className="lg:col-span-8 grid grid-cols-2 sm:grid-cols-3 gap-8 lg:gap-4">
+          <div className="lg:col-span-8 grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-4">
 
             {/* Company Column */}
             <div>
-              <h4 className="text-sm font-bold text-white uppercase tracking-wider mb-6">Company</h4>
-              <ul className="space-y-3">
+              <h4 className="text-sm font-bold text-white uppercase tracking-wider mb-4 sm:mb-6">{t("footer.columns.company") || "Company"}</h4>
+              <ul className="space-y-2 sm:space-y-3">
                 {footerLinks.company.map((link) => (
                   <li key={link.label}>
                     <Link to={rp(link.path)} className="text-sm text-neural-400 hover:text-white transition-colors duration-200 block py-0.5">
@@ -147,8 +153,8 @@ const Footer = () => {
 
             {/* Services Column */}
             <div>
-              <h4 className="text-sm font-bold text-white uppercase tracking-wider mb-6">Services</h4>
-              <ul className="space-y-3">
+              <h4 className="text-sm font-bold text-white uppercase tracking-wider mb-4 sm:mb-6">{t("footer.columns.services") || "Services"}</h4>
+              <ul className="space-y-2 sm:space-y-3">
                 {footerLinks.services.map((link) => (
                   <li key={link.label}>
                     <Link to={rp(link.path)} className="text-sm text-neural-400 hover:text-white transition-colors duration-200 block py-0.5">
@@ -159,59 +165,77 @@ const Footer = () => {
               </ul>
             </div>
 
-            {/* Resources & Connect Column */}
-            <div className="flex flex-col gap-8">
-              <div>
-                <h4 className="text-sm font-bold text-white uppercase tracking-wider mb-6">Resources</h4>
-                <ul className="space-y-3">
-                  {footerLinks.resources.map((link) => (
-                    <li key={link.label}>
-                      {link.external ? (
-                        <a href={link.url} target="_blank" rel="noopener noreferrer" className="text-sm text-neural-400 hover:text-white transition-colors duration-200 flex items-center gap-1 group">
-                          {link.label} <ExternalLink className="w-3 h-3 opacity-50 group-hover:opacity-100" />
-                        </a>
-                      ) : (
-                        <Link to={rp(link.path)} className="text-sm text-neural-400 hover:text-white transition-colors duration-200 block py-0.5">
-                          {link.label}
-                        </Link>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Social Icons (Moved here for better layout) */}
-              <div>
-                <h4 className="text-sm font-bold text-white uppercase tracking-wider mb-4">Connect</h4>
-                <div className="flex gap-3">
-                  {socialLinks.map((social) => (
-                    <a
-                      key={social.name}
-                      href={social.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-neural-400 hover:text-white hover:bg-white/10 hover:shadow-neon transition-all duration-300 transform hover:-translate-y-1"
-                      aria-label={social.name}
-                    >
-                      <social.icon className="w-5 h-5" />
-                    </a>
-                  ))}
-                </div>
-              </div>
+            {/* Resources Column */}
+            <div>
+              <h4 className="text-sm font-bold text-white uppercase tracking-wider mb-4 sm:mb-6">{t("footer.columns.resources") || "Resources"}</h4>
+              <ul className="space-y-2 sm:space-y-3">
+                {footerLinks.resources.map((link) => (
+                  <li key={link.label}>
+                    {link.external ? (
+                      <a href={link.url} target="_blank" rel="noopener noreferrer" className="text-sm text-neural-400 hover:text-white transition-colors duration-200 flex items-center gap-1 group">
+                        {link.label} <ExternalLink className="w-3 h-3 opacity-50 group-hover:opacity-100" />
+                      </a>
+                    ) : (
+                      <Link to={rp(link.path)} className="text-sm text-neural-400 hover:text-white transition-colors duration-200 block py-0.5">
+                        {link.label}
+                      </Link>
+                    )}
+                  </li>
+                ))}
+              </ul>
             </div>
 
+            {/* Legal Column */}
+            <div>
+              <h4 className="text-sm font-bold text-white uppercase tracking-wider mb-4 sm:mb-6">{t("footer.columns.legal") || "Legal"}</h4>
+              <ul className="space-y-2 sm:space-y-3">
+                {footerLinks.legal.map((link) => (
+                  <li key={link.label}>
+                    <Link to={rp(link.path)} className="text-sm text-neural-400 hover:text-white transition-colors duration-200 block py-0.5">
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+          </div>
+        </div>
+
+        {/* Social Icons - Separate Row on Mobile, Integrated on Desktop */}
+        <div className="mt-10 sm:mt-12 pt-8 border-t border-white/5">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+            <h4 className="text-sm font-bold text-white uppercase tracking-wider">{t("footer.columns.connect") || "Connect"}</h4>
+            <div className="flex gap-3">
+              {socialLinks.map((social) => (
+                <a
+                  key={social.name}
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-neural-400 hover:text-white hover:bg-white/10 hover:shadow-neon transition-all duration-300 transform hover:-translate-y-1"
+                  aria-label={social.name}
+                >
+                  <social.icon className="w-5 h-5" />
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       </div>
 
       {/* Bottom Legal Bar */}
       <div className="border-t border-white/5 bg-black/20">
-        <div className="container mx-auto px-6 lg:px-12 py-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-neural-500">
-          <p>© {new Date().getFullYear()} Algorythmos. All rights reserved.</p>
-          <div className="flex items-center gap-6">
-            <Link to={rp("/privacy")} className="hover:text-white transition-colors">Privacy Policy</Link>
-            <Link to={rp("/terms")} className="hover:text-white transition-colors">Terms of Service</Link>
-            <Link to={rp("/sitemap")} className="hover:text-white transition-colors">Sitemap</Link>
+        <div className="container mx-auto px-4 sm:px-6 lg:px-12 py-6 sm:py-8">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-neural-500">
+            <p className="text-center sm:text-left">© {new Date().getFullYear()} Algorythmos. {t("footer.allRightsReserved") || "All rights reserved."}</p>
+            <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
+              <Link to={rp("/privacy")} className="hover:text-white transition-colors whitespace-nowrap">{t("nav.privacy") || "Privacy Policy"}</Link>
+              <span className="hidden sm:inline text-neural-700">•</span>
+              <Link to={rp("/terms")} className="hover:text-white transition-colors whitespace-nowrap">{t("nav.terms") || "Terms of Service"}</Link>
+              <span className="hidden sm:inline text-neural-700">•</span>
+              <Link to={rp("/sitemap")} className="hover:text-white transition-colors whitespace-nowrap">{t("footer.links.sitemap") || "Sitemap"}</Link>
+            </div>
           </div>
         </div>
       </div>
