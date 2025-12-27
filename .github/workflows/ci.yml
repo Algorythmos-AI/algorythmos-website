@@ -100,10 +100,11 @@ jobs:
       
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
+        continue-on-error: true  # Allow build to pass even if artifact storage quota is hit
         with:
           name: dist
           path: dist/
-          retention-days: 7
+          retention-days: 3  # Reduced from 7 to help with storage
 
   # ============================================================================
   # JOB 4: SEO Validation (Enterprise-Grade)
