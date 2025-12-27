@@ -319,13 +319,9 @@ const NavBar = () => {
               <RegionSwitcher />
             </div>
 
-            {/* Auth: Sign In or User Menu */}
+            {/* Sign In - Links to app.algorythmos.com */}
             <div className="shrink-0">
-              {isAuthenticated ? (
-                <UserMenu />
-              ) : (
-                <GoogleSignInButton variant="navbar" />
-              )}
+              <GoogleSignInButton variant="navbar" />
             </div>
 
             {/* Primary CTA - Contact Us */}
