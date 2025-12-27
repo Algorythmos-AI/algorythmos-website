@@ -185,7 +185,7 @@ const NavBar = () => {
           </Link>
 
           {/* CENTER: Navigation Links (Desktop) */}
-          <nav className="hidden lg:flex items-center gap-1 xl:gap-2 flex-1 justify-center min-w-0 ml-8">
+          <nav className="hidden lg:flex items-center gap-0.5 flex-1 justify-center min-w-0 ml-6">
             {navItems.map((item) => (
               <div
                 key={item.key}
@@ -197,7 +197,7 @@ const NavBar = () => {
                 <NavLink
                   to={item.path}
                   className={({ isActive }) => `
-                    relative px-3 py-2 text-sm font-medium rounded-lg
+                    relative px-2.5 py-1.5 text-sm font-medium rounded-lg
                     transition-colors duration-200 whitespace-nowrap
                     ${item.children ? "flex items-center gap-1" : ""}
                     ${isActive
@@ -259,7 +259,7 @@ const NavBar = () => {
               <button
                 onClick={() => setIsEcosystemOpen(!isEcosystemOpen)}
                 className={`
-                  flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-lg
+                  flex items-center gap-1 px-2.5 py-1.5 text-sm font-medium rounded-lg
                   transition-colors duration-200
                   ${isEcosystemOpen ? 'text-white' : 'text-gray-400 hover:text-white'}
                 `}
@@ -295,7 +295,7 @@ const NavBar = () => {
           </nav>
 
           {/* RIGHT: Actions (Desktop) */}
-          <div className="hidden lg:flex items-center gap-4 shrink-0 ml-4">
+          <div className="hidden lg:flex items-center gap-2 shrink-0 ml-3">
             {/* Social Icons (2XL screens only) */}
             <div className="hidden 2xl:flex items-center gap-1 border-r border-white/10 pr-4">
               {socialLinks.map((social) => (
