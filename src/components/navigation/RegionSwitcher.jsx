@@ -41,7 +41,7 @@ export default function RegionSwitcher() {
             {/* Trigger Button */}
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 border border-transparent
+                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 border border-transparent
           ${isOpen
                         ? 'bg-white/10 text-white border-white/10'
                         : 'text-gray-400 hover:text-white hover:bg-white/5'
@@ -49,7 +49,7 @@ export default function RegionSwitcher() {
                 aria-label="Select Region"
                 aria-expanded={isOpen}
             >
-                <span className="text-base leading-none">{currentRegion.flag}</span>
+                <span className="text-sm leading-none">{currentRegion.flag}</span>
                 <span className="hidden xl:inline">{currentRegion.label}</span>
                 <span className="xl:hidden">{currentRegion.code}</span>
                 <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
