@@ -1,6 +1,6 @@
 import React from "react";
 import { Helmet } from "react-helmet-async";
-import { PenTool, Shield, Cpu, Layers, Globe, Mic, Bot, Zap, BarChart3, Users } from "lucide-react";
+import { PenTool, Shield, Cpu, Layers, Globe, Mic, Bot, Zap, BarChart3, Users, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useI18n } from "../../app/i18n/I18nContext.jsx";
 import { getCanonicalUrl, getOgLocale, generateHreflangLinks, getCanonicalBase } from "../../app/utils/seoHelpers.js";
@@ -15,6 +15,14 @@ const BlogPage = () => {
   const hreflangLinks = generateHreflangLinks('/blog');
 
   const blogPosts = [
+    {
+      icon: Heart,
+      title: t("blog.posts.10.title"),
+      snippet: t("blog.posts.10.snippet"),
+      date: t("blog.posts.10.date"),
+      gradient: "from-rose-500 to-violet-500",
+      slug: "clinical-ai-healthcare"
+    },
     {
       icon: Globe,
       title: t("blog.posts.4.title"),
