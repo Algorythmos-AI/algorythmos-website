@@ -69,12 +69,22 @@ const blogStructures = {
       { heading: true, list: [0, 1, 2, 3] },
     ],
   },
+  "clinical-ai-healthcare": {
+    content: [
+      { heading: true, paragraphs: [0, 1] },
+      { heading: true, list: [0, 1, 2, 3] },
+      { heading: true, paragraphs: [0] },
+      { heading: true, list: [0, 1, 2, 3] },
+      { heading: true, paragraphs: [0, 1] },
+    ],
+  },
 };
 
 const blogSlugs = [
   "gdpr-ai", "mlops-production", "agentic-ai", "llmsecops",
   "ai-websites-advantage", "voice-ai-automation", "chatbots-agents-rag",
-  "future-sme-websites", "core-web-vitals", "ai-consultancy-australia"
+  "future-sme-websites", "core-web-vitals", "ai-consultancy-australia",
+  "clinical-ai-healthcare"
 ];
 
 export default function BlogDetailPage() {
