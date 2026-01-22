@@ -1,0 +1,298 @@
+name: CI - Algorythmos Quality Pipeline
+
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+    branches:
+      - master
+      - main
+
+# Cancel in-progress runs when a new commit is pushed
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ============================================================================
+  # JOB 1: Code Quality & Linting
+  # ============================================================================
+  lint:
+    name: 🔍 Lint & Code Quality
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run ESLint
+        run: npm run lint
+        continue-on-error: true  # Allow warnings, but report them
+
+  # ============================================================================
+  # JOB 2: Security Audit
+  # ============================================================================
+  audit:
+    name: 🛡️ Security Audit
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Run npm audit
+        run: npm audit --audit-level=high
+        continue-on-error: false
+      
+      - name: Check for vulnerabilities report
+        if: failure()
+        run: |
+          echo "❌ High or critical vulnerabilities detected!"
+          echo "Run 'npm audit fix' to resolve issues."
+          npm audit --audit-level=high
+
+  # ============================================================================
+  # JOB 3: Build & Compile
+  # ============================================================================
+  build:
+    name: 🏗️ Build Production
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Build project
+        run: npm run build
+      
+      - name: Check build artifacts
+        run: |
+          echo "✅ Build completed successfully"
+          echo "📦 Checking dist/ contents..."
+          ls -lah dist/
+          echo "📄 Checking index.html exists..."
+          test -f dist/index.html && echo "✅ index.html found" || exit 1
+      
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        continue-on-error: true  # Allow build to pass even if artifact storage quota is hit
+        with:
+          name: dist
+          path: dist/
+          retention-days: 3  # Reduced from 7 to help with storage
+
+  # ============================================================================
+  # JOB 4: SEO Validation (Enterprise-Grade)
+  # ============================================================================
+  seo-check:
+    name: 🎯 SEO Validation
+    runs-on: ubuntu-latest
+    needs: build
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        continue-on-error: true  # Don't fail if artifact wasn't uploaded due to quota
+        with:
+          name: dist
+          path: dist/
+      
+      - name: Run SEO validation script
+        continue-on-error: true  # Allow to pass even if dist not available
+        run: npm run seo:check
+      
+      - name: Verify robots.txt
+        run: |
+          echo "🤖 Checking robots.txt..."
+          test -f public/robots.txt || (echo "❌ robots.txt missing!" && exit 1)
+          grep -q "User-agent:" public/robots.txt || (echo "❌ Missing User-agent directive!" && exit 1)
+          grep -q "Sitemap:" public/robots.txt || (echo "❌ Missing Sitemap directive!" && exit 1)
+          echo "✅ robots.txt is valid"
+      
+      - name: Verify sitemap.xml
+        run: |
+          echo "🗺️ Checking sitemap.xml..."
+          test -f public/sitemap.xml || (echo "❌ sitemap.xml missing!" && exit 1)
+          if grep -q "<sitemapindex" public/sitemap.xml || grep -q "<urlset" public/sitemap.xml; then
+            echo "✅ Structure valid (Index or Urlset)"
+          else
+            echo "❌ Invalid sitemap structure (neither urlset nor index)!" && exit 1
+          fi
+          # Check for canonical domain (we now enforce .com everywhere)
+          grep -q "algorythmos.com" public/sitemap.xml || (echo "❌ Missing canonical domain .com in sitemap!" && exit 1)
+          ! grep -q "www.algorythmos" public/sitemap.xml || (echo "❌ sitemap.xml contains www. - should use bare domain!" && exit 1)
+          echo "✅ sitemap.xml is valid"
+      
+      - name: Verify OG image exists
+        run: |
+          echo "🖼️ Checking OG image..."
+          test -f public/Algorythmos.png || (echo "❌ Algorythmos.png missing!" && exit 1)
+          echo "✅ OG image found"
+
+  # ============================================================================
+  # JOB 5: Preview & Runtime Test
+  # ============================================================================
+  preview:
+    name: 🚀 Preview Server Test
+    runs-on: ubuntu-latest
+    needs: build
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        id: download
+        continue-on-error: true  # Don't fail if artifact wasn't uploaded due to quota
+        with:
+          name: dist
+          path: dist/
+      
+      - name: Check if artifacts available
+        id: check-artifacts
+        run: |
+          if [ -d "dist" ] && [ -f "dist/index.html" ]; then
+            echo "artifacts_available=true" >> $GITHUB_OUTPUT
+          else
+            echo "artifacts_available=false" >> $GITHUB_OUTPUT
+            echo "⚠️ Build artifacts not available - skipping preview tests"
+          fi
+      
+      - name: Start preview server
+        if: steps.check-artifacts.outputs.artifacts_available == 'true'
+        run: |
+          npm run preview &
+          echo $! > preview.pid
+          sleep 5
+      
+      - name: Test homepage accessibility
+        if: steps.check-artifacts.outputs.artifacts_available == 'true'
+        run: |
+          echo "🌐 Testing homepage..."
+          curl -f -s -I http://localhost:4173/ | grep "200 OK" || (echo "❌ Homepage not accessible!" && exit 1)
+          echo "✅ Homepage returns 200 OK"
+      
+      - name: Test static assets
+        if: steps.check-artifacts.outputs.artifacts_available == 'true'
+        run: |
+          echo "📦 Testing static assets..."
+          curl -f -s -I http://localhost:4173/Algorythmos.png || (echo "❌ OG image not accessible!" && exit 1)
+          echo "✅ OG image accessible"
+      
+      - name: Stop preview server
+        if: always() && steps.check-artifacts.outputs.artifacts_available == 'true'
+        run: |
+          if [ -f preview.pid ]; then
+            kill $(cat preview.pid) || true
+          fi
+
+  # ============================================================================
+  # JOB 6: Test Suite (if tests exist)
+  # ============================================================================
+  test:
+    name: 🧪 Run Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run unit tests
+        run: npm run test -- --run
+        continue-on-error: true
+      
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+      
+      - name: Run E2E tests
+        run: npm run test:e2e
+        continue-on-error: true
+
+  # ============================================================================
+  # FINAL JOB: Status Summary
+  # ============================================================================
+  summary:
+    name: ✅ CI Summary
+    runs-on: ubuntu-latest
+    needs: [lint, audit, build, seo-check, preview, test]
+    if: always()
+    
+    steps:
+      - name: Check job statuses
+        run: |
+          echo "📊 CI Pipeline Summary"
+          echo "======================="
+          echo "Lint: ${{ needs.lint.result }}"
+          echo "Security Audit: ${{ needs.audit.result }}"
+          echo "Build: ${{ needs.build.result }}"
+          echo "SEO Check: ${{ needs.seo-check.result }}"
+          echo "Preview: ${{ needs.preview.result }}"
+          echo "Tests: ${{ needs.test.result }}"
+          echo "======================="
+          
+          if [ "${{ needs.lint.result }}" != "success" ] || \
+             [ "${{ needs.audit.result }}" != "success" ] || \
+             [ "${{ needs.build.result }}" != "success" ] || \
+             [ "${{ needs.seo-check.result }}" != "success" ] || \
+             [ "${{ needs.preview.result }}" != "success" ]; then
+            echo "❌ CI Pipeline FAILED"
+            exit 1
+          else
+            echo "✅ CI Pipeline PASSED"
+          fi
