@@ -1,0 +1,62 @@
+{
+  "redirects": [
+    {
+      "source": "/:locale(fr-fr|au-en)/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "(www\\.)?algorythmos\\.com\\.au"
+        }
+      ],
+      "destination": "https://algorythmos.com/:locale/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:locale(fr-fr|au-en)/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "(www\\.)?algorythmos\\.fr"
+        }
+      ],
+      "destination": "https://algorythmos.com/:locale/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "(www\\.)?algorythmos\\.com\\.au"
+        }
+      ],
+      "destination": "https://algorythmos.com/au-en/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "(www\\.)?algorythmos\\.fr"
+        }
+      ],
+      "destination": "https://algorythmos.com/fr-fr/:path*",
+      "permanent": true
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/au-en(.*)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/fr-fr(.*)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}

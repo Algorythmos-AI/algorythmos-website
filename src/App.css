@@ -1,0 +1,271 @@
+/* Quantum 3D Page Styles */
+.quantum-page {
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	background: linear-gradient(135deg, #0f2027 0%, #2c5364 100%);
+}
+
+.quantum-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	color: #fff;
+	margin-bottom: 2rem;
+	text-shadow: 0 4px 24px #00c3ff;
+}
+
+.quantum-3d-bg {
+	perspective: 1200px;
+}
+
+.quantum-3d-card {
+	background: rgba(255,255,255,0.08);
+	border-radius: 24px;
+	box-shadow: 0 8px 32px 0 rgba(0,195,255,0.37);
+	padding: 2rem 2.5rem;
+	transform-style: preserve-3d;
+	transition: transform 0.5s cubic-bezier(.17,.67,.83,.67), box-shadow 0.5s;
+	will-change: transform, box-shadow;
+}
+.quantum-3d-card:hover {
+	transform: rotateY(8deg) scale(1.03);
+	box-shadow: 0 16px 48px 0 rgba(0,195,255,0.47);
+}
+
+.quantum-form {
+	display: flex;
+	flex-direction: column;
+	gap: 1.2rem;
+}
+.quantum-form label {
+	color: #00c3ff;
+	font-weight: 600;
+	margin-bottom: 0.3rem;
+}
+.quantum-form input,
+.quantum-form textarea {
+	padding: 0.7rem 1rem;
+	border-radius: 8px;
+	border: none;
+	background: rgba(255,255,255,0.15);
+	color: #fff;
+	font-size: 1rem;
+	box-shadow: 0 2px 8px rgba(0,195,255,0.12);
+	outline: none;
+	transition: background 0.3s;
+}
+.quantum-form input:focus,
+.quantum-form textarea:focus {
+	background: rgba(0,195,255,0.12);
+}
+.quantum-btn {
+	background: linear-gradient(90deg, #00c3ff 0%, #2c5364 100%);
+	color: #fff;
+	border: none;
+	border-radius: 8px;
+	padding: 0.8rem 2rem;
+	font-size: 1.1rem;
+	font-weight: 700;
+	cursor: pointer;
+	box-shadow: 0 4px 16px rgba(0,195,255,0.22);
+	transition: background 0.3s, box-shadow 0.3s, transform 0.3s;
+}
+.quantum-btn:hover {
+	background: linear-gradient(90deg, #2c5364 0%, #00c3ff 100%);
+	box-shadow: 0 8px 32px rgba(0,195,255,0.32);
+	transform: scale(1.05);
+}
+
+/* Utility: 3-line clamp without extra plugin */
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* === Hero Animations === */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes shine {
+    0%   { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+  }
+  @keyframes floatY {
+    0%   { transform: translateY(0px) scale(1); }
+    50%  { transform: translateY(-6px) scale(1.02); }
+    100% { transform: translateY(0px) scale(1); }
+  }
+  @keyframes fadeUp {
+    0%   { opacity: 0; transform: translateY(8px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes mlops-dash {
+    to { stroke-dashoffset: -180; }
+  }
+  @keyframes mlops-pulse {
+    0%, 100% { transform: scale(0.88); opacity: 0.22; }
+    50% { transform: scale(1.08); opacity: 0.36; }
+  }
+  @keyframes glowShift {
+    0%   { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+  }
+}
+
+/* Shimmer gradient text */
+.shimmer-text {
+  background: linear-gradient(90deg, #6D00FF, #7658E7, #6D00FF);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shine 3.5s linear infinite;
+}
+
+/* Soft glass card */
+.glass {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+  border-radius: 12px;
+}
+
+/* Stagger utility */
+.fade-up {
+  opacity: 0;
+  transform: translateY(8px);
+  animation: fadeUp 520ms ease forwards;
+}
+
+/* Decorative orb */
+.hero-orb {
+  position: absolute;
+  width: 360px;
+  height: 360px;
+  border-radius: 9999px;
+  filter: blur(40px);
+  opacity: 0.18;
+  pointer-events: none;
+  background: radial-gradient(closest-side, #6D00FF 10%, #7658E7 55%, transparent 70%);
+  animation: floatY 8s ease-in-out infinite;
+}
+
+.tabular-nums { font-variant-numeric: tabular-nums; }
+
+/* === Service Card Animations === */
+.card-glow {
+  background: linear-gradient(110deg, #6D00FF33, #7658E733, #6D00FF33);
+  background-size: 200% 100%;
+  border-radius: 18px;
+  pointer-events: none;
+}
+
+.card-glow-blur {
+  background: radial-gradient(220px 140px at 30% 20%, #6D00FF33, transparent 60%),
+              radial-gradient(220px 140px at 70% 80%, #7658E733, transparent 60%);
+  filter: blur(20px);
+  border-radius: 24px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 260ms ease;
+}
+
+/* Reveal blur on hover via parent group state using attribute selector */
+a.group:hover .card-glow-blur { opacity: 0.5; }
+
+/* === Pipeline Animations === */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes lineDraw {
+    from { stroke-dashoffset: 240; }
+    to   { stroke-dashoffset: 0; }
+  }
+  @keyframes popIn {
+    0% { transform: translateY(6px) scale(.98); opacity: 0; }
+    100% { transform: translateY(0) scale(1); opacity: 1; }
+  }
+  @keyframes pulseRing {
+    0%, 100% { transform: scale(.88); opacity: .25; }
+    50% { transform: scale(1.06); opacity: .45; }
+  }
+  @keyframes lineGrow {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+}
+
+.pipeline-card {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 16px;
+  box-shadow: 0 10px 26px rgba(0,0,0,.28);
+}
+
+.pipeline-surface {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 16px;
+  box-shadow: 0 10px 26px rgba(0,0,0,.28);
+}
+
+.pipeline-tooltip {
+  background: rgba(10,10,16,.98);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 12px;
+  box-shadow: 0 14px 36px rgba(0,0,0,.4);
+  backdrop-filter: blur(8px);
+}
+
+.pipeline-focus { outline: 2px solid #6D00FF; outline-offset: 3px; }
+
+.pipeline-chip {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.8);
+}
+
+/* Buttons matching brand */
+.btn-ghost {
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.04);
+  color: #ffffff;
+  border-radius: 10px;
+  padding: 8px 12px;
+  transition: background-color 200ms ease;
+}
+.btn-ghost:hover { background: rgba(255,255,255,0.08); }
+.btn-ghost:focus-visible { outline: 2px solid #6D00FF; outline-offset: 3px; }
+
+/* Icon wrapper tone */
+.icon-tile {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.16);
+  border-radius: 9999px;
+}
+
+/* Static brand gradient heading (no animation; Safari-safe) */
+.brand-h1 {
+  background: linear-gradient(90deg, #B892FF 0%, #6D00FF 50%, #B892FF 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Scope that explicitly disables any shimmer descendants */
+.no-anim .shimmer-text { animation: none !important; }
+
+/* Fade in up animation for metrics */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

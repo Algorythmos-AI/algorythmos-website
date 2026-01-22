@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://algorythmos.com/sitemap.xml
+
+Disallow: /admin/
+Disallow: /api/
+Disallow: /private/
+Disallow: /internal/
