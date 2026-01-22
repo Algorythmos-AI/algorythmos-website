@@ -23,6 +23,25 @@ npm run build        # Production build
 
 ---
 
+## ⚠️ Git Configuration (MANDATORY FOR AI AGENTS)
+
+> [!CAUTION]
+> All commits **MUST** use this exact author configuration to ensure Vercel deployments succeed:
+
+```bash
+git config user.name "skalaliya"
+git config user.email "Skalaliya@gmail.com"
+```
+
+| Field | Value |
+|-------|-------|
+| **Name** | `skalaliya` |
+| **Email** | `Skalaliya@gmail.com` |
+
+Failure to use the correct email will cause Vercel to reject deployments with "No GitHub account was found matching the commit author email address".
+
+---
+
 ## 📋 Tech Stack
 
 | Layer | Technology |
