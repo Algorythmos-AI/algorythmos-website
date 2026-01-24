@@ -133,7 +133,9 @@ export default function BlogDetailPage() {
                 alt="Algorythmos"
                 className="h-10 w-auto object-contain"
               />
-              <span className="text-sm font-extrabold tracking-tighter uppercase text-slate-500 font-medium pt-1">| Pulse</span>
+              <span className="text-sm font-extrabold tracking-tighter uppercase text-slate-500 font-medium pt-1">
+                {slug === "pulse-clinical-ai" ? "| Pulse" : "| Insights"}
+              </span>
             </Link>
             <Link to={getRegionPath("/contact")} className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-5 py-2 rounded-full text-xs font-black shadow-lg shadow-indigo-500/20 hover:scale-105 transition-transform">
               Start Transformation
