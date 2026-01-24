@@ -25,7 +25,8 @@ const checkWebPSupport = () => {
 
 const ScrollSequence = ({
     frameCount = 50,
-    className = "w-full h-full object-contain"
+    className = "w-full h-full object-contain",
+    containerHeight = "120vh"
 }) => {
     const containerRef = useRef(null);
     const [images, setImages] = useState([]);
@@ -109,7 +110,7 @@ const ScrollSequence = ({
     }, [images, frameCount, smoothProgress]);
 
     return (
-        <div ref={containerRef} className="relative w-full h-[200vh]">
+        <div ref={containerRef} className="relative w-full" style={{ height: containerHeight }}>
             <div className="sticky top-0 w-full h-screen flex items-center justify-center overflow-hidden">
                 <canvas
                     ref={canvasRef}

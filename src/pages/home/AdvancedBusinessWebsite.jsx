@@ -165,9 +165,9 @@ const AdvancedBusinessWebsite = () => {
       {/* 4. Neural Genesis — Scroll Animation Cinematic Section */}
       {/* Removed fixed height constraints to fix content void */}
       {!isMobile && !prefersReducedMotion && (
-        <section className="relative bg-[#020617] overflow-hidden py-12">
-          <Suspense fallback={<div className="h-screen bg-[#020617]" />}>
-            <ScrollSequence />
+        <section className="relative bg-[#020617] overflow-hidden">
+          <Suspense fallback={<div className="h-[60vh] bg-[#020617] flex items-center justify-center"><div className="animate-pulse text-indigo-500 font-mono text-sm">Loading Neural...</div></div>}>
+            <ScrollSequence containerHeight="120vh" />
           </Suspense>
           {/* Overlay Text */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
