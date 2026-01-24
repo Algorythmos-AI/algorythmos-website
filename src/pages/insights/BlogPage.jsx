@@ -104,8 +104,8 @@ const BlogPage = () => {
                 key={index}
                 to={getRegionPath(`/blog/${post.slug}`)}
                 className="group relative p-6 bg-gradient-to-br from-gray-900/60 to-black/60 rounded-2xl 
-                border border-gray-800/50 hover:border-white/20 backdrop-blur-xl transition-all duration-500 
-                transform hover:scale-[1.02] hover:-translate-y-2 overflow-hidden shadow-lg flex flex-col h-full"
+                border border-gray-800/50 hover:border-violet-500/40 backdrop-blur-xl transition-all duration-500 
+                transform hover:scale-[1.02] hover:-translate-y-2 overflow-hidden shadow-[0_0_20px_rgba(124,58,237,0)] hover:shadow-[0_0_20px_rgba(124,58,237,0.5)] flex flex-col h-full"
               >
                 <div className={`absolute inset-0 bg-gradient-to-br ${post.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
                 <div className="relative z-10 text-left flex flex-col flex-1">
