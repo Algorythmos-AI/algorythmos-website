@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef, Suspense, lazy } from "react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import AnimatedSection from "../../components/ui/AnimatedSection";
+import OurJourneyLayout from "../../components/ui/OurJourneyLayout";
 import { track } from "../../app/utils/analytics";
 import { persistUtmFromLocation, readStoredUtm } from "../../app/utils/utm";
 import { useI18n } from "../../app/i18n/I18nContext";
@@ -553,44 +554,8 @@ const QuantumAboutPage = () => {
         </div>
       </section>
 
-      {/* Timeline */}
-      <section className="py-16 sm:py-20 md:py-28 lg:py-32 relative z-10">
-        <div className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-12">
-          <div className="text-center mb-12 sm:mb-16 md:mb-20">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black mb-6 sm:mb-8 px-4">
-              {t("about.journey.title")}
-              <span className="block bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mt-2">
-                {t("about.journey.titleHighlight")}
-              </span>
-            </h2>
-            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 max-w-4xl mx-auto px-4 leading-relaxed">
-              {t("about.journey.subtitle")}
-            </p>
-          </div>
-
-          <div className="relative">
-            <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-0.5 sm:w-1 h-full bg-gradient-to-b from-blue-500 via-purple-500 to-pink-500" />
-            {TIMELINE.map((item, i) => {
-              const leftSide = i % 2 === 0;
-              return (
-                <div key={i} className={`relative flex items-center mb-10 sm:mb-12 md:mb-16 ${leftSide ? "justify-start" : "justify-end"}`}>
-                  <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-5 h-5 sm:w-6 sm:h-6 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full border-4 border-black z-10 animate-pulse" />
-                  <div className={`w-full md:w-5/12 ${leftSide ? "md:pr-8 lg:pr-12 md:text-right" : "md:pl-8 lg:pl-12 text-left"}`}>
-                    <div className="group p-6 sm:p-7 md:p-8 bg-gradient-to-br from-gray-900/80 to-black/80 rounded-2xl sm:rounded-3xl border border-gray-800/50 hover:border-white/20 backdrop-blur-xl transition-all duration-500 transform hover:scale-[1.02]">
-                      <div className={`flex items-center gap-3 mb-4 sm:mb-5 ${leftSide ? "md:justify-end" : "justify-start"}`}>
-                        <div className="text-purple-400 group-hover:scale-110 transition-transform duration-300">{item.icon}</div>
-                        <div className="text-xl sm:text-2xl font-black bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">{item.year}</div>
-                      </div>
-                      <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 group-hover:text-blue-400 transition-colors duration-300">{item.title}</h3>
-                      <p className="text-sm sm:text-base text-gray-300 group-hover:text-white transition-colors duration-300 leading-relaxed">{item.description}</p>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+      {/* Journey / Timeline Refactored */}
+      <OurJourneyLayout />
 
       {/* CTA */}
       <section className="py-16 sm:py-20 md:py-28 lg:py-32 relative z-10">
