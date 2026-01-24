@@ -13,7 +13,7 @@ import {
     Filler,
     RadialLinearScale
 } from "chart.js";
-import { Bar, Doughnut, Line, Radar } from "react-chartjs-2";
+import { Bar, Doughnut, Line, Radar, Bubble } from "react-chartjs-2";
 
 // Register ChartJS components
 ChartJS.register(
@@ -111,6 +111,8 @@ export const BlogChart = ({ type, data, title, caption, height = "h-80" }) => {
                 return <Line data={data} options={commonOptions} />;
             case "radar":
                 return <Radar data={data} options={radarOptions} />;
+            case "bubble":
+                return <Bubble data={data} options={commonOptions} />;
             default:
                 return null;
         }
