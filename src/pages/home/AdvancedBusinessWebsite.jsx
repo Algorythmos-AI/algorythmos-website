@@ -8,7 +8,7 @@ import ScrollReveal from '../../components/ui/ScrollReveal.jsx';
 import Button from '../../components/ui/Button.jsx';
 
 // Lazy-load heavy UI components
-const PartnersCarousel = lazy(() => import('../../components/ui/PartnersCarousel.jsx'));
+const LogoMarquee = lazy(() => import('../../components/ui/LogoMarquee.jsx'));
 const ServicesShowcase = lazy(() => import('../../components/ui/ServicesShowcase.jsx'));
 const ScrollSequence = lazy(() => import('../../components/microanimations/ScrollSequence.jsx'));
 
@@ -158,7 +158,7 @@ const AdvancedBusinessWebsite = () => {
       {/* Partners Marquee (Lazy Loaded) */}
       <div className="border-y border-white/5 bg-neural-900/50 backdrop-blur-sm">
         <Suspense fallback={<div className="h-20" />}>
-          <PartnersCarousel />
+          <LogoMarquee />
         </Suspense>
       </div>
 
