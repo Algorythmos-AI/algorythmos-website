@@ -13,7 +13,7 @@ import {
     ArcElement,
     Filler
 } from "chart.js";
-import { Bar, Doughnut, Line } from "react-chartjs-2";
+import { Bar, Doughnut, Line, Chart } from "react-chartjs-2";
 import { useI18n } from "../../app/i18n/I18nContext";
 
 // Register ChartJS components
