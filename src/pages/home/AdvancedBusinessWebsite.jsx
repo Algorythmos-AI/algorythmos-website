@@ -102,7 +102,7 @@ const AdvancedBusinessWebsite = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[#020617] text-white overflow-hidden relative selection:bg-indigo-500/30 selection:text-white">
+    <div className="bg-[#020617] text-white overflow-hidden relative selection:bg-indigo-500/30 selection:text-white">
       <RegionHelmet region="GLOBAL" />
       <SeoBreadcrumbs items={[{ name: "Home", path: "/" }]} />
 
@@ -165,9 +165,9 @@ const AdvancedBusinessWebsite = () => {
       {/* 4. Neural Genesis — Scroll Animation Cinematic Section */}
       {/* Removed fixed height constraints to fix content void */}
       {!isMobile && !prefersReducedMotion && (
-        <section className="relative bg-[#020617] overflow-hidden">
-          <Suspense fallback={<div className="h-[60vh] bg-[#020617] flex items-center justify-center"><div className="animate-pulse text-indigo-500 font-mono text-sm">Loading Neural...</div></div>}>
-            <ScrollSequence containerHeight="120vh" />
+        <section className="relative bg-[#020617] overflow-hidden py-24 md:py-32">
+          <Suspense fallback={<div className="h-[60vh] flex items-center justify-center"><div className="animate-pulse text-indigo-500">Loading Neural...</div></div>}>
+            <ScrollSequence containerHeight="100vh" />
           </Suspense>
           {/* Overlay Text */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
