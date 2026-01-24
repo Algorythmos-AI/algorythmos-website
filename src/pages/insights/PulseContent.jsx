@@ -169,7 +169,7 @@ const PulseContent = ({ t, getRegionPath }) => {
                             {t("blogDetail.posts.pulse-clinical-ai.context.chart.title")}
                         </h3>
                         <div className="h-80 w-full">
-                            <ChartJS type="bar" data={heroChartData} options={chartOptions} />
+                            <Chart type="bar" data={heroChartData} options={chartOptions} />
                         </div>
                         <p className="mt-6 text-[10px] text-slate-500 text-center italic">
                             {t("blogDetail.posts.pulse-clinical-ai.context.chart.caption")}
