@@ -4,6 +4,9 @@ import { Helmet } from "react-helmet-async";
 import { useI18n } from "../../app/i18n/I18nContext";
 import { getCanonicalUrl, getOgLocale, generateHreflangLinks, getCanonicalBase } from "../../app/utils/seoHelpers.js";
 import SeoBreadcrumbs from "../../app/seo/SeoBreadcrumbs.jsx";
+import { lazy, Suspense } from "react";
+
+const PulseContent = lazy(() => import("./PulseContent.jsx"));
 
 // Blog structure definitions (content comes from i18n)
 const blogStructures = {
@@ -97,7 +100,83 @@ export default function BlogDetailPage() {
   const hreflangLinks = generateHreflangLinks(`/blog/${slug}`);
 
   // Check if slug is valid
-  const isValidSlug = blogSlugs.includes(slug);
+  const isValidSlug = blogSlugs.includes(slug) || slug === "pulse-clinical-ai";
+
+  // Special case for Pulse Playbook
+  if (slug === "pulse-clinical-ai") {
+    // SEO setup for Pulse is handled inside PulseContent or duplicated here?
+    // Let's duplicate the SEO wrapper here for consistency across all blog posts
+    // and just render the content
+    const pulseTitle = t("blogDetail.posts.pulse-clinical-ai.title");
+    const pulseMeta = t("blogDetail.posts.pulse-clinical-ai.meta");
+    const pulseDate = t("blogDetail.posts.pulse-clinical-ai.date");
+
+    return (
+      <div className="min-h-screen bg-black text-white overflow-hidden relative">
+        <Helmet>
+          <title>{pulseTitle} | Algorythmos</title>
+          <meta name="description" content={pulseMeta} />
+          <link rel="canonical" href={canonicalUrl} />
+          {hreflangLinks.map(({ hreflang, href }) => (
+            <link key={hreflang} rel="alternate" hreflang={hreflang} href={href} />
+          ))}
+          <meta property="og:title" content={pulseTitle} />
+          <meta property="og:description" content={pulseMeta} />
+          <meta property="og:type" content="article" />
+          <meta property="og:url" content={canonicalUrl} />
+          <meta property="og:locale" content={ogLocale} />
+          <meta property="og:image" content={`${getCanonicalBase(region)}/Algorythmos.png`} />
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:title" content={pulseTitle} />
+          <meta name="twitter:description" content={pulseMeta} />
+          <script type="application/ld+json">
+            {JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Article",
+              "headline": pulseTitle,
+              "description": pulseMeta,
+              "datePublished": pulseDate,
+              "author": {
+                "@type": "Organization",
+                "name": "Algorythmos"
+              },
+              "publisher": {
+                "@type": "Organization",
+                "name": "Algorythmos",
+                "url": "https://algorythmos.com",
+                "logo": {
+                  "@type": "ImageObject",
+                  "url": "https://algorythmos.com/Algorythmos.png"
+                }
+              },
+              "mainEntityOfPage": {
+                "@type": "WebPage",
+                "@id": canonicalUrl
+              }
+            })}
+          </script>
+        </Helmet>
+
+        <div className="fixed top-0 w-full z-50 glass-card border-b border-white/5 backdrop-blur-md bg-black/50">
+          <div className="max-w-7xl mx-auto px-6 h-16 flex justify-between items-center">
+            <Link to={getRegionPath("/")} className="flex items-center space-x-2">
+              <div className="h-8 w-8 bg-gradient-to-br from-indigo-600 to-purple-600 rounded flex items-center justify-center text-white font-black">A</div>
+              <span className="text-sm font-extrabold tracking-tighter uppercase text-white">Algorythmos <span className="text-slate-500 font-medium">| Pulse</span></span>
+            </Link>
+            <Link to={getRegionPath("/contact")} className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-5 py-2 rounded-full text-xs font-black shadow-lg shadow-indigo-500/20 hover:scale-105 transition-transform">
+              Start Transformation
+            </Link>
+          </div>
+        </div>
+
+        <main className="pt-16">
+          <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-white">Loading Pulse...</div>}>
+            <PulseContent t={t} getRegionPath={getRegionPath} />
+          </Suspense>
+        </main>
+      </div>
+    );
+  }
 
   // Build post from translations
   const post = isValidSlug ? {
