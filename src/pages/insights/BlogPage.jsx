@@ -1,6 +1,6 @@
 import React from "react";
 import { Helmet } from "react-helmet-async";
-import { blogPosts } from "../../data/blogPosts.js";
+import { blogPosts } from "../../data/blogData.jsx";
 import { useI18n } from "../../app/i18n/I18nContext.jsx";
 import { getCanonicalUrl, getOgLocale, generateHreflangLinks, getCanonicalBase } from "../../app/utils/seoHelpers.js";
 import LocalizedCTA from "../../components/ui/LocalizedCTA.jsx";

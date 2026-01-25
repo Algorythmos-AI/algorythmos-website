@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useI18n } from "../../../app/i18n/I18nContext.jsx";
-import { blogPosts } from "../../../data/blogPosts.js";
+import { blogPosts } from "../../../data/blogData.jsx";
 
 const RelatedPosts = ({ currentSlug }) => {
     const { t, getRegionPath } = useI18n();
