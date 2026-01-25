@@ -780,6 +780,7 @@
   "blogDetail.notFound.title": "Blog post not found",
   "blogDetail.notFound.message": "We couldn't find the blog you requested.",
   "blogDetail.cta.text": "Speak with our team",
+  "blogDetail.related.title": "Continue Reading",
   "blogDetail.posts.gdpr-ai.title": "GDPR & AI: What SMEs Need to Know",
   "blog.posts.11.title": "Pulse | Clinical AI Implementation Playbook",
   "blog.posts.11.snippet": "How hospitals can solve the capacity trap with targeted AI modules—without replacing legacy EMRs. A data-driven roadmap to reclaiming clinical bandwidth.",

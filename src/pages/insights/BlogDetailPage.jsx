@@ -17,6 +17,7 @@ const MlopsLayout = lazy(() => import("./layouts/MlopsLayout.jsx").then(module =
 const AgenticAiLayout = lazy(() => import("./layouts/AgenticAiLayout.jsx").then(module => ({ default: module.AgenticAiLayout })));
 const LlmSecOpsLayout = lazy(() => import("./layouts/LlmSecOpsLayout.jsx").then(module => ({ default: module.LlmSecOpsLayout })));
 const AiWebsitesLayout = lazy(() => import("./layouts/AiWebsitesLayout.jsx").then(module => ({ default: module.AiWebsitesLayout })));
+const RelatedPosts = lazy(() => import("../../components/ui/blog/RelatedPosts.jsx"));
 
 const blogSlugs = [
   "gdpr-ai", "mlops-production", "agentic-ai", "llmsecops",
@@ -146,6 +147,7 @@ export default function BlogDetailPage() {
         <main className="pt-16">
           <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-white">Loading Insights...</div>}>
             {renderLayout(post)}
+            <RelatedPosts currentSlug={slug} />
           </Suspense>
         </main>
       </div>
