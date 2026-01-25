@@ -30,7 +30,7 @@ const blogStructures = {
   "gdpr-ai": { content: [{ heading: true, paragraphs: [0, 1] }, { heading: true, list: [0, 1, 2, 3] }, { heading: true, paragraphs: [0, 1] }] },
   "mlops-production": { content: [{ heading: true, paragraphs: [0, 1, 2] }, { heading: true, list: [0, 1, 2, 3] }, { heading: true, paragraphs: [0] }] },
   "agentic-ai": { content: [{ heading: true, paragraphs: [0, 1] }, { heading: true, list: [0, 1, 2, 3] }, { heading: true, paragraphs: [0, 1] }] },
-  "llmsecops": { content: [{ heading: true, paragraphs: [0] }, { heading: true, list: [0, 1, 2, 3] }] },
+  "llmsecops": { content: [{ heading: true, paragraphs: [0, 1] }, { heading: true, list: [0, 1, 2, 3] }, { heading: true, paragraphs: [0] }] },
   "ai-websites-advantage": { content: [{ heading: true, paragraphs: [0, 1] }, { heading: true, list: [0, 1, 2, 3] }] },
   "voice-ai-automation": { content: [{ heading: true, paragraphs: [0] }, { heading: true, list: [0, 1, 2, 3] }] },
   "chatbots-agents-rag": { content: [{ heading: true, paragraphs: [0] }, { heading: true, list: [0, 1, 2, 3] }] },
