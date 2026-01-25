@@ -28,7 +28,7 @@ const blogSlugs = [
 const blogStructures = {
   // Keeping original structure logic to hydrate 'post' object
   "gdpr-ai": { content: [{ heading: true, paragraphs: [0, 1] }, { heading: true, list: [0, 1, 2, 3] }, { heading: true, paragraphs: [0, 1] }] },
-  "mlops-production": { content: [{ heading: true, paragraphs: [0, 1] }, { heading: true, list: [0, 1, 2, 3] }, { heading: true, paragraphs: [0] }] },
+  "mlops-production": { content: [{ heading: true, paragraphs: [0, 1, 2] }, { heading: true, list: [0, 1, 2, 3] }, { heading: true, paragraphs: [0] }] },
   "agentic-ai": { content: [{ heading: true, paragraphs: [0] }, { heading: true, list: [0, 1, 2, 3] }] },
   "llmsecops": { content: [{ heading: true, paragraphs: [0] }, { heading: true, list: [0, 1, 2, 3] }] },
   "ai-websites-advantage": { content: [{ heading: true, paragraphs: [0, 1] }, { heading: true, list: [0, 1, 2, 3] }] },
