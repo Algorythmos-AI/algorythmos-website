@@ -780,6 +780,7 @@
   "blogDetail.notFound.title": "Article de blog introuvable",
   "blogDetail.notFound.message": "Nous n'avons pas trouvé l'article que vous recherchez.",
   "blogDetail.cta.text": "Parlez avec notre équipe",
+  "blogDetail.related.title": "Continuer la lecture",
   "blogDetail.posts.gdpr-ai.title": "RGPD & IA : Ce que les PME doivent savoir",
   "blogDetail.posts.gdpr-ai.meta": "Comment garantir que vos systèmes IA sont conformes au RGPD et à l'AI Act européen.",
   "blogDetail.posts.gdpr-ai.date": "Août 2025",

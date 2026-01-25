@@ -1,7 +1,6 @@
 import React from "react";
 import { Helmet } from "react-helmet-async";
-import { PenTool, Shield, Cpu, Layers, Globe, Mic, Bot, Zap, BarChart3, Users, Heart } from "lucide-react";
-import { Link } from "react-router-dom";
+import { blogPosts } from "../../data/blogPosts.js";
 import { useI18n } from "../../app/i18n/I18nContext.jsx";
 import { getCanonicalUrl, getOgLocale, generateHreflangLinks, getCanonicalBase } from "../../app/utils/seoHelpers.js";
 import LocalizedCTA from "../../components/ui/LocalizedCTA.jsx";
@@ -14,56 +13,7 @@ const BlogPage = () => {
   const ogLocale = getOgLocale(region);
   const hreflangLinks = generateHreflangLinks('/blog');
 
-  const blogPosts = [
-    {
-      icon: Heart,
-      title: t("blog.posts.10.title"),
-      snippet: t("blog.posts.10.snippet"),
-      date: t("blog.posts.10.date"),
-      gradient: "from-rose-500 to-violet-500",
-      slug: "pulse-clinical-ai"
-    },
-    {
-      icon: Users,
-      title: t("blog.posts.9.title"),
-      snippet: t("blog.posts.9.snippet"),
-      date: t("blog.posts.9.date"),
-      gradient: "from-amber-500 to-orange-500",
-      slug: "ai-consultancy-australia"
-    },
-    {
-      icon: Shield,
-      title: t("blog.posts.0.title"),
-      snippet: t("blog.posts.0.snippet"),
-      date: t("blog.posts.0.date"),
-      gradient: "from-blue-500 to-purple-500",
-      slug: "gdpr-ai"
-    },
-    {
-      icon: Cpu,
-      title: t("blog.posts.1.title"),
-      snippet: t("blog.posts.1.snippet"),
-      date: t("blog.posts.1.date"),
-      gradient: "from-pink-500 to-rose-500",
-      slug: "mlops-production"
-    },
-    {
-      icon: Layers,
-      title: t("blog.posts.2.title"),
-      snippet: t("blog.posts.2.snippet"),
-      date: t("blog.posts.2.date"),
-      gradient: "from-green-500 to-emerald-500",
-      slug: "agentic-ai"
-    },
-    {
-      icon: PenTool,
-      title: t("blog.posts.3.title"),
-      snippet: t("blog.posts.3.snippet"),
-      date: t("blog.posts.3.date"),
-      gradient: "from-yellow-500 to-orange-500",
-      slug: "llmsecops"
-    }
-  ];
+
 
   return (
     <div className="min-h-screen bg-black text-white overflow-hidden relative">
@@ -112,9 +62,9 @@ const BlogPage = () => {
                   <div className={`inline-flex p-3 bg-gradient-to-br ${post.gradient} rounded-xl mb-4 w-fit`}>
                     <Icon className="w-6 h-6" />
                   </div>
-                  <h2 className="text-lg sm:text-xl font-bold mb-2 line-clamp-2">{post.title}</h2>
-                  <p className="text-sm text-gray-400 mb-4 line-clamp-3 flex-1">{post.snippet}</p>
-                  <span className="text-xs text-gray-500 mt-auto">{post.date}</span>
+                  <h2 className="text-lg sm:text-xl font-bold mb-2 line-clamp-2">{t(post.titleKey)}</h2>
+                  <p className="text-sm text-gray-400 mb-4 line-clamp-3 flex-1">{t(post.snippetKey)}</p>
+                  <span className="text-xs text-gray-500 mt-auto">{t(post.dateKey)}</span>
                 </div>
               </Link>
             );
