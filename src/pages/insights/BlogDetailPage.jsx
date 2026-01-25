@@ -125,26 +125,9 @@ export default function BlogDetailPage() {
           </script>
         </Helmet>
 
-        <div className="fixed top-0 w-full z-50 glass-card border-b border-white/5 backdrop-blur-md bg-black/50">
-          <div className="max-w-7xl mx-auto px-6 h-16 flex justify-between items-center">
-            <Link to={getRegionPath("/")} className="flex items-center space-x-3">
-              {/* Replaced 'A' symbol with actual logo */}
-              <img
-                src="/logo-full.png"
-                alt="Algorythmos"
-                className="h-10 w-auto object-contain"
-              />
-              <span className="text-sm font-extrabold tracking-tighter uppercase text-slate-500 font-medium pt-1">
-                {slug === "pulse-clinical-ai" ? "| Pulse" : "| Insights"}
-              </span>
-            </Link>
-            <Link to={getRegionPath("/contact")} className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-5 py-2 rounded-full text-xs font-black shadow-lg shadow-indigo-500/20 hover:scale-105 transition-transform">
-              Start Transformation
-            </Link>
-          </div>
-        </div>
 
-        <main className="pt-16">
+
+        <main className="pt-24 md:pt-32">
           <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-white">Loading Insights...</div>}>
             {renderLayout(post)}
             <RelatedPosts currentSlug={slug} />
