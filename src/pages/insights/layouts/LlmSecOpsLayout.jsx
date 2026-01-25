@@ -75,7 +75,7 @@ export const LlmSecOpsLayout = ({ t, post }) => {
                 category="Security & Compliance"
             />
 
-            <div className="max-w-3xl mx-auto px-6 pb-24 space-y-16">
+            <div className="max-w-3xl mx-auto px-6 pb-24 space-y-10 md:space-y-16">
 
                 {/* Section 1: Intro + Radar */}
                 <section className="space-y-8">

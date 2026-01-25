@@ -98,7 +98,7 @@ export const AiConsultancyLayout = ({ t, post }) => {
                 category="Industry Report"
             />
 
-            <div className="max-w-3xl mx-auto px-6 pb-24 space-y-20">
+            <div className="max-w-3xl mx-auto px-6 pb-24 space-y-12 md:space-y-20">
 
                 {/* Section 1: Introduction + Radar */}
                 <section className="space-y-8">
