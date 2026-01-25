@@ -36,7 +36,7 @@ const blogStructures = {
   "chatbots-agents-rag": { content: [{ heading: true, paragraphs: [0] }, { heading: true, list: [0, 1, 2, 3] }] },
   "future-sme-websites": { content: [{ heading: true, paragraphs: [0] }, { heading: true, list: [0, 1, 2] }] },
   "core-web-vitals": { content: [{ heading: true, paragraphs: [0] }, { heading: true, list: [0, 1, 2, 3] }] },
-  "ai-consultancy-australia": { content: [{ heading: true, paragraphs: [0] }, { heading: true, list: [0, 1, 2, 3] }] },
+  "ai-consultancy-australia": { content: [{ heading: true, paragraphs: [0, 1, 2, 3] }, { heading: true, list: [0, 1, 2, 3] }] },
   "clinical-ai-healthcare": { content: [{ heading: true, paragraphs: [0, 1] }, { heading: true, list: [0, 1, 2, 3] }, { heading: true, paragraphs: [0] }, { heading: true, list: [0, 1, 2, 3] }, { heading: true, paragraphs: [0, 1] }] },
 };
 
