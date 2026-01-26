@@ -3,19 +3,26 @@ import { Helmet } from "react-helmet-async";
 import { CheckCircle } from "lucide-react";
 import { useI18n } from "../../app/i18n/I18nContext";
 import { getCanonicalUrl, getOgLocale, generateHreflangLinks } from "../../app/utils/seoHelpers.js";
+import HealthcareBurdenContent from "./HealthcareBurdenContent";
 
-// Valid case study slugs
-const studySlugs = ["financial-compliance", "manufacturing-docs", "healthcare-mlops", "retail-sql"];
+// Valid case study slugs (including custom content slugs)
+const studySlugs = ["financial-compliance", "manufacturing-docs", "healthcare-mlops", "retail-sql", "healthcare-burden"];
+
+// Slugs that have custom rich content components
+const customContentSlugs = ["healthcare-burden"];
 
 export default function CaseStudyPage() {
   const { t, region, getRegionPath } = useI18n();
   const { slug } = useParams();
-  
+
   // Check if slug is valid
   const isValidSlug = studySlugs.includes(slug);
-  
-  // Build study from translations
-  const study = isValidSlug ? {
+
+  // Check if this slug has custom rich content
+  const hasCustomContent = customContentSlugs.includes(slug);
+
+  // Build study from translations (only for standard case studies)
+  const study = isValidSlug && !hasCustomContent ? {
     title: t(`caseStudyDetail.studies.${slug}.title`),
     meta: t(`caseStudyDetail.studies.${slug}.meta`),
     challenge: t(`caseStudyDetail.studies.${slug}.challenge`),
@@ -32,6 +39,35 @@ export default function CaseStudyPage() {
   const canonicalUrl = getCanonicalUrl(region, `/case-studies/${slug}`);
   const ogLocale = getOgLocale(region);
   const hreflangLinks = generateHreflangLinks(`/case-studies/${slug}`);
+
+  // Handle custom content case studies (like healthcare-burden)
+  if (hasCustomContent && slug === "healthcare-burden") {
+    return (
+      <div className="min-h-screen bg-black text-white overflow-hidden relative">
+        <div className="fixed inset-0 -z-10">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-purple-900/10 to-black" />
+        </div>
+
+        <Helmet>
+          <title>Healthcare Documentation Burden Analysis | Algorythmos</title>
+          <meta name="description" content="Comprehensive analysis of the Digital Disconnect in Australian healthcare—where clinical care competes with administrative friction. $2B annual inefficiency cost." />
+          <link rel="canonical" href={canonicalUrl} />
+          {hreflangLinks.map(({ hreflang, href }) => (
+            <link key={hreflang} rel="alternate" hreflang={hreflang} href={href} />
+          ))}
+          <meta property="og:title" content="Healthcare Documentation Burden Analysis | Algorythmos" />
+          <meta property="og:description" content="Comprehensive analysis of the Digital Disconnect in Australian healthcare—where clinical care competes with administrative friction." />
+          <meta property="og:type" content="article" />
+          <meta property="og:url" content={canonicalUrl} />
+          <meta property="og:locale" content={ogLocale} />
+        </Helmet>
+
+        <main className="pt-32 pb-0">
+          <HealthcareBurdenContent />
+        </main>
+      </div>
+    );
+  }
 
   if (!study) {
     return (
