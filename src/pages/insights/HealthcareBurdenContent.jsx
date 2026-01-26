@@ -204,7 +204,11 @@ const HealthcareBurdenContent = () => {
 
     // Time Distribution Chart
     const timeDistData = {
-        labels: ['Direct Care', 'Documentation', 'Other'],
+        labels: [
+            t('caseStudyDetail.studies.healthcare-burden.charts.timeDist.directCare'),
+            t('caseStudyDetail.studies.healthcare-burden.charts.timeDist.documentation'),
+            t('caseStudyDetail.studies.healthcare-burden.charts.timeDist.other')
+        ],
         datasets: [{
             data: [27.5, 26.6, 45.9],
             backgroundColor: [COLORS.cyan, COLORS.violet, 'rgba(255,255,255,0.05)'],
@@ -216,7 +220,11 @@ const HealthcareBurdenContent = () => {
 
     // GP Impact Chart
     const gpImpactData = {
-        labels: ['Reduced Appt Slots', 'Limited Patient Time', 'Reduced Work Hours'],
+        labels: [
+            t('caseStudyDetail.studies.healthcare-burden.charts.gpImpact.reducedSlots'),
+            t('caseStudyDetail.studies.healthcare-burden.charts.gpImpact.limitedTime'),
+            t('caseStudyDetail.studies.healthcare-burden.charts.gpImpact.reducedHours')
+        ],
         datasets: [{
             label: '% of GPs',
             data: [66, 60, 51],
@@ -228,7 +236,10 @@ const HealthcareBurdenContent = () => {
 
     // Patient Volume Chart
     const patientVolumeData = {
-        labels: ['>150 Patients (Overload)', 'Standard Load'],
+        labels: [
+            t('caseStudyDetail.studies.healthcare-burden.charts.patientVolume.overload'),
+            t('caseStudyDetail.studies.healthcare-burden.charts.patientVolume.standard')
+        ],
         datasets: [{
             data: [27, 73],
             backgroundColor: [COLORS.magenta, 'rgba(255, 255, 255, 0.05)'],
@@ -239,7 +250,10 @@ const HealthcareBurdenContent = () => {
 
     // Burnout Chart
     const burnoutData = {
-        labels: ['Total GP Burnout', 'Admin-Driven'],
+        labels: [
+            t('caseStudyDetail.studies.healthcare-burden.charts.burnout.total'),
+            t('caseStudyDetail.studies.healthcare-burden.charts.burnout.admin')
+        ],
         datasets: [{
             label: 'Rate %',
             data: [32, 21],
@@ -251,7 +265,10 @@ const HealthcareBurdenContent = () => {
 
     // Nursing Turnaround
     const nursingTurnaroundData = {
-        labels: ['Paper Process', 'EMR System'],
+        labels: [
+            t('caseStudyDetail.studies.healthcare-burden.charts.nursing.paper'),
+            t('caseStudyDetail.studies.healthcare-burden.charts.nursing.emr')
+        ],
         datasets: [{
             label: 'Minutes',
             data: [120, 35],
@@ -263,7 +280,11 @@ const HealthcareBurdenContent = () => {
 
     // Information Retention
     const retentionData = {
-        labels: ['Verbal Only', 'Verbal + Notes', 'Printed Handout'],
+        labels: [
+            t('caseStudyDetail.studies.healthcare-burden.charts.retention.verbal'),
+            t('caseStudyDetail.studies.healthcare-burden.charts.retention.verbalNotes'),
+            t('caseStudyDetail.studies.healthcare-burden.charts.retention.printed')
+        ],
         datasets: [{
             label: 'Retention Rate %',
             data: [2.5, 85.5, 99],
@@ -275,7 +296,11 @@ const HealthcareBurdenContent = () => {
 
     // Admin Pain Points
     const adminPainData = {
-        labels: ['Chasing Results', 'Referrals', 'Time-Critical Tasks'],
+        labels: [
+            t('caseStudyDetail.studies.healthcare-burden.charts.adminPain.chasing'),
+            t('caseStudyDetail.studies.healthcare-burden.charts.adminPain.referrals'),
+            t('caseStudyDetail.studies.healthcare-burden.charts.adminPain.critical')
+        ],
         datasets: [{
             label: 'Pain Intensity',
             data: [90, 85, 88],
@@ -291,7 +316,10 @@ const HealthcareBurdenContent = () => {
 
     // Satisfaction Chart
     const satisfactionData = {
-        labels: ['Salaried (ACCHO)', 'Private Practice'],
+        labels: [
+            t('caseStudyDetail.studies.healthcare-burden.charts.satisfaction.salaried'),
+            t('caseStudyDetail.studies.healthcare-burden.charts.satisfaction.private')
+        ],
         datasets: [{
             label: 'Job Satisfaction %',
             data: [88, 58],
@@ -310,14 +338,14 @@ const HealthcareBurdenContent = () => {
                 <div className="max-w-7xl mx-auto px-6 relative z-10">
                     {/* Badge */}
                     <div className="inline-block px-4 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/30 text-violet-400 font-bold text-xs uppercase tracking-widest mb-6">
-                        2024-2025 Analysis • Australia Strategic Review
+                        {t('caseStudyDetail.studies.healthcare-burden.badge')}
                     </div>
 
                     <h1 className="text-4xl lg:text-5xl font-black mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                        Healthcare Documentation Burden Analysis
+                        {t('caseStudyDetail.studies.healthcare-burden.hero.title')}
                     </h1>
                     <p className="text-xl text-gray-400 max-w-3xl mb-8">
-                        A comprehensive analysis of the "Digital Disconnect" in Australian healthcare—where clinical care competes with administrative friction.
+                        {t('caseStudyDetail.studies.healthcare-burden.hero.subtitle')}
                     </p>
                 </div>
             </section>
@@ -329,8 +357,8 @@ const HealthcareBurdenContent = () => {
                     <div className="bg-gradient-to-br from-blue-600 to-violet-600 rounded-3xl p-8 relative overflow-hidden shadow-[0_0_30px_rgba(55,21,224,0.3)]">
                         <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-10 blur-3xl rounded-full -mr-16 -mt-16" />
 
-                        <h2 className="text-3xl font-bold mb-2 text-white">The Care Paradox</h2>
-                        <p className="text-white/90 text-sm mb-6">A System Divided: Clinical Care vs. Administrative Friction</p>
+                        <h2 className="text-3xl font-bold mb-2 text-white">{t('caseStudyDetail.studies.healthcare-burden.careParadox.title')}</h2>
+                        <p className="text-white/90 text-sm mb-6">{t('caseStudyDetail.studies.healthcare-burden.careParadox.subtitle')}</p>
 
                         <div className="h-64 bg-black/20 backdrop-blur-md rounded-2xl p-4 border border-white/10">
                             <Doughnut
@@ -346,16 +374,16 @@ const HealthcareBurdenContent = () => {
                         <div className="flex justify-center gap-4 mt-4 text-xs font-semibold">
                             <div className="flex items-center gap-2">
                                 <span className="w-2 h-2 rounded-full bg-cyan-500 shadow-[0_0_5px_#06b6d4]" />
-                                Patient Care (27.5%)
+                                {t('caseStudyDetail.studies.healthcare-burden.careParadox.patientCare')}
                             </div>
                             <div className="flex items-center gap-2">
                                 <span className="w-2 h-2 rounded-full bg-violet-500 shadow-[0_0_5px_#6D00FF]" />
-                                Documentation (26.6%)
+                                {t('caseStudyDetail.studies.healthcare-burden.careParadox.documentation')}
                             </div>
                         </div>
 
                         <div className="mt-6 pt-4 border-t border-white/10 text-xs text-white/80 leading-relaxed">
-                            <strong className="text-cyan-400">Strategic Insight:</strong> The data reveals a near 1:1 ratio, meaning highly trained clinicians spend effectively half their productive time on clerical duties. This "Digital Disconnect" is a structural inefficiency costing billions.
+                            <strong className="text-cyan-400">Strategic Insight:</strong> {t('caseStudyDetail.studies.healthcare-burden.careParadox.insight')}
                         </div>
                     </div>
 
@@ -368,17 +396,17 @@ const HealthcareBurdenContent = () => {
                                 </svg>
                             </div>
                             <div>
-                                <h3 className="text-xl font-bold text-white">Administrative Work</h3>
-                                <p className="text-gray-400 mt-1">Identified as the <span className="font-bold text-violet-400">biggest pain point</span> for Australian doctors.</p>
+                                <h3 className="text-xl font-bold text-white">{t('caseStudyDetail.studies.healthcare-burden.adminWork.title')}</h3>
+                                <p className="text-gray-400 mt-1">Identified as the <span className="font-bold text-violet-400">{t('caseStudyDetail.studies.healthcare-burden.adminWork.painPoint')}</span> for Australian doctors.</p>
                             </div>
                         </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             <div className="space-y-4">
                                 {[
-                                    { icon: '🔍', title: 'Chasing Results', desc: 'Tracking missing data' },
-                                    { icon: '🔗', title: 'Referrals', desc: 'Coordinating specialist care' },
-                                    { icon: '⏰', title: 'Time-Critical Tasks', desc: 'Managing urgent follow-ups' }
+                                    { icon: '🔍', title: t('caseStudyDetail.studies.healthcare-burden.charts.adminPain.chasing'), desc: t('caseStudyDetail.studies.healthcare-burden.adminWork.painPoint') }, // Reusing appropriate key or generic desc
+                                    { icon: '🔗', title: t('caseStudyDetail.studies.healthcare-burden.charts.adminPain.referrals'), desc: 'Coordinating specialist care' },
+                                    { icon: '⏰', title: t('caseStudyDetail.studies.healthcare-burden.charts.adminPain.critical'), desc: 'Managing urgent follow-ups' }
                                 ].map((item, idx) => (
                                     <div key={idx} className="flex items-center gap-4 p-3 rounded-xl bg-slate-800/50 border border-slate-700/50 hover:border-violet-500/50 transition-colors group">
                                         <div className="h-10 w-10 rounded-lg bg-violet-500/10 flex items-center justify-center text-lg group-hover:bg-violet-500 group-hover:scale-110 transition-all">
@@ -404,7 +432,7 @@ const HealthcareBurdenContent = () => {
                         </div>
 
                         <div className="mt-4 pt-4 border-t border-slate-700 text-xs text-gray-400 text-center">
-                            <strong>The "Template Mess":</strong> GPs navigate a labyrinth of incompatible forms, often manually transcribing data because software silos don't speak the same language.
+                            <strong>The "Template Mess":</strong> {t('caseStudyDetail.studies.healthcare-burden.adminWork.templateMess')}
                         </div>
                     </div>
                 </div>
@@ -414,7 +442,7 @@ const HealthcareBurdenContent = () => {
             <section className="py-12 max-w-7xl mx-auto px-6">
                 <div className="flex items-center gap-3 mb-8">
                     <div className="h-8 w-1 bg-gradient-to-b from-violet-500 to-blue-500 rounded-full shadow-[0_0_10px_#6D00FF]" />
-                    <h2 className="text-2xl font-bold text-white">Burden on General Practitioners</h2>
+                    <h2 className="text-2xl font-bold text-white">{t('caseStudyDetail.studies.healthcare-burden.gpBurden.title')}</h2>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -422,8 +450,8 @@ const HealthcareBurdenContent = () => {
                     <div className="lg:col-span-2 bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-3xl p-6 hover:border-violet-500/30 transition-all">
                         <div className="flex justify-between items-start mb-4">
                             <div>
-                                <h4 className="font-bold text-white">Operational Impact</h4>
-                                <p className="text-sm text-gray-400">Practice changes due to burden</p>
+                                <h4 className="font-bold text-white">{t('caseStudyDetail.studies.healthcare-burden.gpBurden.operationalImpact')}</h4>
+                                <p className="text-sm text-gray-400">{t('caseStudyDetail.studies.healthcare-burden.gpBurden.practiceChanges')}</p>
                             </div>
                             <div className="p-2 bg-rose-500/20 rounded-lg text-rose-500">
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -434,7 +462,11 @@ const HealthcareBurdenContent = () => {
                         <div className="h-64">
                             <Bar
                                 data={{
-                                    labels: ['Reduced Appt Slots', 'Limited Patient Time', 'Reduced Work Hours'],
+                                    labels: [
+                                        t('caseStudyDetail.studies.healthcare-burden.charts.gpImpact.reducedSlots'),
+                                        t('caseStudyDetail.studies.healthcare-burden.charts.gpImpact.limitedTime'),
+                                        t('caseStudyDetail.studies.healthcare-burden.charts.gpImpact.reducedHours')
+                                    ],
                                     datasets: [{
                                         label: '% of GPs',
                                         data: [66, 60, 51],
@@ -447,13 +479,13 @@ const HealthcareBurdenContent = () => {
                             />
                         </div>
                         <div className="mt-4 pt-3 border-t border-slate-700 text-xs text-gray-400">
-                            <strong className="text-rose-500">Access Restriction:</strong> To cope with administrative overload, 66% of GPs are reducing appointment availability, directly restricting patient access to primary care.
+                            <strong className="text-rose-500">Access Restriction:</strong> {t('caseStudyDetail.studies.healthcare-burden.gpBurden.accessRestriction')}
                         </div>
                     </div>
 
                     {/* Patient Volume */}
                     <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-3xl p-6 hover:border-violet-500/30 transition-all">
-                        <h4 className="font-bold text-white mb-2 text-center">Patient Volume Intensity</h4>
+                        <h4 className="font-bold text-white mb-2 text-center">{t('caseStudyDetail.studies.healthcare-burden.gpBurden.patientVolume')}</h4>
                         <div className="h-48 mb-4">
                             <Doughnut
                                 data={patientVolumeData}
@@ -462,10 +494,10 @@ const HealthcareBurdenContent = () => {
                         </div>
                         <div className="text-center mb-4">
                             <p className="text-3xl font-extrabold text-white">27%</p>
-                            <p className="text-xs text-magenta-500 font-semibold uppercase tracking-wider" style={{ color: COLORS.magenta }}>Overloaded (&gt;150 pts)</p>
+                            <p className="text-xs text-magenta-500 font-semibold uppercase tracking-wider" style={{ color: COLORS.magenta }}>{t('caseStudyDetail.studies.healthcare-burden.charts.patientVolume.overload')}</p>
                         </div>
                         <div className="pt-3 border-t border-slate-700 text-xs text-gray-400 text-center">
-                            <strong className="text-white">High Volume Risk:</strong> 27% of Australian GPs see &gt;150 patients/week to maintain viability.
+                            <strong className="text-white">High Volume Risk:</strong> {t('caseStudyDetail.studies.healthcare-burden.gpBurden.highVolumeRisk')}
                         </div>
                     </div>
                 </div>
@@ -475,21 +507,21 @@ const HealthcareBurdenContent = () => {
                     {/* Annual Cost */}
                     <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-3xl p-6 flex flex-col md:flex-row gap-8 items-center hover:border-violet-500/30 transition-all">
                         <div className="flex-1 w-full">
-                            <h4 className="font-bold text-white mb-6">Annual Financial & Time Loss</h4>
+                            <h4 className="font-bold text-white mb-6">{t('caseStudyDetail.studies.healthcare-burden.financial.title')}</h4>
                             <div className="mb-8">
                                 <div className="flex justify-between text-sm mb-2">
-                                    <span className="text-gray-300">🕐 Lost Clinical Hours</span>
-                                    <span className="text-rose-500 font-bold">621 Hours / Year</span>
+                                    <span className="text-gray-300">🕐 {t('caseStudyDetail.studies.healthcare-burden.financial.lostHours')}</span>
+                                    <span className="text-rose-500 font-bold">{t('caseStudyDetail.studies.healthcare-burden.financial.hoursYear')}</span>
                                 </div>
                                 <div className="w-full bg-slate-800 rounded-full h-4 border border-slate-700 relative overflow-hidden">
                                     <div className="bg-gradient-to-r from-rose-500 to-magenta-500 h-full rounded-full shadow-[0_0_15px_#f43f5e]" style={{ width: '35%' }} />
                                 </div>
-                                <p className="text-xs text-gray-500 mt-2">Equivalent to ~15.5 standard work weeks lost annually per practitioner.</p>
+                                <p className="text-xs text-gray-500 mt-2">{t('caseStudyDetail.studies.healthcare-burden.financial.workWeeks')}</p>
                             </div>
                             <div>
                                 <div className="flex justify-between text-sm mb-2">
-                                    <span className="text-gray-300">💰 Personal Financial Cost</span>
-                                    <span className="text-violet-400 font-bold">$23,000 / Year</span>
+                                    <span className="text-gray-300">💰 {t('caseStudyDetail.studies.healthcare-burden.financial.costLabel')}</span>
+                                    <span className="text-violet-400 font-bold">{t('caseStudyDetail.studies.healthcare-burden.financial.costValue')}</span>
                                 </div>
                                 <div className="w-full bg-slate-800 rounded-full h-4 border border-slate-700">
                                     <div className="bg-gradient-to-r from-blue-500 to-violet-500 h-full rounded-full shadow-[0_0_15px_#7658E7]" style={{ width: '100%' }} />
@@ -498,34 +530,34 @@ const HealthcareBurdenContent = () => {
                         </div>
                         <div className="bg-slate-800 p-6 rounded-2xl border border-slate-700 text-center min-w-[200px] shadow-lg">
                             <span className="text-3xl mb-3 block">💼</span>
-                            <div className="text-2xl font-extrabold text-white">$10.5k - $23k</div>
-                            <div className="text-xs text-gray-400 uppercase tracking-wider mt-1">Cost per GP</div>
+                            <div className="text-2xl font-extrabold text-white">{t('caseStudyDetail.studies.healthcare-burden.financial.costRange')}</div>
+                            <div className="text-xs text-gray-400 uppercase tracking-wider mt-1">{t('caseStudyDetail.studies.healthcare-burden.financial.costPerGp')}</div>
                         </div>
                     </div>
 
                     {/* Burnout */}
                     <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-3xl p-6 hover:border-violet-500/30 transition-all">
-                        <h4 className="font-bold text-white mb-4">Burnout & Retention Crisis</h4>
+                        <h4 className="font-bold text-white mb-4">{t('caseStudyDetail.studies.healthcare-burden.burnout.title')}</h4>
 
                         <div className="mb-6 p-4 bg-slate-800 rounded-xl border border-slate-700">
                             <div className="flex justify-between items-center mb-2">
                                 <div className="flex items-center gap-2 text-rose-500">
                                     <span>👤</span>
-                                    <span className="font-semibold text-sm">Considering Leaving</span>
+                                    <span className="font-semibold text-sm">{t('caseStudyDetail.studies.healthcare-burden.burnout.consideringLeaving')}</span>
                                 </div>
                                 <span className="text-2xl font-bold text-white">80.8%</span>
                             </div>
                             <div className="w-full bg-slate-900 h-2 rounded-full overflow-hidden">
                                 <div className="bg-gradient-to-r from-rose-500 to-magenta-500 h-full rounded-full shadow-[0_0_10px_#f43f5e]" style={{ width: '80.8%' }} />
                             </div>
-                            <p className="text-xs text-gray-500 mt-2">Citing administrative burden as a key driver.</p>
+                            <p className="text-xs text-gray-500 mt-2">{t('caseStudyDetail.studies.healthcare-burden.burnout.keyDriver')}</p>
                         </div>
 
                         <div className="h-48">
                             <Bar data={burnoutData} options={chartOptions} />
                         </div>
                         <div className="text-center mt-2 text-xs text-gray-400">
-                            <span className="text-magenta-500 font-bold" style={{ color: COLORS.magenta }}>21%</span> of GPs directly attribute burnout to admin burden.
+                            <span className="text-magenta-500 font-bold" style={{ color: COLORS.magenta }}>21%</span> {t('caseStudyDetail.studies.healthcare-burden.burnout.adminDriven')}
                         </div>
                     </div>
                 </div>
@@ -541,15 +573,15 @@ const HealthcareBurdenContent = () => {
                             </svg>
                         </div>
                         <div>
-                            <h3 className="text-xl font-bold text-white">Primary Health Networks (PHN) Landscape</h3>
-                            <p className="text-gray-400 mt-1">Coverage & Scalability Analysis</p>
+                            <h3 className="text-xl font-bold text-white">{t('caseStudyDetail.studies.healthcare-burden.phn.title')}</h3>
+                            <p className="text-gray-400 mt-1">{t('caseStudyDetail.studies.healthcare-burden.phn.subtitle')}</p>
                         </div>
                     </div>
 
                     {/* Scalability Insight */}
                     <div className="bg-slate-800/50 rounded-xl p-5 mb-6 border border-slate-700/50">
                         <div className="flex justify-between items-start mb-3">
-                            <h4 className="text-xs font-bold text-violet-400 uppercase tracking-widest">The Scalability Trap</h4>
+                            <h4 className="text-xs font-bold text-violet-400 uppercase tracking-widest">{t('caseStudyDetail.studies.healthcare-burden.phn.scalabilityTrap')}</h4>
                             <div className="p-2 bg-violet-500/10 rounded-lg">
                                 <svg className="w-5 h-5 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
@@ -557,11 +589,11 @@ const HealthcareBurdenContent = () => {
                             </div>
                         </div>
                         <p className="text-sm text-gray-300 leading-relaxed">
-                            PHNs bridge care gaps via "HealthPathways" initiatives, like Brisbane North's standardized templates. However, these are often <strong className="text-white">localized solutions</strong> that fail to scale across state borders, creating a fragmented digital health landscape.
+                            {t('caseStudyDetail.studies.healthcare-burden.phn.scalabilityDesc')}
                         </p>
                         <p className="text-xs text-gray-500 mt-3 flex items-center gap-2">
                             <span className="text-cyan-500">▶</span>
-                            Interactive Map: Zoom and hover to explore all 31 Primary Health Networks.
+                            {t('caseStudyDetail.studies.healthcare-burden.phn.mapHint')}
                         </p>
                     </div>
 
@@ -576,15 +608,15 @@ const HealthcareBurdenContent = () => {
                     <div className="mt-4 flex flex-wrap gap-4 justify-center text-xs mb-8">
                         <div className="flex items-center gap-2">
                             <span className="w-3 h-3 rounded-full bg-cyan-500 shadow-[0_0_8px_#06b6d4]" />
-                            <span className="text-gray-400">PHN Location</span>
+                            <span className="text-gray-400">{t('caseStudyDetail.studies.healthcare-burden.phn.legend.location')}</span>
                         </div>
                         <div className="flex items-center gap-2">
                             <span className="text-gray-500">|</span>
-                            <span className="text-gray-400">31 Networks</span>
+                            <span className="text-gray-400">{t('caseStudyDetail.studies.healthcare-burden.phn.legend.networks')}</span>
                         </div>
                         <div className="flex items-center gap-2">
                             <span className="text-gray-500">|</span>
-                            <span className="text-gray-400">Click markers for details</span>
+                            <span className="text-gray-400">{t('caseStudyDetail.studies.healthcare-burden.phn.legend.clickDetails')}</span>
                         </div>
                     </div>
 
@@ -599,17 +631,17 @@ const HealthcareBurdenContent = () => {
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                         </svg>
                                     </div>
-                                    <h4 className="text-lg font-bold text-white">What is a Primary Health Network?</h4>
+                                    <h4 className="text-lg font-bold text-white">{t('caseStudyDetail.studies.healthcare-burden.phn.whatIsPhn.title')}</h4>
                                 </div>
                                 <p className="text-sm text-gray-300 leading-relaxed mb-4">
-                                    A PHN is a <strong className="text-white">regional health coordinator</strong>. They don't run hospitals and don't replace GPs. Think of them as the local "traffic control centre" for community healthcare.
+                                    {t('caseStudyDetail.studies.healthcare-burden.phn.whatIsPhn.desc')}
                                 </p>
                                 <div className="space-y-2">
                                     {[
-                                        "Assess what the local community needs",
-                                        "Connect services (GPs, allied health, mental health, hospitals, aged care)",
-                                        "Fund and organise programs so people don't fall through gaps",
-                                        "Ensure patients get the right care, in the right place, at the right time"
+                                        t('caseStudyDetail.studies.healthcare-burden.phn.whatIsPhn.point1'),
+                                        t('caseStudyDetail.studies.healthcare-burden.phn.whatIsPhn.point2'),
+                                        t('caseStudyDetail.studies.healthcare-burden.phn.whatIsPhn.point3'),
+                                        t('caseStudyDetail.studies.healthcare-burden.phn.whatIsPhn.point4')
                                     ].map((item, idx) => (
                                         <div key={idx} className="flex items-start gap-2 text-xs text-gray-400">
                                             <span className="text-cyan-500 mt-0.5">✓</span>
@@ -618,7 +650,7 @@ const HealthcareBurdenContent = () => {
                                     ))}
                                 </div>
                                 <p className="text-[10px] text-gray-500 mt-4 italic">
-                                    Established 1 July 2015 to improve efficiency and coordination of care.
+                                    {t('caseStudyDetail.studies.healthcare-burden.phn.whatIsPhn.established')}
                                 </p>
                             </div>
 
@@ -629,14 +661,14 @@ const HealthcareBurdenContent = () => {
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                                         </svg>
                                     </div>
-                                    <h4 className="text-lg font-bold text-white">What PHNs Actually Do</h4>
+                                    <h4 className="text-lg font-bold text-white">{t('caseStudyDetail.studies.healthcare-burden.phn.whatTheyDo.title')}</h4>
                                 </div>
                                 <div className="space-y-3">
                                     {[
-                                        { title: "Plan Regional Needs", desc: "Analyse local health issues (mental health, diabetes, aged care, etc.)" },
-                                        { title: "Fund & Commission Services", desc: "Mental health programs, after-hours GP support, chronic disease coordination" },
-                                        { title: "Support GP Clinics", desc: "Digital health support, training, quality improvement, care pathway tools" },
-                                        { title: "Coordinate Care Transitions", desc: "Reduce chaos when patients move between hospitals and community providers" }
+                                        { title: t('caseStudyDetail.studies.healthcare-burden.phn.whatTheyDo.plan'), desc: t('caseStudyDetail.studies.healthcare-burden.phn.whatTheyDo.planDesc') },
+                                        { title: t('caseStudyDetail.studies.healthcare-burden.phn.whatTheyDo.fund'), desc: t('caseStudyDetail.studies.healthcare-burden.phn.whatTheyDo.fundDesc') },
+                                        { title: t('caseStudyDetail.studies.healthcare-burden.phn.whatTheyDo.support'), desc: t('caseStudyDetail.studies.healthcare-burden.phn.whatTheyDo.supportDesc') },
+                                        { title: t('caseStudyDetail.studies.healthcare-burden.phn.whatTheyDo.coordinate'), desc: t('caseStudyDetail.studies.healthcare-burden.phn.whatTheyDo.coordinateDesc') }
                                     ].map((item, idx) => (
                                         <div key={idx} className="border-l-2 border-violet-500/30 pl-3">
                                             <h5 className="text-sm font-semibold text-white">{item.title}</h5>
@@ -649,15 +681,15 @@ const HealthcareBurdenContent = () => {
 
                         {/* Why PHNs Exist */}
                         <div className="bg-gradient-to-r from-rose-500/10 via-transparent to-violet-500/10 rounded-xl p-6 border border-rose-500/20 mb-8">
-                            <h4 className="text-sm font-bold text-rose-400 uppercase tracking-wider mb-4">Why Do We Have PHNs?</h4>
-                            <p className="text-sm text-gray-300 mb-4">PHNs were created to fix common problems in the healthcare system:</p>
+                            <h4 className="text-sm font-bold text-rose-400 uppercase tracking-wider mb-4">{t('caseStudyDetail.studies.healthcare-burden.phn.whyExist.title')}</h4>
+                            <p className="text-sm text-gray-300 mb-4">{t('caseStudyDetail.studies.healthcare-burden.phn.whyExist.intro')}</p>
                             <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
                                 {[
-                                    "People can't find the right services",
-                                    "Everyone is working separately",
-                                    "Too many avoidable hospital visits",
-                                    "Mental health support is hard to access",
-                                    "Chronic patients get bounced around"
+                                    t('caseStudyDetail.studies.healthcare-burden.phn.whyExist.problem1'),
+                                    t('caseStudyDetail.studies.healthcare-burden.phn.whyExist.problem2'),
+                                    t('caseStudyDetail.studies.healthcare-burden.phn.whyExist.problem3'),
+                                    t('caseStudyDetail.studies.healthcare-burden.phn.whyExist.problem4'),
+                                    t('caseStudyDetail.studies.healthcare-burden.phn.whyExist.problem5')
                                 ].map((problem, idx) => (
                                     <div key={idx} className="bg-slate-900/60 p-3 rounded-lg border border-slate-700/50 text-center">
                                         <p className="text-xs text-gray-400 leading-tight">{problem}</p>
@@ -668,7 +700,7 @@ const HealthcareBurdenContent = () => {
 
                         {/* State Breakdown */}
                         <div>
-                            <h4 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">All 31 PHNs by State/Territory</h4>
+                            <h4 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">{t('caseStudyDetail.studies.healthcare-burden.phn.stateBreakdown')}</h4>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                                 {[
                                     { state: "NSW", count: 9, color: "cyan" },
@@ -689,7 +721,7 @@ const HealthcareBurdenContent = () => {
                                 ))}
                             </div>
                             <p className="text-[10px] text-gray-500 mt-4 text-center">
-                                Note: WA PHNs are managed by WA Primary Health Alliance. Country WA PHN includes the South West region.
+                                {t('caseStudyDetail.studies.healthcare-burden.phn.waNote')}
                             </p>
                         </div>
                     </div>
@@ -706,16 +738,16 @@ const HealthcareBurdenContent = () => {
                             </svg>
                         </div>
                         <div>
-                            <h3 className="font-bold text-lg text-white">Digital Health Interoperability</h3>
-                            <p className="text-sm text-gray-400">Function Usage Rates by Australian GPs</p>
+                            <h3 className="font-bold text-lg text-white">{t('caseStudyDetail.studies.healthcare-burden.interoperability.title')}</h3>
+                            <p className="text-sm text-gray-400">{t('caseStudyDetail.studies.healthcare-burden.interoperability.subtitle')}</p>
                         </div>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {[
-                            { label: 'Receiving Discharge Summaries', value: 83, color: COLORS.success, status: 'High Uptake', note: 'Incoming data flow is strong; hospitals effectively push information to GPs.' },
-                            { label: 'Receiving Pathology Reports', value: 67, color: COLORS.cyan, status: 'Moderate', note: 'Integration with diagnostic providers is established but not universal.' },
-                            { label: 'Sending Referrals', value: 53, color: COLORS.rose, status: 'Low Uptake', note: 'Critical Failure Point. Nearly half of referrals rely on fax/paper methods.' }
+                            { label: t('caseStudyDetail.studies.healthcare-burden.interoperability.items.discharge.label'), value: 83, color: COLORS.success, status: t('caseStudyDetail.studies.healthcare-burden.interoperability.items.discharge.status'), note: t('caseStudyDetail.studies.healthcare-burden.interoperability.items.discharge.note') },
+                            { label: t('caseStudyDetail.studies.healthcare-burden.interoperability.items.pathology.label'), value: 67, color: COLORS.cyan, status: t('caseStudyDetail.studies.healthcare-burden.interoperability.items.pathology.status'), note: t('caseStudyDetail.studies.healthcare-burden.interoperability.items.pathology.note') },
+                            { label: t('caseStudyDetail.studies.healthcare-burden.interoperability.items.referrals.label'), value: 53, color: COLORS.rose, status: t('caseStudyDetail.studies.healthcare-burden.interoperability.items.referrals.status'), note: t('caseStudyDetail.studies.healthcare-burden.interoperability.items.referrals.note') }
                         ].map((item, idx) => (
                             <div key={idx} className="bg-slate-800 p-4 rounded-xl border border-slate-700/50 hover:border-opacity-100 transition-all" style={{ borderColor: `${item.color}30` }}>
                                 <div className="flex justify-between items-center mb-3">
@@ -741,8 +773,8 @@ const HealthcareBurdenContent = () => {
                     <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-3xl p-6">
                         <div className="flex justify-between items-start mb-6">
                             <div>
-                                <h4 className="font-bold text-white text-lg">Nursing Efficiency</h4>
-                                <p className="text-sm text-gray-400">Documentation & Turnaround Analysis</p>
+                                <h4 className="font-bold text-white text-lg">{t('caseStudyDetail.studies.healthcare-burden.nursing.title')}</h4>
+                                <p className="text-sm text-gray-400">{t('caseStudyDetail.studies.healthcare-burden.nursing.subtitle')}</p>
                             </div>
                             <div className="p-2 bg-blue-500/20 rounded-lg text-blue-500">
                                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -753,99 +785,64 @@ const HealthcareBurdenContent = () => {
 
                         <div className="mb-8">
                             <div className="flex justify-between items-end mb-2">
-                                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Medication Order Turnaround</p>
+                                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('caseStudyDetail.studies.healthcare-burden.nursing.medicationTurnaround')}</p>
                                 <span className="text-xs font-bold text-emerald-500 bg-emerald-500/10 px-2 py-1 rounded border border-emerald-500/20">
-                                    ⚡ 70% Faster with EMR
+                                    ⚡ {t('caseStudyDetail.studies.healthcare-burden.nursing.emrFaster')}
                                 </span>
                             </div>
                             <div className="h-32">
                                 <Bar data={nursingTurnaroundData} options={{ ...chartOptions, indexAxis: 'y' }} />
                             </div>
-                            <p className="text-xs text-gray-400 mt-2 italic">Paper: 120 mins vs EMR: 35 mins</p>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-4 pt-4 border-t border-slate-700">
-                            <div>
-                                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Shift Saturation</p>
-                                <div className="text-2xl font-bold text-white tracking-tight">~3 Hours</div>
-                                <p className="text-[10px] text-violet-400 mt-1 font-medium">doc per 12h shift</p>
-                            </div>
-                            <div>
-                                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Admission Assess.</p>
-                                <div className="text-2xl font-bold text-rose-500 tracking-tight">4 Hours</div>
-                                <p className="text-[10px] text-gray-400 mt-1">Target: Immediate</p>
-                            </div>
+                            <p className="text-xs text-gray-400 mt-2 italic">{t('caseStudyDetail.studies.healthcare-burden.nursing.comparison')}</p>
                         </div>
                     </div>
 
-                    {/* Information Retention */}
                     <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-3xl p-6">
-                        <div className="flex justify-between items-start mb-4">
+                        <div className="flex justify-between items-start mb-6">
                             <div>
-                                <h4 className="text-sm font-bold text-white">Information Retention (5 Cycles)</h4>
-                                <p className="text-xs text-gray-400">Data survival after multiple handovers</p>
+                                <h4 className="font-bold text-white text-lg">{t('caseStudyDetail.studies.healthcare-burden.retention.title')}</h4>
+                                <p className="text-sm text-gray-400">{t('caseStudyDetail.studies.healthcare-burden.retention.subtitle')}</p>
                             </div>
-                            <span className="text-xs font-bold bg-rose-500/20 text-rose-500 px-2 py-1 rounded border border-rose-500/30">
-                                ⚠️ Catastrophic Loss
-                            </span>
+                            <div className="p-2 bg-rose-500/20 rounded-lg text-rose-500">
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                </svg>
+                            </div>
                         </div>
 
-                        <div className="h-64">
-                            <Bar data={retentionData} options={chartOptions} />
+                        <div className="h-48 mb-4">
+                            <Bar data={retentionData} options={{ ...chartOptions, indexAxis: 'y', scales: { x: { ...chartOptions.scales.x, max: 100 } } }} />
                         </div>
 
-                        <div className="mt-4 p-3 bg-slate-800 rounded-lg border border-rose-500/20">
-                            <p className="text-xs text-gray-400 leading-relaxed">
-                                <span className="text-rose-500 font-bold">Verbal Only (2.5%):</span> Equivalent to "Chinese Whispers." Complex details like dosage changes are almost guaranteed to be lost.
-                            </p>
+                        <div className="bg-rose-500/10 border border-rose-500/20 rounded-lg p-3 text-xs leading-relaxed">
+                            <strong className="text-rose-400 block mb-1">{t('caseStudyDetail.studies.healthcare-burden.retention.catastrophic')}</strong>
+                            {t('caseStudyDetail.studies.healthcare-burden.retention.verbalOnly')}
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* Economic Impact Section */}
+            {/* Economic Burden & Satisfaction */}
             <section className="py-12 max-w-7xl mx-auto px-6">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {/* Economic Burden */}
-                    <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-3xl p-8 relative overflow-hidden group hover:border-violet-500/30 transition-all">
-                        <div className="absolute inset-0 bg-violet-500/5 group-hover:bg-violet-500/10 transition-colors" />
-                        <div className="flex items-center gap-3 mb-6 relative z-10">
-                            <div className="p-2 bg-violet-500/20 rounded-lg text-violet-400">
-                                <span className="text-xl">💰</span>
-                            </div>
-                            <div>
-                                <h3 className="font-bold text-lg text-white">Systemic Economic Burden</h3>
-                                <p className="text-sm text-gray-400">Deloitte Access Economics Report</p>
-                            </div>
+                    <div className="bg-gradient-to-br from-indigo-900/50 to-slate-900/50 backdrop-blur-xl border border-indigo-500/20 rounded-3xl p-8 relative overflow-hidden">
+                        <div className="absolute top-0 right-0 p-4 opacity-10">
+                            <span className="text-8xl">💰</span>
                         </div>
+                        <h3 className="font-bold text-xl text-white mb-2">{t('caseStudyDetail.studies.healthcare-burden.economic.title')}</h3>
+                        <p className="text-xs uppercase tracking-widest text-indigo-400 mb-6">{t('caseStudyDetail.studies.healthcare-burden.economic.source')}</p>
 
-                        <div className="flex flex-col items-center justify-center py-4 relative z-10">
-                            <div className="text-5xl font-extrabold text-white tracking-tight drop-shadow-[0_0_15px_rgba(118,88,231,0.5)]">
-                                $2 Billion
-                            </div>
-                            <div className="text-xs font-bold text-rose-500 uppercase tracking-widest mt-2 border border-rose-500/30 px-3 py-1 rounded-full bg-rose-500/10">
-                                Annual Inefficiency Cost
-                            </div>
+                        <div className="flex items-baseline gap-2 mb-2">
+                            <span className="text-5xl font-black text-white tracking-tight">{t('caseStudyDetail.studies.healthcare-burden.economic.amount')}</span>
                         </div>
-
-                        <div className="grid grid-cols-2 gap-3 mt-8 relative z-10">
-                            {['Searching Forms', 'Admin Chasing', 'Duplicate Tests', 'Delayed Care'].map((item, idx) => (
-                                <div key={idx} className="p-3 bg-slate-800 rounded-lg border border-slate-700 text-center">
-                                    <p className="text-xs text-gray-400">{item}</p>
-                                </div>
-                            ))}
-                        </div>
+                        <p className="text-gray-400 mb-8">{t('caseStudyDetail.studies.healthcare-burden.economic.annual')}</p>
                     </div>
 
-                    {/* Satisfaction Gap */}
-                    <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-3xl p-6">
-                        <div className="flex items-center gap-3 mb-6">
-                            <div className="p-2 bg-emerald-500/20 rounded-lg text-emerald-500">
-                                <span className="text-xl">😊</span>
-                            </div>
+                    <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-3xl p-8 flex flex-col justify-between">
+                        <div className="flex justify-between items-start mb-6">
                             <div>
-                                <h3 className="font-bold text-lg text-white">The "Unpaid Tax" on Satisfaction</h3>
-                                <p className="text-sm text-gray-400">RACGP Satisfaction Analysis</p>
+                                <h3 className="font-bold text-lg text-white">{t('caseStudyDetail.studies.healthcare-burden.satisfaction.title')}</h3>
+                                <p className="text-sm text-gray-400">{t('caseStudyDetail.studies.healthcare-burden.satisfaction.source')}</p>
                             </div>
                         </div>
 
@@ -856,7 +853,7 @@ const HealthcareBurdenContent = () => {
                         <div className="bg-slate-800 p-4 rounded-xl border border-rose-500/20 flex gap-4 items-start">
                             <span className="text-rose-500 text-xl opacity-50">❝</span>
                             <p className="text-sm text-gray-300 italic">
-                                The inefficiency of the referral process imposes an <span className="text-white font-bold not-italic">unpaid tax</span> on the time of private practitioners, driving burnout.
+                                {t('caseStudyDetail.studies.healthcare-burden.satisfaction.quote')}
                             </p>
                         </div>
                     </div>
@@ -866,21 +863,21 @@ const HealthcareBurdenContent = () => {
             {/* CTA Section */}
             <section className="py-20 text-center max-w-4xl mx-auto px-6">
                 <h2 className="text-4xl font-black mb-6 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                    Ready to Transform Healthcare Workflows?
+                    {t('caseStudyDetail.studies.healthcare-burden.cta.title')}
                 </h2>
                 <p className="text-gray-400 text-lg mb-10 leading-relaxed">
-                    The Australian healthcare system is losing billions in funds and hours in capacity due to fragmented documentation workflows. Let us help you implement AI-powered solutions to close the "Digital Disconnect."
+                    {t('caseStudyDetail.studies.healthcare-burden.cta.subtitle')}
                 </p>
                 <Link
                     to={getRegionPath("/contact")}
                     className="inline-block bg-gradient-to-r from-blue-600 to-purple-600 text-white px-10 py-5 rounded-full text-lg font-black shadow-2xl shadow-violet-500/40 hover:scale-105 transition-all"
                 >
-                    Start Your Transformation
+                    {t('caseStudyDetail.studies.healthcare-burden.cta.button')}
                 </Link>
             </section>
 
             <footer className="py-12 border-t border-white/5 text-center text-[10px] font-black uppercase tracking-widest text-gray-600">
-                © 2026 Algorythmos Advisory | Data Synthesized from AIHW, AMA, RACGP, and Grattan Reports.
+                {t('caseStudyDetail.studies.healthcare-burden.footer')}
             </footer>
         </div>
     );
