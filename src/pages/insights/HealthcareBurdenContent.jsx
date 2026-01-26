@@ -48,7 +48,123 @@ const COLORS = {
 
 const HealthcareBurdenContent = () => {
     const { t, getRegionPath } = useI18n();
+    const mapContainerRef = useRef(null);
+    const mapInstanceRef = useRef(null);
 
+    // PHN Data for interactive map
+    const phnData = [
+        { name: "Adelaide PHN", coords: [-34.92, 138.60] },
+        { name: "Brisbane North PHN", coords: [-27.35, 153.02] },
+        { name: "Brisbane South PHN", coords: [-27.57, 153.02] },
+        { name: "Central and Eastern Sydney PHN", coords: [-33.86, 151.20] },
+        { name: "Country South Australia PHN", coords: [-32.00, 135.00] },
+        { name: "Darling Downs and West Moreton PHN", coords: [-27.60, 151.90] },
+        { name: "Eastern Melbourne PHN", coords: [-37.82, 145.20] },
+        { name: "Gippsland PHN", coords: [-38.10, 147.00] },
+        { name: "Gold Coast PHN", coords: [-28.01, 153.40] },
+        { name: "Hunter New England and Central Coast PHN", coords: [-32.92, 151.77] },
+        { name: "Murray PHN", coords: [-36.75, 144.28] },
+        { name: "Murrumbidgee PHN", coords: [-35.11, 147.36] },
+        { name: "Nepean Blue Mountains PHN", coords: [-33.75, 150.69] },
+        { name: "North Coast PHN", coords: [-29.40, 153.30] },
+        { name: "North Western Melbourne PHN", coords: [-37.75, 144.90] },
+        { name: "Northern Queensland PHN", coords: [-19.25, 146.80] },
+        { name: "Northern Sydney PHN", coords: [-33.70, 151.10] },
+        { name: "Northern Territory PHN", coords: [-19.49, 132.55] },
+        { name: "Perth North PHN", coords: [-31.85, 115.86] },
+        { name: "Perth South PHN", coords: [-32.15, 115.90] },
+        { name: "Country Western Australia PHN", coords: [-26.00, 121.00] },
+        { name: "South Eastern Melbourne PHN", coords: [-38.00, 145.15] },
+        { name: "South Eastern NSW PHN", coords: [-36.00, 149.50] },
+        { name: "South Western Sydney PHN", coords: [-34.00, 150.80] },
+        { name: "Tasmania PHN", coords: [-42.00, 146.50] },
+        { name: "Western NSW PHN", coords: [-32.25, 147.50] },
+        { name: "Western Queensland PHN", coords: [-23.70, 143.00] },
+        { name: "Western Sydney PHN", coords: [-33.80, 150.95] },
+        { name: "South West WA PHN", coords: [-33.32, 116.00] },
+        { name: "Sydney North Health Network", coords: [-33.75, 151.15] },
+        { name: "Capital Health Network (ACT)", coords: [-35.30, 149.13] }
+    ];
+
+    // Initialize Leaflet map via CDN
+    useEffect(() => {
+        // Load Leaflet CSS
+        if (!document.getElementById('leaflet-css')) {
+            const link = document.createElement('link');
+            link.id = 'leaflet-css';
+            link.rel = 'stylesheet';
+            link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+            document.head.appendChild(link);
+        }
+
+        // Load Leaflet JS
+        const loadLeaflet = () => {
+            return new Promise((resolve) => {
+                if (window.L) {
+                    resolve(window.L);
+                    return;
+                }
+                const script = document.createElement('script');
+                script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+                script.onload = () => resolve(window.L);
+                document.head.appendChild(script);
+            });
+        };
+
+        loadLeaflet().then((L) => {
+            if (mapContainerRef.current && !mapInstanceRef.current) {
+                const map = L.map(mapContainerRef.current, {
+                    center: [-27.0, 133.0],
+                    zoom: 4,
+                    zoomControl: true,
+                    attributionControl: false,
+                    dragging: true,
+                    scrollWheelZoom: false,
+                    doubleClickZoom: true,
+                    touchZoom: true
+                });
+
+                // Dark Matter Tiles (CartoDB)
+                L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                    maxZoom: 19
+                }).addTo(map);
+
+                // Add markers for each PHN
+                phnData.forEach(phn => {
+                    const marker = L.circleMarker(phn.coords, {
+                        radius: 6,
+                        fillColor: "#06b6d4",
+                        color: "#fff",
+                        weight: 2,
+                        opacity: 1,
+                        fillOpacity: 0.8
+                    }).addTo(map);
+
+                    marker.bindTooltip(phn.name, {
+                        permanent: false,
+                        direction: 'top',
+                        className: 'phn-tooltip'
+                    });
+
+                    marker.bindPopup(`
+                        <div style="font-family: system-ui; padding: 4px;">
+                            <h5 style="font-size: 12px; font-weight: bold; color: #1e293b; margin: 0 0 4px 0;">${phn.name}</h5>
+                            <p style="font-size: 10px; color: #64748b; margin: 0;">Primary Health Network</p>
+                        </div>
+                    `);
+                });
+
+                mapInstanceRef.current = map;
+            }
+        });
+
+        return () => {
+            if (mapInstanceRef.current) {
+                mapInstanceRef.current.remove();
+                mapInstanceRef.current = null;
+            }
+        };
+    }, []);
     const chartOptions = {
         responsive: true,
         maintainAspectRatio: false,
