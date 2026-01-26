@@ -53,7 +53,7 @@ const HealthcareBurdenContent = () => {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-            legend: { 
+            legend: {
                 display: false
             },
             tooltip: {
@@ -67,13 +67,13 @@ const HealthcareBurdenContent = () => {
             },
         },
         scales: {
-            x: { 
-                grid: { color: COLORS.spaceBorder }, 
-                ticks: { color: "#64748b", font: { size: 10 } } 
+            x: {
+                grid: { color: COLORS.spaceBorder },
+                ticks: { color: "#64748b", font: { size: 10 } }
             },
-            y: { 
-                grid: { color: COLORS.spaceBorder }, 
-                ticks: { color: "#64748b", font: { size: 10 } } 
+            y: {
+                grid: { color: COLORS.spaceBorder },
+                ticks: { color: "#64748b", font: { size: 10 } }
             },
         },
     };
@@ -182,13 +182,13 @@ const HealthcareBurdenContent = () => {
             {/* Hero Section */}
             <section className="py-12 relative overflow-hidden">
                 <div className="absolute inset-0 bg-[radial-gradient(at_0%_0%,rgba(109,0,255,0.15)_0px,transparent_50%),radial-gradient(at_100%_0%,rgba(55,21,224,0.1)_0px,transparent_50%)] pointer-events-none" />
-                
+
                 <div className="max-w-7xl mx-auto px-6 relative z-10">
                     {/* Badge */}
                     <div className="inline-block px-4 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/30 text-violet-400 font-bold text-xs uppercase tracking-widest mb-6">
                         2024-2025 Analysis • Australia Strategic Review
                     </div>
-                    
+
                     <h1 className="text-4xl lg:text-5xl font-black mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                         Healthcare Documentation Burden Analysis
                     </h1>
@@ -204,21 +204,21 @@ const HealthcareBurdenContent = () => {
                     {/* The Care Paradox */}
                     <div className="bg-gradient-to-br from-blue-600 to-violet-600 rounded-3xl p-8 relative overflow-hidden shadow-[0_0_30px_rgba(55,21,224,0.3)]">
                         <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-10 blur-3xl rounded-full -mr-16 -mt-16" />
-                        
+
                         <h2 className="text-3xl font-bold mb-2 text-white">The Care Paradox</h2>
                         <p className="text-white/90 text-sm mb-6">A System Divided: Clinical Care vs. Administrative Friction</p>
-                        
+
                         <div className="h-64 bg-black/20 backdrop-blur-md rounded-2xl p-4 border border-white/10">
-                            <Doughnut 
-                                data={timeDistData} 
-                                options={{ 
-                                    ...chartOptions, 
+                            <Doughnut
+                                data={timeDistData}
+                                options={{
+                                    ...chartOptions,
                                     cutout: '65%',
                                     plugins: { legend: { display: false } }
-                                }} 
+                                }}
                             />
                         </div>
-                        
+
                         <div className="flex justify-center gap-4 mt-4 text-xs font-semibold">
                             <div className="flex items-center gap-2">
                                 <span className="w-2 h-2 rounded-full bg-cyan-500 shadow-[0_0_5px_#06b6d4]" />
@@ -229,7 +229,7 @@ const HealthcareBurdenContent = () => {
                                 Documentation (26.6%)
                             </div>
                         </div>
-                        
+
                         <div className="mt-6 pt-4 border-t border-white/10 text-xs text-white/80 leading-relaxed">
                             <strong className="text-cyan-400">Strategic Insight:</strong> The data reveals a near 1:1 ratio, meaning highly trained clinicians spend effectively half their productive time on clerical duties. This "Digital Disconnect" is a structural inefficiency costing billions.
                         </div>
@@ -248,7 +248,7 @@ const HealthcareBurdenContent = () => {
                                 <p className="text-gray-400 mt-1">Identified as the <span className="font-bold text-violet-400">biggest pain point</span> for Australian doctors.</p>
                             </div>
                         </div>
-                        
+
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             <div className="space-y-4">
                                 {[
@@ -267,18 +267,18 @@ const HealthcareBurdenContent = () => {
                                     </div>
                                 ))}
                             </div>
-                            
+
                             <div className="h-56 relative flex items-center justify-center">
-                                <PolarArea 
-                                    data={adminPainData} 
-                                    options={{ 
+                                <PolarArea
+                                    data={adminPainData}
+                                    options={{
                                         ...chartOptions,
                                         scales: { r: { ticks: { display: false }, grid: { color: COLORS.spaceBorder }, pointLabels: { display: false } } }
-                                    }} 
+                                    }}
                                 />
                             </div>
                         </div>
-                        
+
                         <div className="mt-4 pt-4 border-t border-slate-700 text-xs text-gray-400 text-center">
                             <strong>The "Template Mess":</strong> GPs navigate a labyrinth of incompatible forms, often manually transcribing data because software silos don't speak the same language.
                         </div>
@@ -308,7 +308,7 @@ const HealthcareBurdenContent = () => {
                             </div>
                         </div>
                         <div className="h-64">
-                            <Bar 
+                            <Bar
                                 data={{
                                     labels: ['Reduced Appt Slots', 'Limited Patient Time', 'Reduced Work Hours'],
                                     datasets: [{
@@ -318,8 +318,8 @@ const HealthcareBurdenContent = () => {
                                         borderRadius: 6,
                                         barPercentage: 0.6
                                     }]
-                                }} 
-                                options={{ ...chartOptions, indexAxis: 'y', scales: { x: { ...chartOptions.scales.x, max: 100 } } }} 
+                                }}
+                                options={{ ...chartOptions, indexAxis: 'y', scales: { x: { ...chartOptions.scales.x, max: 100 } } }}
                             />
                         </div>
                         <div className="mt-4 pt-3 border-t border-slate-700 text-xs text-gray-400">
@@ -331,9 +331,9 @@ const HealthcareBurdenContent = () => {
                     <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-3xl p-6 hover:border-violet-500/30 transition-all">
                         <h4 className="font-bold text-white mb-2 text-center">Patient Volume Intensity</h4>
                         <div className="h-48 mb-4">
-                            <Doughnut 
-                                data={patientVolumeData} 
-                                options={{ ...chartOptions, cutout: '70%' }} 
+                            <Doughnut
+                                data={patientVolumeData}
+                                options={{ ...chartOptions, cutout: '70%' }}
                             />
                         </div>
                         <div className="text-center mb-4">
@@ -382,7 +382,7 @@ const HealthcareBurdenContent = () => {
                     {/* Burnout */}
                     <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-3xl p-6 hover:border-violet-500/30 transition-all">
                         <h4 className="font-bold text-white mb-4">Burnout & Retention Crisis</h4>
-                        
+
                         <div className="mb-6 p-4 bg-slate-800 rounded-xl border border-slate-700">
                             <div className="flex justify-between items-center mb-2">
                                 <div className="flex items-center gap-2 text-rose-500">
@@ -402,6 +402,65 @@ const HealthcareBurdenContent = () => {
                         </div>
                         <div className="text-center mt-2 text-xs text-gray-400">
                             <span className="text-magenta-500 font-bold" style={{ color: COLORS.magenta }}>21%</span> of GPs directly attribute burnout to admin burden.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* PHN Map Section */}
+            <section className="py-12 max-w-7xl mx-auto px-6">
+                <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-3xl p-8 overflow-hidden">
+                    <div className="flex items-start gap-4 mb-6">
+                        <div className="p-3 bg-cyan-500/20 text-cyan-400 border border-cyan-500/50 rounded-xl shadow-[0_0_15px_rgba(6,182,212,0.3)]">
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 className="text-xl font-bold text-white">Primary Health Networks (PHN) Landscape</h3>
+                            <p className="text-gray-400 mt-1">Coverage & Scalability Analysis</p>
+                        </div>
+                    </div>
+
+                    {/* Scalability Insight */}
+                    <div className="bg-slate-800/50 rounded-xl p-5 mb-6 border border-slate-700/50">
+                        <div className="flex justify-between items-start mb-3">
+                            <h4 className="text-xs font-bold text-violet-400 uppercase tracking-widest">The Scalability Trap</h4>
+                            <div className="p-2 bg-violet-500/10 rounded-lg">
+                                <svg className="w-5 h-5 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
+                                </svg>
+                            </div>
+                        </div>
+                        <p className="text-sm text-gray-300 leading-relaxed">
+                            PHNs bridge care gaps via "HealthPathways" initiatives, like Brisbane North's standardized templates. However, these are often <strong className="text-white">localized solutions</strong> that fail to scale across state borders, creating a fragmented digital health landscape.
+                        </p>
+                        <p className="text-xs text-gray-500 mt-3 flex items-center gap-2">
+                            <span className="text-cyan-500">▶</span>
+                            Interactive Map: Zoom and hover to explore all 31 Primary Health Networks.
+                        </p>
+                    </div>
+
+                    {/* Interactive Map Container */}
+                    <div
+                        ref={mapContainerRef}
+                        className="h-[400px] w-full rounded-2xl overflow-hidden border-2 border-violet-500/30 shadow-[0_0_30px_rgba(109,0,255,0.2)]"
+                        style={{ background: '#0f0f23' }}
+                    />
+
+                    {/* Map Legend */}
+                    <div className="mt-4 flex flex-wrap gap-4 justify-center text-xs">
+                        <div className="flex items-center gap-2">
+                            <span className="w-3 h-3 rounded-full bg-cyan-500 shadow-[0_0_8px_#06b6d4]" />
+                            <span className="text-gray-400">PHN Location</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <span className="text-gray-500">|</span>
+                            <span className="text-gray-400">31 Networks</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <span className="text-gray-500">|</span>
+                            <span className="text-gray-400">Click markers for details</span>
                         </div>
                     </div>
                 </div>
@@ -461,7 +520,7 @@ const HealthcareBurdenContent = () => {
                                 </svg>
                             </div>
                         </div>
-                        
+
                         <div className="mb-8">
                             <div className="flex justify-between items-end mb-2">
                                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Medication Order Turnaround</p>
@@ -474,7 +533,7 @@ const HealthcareBurdenContent = () => {
                             </div>
                             <p className="text-xs text-gray-400 mt-2 italic">Paper: 120 mins vs EMR: 35 mins</p>
                         </div>
-                        
+
                         <div className="grid grid-cols-2 gap-4 pt-4 border-t border-slate-700">
                             <div>
                                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Shift Saturation</p>
@@ -500,11 +559,11 @@ const HealthcareBurdenContent = () => {
                                 ⚠️ Catastrophic Loss
                             </span>
                         </div>
-                        
+
                         <div className="h-64">
                             <Bar data={retentionData} options={chartOptions} />
                         </div>
-                        
+
                         <div className="mt-4 p-3 bg-slate-800 rounded-lg border border-rose-500/20">
                             <p className="text-xs text-gray-400 leading-relaxed">
                                 <span className="text-rose-500 font-bold">Verbal Only (2.5%):</span> Equivalent to "Chinese Whispers." Complex details like dosage changes are almost guaranteed to be lost.
