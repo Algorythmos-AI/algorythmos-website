@@ -51,39 +51,47 @@ const HealthcareBurdenContent = () => {
     const mapContainerRef = useRef(null);
     const mapInstanceRef = useRef(null);
 
-    // PHN Data for interactive map
+    // PHN Data for interactive map - organized by state/territory
     const phnData = [
-        { name: "Adelaide PHN", coords: [-34.92, 138.60] },
-        { name: "Brisbane North PHN", coords: [-27.35, 153.02] },
-        { name: "Brisbane South PHN", coords: [-27.57, 153.02] },
-        { name: "Central and Eastern Sydney PHN", coords: [-33.86, 151.20] },
-        { name: "Country South Australia PHN", coords: [-32.00, 135.00] },
-        { name: "Darling Downs and West Moreton PHN", coords: [-27.60, 151.90] },
-        { name: "Eastern Melbourne PHN", coords: [-37.82, 145.20] },
-        { name: "Gippsland PHN", coords: [-38.10, 147.00] },
-        { name: "Gold Coast PHN", coords: [-28.01, 153.40] },
-        { name: "Hunter New England and Central Coast PHN", coords: [-32.92, 151.77] },
-        { name: "Murray PHN", coords: [-36.75, 144.28] },
-        { name: "Murrumbidgee PHN", coords: [-35.11, 147.36] },
-        { name: "Nepean Blue Mountains PHN", coords: [-33.75, 150.69] },
-        { name: "North Coast PHN", coords: [-29.40, 153.30] },
-        { name: "North Western Melbourne PHN", coords: [-37.75, 144.90] },
-        { name: "Northern Queensland PHN", coords: [-19.25, 146.80] },
-        { name: "Northern Sydney PHN", coords: [-33.70, 151.10] },
-        { name: "Northern Territory PHN", coords: [-19.49, 132.55] },
-        { name: "Perth North PHN", coords: [-31.85, 115.86] },
-        { name: "Perth South PHN", coords: [-32.15, 115.90] },
-        { name: "Country Western Australia PHN", coords: [-26.00, 121.00] },
-        { name: "South Eastern Melbourne PHN", coords: [-38.00, 145.15] },
-        { name: "South Eastern NSW PHN", coords: [-36.00, 149.50] },
-        { name: "South Western Sydney PHN", coords: [-34.00, 150.80] },
-        { name: "Tasmania PHN", coords: [-42.00, 146.50] },
-        { name: "Western NSW PHN", coords: [-32.25, 147.50] },
-        { name: "Western Queensland PHN", coords: [-23.70, 143.00] },
-        { name: "Western Sydney PHN", coords: [-33.80, 150.95] },
-        { name: "South West WA PHN", coords: [-33.32, 116.00] },
-        { name: "Sydney North Health Network", coords: [-33.75, 151.15] },
-        { name: "Capital Health Network (ACT)", coords: [-35.30, 149.13] }
+        // New South Wales (9)
+        { name: "Central and Eastern Sydney", state: "NSW", coords: [-33.86, 151.20] },
+        { name: "South Eastern NSW", state: "NSW", coords: [-36.00, 149.50] },
+        { name: "South Western Sydney", state: "NSW", coords: [-34.00, 150.80] },
+        { name: "Western Sydney", state: "NSW", coords: [-33.80, 150.95] },
+        { name: "Nepean Blue Mountains", state: "NSW", coords: [-33.75, 150.69] },
+        { name: "Northern Sydney", state: "NSW", coords: [-33.70, 151.10] },
+        { name: "Hunter New England & Central Coast", state: "NSW", coords: [-32.92, 151.77] },
+        { name: "North Coast", state: "NSW", coords: [-29.40, 153.30] },
+        { name: "Western NSW", state: "NSW", coords: [-32.25, 147.50] },
+        // Victoria (7)
+        { name: "Eastern Melbourne", state: "VIC", coords: [-37.82, 145.20] },
+        { name: "South Eastern Melbourne", state: "VIC", coords: [-38.00, 145.15] },
+        { name: "North Western Melbourne", state: "VIC", coords: [-37.75, 144.90] },
+        { name: "Gippsland", state: "VIC", coords: [-38.10, 147.00] },
+        { name: "Murray", state: "VIC", coords: [-36.75, 144.28] },
+        { name: "Western Victoria", state: "VIC", coords: [-37.56, 143.85] },
+        { name: "South Western Victoria", state: "VIC", coords: [-38.35, 142.48] },
+        // Queensland (7)
+        { name: "Brisbane North", state: "QLD", coords: [-27.35, 153.02] },
+        { name: "Brisbane South", state: "QLD", coords: [-27.57, 153.02] },
+        { name: "Gold Coast", state: "QLD", coords: [-28.01, 153.40] },
+        { name: "Darling Downs & West Moreton", state: "QLD", coords: [-27.60, 151.90] },
+        { name: "Central QLD, Wide Bay, Sunshine Coast", state: "QLD", coords: [-24.87, 152.35] },
+        { name: "Northern Queensland", state: "QLD", coords: [-19.25, 146.80] },
+        { name: "Western Queensland", state: "QLD", coords: [-23.70, 143.00] },
+        // South Australia (2)
+        { name: "Adelaide", state: "SA", coords: [-34.92, 138.60] },
+        { name: "Country SA", state: "SA", coords: [-32.00, 135.00] },
+        // Western Australia (3)
+        { name: "Perth North", state: "WA", coords: [-31.85, 115.86] },
+        { name: "Perth South", state: "WA", coords: [-32.15, 115.90] },
+        { name: "Country WA", state: "WA", coords: [-26.00, 121.00] },
+        // Tasmania (1)
+        { name: "Tasmania", state: "TAS", coords: [-42.00, 146.50] },
+        // Northern Territory (1)
+        { name: "Northern Territory", state: "NT", coords: [-19.49, 132.55] },
+        // ACT (1)
+        { name: "Capital Health Network", state: "ACT", coords: [-35.30, 149.13] }
     ];
 
     // Initialize Leaflet map via CDN
@@ -140,7 +148,7 @@ const HealthcareBurdenContent = () => {
                         fillOpacity: 0.8
                     }).addTo(map);
 
-                    marker.bindTooltip(phn.name, {
+                    marker.bindTooltip(`${phn.name} (${phn.state})`, {
                         permanent: false,
                         direction: 'top',
                         className: 'phn-tooltip'
@@ -148,8 +156,8 @@ const HealthcareBurdenContent = () => {
 
                     marker.bindPopup(`
                         <div style="font-family: system-ui; padding: 4px;">
-                            <h5 style="font-size: 12px; font-weight: bold; color: #1e293b; margin: 0 0 4px 0;">${phn.name}</h5>
-                            <p style="font-size: 10px; color: #64748b; margin: 0;">Primary Health Network</p>
+                            <h5 style="font-size: 12px; font-weight: bold; color: #1e293b; margin: 0 0 4px 0;">${phn.name} PHN</h5>
+                            <p style="font-size: 10px; color: #64748b; margin: 0;">${phn.state} • Primary Health Network</p>
                         </div>
                     `);
                 });
@@ -565,7 +573,7 @@ const HealthcareBurdenContent = () => {
                     />
 
                     {/* Map Legend */}
-                    <div className="mt-4 flex flex-wrap gap-4 justify-center text-xs">
+                    <div className="mt-4 flex flex-wrap gap-4 justify-center text-xs mb-8">
                         <div className="flex items-center gap-2">
                             <span className="w-3 h-3 rounded-full bg-cyan-500 shadow-[0_0_8px_#06b6d4]" />
                             <span className="text-gray-400">PHN Location</span>
@@ -577,6 +585,112 @@ const HealthcareBurdenContent = () => {
                         <div className="flex items-center gap-2">
                             <span className="text-gray-500">|</span>
                             <span className="text-gray-400">Click markers for details</span>
+                        </div>
+                    </div>
+
+                    {/* PHN Educational Content */}
+                    <div className="border-t border-slate-700/50 pt-8">
+                        {/* What is a PHN */}
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                            <div className="bg-slate-800/50 rounded-xl p-6 border border-slate-700/50">
+                                <div className="flex items-center gap-3 mb-4">
+                                    <div className="p-2 bg-cyan-500/20 rounded-lg text-cyan-400">
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    </div>
+                                    <h4 className="text-lg font-bold text-white">What is a Primary Health Network?</h4>
+                                </div>
+                                <p className="text-sm text-gray-300 leading-relaxed mb-4">
+                                    A PHN is a <strong className="text-white">regional health coordinator</strong>. They don't run hospitals and don't replace GPs. Think of them as the local "traffic control centre" for community healthcare.
+                                </p>
+                                <div className="space-y-2">
+                                    {[
+                                        "Assess what the local community needs",
+                                        "Connect services (GPs, allied health, mental health, hospitals, aged care)",
+                                        "Fund and organise programs so people don't fall through gaps",
+                                        "Ensure patients get the right care, in the right place, at the right time"
+                                    ].map((item, idx) => (
+                                        <div key={idx} className="flex items-start gap-2 text-xs text-gray-400">
+                                            <span className="text-cyan-500 mt-0.5">✓</span>
+                                            <span>{item}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                                <p className="text-[10px] text-gray-500 mt-4 italic">
+                                    Established 1 July 2015 to improve efficiency and coordination of care.
+                                </p>
+                            </div>
+
+                            <div className="bg-slate-800/50 rounded-xl p-6 border border-slate-700/50">
+                                <div className="flex items-center gap-3 mb-4">
+                                    <div className="p-2 bg-violet-500/20 rounded-lg text-violet-400">
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                                        </svg>
+                                    </div>
+                                    <h4 className="text-lg font-bold text-white">What PHNs Actually Do</h4>
+                                </div>
+                                <div className="space-y-3">
+                                    {[
+                                        { title: "Plan Regional Needs", desc: "Analyse local health issues (mental health, diabetes, aged care, etc.)" },
+                                        { title: "Fund & Commission Services", desc: "Mental health programs, after-hours GP support, chronic disease coordination" },
+                                        { title: "Support GP Clinics", desc: "Digital health support, training, quality improvement, care pathway tools" },
+                                        { title: "Coordinate Care Transitions", desc: "Reduce chaos when patients move between hospitals and community providers" }
+                                    ].map((item, idx) => (
+                                        <div key={idx} className="border-l-2 border-violet-500/30 pl-3">
+                                            <h5 className="text-sm font-semibold text-white">{item.title}</h5>
+                                            <p className="text-xs text-gray-500">{item.desc}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Why PHNs Exist */}
+                        <div className="bg-gradient-to-r from-rose-500/10 via-transparent to-violet-500/10 rounded-xl p-6 border border-rose-500/20 mb-8">
+                            <h4 className="text-sm font-bold text-rose-400 uppercase tracking-wider mb-4">Why Do We Have PHNs?</h4>
+                            <p className="text-sm text-gray-300 mb-4">PHNs were created to fix common problems in the healthcare system:</p>
+                            <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+                                {[
+                                    "People can't find the right services",
+                                    "Everyone is working separately",
+                                    "Too many avoidable hospital visits",
+                                    "Mental health support is hard to access",
+                                    "Chronic patients get bounced around"
+                                ].map((problem, idx) => (
+                                    <div key={idx} className="bg-slate-900/60 p-3 rounded-lg border border-slate-700/50 text-center">
+                                        <p className="text-xs text-gray-400 leading-tight">{problem}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* State Breakdown */}
+                        <div>
+                            <h4 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">All 31 PHNs by State/Territory</h4>
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                {[
+                                    { state: "NSW", count: 9, color: "cyan" },
+                                    { state: "VIC", count: 7, color: "violet" },
+                                    { state: "QLD", count: 7, color: "magenta" },
+                                    { state: "SA", count: 2, color: "rose" },
+                                    { state: "WA", count: 3, color: "blue" },
+                                    { state: "TAS", count: 1, color: "emerald" },
+                                    { state: "NT", count: 1, color: "orange" },
+                                    { state: "ACT", count: 1, color: "teal" }
+                                ].map((item, idx) => (
+                                    <div key={idx} className="bg-slate-800/30 p-3 rounded-lg border border-slate-700/30 flex items-center justify-between">
+                                        <span className="text-sm font-bold text-white">{item.state}</span>
+                                        <span className={`text-xs font-bold px-2 py-1 rounded bg-${item.color}-500/20 text-${item.color}-400`} style={{ backgroundColor: `rgba(6, 182, 212, 0.2)`, color: '#06b6d4' }}>
+                                            {item.count} PHN{item.count > 1 ? 's' : ''}
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
+                            <p className="text-[10px] text-gray-500 mt-4 text-center">
+                                Note: WA PHNs are managed by WA Primary Health Alliance. Country WA PHN includes the South West region.
+                            </p>
                         </div>
                     </div>
                 </div>
