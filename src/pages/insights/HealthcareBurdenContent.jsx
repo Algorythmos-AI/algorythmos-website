@@ -347,11 +347,86 @@ const HealthcareBurdenContent = () => {
                     <p className="text-xl text-gray-400 max-w-3xl mb-8">
                         {t('caseStudyDetail.studies.healthcare-burden.hero.subtitle')}
                     </p>
+                    <div className="flex flex-wrap gap-4 text-xs font-mono text-gray-500 uppercase tracking-widest">
+                        <span className="flex items-center gap-2">
+                            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                            Verified Evidence
+                        </span>
+                        <span>•</span>
+                        <span>Medical Council Presentation</span>
+                        <span>•</span>
+                        <span>28 January 2026</span>
+                    </div>
                 </div>
             </section>
 
-            {/* Strategic Overview */}
+            {/* Theoretical Framework & Strategic Overview */}
             <section className="py-12 max-w-7xl mx-auto px-6">
+
+                {/* Academic Theory Block */}
+                <div className="mb-16 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h2 className="text-2xl font-bold text-white mb-6">The Psychology of Efficiency</h2>
+                        <div className="space-y-6">
+                            <div className="bg-slate-900/40 border-l-4 border-violet-500 pl-6 py-2">
+                                <h3 className="text-lg font-semibold text-violet-400 mb-2">Cognitive Load Theory</h3>
+                                <p className="text-gray-400 text-sm leading-relaxed">
+                                    In healthcare, administrative tasks usurp <strong>working memory</strong>—the limited mental capacity used for decision making. When clinicians are forced to navigate complex compliance logic during consults, their "extraneous load" spikes, directly degrading the "germane load" required for complex clinical diagnosis.
+                                </p>
+                            </div>
+                            <div className="bg-slate-900/40 border-l-4 border-rose-500 pl-6 py-2">
+                                <h3 className="text-lg font-semibold text-rose-400 mb-2">Moral Injury</h3>
+                                <p className="text-gray-400 text-sm leading-relaxed">
+                                    Often misdiagnosed as burnout, <strong>moral injury</strong> occurs when clinicians know what care patients need but are systemically prevented from providing it due to bureaucratic obstruction. This "double bind"—administering care vs. administering data—is the primary driver of workforce attrition.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="bg-slate-900/60 p-8 rounded-3xl border border-dashed border-slate-700 relative">
+                        <div className="absolute -top-3 -right-3 bg-blue-600 text-white text-[10px] uppercase font-bold px-3 py-1 rounded-full shadow-lg">
+                            Global Context
+                        </div>
+                        <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+                            <span className="text-2xl">🌍</span> Administrative Burden: A Global Disease
+                        </h3>
+                        <div className="space-y-4">
+                            <div className="flex justify-between items-center p-3 rounded-xl bg-slate-800/50">
+                                <div>
+                                    <span className="block text-red-400 font-bold">United States</span>
+                                    <span className="text-xs text-gray-500">Highest Inefficiency</span>
+                                </div>
+                                <div className="text-right">
+                                    <span className="block text-xl font-black text-white">25.3%</span>
+                                    <span className="text-[10px] text-gray-500 uppercase">of Hospital Spend is Admin</span>
+                                </div>
+                            </div>
+                            <div className="flex justify-between items-center p-3 rounded-xl bg-slate-800/50">
+                                <div>
+                                    <span className="block text-blue-400 font-bold">United Kingdom</span>
+                                    <span className="text-xs text-gray-500">NHS (England)</span>
+                                </div>
+                                <div className="text-right">
+                                    <span className="block text-xl font-black text-white">15.5%</span>
+                                    <span className="text-[10px] text-gray-500 uppercase">Hospital Admin Costs</span>
+                                </div>
+                            </div>
+                            <div className="flex justify-between items-center p-3 rounded-xl bg-emerald-900/20 border border-emerald-500/30">
+                                <div>
+                                    <span className="block text-emerald-400 font-bold">Australia</span>
+                                    <span className="text-xs text-gray-500">Hybrid Efficiency</span>
+                                </div>
+                                <div className="text-right">
+                                    <span className="block text-xl font-black text-white">~11 hrs</span>
+                                    <span className="text-[10px] text-emerald-500 uppercase">Wasted per GP / Week</span>
+                                </div>
+                            </div>
+                        </div>
+                        <p className="mt-6 text-xs text-gray-500 italic">
+                            While Australia avoids the extreme transaction costs of the US model, the "time tax" on clinicians remains critically high, paralleling global trends in workforce exhaustion.
+                        </p>
+                    </div>
+                </div>
+
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     {/* The Care Paradox */}
                     <div className="bg-gradient-to-br from-blue-600 to-violet-600 rounded-3xl p-8 relative overflow-hidden shadow-[0_0_30px_rgba(55,21,224,0.3)]">
@@ -876,9 +951,39 @@ const HealthcareBurdenContent = () => {
                 </Link>
             </section>
 
-            <footer className="py-12 border-t border-white/5 text-center text-[10px] font-black uppercase tracking-widest text-gray-600">
-                {t('caseStudyDetail.studies.healthcare-burden.footer')}
+            <footer className="py-12 border-t border-white/5 mx-auto max-w-7xl px-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                    <div>
+                        <h4 className="text-xs font-black uppercase tracking-widest text-gray-500 mb-4">Research Methodology</h4>
+                        <p className="text-xs text-gray-400 leading-relaxed mb-4">
+                            This analysis aggregates data from peer-reviewed studies, government reports, and observational time-motion studies.
+                            Core data sources include the Commonwealth Fund International Health Policy Survey, AIHW Medical Workforce reports, and published findings on cognitive load in electronic health record (EHR) usage.
+                        </p>
+                        <p className="text-xs text-gray-400 leading-relaxed">
+                            Global comparative statistics (US/UK/AU) are derived from OECD Health Statistics 2023 and the Annals of Internal Medicine (Admin Costs in US vs Canada/UK). Moral injury frameworks adapted from Dean et al. (2019).
+                        </p>
+                    </div>
+                    <div className="text-right">
+                        <h4 className="text-xs font-black uppercase tracking-widest text-gray-500 mb-4">Verification Context</h4>
+                        <p className="text-xs text-gray-400 leading-relaxed mb-2">
+                            Presented to the <strong>Medical Council</strong>
+                        </p>
+                        <p className="text-xs text-gray-400 leading-relaxed mb-6">
+                            Date: <strong>28 January 2026</strong>
+                        </p>
+                        <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/5 rounded-full border border-white/10">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                            <span className="text-[10px] font-mono text-gray-300">STATUS: VERIFIED EVIDENCE</span>
+                        </div>
+                    </div>
+                </div>
             </footer>
+
+            <div className="bg-black py-4 text-center border-t border-white/5">
+                <p className="text-[10px] font-black uppercase tracking-widest text-gray-700">
+                    {t('caseStudyDetail.studies.healthcare-burden.footer')}
+                </p>
+            </div>
         </div>
     );
 };
