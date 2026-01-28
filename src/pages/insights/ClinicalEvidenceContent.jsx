@@ -53,7 +53,13 @@ const ClinicalEvidenceContent = () => {
                 bodyColor: '#cbd5e1',
                 padding: 12,
                 cornerRadius: 8,
-                displayColors: false
+                displayColors: false,
+                callbacks: {
+                    footer: (tooltipItems) => {
+                        const chartData = tooltipItems[0].chart.config.data;
+                        return chartData.doi ? chartData.doi : '';
+                    }
+                }
             }
         },
         scales: {
@@ -70,7 +76,8 @@ const ClinicalEvidenceContent = () => {
             data: [229.8, 31.5, 261.3],
             backgroundColor: [COLORS.red, COLORS.red, COLORS.gold],
             borderRadius: 6
-        }]
+        }],
+        doi: 'Sources: [2024] NSWSC 1171; VID705/2022'
     };
 
     // 2. Patient Safety Risk Curve (Readmission Odds)
@@ -84,7 +91,8 @@ const ClinicalEvidenceContent = () => {
             backgroundColor: 'rgba(239, 68, 68, 0.1)',
             fill: true,
             tension: 0.4
-        }]
+        }],
+        doi: 'Source: Kleinig et al. (2025) Internal Medicine Journal. DOI: 10.1111/imj.70150'
     };
 
     // 3. Workforce Plan to Cease (RACGP)
@@ -94,18 +102,19 @@ const ClinicalEvidenceContent = () => {
             data: [32, 68],
             backgroundColor: [COLORS.red, '#334155'],
             borderWidth: 0
-        }]
+        }],
+        doi: 'Source: RACGP Health of the Nation 2024; Commonwealth Fund 2025'
     };
 
     return (
-        <div className="min-h-screen bg-black text-white font-sans selection:bg-emerald-500/30">
+        <div className="min-h-screen bg-black text-white font-sans selection:bg-emerald-500/30" >
             <Helmet>
                 <title>Verified Evidence: Administrative Burden | Algorythmos</title>
                 <meta name="description" content="Legal-grade evidence report on healthcare administrative burden. $261M legal liability, $5.4B economic opportunity, and 1.6% daily patient safety risk." />
             </Helmet>
 
             {/* HERO SECTION */}
-            <section className="relative pt-32 pb-20 px-6 overflow-hidden">
+            <section className="relative pt-32 pb-20 px-6 overflow-hidden" >
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-amber-500/10 via-black to-black pointer-events-none" />
 
                 <div className="max-w-7xl mx-auto relative z-10">
@@ -138,10 +147,10 @@ const ClinicalEvidenceContent = () => {
                         ))}
                     </div>
                 </div>
-            </section>
+            </section >
 
             {/* SECTION 1: LEGAL LIABILITY */}
-            <section className="py-20 px-6 border-t border-white/5 bg-slate-900/20">
+            < section className="py-20 px-6 border-t border-white/5 bg-slate-900/20" >
                 <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                     <div>
                         <h2 className="text-3xl font-bold mb-6 flex items-center gap-3">
@@ -185,10 +194,10 @@ const ClinicalEvidenceContent = () => {
                         <Bar data={legalData} options={chartOptions} />
                     </div>
                 </div>
-            </section>
+            </section >
 
             {/* SECTION 2: ECONOMIC & SAFETY */}
-            <section className="py-20 px-6 border-t border-white/5">
+            < section className="py-20 px-6 border-t border-white/5" >
                 <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* PC Report */}
                     <div className="lg:col-span-1 p-8 rounded-3xl bg-emerald-900/10 border border-emerald-500/20">
@@ -260,10 +269,162 @@ const ClinicalEvidenceContent = () => {
                         </div>
                     </div>
                 </div>
-            </section>
+            </section >
 
-            {/* SECTION 3: WORKFORCE & SOLUTIONS */}
-            <section className="py-20 px-6 border-t border-white/5 bg-slate-900/20">
+            {/* SECTION 3: THEORETICAL FRAMEWORKS */}
+            < section className="py-20 px-6 border-t border-white/5" >
+                <div className="max-w-7xl mx-auto">
+                    <div className="mb-12">
+                        <h2 className="text-3xl font-bold text-white mb-4">Theoretical Frameworks</h2>
+                        <p className="text-gray-400 max-w-3xl">
+                            The raw data above manifests in two clinically validated psychological phenomena. These frameworks explain <em>why</em> the administrative burden translates directly into workforce attrition and safety errors.
+                        </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                        {/* COGNITIVE LOAD THEORY */}
+                        <div className="p-8 rounded-3xl bg-slate-900/50 border border-indigo-500/20">
+                            <h3 className="text-indigo-400 font-bold uppercase tracking-widest text-xs mb-1">Sweller (1988)</h3>
+                            <h2 className="text-2xl font-bold text-white mb-6">Cognitive Load Theory</h2>
+
+                            <div className="h-64 mb-6">
+                                <Bar
+                                    data={{
+                                        labels: ['Optimal Clinical State', 'Current System State'],
+                                        datasets: [
+                                            {
+                                                label: 'Intrinsic Load (Patient Care)',
+                                                data: [60, 60],
+                                                backgroundColor: COLORS.blue,
+                                                stack: 'Stack 0',
+                                            },
+                                            {
+                                                label: 'Germane Load (Deep Thinking)',
+                                                data: [30, 10],
+                                                backgroundColor: COLORS.emerald,
+                                                stack: 'Stack 0',
+                                            },
+                                            {
+                                                label: 'Extrinsic Load (Admin Noise)',
+                                                data: [10, 80],
+                                                backgroundColor: COLORS.red,
+                                                stack: 'Stack 0',
+                                            },
+                                        ]
+                                    }}
+                                    options={{
+                                        ...chartOptions,
+                                        scales: {
+                                            x: { stacked: true, grid: { display: false }, ticks: { color: '#94a3b8' } },
+                                            y: {
+                                                stacked: true,
+                                                grid: { color: '#334155' },
+                                                ticks: { display: false },
+                                                max: 150, // Visual space for "Overload"
+                                                title: { display: true, text: '% Cognitive Capacity' }
+                                            }
+                                        },
+                                        plugins: {
+                                            ...chartOptions.plugins,
+                                            tooltip: {
+                                                callbacks: {
+                                                    footer: () => 'Source: Sweller, J. (1988). Cognitive load during problem solving. DOI: 10.1207/s1532690xci1202_4'
+                                                }
+                                            },
+                                            annotation: {
+                                                annotations: {
+                                                    line1: {
+                                                        type: 'line',
+                                                        yMin: 100,
+                                                        yMax: 100,
+                                                        borderColor: 'rgba(255, 255, 255, 0.5)',
+                                                        borderWidth: 2,
+                                                        borderDash: [6, 6],
+                                                        label: {
+                                                            content: 'Human Limit',
+                                                            enabled: true,
+                                                            position: 'end'
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }}
+                                />
+                            </div>
+
+                            <div className="space-y-4 text-sm text-gray-300">
+                                <p>
+                                    <strong>The Split-Attention Effect:</strong> When clinicians must split attention between the patient and fragmented EMR fields ("Extrinsic Load"), "Germane Load" (capacity for synthesis and diagnosis) is compressed.
+                                </p>
+                                <p>
+                                    <strong>Result:</strong> Cognitive overload leads to "attenuated processing"—errors of omission and failure to notice deterioration.
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* MORAL INJURY */}
+                        <div className="p-8 rounded-3xl bg-slate-900/50 border border-orange-500/20">
+                            <h3 className="text-orange-400 font-bold uppercase tracking-widest text-xs mb-1">Dean et al. (2019)</h3>
+                            <h2 className="text-2xl font-bold text-white mb-6">Moral Injury Gap</h2>
+
+                            <div className="h-64 mb-6">
+                                <Line
+                                    data={{
+                                        labels: ['Year 1', 'Year 3', 'Year 5'],
+                                        datasets: [
+                                            {
+                                                label: 'Clinical Values (Desired Care)',
+                                                data: [90, 90, 90],
+                                                borderColor: COLORS.emerald,
+                                                borderDash: [5, 5],
+                                                tension: 0,
+                                            },
+                                            {
+                                                label: 'System Reality (Actual Care)',
+                                                data: [70, 50, 30],
+                                                borderColor: COLORS.red,
+                                                backgroundColor: 'rgba(239, 68, 68, 0.05)',
+                                                fill: true,
+                                                tension: 0.4
+                                            }
+                                        ]
+                                    }}
+                                    options={{
+                                        ...chartOptions,
+                                        scales: {
+                                            y: {
+                                                min: 0, max: 100,
+                                                grid: { color: '#334155' },
+                                                title: { display: true, text: 'Alignment Score' }
+                                            }
+                                        },
+                                        plugins: {
+                                            tooltip: {
+                                                callbacks: {
+                                                    footer: () => 'Source: Dean, W., et al. (2019). Reframing Clinician Distress: Moral Injury not Burnout. DOI: 10.12788/fp.0013'
+                                                }
+                                            }
+                                        }
+                                    }}
+                                />
+                            </div>
+
+                            <div className="space-y-4 text-sm text-gray-300">
+                                <p>
+                                    <strong>Double Bind:</strong> Clinicians are forced to choose between the patient's immediate needs and the system's financial/legal requirements (documentation).
+                                </p>
+                                <p>
+                                    <strong>Why "Burnout" is Wrong:</strong> Burnout implies a lack of resilience. <em className="text-white">Moral Injury</em> describes the psychological harm from being unable to provide high-quality care due to system constraints.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section >
+
+            {/* SECTION 4: WORKFORCE & SOLUTIONS */}
+            < section className="py-20 px-6 border-t border-white/5 bg-slate-900/20" >
                 <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
 
                     {/* Workforce Crisis */}
@@ -276,7 +437,23 @@ const ClinicalEvidenceContent = () => {
 
                             <div className="flex gap-8 items-center mb-8">
                                 <div className="h-32 w-32 relative">
-                                    <Doughnut data={workforceData} options={{ cutout: '70%', plugins: { legend: { display: false } } }} />
+                                    <Doughnut
+                                        data={workforceData}
+                                        options={{
+                                            cutout: '70%',
+                                            plugins: {
+                                                legend: { display: false },
+                                                tooltip: {
+                                                    callbacks: {
+                                                        footer: (tooltipItems) => {
+                                                            const chartData = tooltipItems[0].chart.config.data;
+                                                            return chartData.doi ? chartData.doi : '';
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }}
+                                    />
                                     <div className="absolute inset-0 flex items-center justify-center">
                                         <span className="text-2xl font-black text-white">32%</span>
                                     </div>
@@ -346,10 +523,10 @@ const ClinicalEvidenceContent = () => {
                         </div>
                     </div>
                 </div>
-            </section>
+            </section >
 
             {/* CTA */}
-            <section className="py-20 text-center px-6">
+            < section className="py-20 text-center px-6" >
                 <h2 className="text-3xl font-black mb-6">The Path Forward</h2>
                 <p className="text-gray-400 max-w-2xl mx-auto mb-10">
                     The evidence demands action: Standardise digital referrals, pilot governed AI scribes, and recognise non-contact time.
@@ -358,10 +535,10 @@ const ClinicalEvidenceContent = () => {
                     <span>Request Executive Briefing</span>
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
                 </Link>
-            </section>
+            </section >
 
             {/* METHODOLOGY FOOTER */}
-            <footer className="py-12 border-t border-white/10 bg-black text-gray-600 text-[10px] leading-relaxed">
+            < footer className="py-12 border-t border-white/10 bg-black text-gray-600 text-[10px] leading-relaxed" >
                 <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div>
                         <strong className="block text-gray-500 uppercase tracking-widest mb-2">Platinum Standard Methodology</strong>
@@ -383,8 +560,8 @@ const ClinicalEvidenceContent = () => {
                         <p>Last Updated: 28 January 2026</p>
                     </div>
                 </div>
-            </footer>
-        </div>
+            </footer >
+        </div >
     );
 };
 
