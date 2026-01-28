@@ -532,9 +532,20 @@ const ClinicalEvidenceContent = () => {
             {/* CTA */}
             < section className="py-20 text-center px-6" >
                 <h2 className="text-3xl font-black mb-6">{t('clinicalEvidence.cta.title')}</h2>
-                <p className="text-gray-400 max-w-2xl mx-auto mb-10">
-                    {t('clinicalEvidence.cta.desc')}
-                </p>
+                <div className="max-w-4xl mx-auto mb-10 text-left space-y-4">
+                    <p className="text-gray-300 leading-relaxed border-l-4 border-amber-500 pl-4 bg-slate-900/50 p-4 rounded-r-xl">
+                        {t('clinicalEvidence.cta.p1')}
+                    </p>
+                    <p className="text-gray-400 leading-relaxed">
+                        {t('clinicalEvidence.cta.p2')}
+                    </p>
+                    <p className="text-gray-400 leading-relaxed">
+                        {t('clinicalEvidence.cta.p3')}
+                    </p>
+                    <p className="text-white text-lg font-bold leading-relaxed text-center pt-4">
+                        {t('clinicalEvidence.cta.p4')}
+                    </p>
+                </div>
                 <Link to={getRegionPath("/contact")} className="inline-flex items-center gap-3 px-8 py-4 bg-amber-500 text-black font-black uppercase text-sm tracking-widest rounded-full hover:bg-amber-400 transition-colors">
                     <span>{t('clinicalEvidence.cta.button')}</span>
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
