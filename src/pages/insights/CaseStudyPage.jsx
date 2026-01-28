@@ -4,12 +4,13 @@ import { CheckCircle } from "lucide-react";
 import { useI18n } from "../../app/i18n/I18nContext";
 import { getCanonicalUrl, getOgLocale, generateHreflangLinks } from "../../app/utils/seoHelpers.js";
 import HealthcareBurdenContent from "./HealthcareBurdenContent";
+import ClinicalEvidenceContent from "./ClinicalEvidenceContent";
 
 // Valid case study slugs (including custom content slugs)
-const studySlugs = ["financial-compliance", "manufacturing-docs", "healthcare-mlops", "retail-sql", "healthcare-burden"];
+const studySlugs = ["financial-compliance", "manufacturing-docs", "healthcare-mlops", "retail-sql", "healthcare-burden", "admin-burden-evidence"];
 
 // Slugs that have custom rich content components
-const customContentSlugs = ["healthcare-burden"];
+const customContentSlugs = ["healthcare-burden", "admin-burden-evidence"];
 
 export default function CaseStudyPage() {
   const { t, region, getRegionPath } = useI18n();
@@ -64,6 +65,30 @@ export default function CaseStudyPage() {
 
         <main className="pt-32 pb-0">
           <HealthcareBurdenContent />
+        </main>
+      </div>
+    );
+  }
+
+  // Handle Verified Evidence case study
+  if (hasCustomContent && slug === "admin-burden-evidence") {
+    return (
+      <div className="min-h-screen bg-black text-white overflow-hidden relative">
+        <Helmet>
+          <title>Verified Evidence: Administrative Burden | Algorythmos</title>
+          <meta name="description" content="Legal-grade evidence report on healthcare administrative burden. $261M legal liability, $5.4B economic opportunity, and 1.6% daily patient safety risk." />
+          <link rel="canonical" href={canonicalUrl} />
+          {hreflangLinks.map(({ hreflang, href }) => (
+            <link key={hreflang} rel="alternate" hreflang={hreflang} href={href} />
+          ))}
+          <meta property="og:title" content="Verified Evidence: Administrative Burden | Algorythmos" />
+          <meta property="og:description" content="Legal-grade evidence report on healthcare administrative burden. $261M legal liability, $5.4B economic opportunity." />
+          <meta property="og:type" content="article" />
+          <meta property="og:url" content={canonicalUrl} />
+          <meta property="og:locale" content={ogLocale} />
+        </Helmet>
+        <main>
+          <ClinicalEvidenceContent />
         </main>
       </div>
     );

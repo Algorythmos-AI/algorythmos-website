@@ -1,6 +1,6 @@
 import React from "react";
 import { Helmet } from "react-helmet-async";
-import { BarChart2, FileText, Zap, Users, Heart } from "lucide-react";
+import { BarChart2, FileText, Zap, Users, Heart, Scale } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useI18n } from "../../app/i18n/I18nContext.jsx";
 import { getCanonicalUrl, getOgLocale, generateHreflangLinks, getCanonicalBase } from "../../app/utils/seoHelpers.js";
@@ -14,6 +14,16 @@ const CaseStudiesPage = () => {
   const hreflangLinks = generateHreflangLinks('/case-studies');
 
   const caseStudies = [
+    {
+      icon: Scale,
+      title: t("caseStudies.items.5.title"),
+      challenge: t("caseStudies.items.5.challenge"),
+      solution: t("caseStudies.items.5.solution"),
+      result: t("caseStudies.items.5.result"),
+      gradient: "from-amber-500 to-yellow-500",
+      slug: "admin-burden-evidence",
+      featured: true
+    },
     {
       icon: Heart,
       title: t("caseStudies.items.4.title"),
