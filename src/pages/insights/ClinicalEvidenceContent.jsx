@@ -138,17 +138,63 @@ const ClinicalEvidenceContent = () => {
                         {t('clinicalEvidence.hero.subtitle')}
                     </p>
 
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
                         {[
-                            { label: t('clinicalEvidence.hero.stats.0.label'), value: '$261.3M', sub: t('clinicalEvidence.hero.stats.0.sub'), color: 'text-amber-400' },
-                            { label: t('clinicalEvidence.hero.stats.1.label'), value: '$5.4B', sub: t('clinicalEvidence.hero.stats.1.sub'), color: 'text-emerald-400' },
-                            { label: t('clinicalEvidence.hero.stats.2.label'), value: '1.6%', sub: t('clinicalEvidence.hero.stats.2.sub'), color: 'text-red-400' },
-                            { label: t('clinicalEvidence.hero.stats.3.label'), value: '32%', sub: t('clinicalEvidence.hero.stats.3.sub'), color: 'text-blue-400' },
+                            {
+                                title: t('clinicalEvidence.topStats.legal.title'),
+                                value: t('clinicalEvidence.topStats.legal.value'),
+                                badge: t('clinicalEvidence.topStats.legal.badge'),
+                                desc: t('clinicalEvidence.topStats.legal.desc'),
+                                border: 'border-amber-500/50',
+                                text: 'text-amber-400',
+                                badgeBg: 'bg-amber-500/10 text-amber-500'
+                            },
+                            {
+                                title: t('clinicalEvidence.topStats.econ.title'),
+                                value: t('clinicalEvidence.topStats.econ.value'),
+                                badge: t('clinicalEvidence.topStats.econ.badge'),
+                                desc: t('clinicalEvidence.topStats.econ.desc'),
+                                border: 'border-emerald-500/50',
+                                text: 'text-emerald-400',
+                                badgeBg: 'bg-emerald-500/10 text-emerald-500'
+                            },
+                            {
+                                title: t('clinicalEvidence.topStats.safety.title'),
+                                value: t('clinicalEvidence.topStats.safety.value'),
+                                badge: t('clinicalEvidence.topStats.safety.badge'),
+                                desc: t('clinicalEvidence.topStats.safety.desc'),
+                                border: 'border-red-500/50',
+                                text: 'text-red-400',
+                                badgeBg: 'bg-red-500/10 text-red-500'
+                            },
+                            {
+                                title: t('clinicalEvidence.topStats.workforce.title'),
+                                value: t('clinicalEvidence.topStats.workforce.value'),
+                                badge: t('clinicalEvidence.topStats.workforce.badge'),
+                                desc: t('clinicalEvidence.topStats.workforce.desc'),
+                                border: 'border-rose-500/50',
+                                text: 'text-rose-400',
+                                badgeBg: 'bg-rose-500/10 text-rose-500'
+                            },
+                            {
+                                title: t('clinicalEvidence.topStats.eff.title'),
+                                value: t('clinicalEvidence.topStats.eff.value'),
+                                badge: t('clinicalEvidence.topStats.eff.badge'),
+                                desc: t('clinicalEvidence.topStats.eff.desc'),
+                                border: 'border-indigo-500/50',
+                                text: 'text-indigo-400',
+                                badgeBg: 'bg-indigo-500/10 text-indigo-500'
+                            }
                         ].map((stat, i) => (
-                            <div key={i} className="p-6 rounded-2xl bg-slate-900/50 border border-white/10 backdrop-blur-sm">
-                                <div className="text-sm text-gray-500 font-bold uppercase tracking-wider mb-2">{stat.label}</div>
-                                <div className={`text-3xl md:text-4xl font-black mb-1 ${stat.color}`}>{stat.value}</div>
-                                <div className="text-xs text-gray-400">{stat.sub}</div>
+                            <div key={i} className={`p-5 rounded-2xl bg-slate-900/80 border ${stat.border} backdrop-blur-sm relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300`}>
+                                <div className={`absolute top-0 right-0 px-2 py-1 text-[10px] font-bold uppercase rounded-bl-lg ${stat.badgeBg}`}>
+                                    {stat.badge}
+                                </div>
+                                <div className="text-xs text-gray-400 font-bold uppercase tracking-wider mb-2 mt-2">{stat.title}</div>
+                                <div className={`text-3xl font-black mb-3 ${stat.text}`}>{stat.value}</div>
+                                <div className="text-[10px] text-gray-400 font-mono whitespace-pre-line leading-tight opacity-80">
+                                    {stat.desc}
+                                </div>
                             </div>
                         ))}
                     </div>
