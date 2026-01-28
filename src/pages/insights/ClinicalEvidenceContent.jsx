@@ -70,47 +70,53 @@ const ClinicalEvidenceContent = () => {
 
     // 1. Legal Liability Chart
     const legalData = {
-        labels: ['NSW Health', 'ACT Health', 'Total Liability'],
+        labels: [t('clinicalEvidence.legal.chart.labels.nsw'), t('clinicalEvidence.legal.chart.labels.act'), t('clinicalEvidence.legal.chart.labels.total')],
         datasets: [{
-            label: 'Settlement Amount ($M)',
+            label: t('clinicalEvidence.legal.chart.dataset'),
             data: [229.8, 31.5, 261.3],
             backgroundColor: [COLORS.red, COLORS.red, COLORS.gold],
             borderRadius: 6
         }],
-        doi: 'Sources: [2024] NSWSC 1171; VID705/2022'
+        doi: t('clinicalEvidence.legal.chart.doi')
     };
 
     // 2. Patient Safety Risk Curve (Readmission Odds)
     // Based on Kleinig 2025: OR 1.016 per day delay
     const riskData = {
-        labels: ['24h', '48h', '72h', '4 Days', '5 Days'],
+        labels: [
+            t('clinicalEvidence.safety.chart.labels.24h'),
+            t('clinicalEvidence.safety.chart.labels.48h'),
+            t('clinicalEvidence.safety.chart.labels.72h'),
+            t('clinicalEvidence.safety.chart.labels.4d'),
+            t('clinicalEvidence.safety.chart.labels.5d')
+        ],
         datasets: [{
-            label: 'Increased Readmission Risk (%)',
+            label: t('clinicalEvidence.safety.chart.label'),
             data: [1.6, 3.2, 4.8, 6.4, 8.0],
             borderColor: COLORS.red,
             backgroundColor: 'rgba(239, 68, 68, 0.1)',
             fill: true,
             tension: 0.4
         }],
-        doi: 'Source: Kleinig et al. (2025) Internal Medicine Journal. DOI: 10.1111/imj.70150'
+        doi: t('clinicalEvidence.safety.chart.doi')
     };
 
     // 3. Workforce Plan to Cease (RACGP)
     const workforceData = {
-        labels: ['Plan to Cease (5yrs)', 'Staying'],
+        labels: [t('clinicalEvidence.workforce.pie.datasets.leaving'), t('clinicalEvidence.workforce.pie.datasets.staying')],
         datasets: [{
             data: [32, 68],
             backgroundColor: [COLORS.red, '#334155'],
             borderWidth: 0
         }],
-        doi: 'Source: RACGP Health of the Nation 2024; Commonwealth Fund 2025'
+        doi: t('clinicalEvidence.workforce.chart.doi')
     };
 
     return (
         <div className="min-h-screen bg-black text-white font-sans selection:bg-emerald-500/30" >
             <Helmet>
-                <title>Verified Evidence: Administrative Burden | Algorythmos</title>
-                <meta name="description" content="Legal-grade evidence report on healthcare administrative burden. $261M legal liability, $5.4B economic opportunity, and 1.6% daily patient safety risk." />
+                <title>{t('clinicalEvidence.meta.title')}</title>
+                <meta name="description" content={t('clinicalEvidence.meta.description')} />
             </Helmet>
 
             {/* HERO SECTION */}
@@ -120,24 +126,24 @@ const ClinicalEvidenceContent = () => {
                 <div className="max-w-7xl mx-auto relative z-10">
                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-bold uppercase tracking-widest mb-6 animate-fade-in">
                         <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
-                        Medical Council Presentation
+                        {t('clinicalEvidence.hero.badge')}
                     </div>
 
                     <h1 className="text-5xl md:text-7xl font-black mb-6 leading-tight">
-                        The <span className="bg-clip-text text-transparent bg-gradient-to-r from-amber-200 to-amber-500">$261 Million</span> <br />
-                        Legal Crisis
+                        {t('clinicalEvidence.hero.title1')} <span className="bg-clip-text text-transparent bg-gradient-to-r from-amber-200 to-amber-500">{t('clinicalEvidence.hero.titleHighlight')}</span> <br />
+                        {t('clinicalEvidence.hero.title2')}
                     </h1>
 
                     <p className="text-xl text-gray-400 max-w-2xl mb-12 leading-relaxed">
-                        Administrative overload is no longer just a wellbeing issue—it is a Tier-1 legal and financial liability. Verified evidence for clinical governance and executive boards.
+                        {t('clinicalEvidence.hero.subtitle')}
                     </p>
 
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                         {[
-                            { label: 'Legal Liability', value: '$261.3M', sub: 'Court-Approved Settlements', color: 'text-amber-400' },
-                            { label: 'Economic Impact', value: '$5.4B', sub: 'Annual Productivity Cost', color: 'text-emerald-400' },
-                            { label: 'Patient Safety', value: '1.6%', sub: 'Daily Readmission Risk', color: 'text-red-400' },
-                            { label: 'Workforce', value: '32%', sub: 'GPs Plan to Cease', color: 'text-blue-400' },
+                            { label: t('clinicalEvidence.hero.stats.0.label'), value: '$261.3M', sub: t('clinicalEvidence.hero.stats.0.sub'), color: 'text-amber-400' },
+                            { label: t('clinicalEvidence.hero.stats.1.label'), value: '$5.4B', sub: t('clinicalEvidence.hero.stats.1.sub'), color: 'text-emerald-400' },
+                            { label: t('clinicalEvidence.hero.stats.2.label'), value: '1.6%', sub: t('clinicalEvidence.hero.stats.2.sub'), color: 'text-red-400' },
+                            { label: t('clinicalEvidence.hero.stats.3.label'), value: '32%', sub: t('clinicalEvidence.hero.stats.3.sub'), color: 'text-blue-400' },
                         ].map((stat, i) => (
                             <div key={i} className="p-6 rounded-2xl bg-slate-900/50 border border-white/10 backdrop-blur-sm">
                                 <div className="text-sm text-gray-500 font-bold uppercase tracking-wider mb-2">{stat.label}</div>
@@ -155,41 +161,39 @@ const ClinicalEvidenceContent = () => {
                     <div>
                         <h2 className="text-3xl font-bold mb-6 flex items-center gap-3">
                             <span className="text-amber-500">⚖️</span>
-                            Tier 1: Legal Liability
+                            {t('clinicalEvidence.legal.title')}
                         </h2>
                         <div className="space-y-8">
                             <div className="p-6 rounded-2xl bg-amber-950/20 border border-amber-500/20 relative overflow-hidden">
                                 <div className="absolute top-0 right-0 p-4 opacity-50 text-amber-500">
                                     <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" /></svg>
                                 </div>
-                                <h3 className="text-xl font-bold text-white mb-2">NSW Health Settlement</h3>
+                                <h3 className="text-xl font-bold text-white mb-2">{t('clinicalEvidence.legal.nsw.title')}</h3>
                                 <div className="text-4xl font-black text-amber-400 mb-2">$229,800,000</div>
-                                <p className="text-sm text-gray-300 mb-4 font-mono">
-                                    Approved: [2024] NSWSC 1171<br />
-                                    Date: 20 Sept 2024
+                                <p className="text-sm text-gray-300 mb-4 font-mono whitespace-pre-line">
+                                    {t('clinicalEvidence.legal.nsw.meta')}
                                 </p>
                                 <p className="text-sm text-gray-400">
-                                    Supreme Court judgment for junior doctors' expenses and unpaid overtime due to administrative burden.
+                                    {t('clinicalEvidence.legal.nsw.desc')}
                                 </p>
                             </div>
 
                             <div className="p-6 rounded-2xl bg-slate-800/50 border border-white/10">
-                                <h3 className="text-xl font-bold text-white mb-2">ACT Health Settlement</h3>
+                                <h3 className="text-xl font-bold text-white mb-2">{t('clinicalEvidence.legal.act.title')}</h3>
                                 <div className="text-3xl font-black text-white mb-2">$31,500,000</div>
-                                <p className="text-sm text-gray-400 mb-4 font-mono">
-                                    Orders: VID705/2022 (Fed Court)<br />
-                                    Date: 18 Dec 2024
+                                <p className="text-sm text-gray-400 mb-4 font-mono whitespace-pre-line">
+                                    {t('clinicalEvidence.legal.act.meta')}
                                 </p>
                                 <p className="text-sm text-gray-400">
-                                    Total package inclusive of settlement sum, legal costs, and administration.
+                                    {t('clinicalEvidence.legal.act.desc')}
                                 </p>
                             </div>
                         </div>
                     </div>
                     <div className="h-[400px] bg-slate-900/50 p-6 rounded-3xl border border-white/5">
                         <div className="flex justify-between items-center mb-6">
-                            <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest">Total Liability Exposure</h3>
-                            <span className="text-xs text-amber-500 font-mono bg-amber-500/10 px-2 py-1 rounded">VERIFIED COURT DOCS</span>
+                            <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest">{t('clinicalEvidence.legal.chart.title')}</h3>
+                            <span className="text-xs text-amber-500 font-mono bg-amber-500/10 px-2 py-1 rounded">{t('clinicalEvidence.legal.chart.badge')}</span>
                         </div>
                         <Bar data={legalData} options={chartOptions} />
                     </div>
@@ -201,22 +205,22 @@ const ClinicalEvidenceContent = () => {
                 <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* PC Report */}
                     <div className="lg:col-span-1 p-8 rounded-3xl bg-emerald-900/10 border border-emerald-500/20">
-                        <h3 className="text-emerald-400 font-bold uppercase tracking-widest text-xs mb-4">The Economic Case</h3>
+                        <h3 className="text-emerald-400 font-bold uppercase tracking-widest text-xs mb-4">{t('clinicalEvidence.economic.title')}</h3>
                         <div className="text-5xl font-black text-white mb-2">$5.4 Billion</div>
-                        <p className="text-lg text-emerald-200 mb-6">Annual Potential Savings</p>
+                        <p className="text-lg text-emerald-200 mb-6">{t('clinicalEvidence.economic.subtitle')}</p>
 
                         <div className="space-y-4">
                             <div className="flex items-start gap-3">
                                 <span className="text-emerald-500 mt-1">✓</span>
-                                <p className="text-sm text-gray-400"><strong>Source:</strong> Productivity Commission 2024 Research Paper</p>
+                                <p className="text-sm text-gray-400"><strong>{t('clinicalEvidence.economic.points.0.label')}</strong> {t('clinicalEvidence.economic.points.0.value')}</p>
                             </div>
                             <div className="flex items-start gap-3">
                                 <span className="text-emerald-500 mt-1">✓</span>
-                                <p className="text-sm text-gray-400"><strong>Metric:</strong> Better digital info use & reduced length-of-stay</p>
+                                <p className="text-sm text-gray-400"><strong>{t('clinicalEvidence.economic.points.1.label')}</strong> {t('clinicalEvidence.economic.points.1.value')}</p>
                             </div>
                             <div className="flex items-start gap-3">
                                 <span className="text-emerald-500 mt-1">✓</span>
-                                <p className="text-sm text-gray-400"><strong>Opportunity:</strong> Up to 30% of tasks automatable (upper bound)</p>
+                                <p className="text-sm text-gray-400"><strong>{t('clinicalEvidence.economic.points.2.label')}</strong> {t('clinicalEvidence.economic.points.2.value')}</p>
                             </div>
                         </div>
                     </div>
@@ -225,12 +229,12 @@ const ClinicalEvidenceContent = () => {
                     <div className="lg:col-span-2 p-8 rounded-3xl bg-slate-900/50 border border-white/10">
                         <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-8">
                             <div>
-                                <h3 className="text-red-400 font-bold uppercase tracking-widest text-xs mb-1">Patient Safety Risk</h3>
-                                <h2 className="text-2xl font-bold text-white">Discharge Delay Harm</h2>
+                                <h3 className="text-red-400 font-bold uppercase tracking-widest text-xs mb-1">{t('clinicalEvidence.safety.badge')}</h3>
+                                <h2 className="text-2xl font-bold text-white">{t('clinicalEvidence.safety.title')}</h2>
                             </div>
                             <div className="text-right">
                                 <div className="text-3xl font-black text-white">37.6%</div>
-                                <div className="text-xs text-gray-400">Summaries Delayed &gt;24h</div>
+                                <div className="text-xs text-gray-400">{t('clinicalEvidence.safety.statLabel')}</div>
                             </div>
                         </div>
 
@@ -241,29 +245,29 @@ const ClinicalEvidenceContent = () => {
                                     options={{
                                         ...chartOptions,
                                         scales: {
-                                            y: { title: { display: true, text: '% Readmission Risk' } }
+                                            y: { title: { display: true, text: t('clinicalEvidence.safety.chart.options.y') } }
                                         }
                                     }}
                                 />
                             </div>
                             <div className="space-y-4 text-sm text-gray-300">
                                 <p>
-                                    <strong className="text-white block mb-1">1.6% Daily Escalation</strong>
-                                    Each day of delay increases 30-day readmission risk by 1.6% (OR 1.016).
+                                    <strong className="text-white block mb-1">{t('clinicalEvidence.safety.points.0.strong')}</strong>
+                                    {t('clinicalEvidence.safety.points.0.desc')}
                                 </p>
                                 <p>
-                                    <strong className="text-white block mb-1">Evidence Source</strong>
-                                    Kleinig et al., <em>Internal Medicine Journal</em> 2025. Analysis of 7,185 summaries.
+                                    <strong className="text-white block mb-1">{t('clinicalEvidence.safety.points.1.strong')}</strong>
+                                    {t('clinicalEvidence.safety.points.1.desc')}
                                 </p>
                                 <div className="p-4 bg-slate-800 rounded-xl border border-white/5 mt-4">
                                     <div className="flex justify-between mb-2">
-                                        <span>Median Time:</span>
+                                        <span>{t('clinicalEvidence.safety.bar.label')}</span>
                                         <span className="font-bold text-white">14.5 mins</span>
                                     </div>
                                     <div className="w-full bg-slate-700 h-1.5 rounded-full overflow-hidden">
                                         <div className="bg-blue-500 h-full w-[40%]"></div>
                                     </div>
-                                    <p className="text-xs text-gray-500 mt-2">Per summary. Cumulative burden: ~135 hours/week at one site.</p>
+                                    <p className="text-xs text-gray-500 mt-2">{t('clinicalEvidence.safety.bar.sub')}</p>
                                 </div>
                             </div>
                         </div>
@@ -275,37 +279,37 @@ const ClinicalEvidenceContent = () => {
             < section className="py-20 px-6 border-t border-white/5" >
                 <div className="max-w-7xl mx-auto">
                     <div className="mb-12">
-                        <h2 className="text-3xl font-bold text-white mb-4">Theoretical Frameworks</h2>
+                        <h2 className="text-3xl font-bold text-white mb-4">{t('clinicalEvidence.theory.title')}</h2>
                         <p className="text-gray-400 max-w-3xl">
-                            The raw data above manifests in two clinically validated psychological phenomena. These frameworks explain <em>why</em> the administrative burden translates directly into workforce attrition and safety errors.
+                            {t('clinicalEvidence.theory.desc')}
                         </p>
                     </div>
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                         {/* COGNITIVE LOAD THEORY */}
                         <div className="p-8 rounded-3xl bg-slate-900/50 border border-indigo-500/20">
-                            <h3 className="text-indigo-400 font-bold uppercase tracking-widest text-xs mb-1">Sweller (1988)</h3>
-                            <h2 className="text-2xl font-bold text-white mb-6">Cognitive Load Theory</h2>
+                            <h3 className="text-indigo-400 font-bold uppercase tracking-widest text-xs mb-1">{t('clinicalEvidence.theory.cognitive.badge')}</h3>
+                            <h2 className="text-2xl font-bold text-white mb-6">{t('clinicalEvidence.theory.cognitive.title')}</h2>
 
                             <div className="h-64 mb-6">
                                 <Bar
                                     data={{
-                                        labels: ['Optimal Clinical State', 'Current System State'],
+                                        labels: [t('clinicalEvidence.theory.cognitive.labels.optimal'), t('clinicalEvidence.theory.cognitive.labels.current')],
                                         datasets: [
                                             {
-                                                label: 'Intrinsic Load (Patient Care)',
+                                                label: t('clinicalEvidence.theory.cognitive.datasets.intrinsic'),
                                                 data: [60, 60],
                                                 backgroundColor: COLORS.blue,
                                                 stack: 'Stack 0',
                                             },
                                             {
-                                                label: 'Germane Load (Deep Thinking)',
+                                                label: t('clinicalEvidence.theory.cognitive.datasets.germane'),
                                                 data: [30, 10],
                                                 backgroundColor: COLORS.emerald,
                                                 stack: 'Stack 0',
                                             },
                                             {
-                                                label: 'Extrinsic Load (Admin Noise)',
+                                                label: t('clinicalEvidence.theory.cognitive.datasets.extrinsic'),
                                                 data: [10, 80],
                                                 backgroundColor: COLORS.red,
                                                 stack: 'Stack 0',
@@ -321,14 +325,14 @@ const ClinicalEvidenceContent = () => {
                                                 grid: { color: '#334155' },
                                                 ticks: { display: false },
                                                 max: 150, // Visual space for "Overload"
-                                                title: { display: true, text: '% Cognitive Capacity' }
+                                                title: { display: true, text: t('clinicalEvidence.theory.cognitive.chart.y') }
                                             }
                                         },
                                         plugins: {
                                             ...chartOptions.plugins,
                                             tooltip: {
                                                 callbacks: {
-                                                    footer: () => 'Source: Sweller, J. (1988). Cognitive load during problem solving. DOI: 10.1207/s1532690xci1202_4'
+                                                    footer: () => t('clinicalEvidence.theory.cognitive.chart.doi')
                                                 }
                                             },
                                             annotation: {
@@ -341,7 +345,7 @@ const ClinicalEvidenceContent = () => {
                                                         borderWidth: 2,
                                                         borderDash: [6, 6],
                                                         label: {
-                                                            content: 'Human Limit',
+                                                            content: t('clinicalEvidence.theory.cognitive.annotation'),
                                                             enabled: true,
                                                             position: 'end'
                                                         }
@@ -355,33 +359,33 @@ const ClinicalEvidenceContent = () => {
 
                             <div className="space-y-4 text-sm text-gray-300">
                                 <p>
-                                    <strong>The Split-Attention Effect:</strong> When clinicians must split attention between the patient and fragmented EMR fields ("Extrinsic Load"), "Germane Load" (capacity for synthesis and diagnosis) is compressed.
+                                    <strong>{t('clinicalEvidence.theory.cognitive.splitAttention.strong')}</strong> {t('clinicalEvidence.theory.cognitive.splitAttention.desc')}
                                 </p>
                                 <p>
-                                    <strong>Result:</strong> Cognitive overload leads to "attenuated processing"—errors of omission and failure to notice deterioration.
+                                    <strong>{t('clinicalEvidence.theory.cognitive.result.strong')}</strong> {t('clinicalEvidence.theory.cognitive.result.desc')}
                                 </p>
                             </div>
                         </div>
 
                         {/* MORAL INJURY */}
                         <div className="p-8 rounded-3xl bg-slate-900/50 border border-orange-500/20">
-                            <h3 className="text-orange-400 font-bold uppercase tracking-widest text-xs mb-1">Dean et al. (2019)</h3>
-                            <h2 className="text-2xl font-bold text-white mb-6">Moral Injury Gap</h2>
+                            <h3 className="text-orange-400 font-bold uppercase tracking-widest text-xs mb-1">{t('clinicalEvidence.theory.moral.badge')}</h3>
+                            <h2 className="text-2xl font-bold text-white mb-6">{t('clinicalEvidence.theory.moral.title')}</h2>
 
                             <div className="h-64 mb-6">
                                 <Line
                                     data={{
-                                        labels: ['Year 1', 'Year 3', 'Year 5'],
+                                        labels: [t('clinicalEvidence.theory.moral.labels.y1'), t('clinicalEvidence.theory.moral.labels.y3'), t('clinicalEvidence.theory.moral.labels.y5')],
                                         datasets: [
                                             {
-                                                label: 'Clinical Values (Desired Care)',
+                                                label: t('clinicalEvidence.theory.moral.datasets.values'),
                                                 data: [90, 90, 90],
                                                 borderColor: COLORS.emerald,
                                                 borderDash: [5, 5],
                                                 tension: 0,
                                             },
                                             {
-                                                label: 'System Reality (Actual Care)',
+                                                label: t('clinicalEvidence.theory.moral.datasets.reality'),
                                                 data: [70, 50, 30],
                                                 borderColor: COLORS.red,
                                                 backgroundColor: 'rgba(239, 68, 68, 0.05)',
@@ -396,13 +400,13 @@ const ClinicalEvidenceContent = () => {
                                             y: {
                                                 min: 0, max: 100,
                                                 grid: { color: '#334155' },
-                                                title: { display: true, text: 'Alignment Score' }
+                                                title: { display: true, text: t('clinicalEvidence.theory.moral.chart.y') }
                                             }
                                         },
                                         plugins: {
                                             tooltip: {
                                                 callbacks: {
-                                                    footer: () => 'Source: Dean, W., et al. (2019). Reframing Clinician Distress: Moral Injury not Burnout. DOI: 10.12788/fp.0013'
+                                                    footer: () => t('clinicalEvidence.theory.moral.chart.doi')
                                                 }
                                             }
                                         }
@@ -412,10 +416,10 @@ const ClinicalEvidenceContent = () => {
 
                             <div className="space-y-4 text-sm text-gray-300">
                                 <p>
-                                    <strong>Double Bind:</strong> Clinicians are forced to choose between the patient's immediate needs and the system's financial/legal requirements (documentation).
+                                    <strong>{t('clinicalEvidence.theory.moral.doubleBind.strong')}</strong> {t('clinicalEvidence.theory.moral.doubleBind.desc')}
                                 </p>
                                 <p>
-                                    <strong>Why "Burnout" is Wrong:</strong> Burnout implies a lack of resilience. <em className="text-white">Moral Injury</em> describes the psychological harm from being unable to provide high-quality care due to system constraints.
+                                    <strong>{t('clinicalEvidence.theory.moral.burnout.strong')}</strong> {t('clinicalEvidence.theory.moral.burnout.desc')}
                                 </p>
                             </div>
                         </div>
@@ -429,10 +433,10 @@ const ClinicalEvidenceContent = () => {
 
                     {/* Workforce Crisis */}
                     <div>
-                        <h2 className="text-2xl font-bold text-white mb-6">Workforce Crisis</h2>
+                        <h2 className="text-2xl font-bold text-white mb-6">{t('clinicalEvidence.workforce.title')}</h2>
                         <div className="bg-slate-900 p-8 rounded-3xl border border-red-500/20 relative overflow-hidden">
                             <div className="absolute top-0 right-0 p-3 bg-red-500/10 rounded-bl-2xl border-l border-b border-red-500/20 text-red-400 text-xs font-bold">
-                                CRITICAL RISK
+                                {t('clinicalEvidence.workforce.badge')}
                             </div>
 
                             <div className="flex gap-8 items-center mb-8">
@@ -459,22 +463,22 @@ const ClinicalEvidenceContent = () => {
                                     </div>
                                 </div>
                                 <div>
-                                    <h3 className="text-lg font-bold text-white">Plan to Cease Practice</h3>
-                                    <p className="text-sm text-gray-400 mb-2">Within 5 Years (RACGP 2024)</p>
+                                    <h3 className="text-lg font-bold text-white">{t('clinicalEvidence.workforce.pie.title')}</h3>
+                                    <p className="text-sm text-gray-400 mb-2">{t('clinicalEvidence.workforce.pie.sub')}</p>
                                     <p className="text-xs text-red-300">
-                                        60% cite regulatory/compliance burden as key factor.
+                                        {t('clinicalEvidence.workforce.pie.detail')}
                                     </p>
                                 </div>
                             </div>
 
                             <div className="space-y-3">
                                 <div className="flex justify-between text-sm p-3 bg-slate-800 rounded-lg">
-                                    <span className="text-gray-400">Burnout Rate (Aust)</span>
-                                    <span className="font-bold text-white">32% (Commonwealth Fund)</span>
+                                    <span className="text-gray-400">{t('clinicalEvidence.workforce.stats.burnout')}</span>
+                                    <span className="font-bold text-white">{t('clinicalEvidence.workforce.stats.burnoutValue')}</span>
                                 </div>
                                 <div className="flex justify-between text-sm p-3 bg-slate-800 rounded-lg">
-                                    <span className="text-gray-400">Unpaid Work/Week</span>
-                                    <span className="font-bold text-white">5.1 Hours (Brown 2021)</span>
+                                    <span className="text-gray-400">{t('clinicalEvidence.workforce.stats.unpaid')}</span>
+                                    <span className="font-bold text-white">{t('clinicalEvidence.workforce.stats.unpaidValue')}</span>
                                 </div>
                             </div>
                         </div>
@@ -482,42 +486,42 @@ const ClinicalEvidenceContent = () => {
 
                     {/* Solutions */}
                     <div>
-                        <h2 className="text-2xl font-bold text-white mb-6">Proven Solutions</h2>
+                        <h2 className="text-2xl font-bold text-white mb-6">{t('clinicalEvidence.solutions.title')}</h2>
                         <div className="space-y-6">
                             {/* Gold Coast */}
                             <div className="group p-6 rounded-2xl bg-gradient-to-br from-indigo-900/30 to-slate-900 border border-indigo-500/20 hover:border-indigo-500/50 transition-all">
                                 <div className="flex justify-between items-start mb-4">
-                                    <h3 className="font-bold text-indigo-300">Ambient AI Trial (Gold Coast)</h3>
+                                    <h3 className="font-bold text-indigo-300">{t('clinicalEvidence.solutions.ambient.title')}</h3>
                                     <span className="bg-indigo-500 text-white text-[10px] px-2 py-0.5 rounded font-bold">JAN 2026</span>
                                 </div>
                                 <div className="grid grid-cols-2 gap-4 mb-4">
                                     <div>
                                         <div className="text-2xl font-black text-white">58%</div>
-                                        <div className="text-xs text-gray-400">Accepted Unedited</div>
+                                        <div className="text-xs text-gray-400">{t('clinicalEvidence.solutions.ambient.stat1.label')}</div>
                                     </div>
                                     <div>
                                         <div className="text-2xl font-black text-white">100+</div>
-                                        <div className="text-xs text-gray-400">Clinicians</div>
+                                        <div className="text-xs text-gray-400">{t('clinicalEvidence.solutions.ambient.stat2.label')}</div>
                                     </div>
                                 </div>
                                 <p className="text-xs text-indigo-200/60">
-                                    <strong>Governance:</strong> Human-in-the-loop mandatory due to hallucination risk. Peer-reviewed evaluation.
+                                    <strong>{t('clinicalEvidence.solutions.ambient.governance.strong')}</strong> {t('clinicalEvidence.solutions.ambient.governance.desc')}
                                 </p>
                             </div>
 
                             {/* Digital vs Paper */}
                             <div className="p-6 rounded-2xl bg-slate-800/50 border border-white/5">
-                                <h3 className="font-bold text-white mb-4">Medication Turnaround (Austin 2018)</h3>
+                                <h3 className="font-bold text-white mb-4">{t('clinicalEvidence.solutions.digital.title')}</h3>
                                 <div className="w-full h-12 flex rounded-lg overflow-hidden mb-2">
                                     <div className="bg-emerald-500 h-full flex items-center justify-center font-bold text-white text-sm" style={{ width: '29%' }}>
-                                        35 min (Digital)
+                                        {t('clinicalEvidence.solutions.digital.label1')}
                                     </div>
                                     <div className="bg-slate-700 h-full flex items-center justify-center font-bold text-gray-400 text-sm" style={{ width: '71%' }}>
-                                        120 min (Paper)
+                                        {t('clinicalEvidence.solutions.digital.label2')}
                                     </div>
                                 </div>
                                 <p className="text-xs text-gray-500">
-                                    Time to first dose. DOI: 10.1111/ijpp.12432
+                                    {t('clinicalEvidence.solutions.digital.footer')}
                                 </p>
                             </div>
                         </div>
@@ -527,12 +531,12 @@ const ClinicalEvidenceContent = () => {
 
             {/* CTA */}
             < section className="py-20 text-center px-6" >
-                <h2 className="text-3xl font-black mb-6">The Path Forward</h2>
+                <h2 className="text-3xl font-black mb-6">{t('clinicalEvidence.cta.title')}</h2>
                 <p className="text-gray-400 max-w-2xl mx-auto mb-10">
-                    The evidence demands action: Standardise digital referrals, pilot governed AI scribes, and recognise non-contact time.
+                    {t('clinicalEvidence.cta.desc')}
                 </p>
                 <Link to={getRegionPath("/contact")} className="inline-flex items-center gap-3 px-8 py-4 bg-amber-500 text-black font-black uppercase text-sm tracking-widest rounded-full hover:bg-amber-400 transition-colors">
-                    <span>Request Executive Briefing</span>
+                    <span>{t('clinicalEvidence.cta.button')}</span>
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
                 </Link>
             </section >
@@ -541,9 +545,9 @@ const ClinicalEvidenceContent = () => {
             < footer className="py-12 border-t border-white/10 bg-black text-gray-600 text-[10px] leading-relaxed" >
                 <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div>
-                        <strong className="block text-gray-500 uppercase tracking-widest mb-2">Platinum Standard Methodology</strong>
+                        <strong className="block text-gray-500 uppercase tracking-widest mb-2">{t('clinicalEvidence.footer.methodology.title')}</strong>
                         <p className="mb-2">
-                            This report aggregates verifiable primary sources including Supreme Court judgments, Federal Court orders, Australian Government statutory authority research (Productivity Commission), and peer-reviewed journals with DOIs.
+                            {t('clinicalEvidence.footer.methodology.desc')}
                         </p>
                         <ul className="space-y-1">
                             <li>• <strong>Legal:</strong> [2024] NSWSC 1171; VID705/2022.</li>
@@ -553,11 +557,11 @@ const ClinicalEvidenceContent = () => {
                         </ul>
                     </div>
                     <div className="text-right">
-                        <strong className="block text-gray-500 uppercase tracking-widest mb-2">Verification Status</strong>
+                        <strong className="block text-gray-500 uppercase tracking-widest mb-2">{t('clinicalEvidence.footer.verification.title')}</strong>
                         <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-900/20 border border-emerald-500/20 rounded text-emerald-500 font-mono mb-2">
-                            ✓ VERIFIED EVIDENCE
+                            {t('clinicalEvidence.footer.verification.badge')}
                         </div>
-                        <p>Last Updated: 28 January 2026</p>
+                        <p>{t('clinicalEvidence.footer.verification.updated')}</p>
                     </div>
                 </div>
             </footer >
