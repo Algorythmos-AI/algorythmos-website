@@ -131,10 +131,10 @@ const ClinicalEvidenceContent = () => {
 
                     <h1 className="text-5xl md:text-7xl font-black mb-6 leading-tight">
                         {t('clinicalEvidence.hero.title1')} <span className="bg-clip-text text-transparent bg-gradient-to-r from-amber-200 to-amber-500">{t('clinicalEvidence.hero.titleHighlight')}</span> <br />
-                        {t('clinicalEvidence.hero.title2')}
+                        <span className="text-3xl md:text-4xl text-white block mt-2 font-bold">{t('clinicalEvidence.hero.title2')}</span>
                     </h1>
 
-                    <p className="text-xl text-gray-400 max-w-2xl mb-12 leading-relaxed">
+                    <p className="text-xl text-gray-400 max-w-3xl mb-12 leading-relaxed border-l-4 border-amber-500 pl-6">
                         {t('clinicalEvidence.hero.subtitle')}
                     </p>
 
@@ -192,14 +192,14 @@ const ClinicalEvidenceContent = () => {
                                 </div>
                                 <div className="text-xs text-gray-400 font-bold uppercase tracking-wider mb-2 mt-2">{stat.title}</div>
                                 <div className={`text-3xl font-black mb-3 ${stat.text}`}>{stat.value}</div>
-                                <div className="text-[10px] text-gray-400 font-mono whitespace-pre-line leading-tight opacity-80">
+                                <div className="text-[10px] text-white font-mono whitespace-pre-line leading-tight opacity-90">
                                     {stat.desc}
                                 </div>
                             </div>
                         ))}
                     </div>
                 </div>
-            </section >
+            </section>
 
             {/* KEY DISCOVERIES SECTION */}
             <section className="py-20 px-6 border-t border-white/5 bg-slate-900/40">
@@ -257,6 +257,218 @@ const ClinicalEvidenceContent = () => {
                                 {t('clinicalEvidence.discoveries.card4.desc')}
                             </p>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* EVIDENCE STANDARDS SECTION (WHY UNASSAILABLE) */}
+            <section className="py-12 bg-black border-y border-white/5">
+                <div className="max-w-7xl mx-auto px-6">
+                    <h2 className="text-lg font-bold text-gray-400 uppercase tracking-widest mb-8 text-center">{t('clinicalEvidence.standards.title')}</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        <div>
+                            <div className="flex items-center gap-2 mb-2 text-amber-500">
+                                <span className="text-xl">⚖️</span>
+                                <h3 className="font-bold text-sm uppercase">{t('clinicalEvidence.standards.court.title')}</h3>
+                            </div>
+                            <p className="text-xs text-gray-500 leading-relaxed">{t('clinicalEvidence.standards.court.desc')}</p>
+                        </div>
+                        <div>
+                            <div className="flex items-center gap-2 mb-2 text-emerald-500">
+                                <span className="text-xl">🎓</span>
+                                <h3 className="font-bold text-sm uppercase">{t('clinicalEvidence.standards.academic.title')}</h3>
+                            </div>
+                            <p className="text-xs text-gray-500 leading-relaxed">{t('clinicalEvidence.standards.academic.desc')}</p>
+                        </div>
+                        <div>
+                            <div className="flex items-center gap-2 mb-2 text-blue-500">
+                                <span className="text-xl">🏛️</span>
+                                <h3 className="font-bold text-sm uppercase">{t('clinicalEvidence.standards.govt.title')}</h3>
+                            </div>
+                            <p className="text-xs text-gray-500 leading-relaxed">{t('clinicalEvidence.standards.govt.desc')}</p>
+                        </div>
+                        <div>
+                            <div className="flex items-center gap-2 mb-2 text-red-500">
+                                <span className="text-xl">🚫</span>
+                                <h3 className="font-bold text-sm uppercase">{t('clinicalEvidence.standards.rejected.title')}</h3>
+                            </div>
+                            <p className="text-xs text-gray-500 leading-relaxed">{t('clinicalEvidence.standards.rejected.desc')}</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* ROI CASE SECTION (NEW) */}
+            <section className="py-20 px-6 bg-slate-900/20">
+                <div className="max-w-7xl mx-auto">
+                    <div className="flex items-center gap-3 mb-10">
+                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                        <h2 className="text-sm font-bold text-emerald-400 uppercase tracking-widest">{t('clinicalEvidence.roi.title')}</h2>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {[
+                            { title: t('clinicalEvidence.roi.card1.title'), sub: t('clinicalEvidence.roi.card1.subtitle'), desc: t('clinicalEvidence.roi.card1.desc'), border: 'border-red-500/20' },
+                            { title: t('clinicalEvidence.roi.card2.title'), sub: t('clinicalEvidence.roi.card2.subtitle'), desc: t('clinicalEvidence.roi.card2.desc'), border: 'border-emerald-500/20' },
+                            { title: t('clinicalEvidence.roi.card3.title'), sub: t('clinicalEvidence.roi.card3.subtitle'), desc: t('clinicalEvidence.roi.card3.desc'), border: 'border-indigo-500/20' },
+                            { title: t('clinicalEvidence.roi.card4.title'), sub: t('clinicalEvidence.roi.card4.subtitle'), desc: t('clinicalEvidence.roi.card4.desc'), border: 'border-amber-500/20', highlight: true }
+                        ].map((card, i) => (
+                            <div key={i} className={`p-6 bg-slate-900 border ${card.border} rounded-2xl relative overflow-hidden group hover:bg-slate-800 transition-colors`}>
+                                <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">{card.sub}</div>
+                                <h3 className={`text-xl font-bold text-white mb-4 ${card.highlight ? 'text-amber-400' : ''}`}>{card.title}</h3>
+                                <p className="text-sm text-gray-400 leading-relaxed whitespace-pre-line">{card.desc}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* ACTION PLAN SECTION (NEW) */}
+            <section className="py-20 px-6 bg-slate-900/40 border-t border-white/5">
+                <div className="max-w-7xl mx-auto">
+                    <div className="text-center mb-16">
+                        <h2 className="text-3xl font-black mb-4">{t('clinicalEvidence.actions.title')}</h2>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div className="p-8 rounded-3xl bg-gradient-to-br from-indigo-500/10 to-indigo-600/5 border border-indigo-500/20 text-center">
+                            <div className="w-12 h-12 rounded-full bg-indigo-500/20 flex items-center justify-center mx-auto mb-6 text-2xl">🤖</div>
+                            <h3 className="text-xl font-bold text-white mb-4">{t('clinicalEvidence.actions.action1.title')}</h3>
+                            <p className="text-sm text-gray-300 mb-2 font-medium">{t('clinicalEvidence.actions.action1.evidence')}</p>
+                            <p className="text-xs text-indigo-400 font-bold uppercase tracking-wider">{t('clinicalEvidence.actions.action1.next')}</p>
+                        </div>
+
+                        <div className="p-8 rounded-3xl bg-gradient-to-br from-cyan-500/10 to-cyan-600/5 border border-cyan-500/20 text-center">
+                            <div className="w-12 h-12 rounded-full bg-cyan-500/20 flex items-center justify-center mx-auto mb-6 text-2xl">🔗</div>
+                            <h3 className="text-xl font-bold text-white mb-4">{t('clinicalEvidence.actions.action2.title')}</h3>
+                            <p className="text-sm text-gray-300 mb-2 font-medium">{t('clinicalEvidence.actions.action2.evidence')}</p>
+                            <p className="text-xs text-cyan-400 font-bold uppercase tracking-wider">{t('clinicalEvidence.actions.action2.next')}</p>
+                        </div>
+
+                        <div className="p-8 rounded-3xl bg-gradient-to-br from-rose-500/10 to-rose-600/5 border border-rose-500/20 text-center">
+                            <div className="w-12 h-12 rounded-full bg-rose-500/20 flex items-center justify-center mx-auto mb-6 text-2xl">❤️</div>
+                            <h3 className="text-xl font-bold text-white mb-4">{t('clinicalEvidence.actions.action3.title')}</h3>
+                            <p className="text-sm text-gray-300 mb-2 font-medium">{t('clinicalEvidence.actions.action3.evidence')}</p>
+                            <p className="text-xs text-rose-400 font-bold uppercase tracking-wider">{t('clinicalEvidence.actions.action3.next')}</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Q&A SECTION (CHALLENGE RESPONSES) */}
+            <section className="py-20 px-6 border-t border-white/5 bg-slate-900/20">
+                <div className="max-w-7xl mx-auto">
+                    <div className="text-center mb-16">
+                        <h2 className="text-3xl font-black mb-4">{t('clinicalEvidence.qna.title')}</h2>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="p-6 rounded-2xl bg-slate-900 border border-white/5 hover:border-white/10 transition-colors">
+                            <h3 className="text-lg font-bold text-white mb-3 flex items-start gap-3">
+                                <span className="text-amber-500 mt-1">❓</span>
+                                {t('clinicalEvidence.qna.q1.question')}
+                            </h3>
+                            <p className="text-sm text-gray-400 leading-relaxed pl-8 border-l-2 border-amber-500/20">
+                                {t('clinicalEvidence.qna.q1.answer')}
+                            </p>
+                        </div>
+
+                        <div className="p-6 rounded-2xl bg-slate-900 border border-white/5 hover:border-white/10 transition-colors">
+                            <h3 className="text-lg font-bold text-white mb-3 flex items-start gap-3">
+                                <span className="text-emerald-500 mt-1">❓</span>
+                                {t('clinicalEvidence.qna.q2.question')}
+                            </h3>
+                            <p className="text-sm text-gray-400 leading-relaxed pl-8 border-l-2 border-emerald-500/20">
+                                {t('clinicalEvidence.qna.q2.answer')}
+                            </p>
+                        </div>
+
+                        <div className="p-6 rounded-2xl bg-slate-900 border border-white/5 hover:border-white/10 transition-colors">
+                            <h3 className="text-lg font-bold text-white mb-3 flex items-start gap-3">
+                                <span className="text-rose-500 mt-1">❓</span>
+                                {t('clinicalEvidence.qna.q3.question')}
+                            </h3>
+                            <p className="text-sm text-gray-400 leading-relaxed pl-8 border-l-2 border-rose-500/20">
+                                {t('clinicalEvidence.qna.q3.answer')}
+                            </p>
+                        </div>
+
+                        <div className="p-6 rounded-2xl bg-slate-900 border border-white/5 hover:border-white/10 transition-colors">
+                            <h3 className="text-lg font-bold text-white mb-3 flex items-start gap-3">
+                                <span className="text-cyan-500 mt-1">❓</span>
+                                {t('clinicalEvidence.qna.q4.question')}
+                            </h3>
+                            <p className="text-sm text-gray-400 leading-relaxed pl-8 border-l-2 border-cyan-500/20">
+                                {t('clinicalEvidence.qna.q4.answer')}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* PRESENTATION GUIDE & DOWNLOADS */}
+            <section className="py-20 px-6 bg-gradient-to-b from-slate-900 to-black border-y border-white/10">
+                <div className="max-w-5xl mx-auto">
+                    <div className="text-center mb-12">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-bold uppercase tracking-widest mb-4">
+                            <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
+                            Guide
+                        </div>
+                        <h2 className="text-3xl font-black text-white">{t('clinicalEvidence.presentation.title')}</h2>
+                    </div>
+
+                    <div className="space-y-6 mb-16">
+                        <div className="p-6 rounded-xl bg-white/5 border border-white/5 flex flex-col md:flex-row gap-6 items-start">
+                            <div className="w-32 shrink-0 py-1 px-3 rounded bg-amber-500/20 text-amber-500 text-xs font-bold uppercase text-center border border-amber-500/20">
+                                {t('clinicalEvidence.presentation.opening.label')}
+                            </div>
+                            <p className="text-lg text-white font-medium italic opacity-90">
+                                {t('clinicalEvidence.presentation.opening.text')}
+                            </p>
+                        </div>
+
+                        <div className="p-6 rounded-xl bg-white/5 border border-white/5 flex flex-col md:flex-row gap-6 items-start">
+                            <div className="w-32 shrink-0 py-1 px-3 rounded bg-rose-500/20 text-rose-500 text-xs font-bold uppercase text-center border border-rose-500/20">
+                                {t('clinicalEvidence.presentation.problem.label')}
+                            </div>
+                            <p className="text-lg text-white font-medium italic opacity-90">
+                                {t('clinicalEvidence.presentation.problem.text')}
+                            </p>
+                        </div>
+
+                        <div className="p-6 rounded-xl bg-white/5 border border-white/5 flex flex-col md:flex-row gap-6 items-start">
+                            <div className="w-32 shrink-0 py-1 px-3 rounded bg-emerald-500/20 text-emerald-500 text-xs font-bold uppercase text-center border border-emerald-500/20">
+                                {t('clinicalEvidence.presentation.solution.label')}
+                            </div>
+                            <p className="text-lg text-white font-medium italic opacity-90">
+                                {t('clinicalEvidence.presentation.solution.text')}
+                            </p>
+                        </div>
+
+                        <div className="p-6 rounded-xl bg-indigo-600/20 border border-indigo-500/30 flex flex-col md:flex-row gap-6 items-start">
+                            <div className="w-32 shrink-0 py-1 px-3 rounded bg-indigo-500 text-white text-xs font-bold uppercase text-center border border-indigo-400">
+                                {t('clinicalEvidence.presentation.cta.label')}
+                            </div>
+                            <p className="text-lg text-white font-bold italic">
+                                {t('clinicalEvidence.presentation.cta.text')}
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* DOWNLOAD OPTIONS */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 border-t border-white/10 pt-12">
+                        <button className="p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all group flex items-center justify-center gap-3">
+                            <span className="p-2 rounded-lg bg-blue-500/20 text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-colors">📄</span>
+                            <span className="text-sm font-bold text-gray-300 group-hover:text-white">{t('clinicalEvidence.download.report')}</span>
+                        </button>
+                        <button className="p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all group flex items-center justify-center gap-3">
+                            <span className="p-2 rounded-lg bg-orange-500/20 text-orange-400 group-hover:bg-orange-500 group-hover:text-white transition-colors">📊</span>
+                            <span className="text-sm font-bold text-gray-300 group-hover:text-white">{t('clinicalEvidence.download.slides')}</span>
+                        </button>
+                        <button className="p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all group flex items-center justify-center gap-3">
+                            <span className="p-2 rounded-lg bg-red-500/20 text-red-400 group-hover:bg-red-500 group-hover:text-white transition-colors">📑</span>
+                            <span className="text-sm font-bold text-gray-300 group-hover:text-white">{t('clinicalEvidence.download.summary')}</span>
+                        </button>
                     </div>
                 </div>
             </section>
