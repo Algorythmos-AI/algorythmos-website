@@ -1739,5 +1739,22 @@
   "clinicalEvidence.footer.methodology.desc": "Ce rapport agrège des sources primaires vérifiables incluant jugements de la Cour Suprême, ordonnances de la Cour Fédérale, recherches d'autorités statutaires du gouvernement australien (Commission de Productivité) et journaux évalués par des pairs avec DOIs.",
   "clinicalEvidence.footer.verification.title": "Statut de Vérification",
   "clinicalEvidence.footer.verification.badge": "✓ PREUVES VÉRIFIÉES",
-  "clinicalEvidence.footer.verification.updated": "Dernière Mise à Jour : 28 Janvier 2026"
+  "clinicalEvidence.footer.verification.updated": "Dernière Mise à Jour : 28 Janvier 2026",
+  "clinicalEvidence.discoveries.title": "Découvertes Clés",
+  "clinicalEvidence.discoveries.card1.badge": "Essai par Pairs (2026)",
+  "clinicalEvidence.discoveries.card1.title": "Essai Gold Coast",
+  "clinicalEvidence.discoveries.card1.statLabel": "Acceptation",
+  "clinicalEvidence.discoveries.card1.desc": "Essai clinique validé. Hallucinations notées nécessitant une validation humaine.",
+  "clinicalEvidence.discoveries.card2.badge": "Impact Patient",
+  "clinicalEvidence.discoveries.card2.title": "Rejet de Référence",
+  "clinicalEvidence.discoveries.card2.statLabel": "Taux de Rejet",
+  "clinicalEvidence.discoveries.card2.desc": "Impact quantifié de la mauvaise interopérabilité sur l'accès aux soins.",
+  "clinicalEvidence.discoveries.card3.badge": "Interopérabilité",
+  "clinicalEvidence.discoveries.card3.title": "Dépendance Fax",
+  "clinicalEvidence.discoveries.card3.statLabel": "Utilisent le Fax",
+  "clinicalEvidence.discoveries.card3.desc": "Enquête australienne confirmant la persistance des méthodes obsolètes.",
+  "clinicalEvidence.discoveries.card4.badge": "Efficacité Système",
+  "clinicalEvidence.discoveries.card4.title": "Gaspillage Documentaire",
+  "clinicalEvidence.discoveries.card4.statLabel": "Champs Inutilisés",
+  "clinicalEvidence.discoveries.card4.desc": "32% des champs obligatoires ont 0% d'usage, créant une fatigue sans valeur clinique."
 }

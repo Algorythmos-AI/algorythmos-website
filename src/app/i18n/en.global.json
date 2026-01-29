@@ -1783,5 +1783,22 @@
   "clinicalEvidence.footer.methodology.desc": "This report aggregates verifiable primary sources including Supreme Court judgments, Federal Court orders, Australian Government statutory authority research (Productivity Commission), and peer-reviewed journals with DOIs.",
   "clinicalEvidence.footer.verification.title": "Verification Status",
   "clinicalEvidence.footer.verification.badge": "✓ VERIFIED EVIDENCE",
-  "clinicalEvidence.footer.verification.updated": "Last Updated: 28 January 2026"
+  "clinicalEvidence.footer.verification.updated": "Last Updated: 28 January 2026",
+  "clinicalEvidence.discoveries.title": "Key Discoveries",
+  "clinicalEvidence.discoveries.card1.badge": "Peer-Reviewed (2026)",
+  "clinicalEvidence.discoveries.card1.title": "Gold Coast Trial",
+  "clinicalEvidence.discoveries.card1.statLabel": "Acceptance",
+  "clinicalEvidence.discoveries.card1.desc": "Validated clinical trial. Hallucinations noted in unedited output requiring human-in-the-loop.",
+  "clinicalEvidence.discoveries.card2.badge": "Patient Impact",
+  "clinicalEvidence.discoveries.card2.title": "Referral Rejection",
+  "clinicalEvidence.discoveries.card2.statLabel": "Rejection Rate",
+  "clinicalEvidence.discoveries.card2.desc": "Quantified impact of poor interoperability and documentation quality on patient access.",
+  "clinicalEvidence.discoveries.card3.badge": "Interoperability",
+  "clinicalEvidence.discoveries.card3.title": "Fax & Post Reliance",
+  "clinicalEvidence.discoveries.card3.statLabel": "Still Use Fax",
+  "clinicalEvidence.discoveries.card3.desc": "Australian survey confirms persistence of legacy communication methods despite digital goals.",
+  "clinicalEvidence.discoveries.card4.badge": "System Efficiency",
+  "clinicalEvidence.discoveries.card4.title": "Documentation Waste",
+  "clinicalEvidence.discoveries.card4.statLabel": "Unused Fields",
+  "clinicalEvidence.discoveries.card4.desc": "32% of mandatory form fields have 0% usage, contributing to 'click fatigue' without clinical value."
 }
