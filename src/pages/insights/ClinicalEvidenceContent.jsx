@@ -201,6 +201,66 @@ const ClinicalEvidenceContent = () => {
                 </div>
             </section >
 
+            {/* KEY DISCOVERIES SECTION */}
+            <section className="py-20 px-6 border-t border-white/5 bg-slate-900/40">
+                <div className="max-w-7xl mx-auto">
+                    <div className="flex items-center gap-3 mb-10">
+                        <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
+                        <h2 className="text-sm font-bold text-cyan-400 uppercase tracking-widest">{t('clinicalEvidence.discoveries.title')}</h2>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {/* 1. Gold Coast Trial */}
+                        <div className="p-6 rounded-2xl bg-slate-900 border border-indigo-500/30 hover:border-indigo-500/60 transition-colors group">
+                            <div className="mb-4 flex justify-between items-start">
+                                <span className="text-indigo-400 text-xs font-bold uppercase tracking-wider border border-indigo-500/20 px-2 py-1 rounded bg-indigo-500/10">{t('clinicalEvidence.discoveries.card1.badge')}</span>
+                            </div>
+                            <h3 className="text-xl font-bold text-white mb-2 group-hover:text-indigo-300 transition-colors">{t('clinicalEvidence.discoveries.card1.title')}</h3>
+                            <div className="text-3xl font-black text-white mb-2">58% <span className="text-sm font-normal text-gray-400">{t('clinicalEvidence.discoveries.card1.statLabel')}</span></div>
+                            <p className="text-sm text-gray-400 leading-relaxed">
+                                {t('clinicalEvidence.discoveries.card1.desc')}
+                            </p>
+                        </div>
+
+                        {/* 2. Referral Rejection */}
+                        <div className="p-6 rounded-2xl bg-slate-900 border border-rose-500/30 hover:border-rose-500/60 transition-colors group">
+                            <div className="mb-4 flex justify-between items-start">
+                                <span className="text-rose-400 text-xs font-bold uppercase tracking-wider border border-rose-500/20 px-2 py-1 rounded bg-rose-500/10">{t('clinicalEvidence.discoveries.card2.badge')}</span>
+                            </div>
+                            <h3 className="text-xl font-bold text-white mb-2 group-hover:text-rose-300 transition-colors">{t('clinicalEvidence.discoveries.card2.title')}</h3>
+                            <div className="text-3xl font-black text-white mb-2">10% <span className="text-sm font-normal text-gray-400">{t('clinicalEvidence.discoveries.card2.statLabel')}</span></div>
+                            <p className="text-sm text-gray-400 leading-relaxed">
+                                {t('clinicalEvidence.discoveries.card2.desc')}
+                            </p>
+                        </div>
+
+                        {/* 3. Fax/Post Usage */}
+                        <div className="p-6 rounded-2xl bg-slate-900 border border-amber-500/30 hover:border-amber-500/60 transition-colors group">
+                            <div className="mb-4 flex justify-between items-start">
+                                <span className="text-amber-400 text-xs font-bold uppercase tracking-wider border border-amber-500/20 px-2 py-1 rounded bg-amber-500/10">{t('clinicalEvidence.discoveries.card3.badge')}</span>
+                            </div>
+                            <h3 className="text-xl font-bold text-white mb-2 group-hover:text-amber-300 transition-colors">{t('clinicalEvidence.discoveries.card3.title')}</h3>
+                            <div className="text-3xl font-black text-white mb-2">80% <span className="text-sm font-normal text-gray-400">{t('clinicalEvidence.discoveries.card3.statLabel')}</span></div>
+                            <p className="text-sm text-gray-400 leading-relaxed">
+                                {t('clinicalEvidence.discoveries.card3.desc')}
+                            </p>
+                        </div>
+
+                        {/* 4. Documentation Waste */}
+                        <div className="p-6 rounded-2xl bg-slate-900 border border-slate-500/30 hover:border-slate-500/60 transition-colors group">
+                            <div className="mb-4 flex justify-between items-start">
+                                <span className="text-slate-400 text-xs font-bold uppercase tracking-wider border border-slate-500/20 px-2 py-1 rounded bg-slate-500/10">{t('clinicalEvidence.discoveries.card4.badge')}</span>
+                            </div>
+                            <h3 className="text-xl font-bold text-white mb-2 group-hover:text-slate-300 transition-colors">{t('clinicalEvidence.discoveries.card4.title')}</h3>
+                            <div className="text-3xl font-black text-white mb-2">32% <span className="text-sm font-normal text-gray-400">{t('clinicalEvidence.discoveries.card4.statLabel')}</span></div>
+                            <p className="text-sm text-gray-400 leading-relaxed">
+                                {t('clinicalEvidence.discoveries.card4.desc')}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             {/* SECTION 1: LEGAL LIABILITY */}
             < section className="py-20 px-6 border-t border-white/5 bg-slate-900/20" >
                 <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
