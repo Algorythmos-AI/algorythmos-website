@@ -1,5 +1,5 @@
 import React, { Suspense, lazy, useEffect, useState } from 'react';
-import { Bot, ScanText, BarChart3, Globe, Workflow, ShieldCheck, Compass, CheckCircle, MousePointer2, Star } from 'lucide-react';
+import { Bot, ScanText, BarChart3, Globe, Workflow, ShieldCheck, Compass, CheckCircle, MousePointer2, Star, Rocket, Sparkles } from 'lucide-react';
 import { useI18n } from '../../app/i18n/I18nContext.jsx';
 import { RegionHelmet } from '../../app/seo';
 import SeoBreadcrumbs from '../../app/seo/SeoBreadcrumbs.jsx';
