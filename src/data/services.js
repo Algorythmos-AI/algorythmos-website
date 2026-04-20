@@ -1,5 +1,5 @@
 // src/data/services.js
-import { Bot, FileText, BarChart2, Layers, Globe } from "lucide-react";
+import { Bot, ScanText, BarChart3, Workflow, Globe } from "lucide-react";
 
 export const servicesList = [
   {
@@ -65,7 +65,7 @@ export const servicesList = [
     tagline: "OCR + NLP pipelines for invoices, POs, contracts, and reports.",
     meta:
       "Extract accurate, structured data from unstructured documents with validation and human-in-the-loop for edge cases.",
-    icon: FileText,
+    icon: ScanText,
     heroPoints: [
       "Enterprise OCR + layout parsing",
       "Domain-tuned extraction with rules & ML",
@@ -105,7 +105,7 @@ export const servicesList = [
     tagline: "Unified metrics and AI-assisted insights on modern SQL stacks.",
     meta:
       "Modeled data + executive-ready dashboards with alerts, RBAC, and self-serve analytics.",
-    icon: BarChart2,
+    icon: BarChart3,
     heroPoints: ["Modeled metrics & dimensions", "Fast, reliable dashboards", "Proactive alerts & anomaly detection"],
     sections: [
       {
@@ -134,7 +134,7 @@ export const servicesList = [
     tagline: "Productionize AI with CI/CD (Continuous Integration/Continuous Delivery) on Kubernetes and Docker, automated evaluations, observability, and safe rollbacks—with governance and DevSecOps (Development, Security & Operations) baked in.",
     meta:
       "Productionize AI with CI/CD (Continuous Integration/Continuous Delivery) on Kubernetes and Docker, automated evaluations, observability, and safe rollbacks—with governance and DevSecOps (Development, Security & Operations) baked in.",
-    icon: Layers,
+    icon: Workflow,
     heroPoints: ["Model registry & packaging", "Automated evals & drift monitoring", "Rollbacks and canaries"],
     sections: [
       {
