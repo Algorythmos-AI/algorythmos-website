@@ -1,7 +1,7 @@
 import React from "react";
 import { MeshHero, ProseContent, GlassCard } from "../../../components/ui/blog/BlogRefactorSystem";
 import { BlogChart } from "../../../components/ui/blog/BlogChart";
-import { BrainCircuit, databases, Cpu, ArrowRight } from "lucide-react";
+import { BrainCircuit, Cpu, ArrowRight, Target, Map, Wrench, Zap, RefreshCw } from "lucide-react";
 
 export const AgenticAiLayout = ({ t, post }) => {
     // 1. Radar Chart: Reasoning Engine Comparison
@@ -31,11 +31,11 @@ export const AgenticAiLayout = ({ t, post }) => {
 
     // 2. Reasoning Loop Grid Data
     const loops = [
-        { title: "Goal Setting", desc: "Decomposing user intent into sub-tasks.", icon: "🎯" },
-        { title: "Planning", desc: "Selecting the optimal execution path.", icon: "🗺️" },
-        { title: "Tool Selection", desc: "Identifying required APIs or Databases.", icon: "🔧" },
-        { title: "Execution", desc: "Running code or queries in a sandbox.", icon: "⚡" },
-        { title: "Self-Correction", desc: "Analyzing output and retrying if needed.", icon: "🔄" }
+        { title: "Goal Setting", desc: "Decomposing user intent into sub-tasks.", icon: Target },
+        { title: "Planning", desc: "Selecting the optimal execution path.", icon: Map },
+        { title: "Tool Selection", desc: "Identifying required APIs or Databases.", icon: Wrench },
+        { title: "Execution", desc: "Running code or queries in a sandbox.", icon: Zap },
+        { title: "Self-Correction", desc: "Analyzing output and retrying if needed.", icon: RefreshCw }
     ];
 
     return (
@@ -77,8 +77,8 @@ export const AgenticAiLayout = ({ t, post }) => {
                         {loops.map((step, i) => (
                             <div key={i} className={`p-6 rounded-2xl border border-white/5 bg-slate-900/40 backdrop-blur-md hover:border-violet-500/30 transition-all duration-300 ${i === 4 ? "md:col-span-2" : ""}`}>
                                 <div className="flex items-center gap-4 mb-3">
-                                    <div className="h-10 w-10 rounded-full bg-violet-500/10 flex items-center justify-center text-xl">
-                                        {step.icon}
+                                    <div className="h-10 w-10 rounded-full bg-violet-500/10 flex items-center justify-center">
+                                        <step.icon size={20} strokeWidth={1.5} aria-hidden="true" className="text-violet-400" />
                                     </div>
                                     <h3 className="font-bold text-white text-lg">{i + 1}. {step.title}</h3>
                                 </div>

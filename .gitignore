@@ -25,3 +25,15 @@ dist-ssr
 
 /video files/
 .vercel
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Test artifacts
+coverage/
+test-results/
+playwright-report/
+.cache/
+.playwright-mcp/

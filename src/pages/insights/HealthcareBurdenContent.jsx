@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import { Zap } from "lucide-react";
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -862,7 +863,7 @@ const HealthcareBurdenContent = () => {
                             <div className="flex justify-between items-end mb-2">
                                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('caseStudyDetail.studies.healthcare-burden.nursing.medicationTurnaround')}</p>
                                 <span className="text-xs font-bold text-emerald-500 bg-emerald-500/10 px-2 py-1 rounded border border-emerald-500/20">
-                                    ⚡ {t('caseStudyDetail.studies.healthcare-burden.nursing.emrFaster')}
+                                    <Zap size={12} strokeWidth={1.5} aria-hidden="true" className="inline" /> {t('caseStudyDetail.studies.healthcare-burden.nursing.emrFaster')}
                                 </span>
                             </div>
                             <div className="h-32">
