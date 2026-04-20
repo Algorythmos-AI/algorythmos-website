@@ -100,13 +100,16 @@ PHASE 6 — Re-run audit against the Vercel preview
 Repeat Phase 2 with BASE_URL set to the Vercel preview URL.
 
 Vercel Deployment Protection is enabled on this project, so anonymous
-GET returns 401. Bypass it with the automation secret:
+GET returns 401. Bypass it with the automation secret that lives in
+the root `.env` as `VERCEL_AUTOMATION_BYPASS_SECRET` (gitignored).
 
-  export SECRET="$VERCEL_AUTOMATION_BYPASS_SECRET"   # repo secret
-  FIRST_URL="$PREVIEW_URL/?x-vercel-protection-bypass=$SECRET&x-vercel-set-bypass-cookie=true"
+Load it into the shell without echoing it, then build the first URL:
+
+  set -a; . ./.env; set +a
+  FIRST_URL="$PREVIEW_URL/?x-vercel-protection-bypass=$VERCEL_AUTOMATION_BYPASS_SECRET&x-vercel-set-bypass-cookie=true"
 
 Navigate Playwright to FIRST_URL once — the response sets a
-_vercel_jwt cookie that covers the rest of the session, so
+`_vercel_jwt` cookie that covers the rest of the session, so
 subsequent navigations use the plain URL (no query-string tax).
 
   The set-bypass-cookie=true part matters. Without it you would
