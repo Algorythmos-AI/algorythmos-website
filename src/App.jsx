@@ -53,6 +53,7 @@ const AiWebsitesPage = lazy(() => import('./pages/services/services/AiWebsitesPa
 const QuantumAboutPage = lazy(() => import('./pages/contact/QuantumAboutPage.jsx'));
 const QuantumContactPage = lazy(() => import('./pages/contact/QuantumContactPage.jsx'));
 const PricingPage = lazy(() => import('./pages/contact/PricingPage.jsx'));
+const CareersPage = lazy(() => import('./pages/CareersPage.jsx'));
 
 // Insights
 const CaseStudiesPage = lazy(() => import('./pages/insights/CaseStudiesPage.jsx'));
@@ -145,7 +146,7 @@ const ORGANISATION_SCHEMA = {
 const SITE_NAVIGATION_SCHEMA = {
   "@context": "https://schema.org",
   "@type": "SiteNavigationElement",
-  "name": ["Home", "Services", "Pricing", "About", "Case Studies", "Blog", "Contact"],
+  "name": ["Home", "Services", "Pricing", "About", "Case Studies", "Blog", "Contact", "Careers"],
   "url": [
     "https://algorythmos.com/",
     "https://algorythmos.com/services",
@@ -153,7 +154,8 @@ const SITE_NAVIGATION_SCHEMA = {
     "https://algorythmos.com/about",
     "https://algorythmos.com/case-studies",
     "https://algorythmos.com/blog",
-    "https://algorythmos.com/contact"
+    "https://algorythmos.com/contact",
+    "https://algorythmos.com/careers"
   ]
 };
 
@@ -194,6 +196,7 @@ function App() {
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/blog/:slug" element={<BlogDetailPage />} />
           <Route path="/pricing" element={<PricingPage />} />
+          <Route path="/careers" element={<CareersPage />} />
           <Route path="/privacy" element={<PrivacyPolicyPage />} />
           <Route path="/terms" element={<TermsOfServicePage />} />
 
@@ -215,6 +218,7 @@ function App() {
           <Route path="/au-en/case-studies/:slug" element={<RegionLayout region="AU"><CaseStudyPage /></RegionLayout>} />
           <Route path="/au-en/blog" element={<RegionLayout region="AU"><BlogPage /></RegionLayout>} />
           <Route path="/au-en/blog/:slug" element={<RegionLayout region="AU"><BlogDetailPage /></RegionLayout>} />
+          <Route path="/au-en/careers" element={<RegionLayout region="AU"><CareersPage /></RegionLayout>} />
           <Route path="/au-en/privacy" element={<RegionLayout region="AU"><PrivacyPolicyPage /></RegionLayout>} />
           <Route path="/au-en/terms" element={<RegionLayout region="AU"><TermsOfServicePage /></RegionLayout>} />
 
@@ -236,6 +240,7 @@ function App() {
           <Route path="/fr-fr/case-studies/:slug" element={<RegionLayout region="FR"><CaseStudyPage /></RegionLayout>} />
           <Route path="/fr-fr/blog" element={<RegionLayout region="FR"><BlogPage /></RegionLayout>} />
           <Route path="/fr-fr/blog/:slug" element={<RegionLayout region="FR"><BlogDetailPage /></RegionLayout>} />
+          <Route path="/fr-fr/careers" element={<RegionLayout region="FR"><CareersPage /></RegionLayout>} />
           <Route path="/fr-fr/privacy" element={<RegionLayout region="FR"><PrivacyPolicyPage /></RegionLayout>} />
           <Route path="/fr-fr/terms" element={<RegionLayout region="FR"><TermsOfServicePage /></RegionLayout>} />
 

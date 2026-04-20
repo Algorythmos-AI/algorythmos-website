@@ -1,5 +1,5 @@
 import React, { Suspense, lazy, useEffect, useState } from 'react';
-import { Brain, Rocket, Eye, Globe, Shield, Sparkles, CheckCircle, MousePointer2, Star } from 'lucide-react';
+import { Bot, ScanText, BarChart3, Globe, Workflow, ShieldCheck, Compass, CheckCircle, MousePointer2, Star, Rocket, Sparkles } from 'lucide-react';
 import { useI18n } from '../../app/i18n/I18nContext.jsx';
 import { RegionHelmet } from '../../app/seo';
 import SeoBreadcrumbs from '../../app/seo/SeoBreadcrumbs.jsx';
@@ -34,43 +34,43 @@ const AdvancedBusinessWebsite = () => {
 
   const features = [
     {
-      icon: <Brain className="w-8 h-8" />,
+      icon: <Bot className="w-8 h-8" strokeWidth={1.5} aria-hidden="true" />,
       title: t("home.features.0.title"),
       description: t("home.features.0.description"),
       gradient: "from-violet-500 to-indigo-500"
     },
     {
-      icon: <Rocket className="w-8 h-8" />,
+      icon: <ScanText className="w-8 h-8" strokeWidth={1.5} aria-hidden="true" />,
       title: t("home.features.1.title"),
       description: t("home.features.1.description"),
       gradient: "from-blue-500 to-cyan-500"
     },
     {
-      icon: <Eye className="w-8 h-8" />,
+      icon: <BarChart3 className="w-8 h-8" strokeWidth={1.5} aria-hidden="true" />,
       title: t("home.features.2.title"),
       description: t("home.features.2.description"),
       gradient: "from-emerald-500 to-teal-500"
     },
     {
-      icon: <Globe className="w-8 h-8" />,
+      icon: <Workflow className="w-8 h-8" strokeWidth={1.5} aria-hidden="true" />,
       title: t("home.features.3.title"),
       description: t("home.features.3.description"),
       gradient: "from-orange-500 to-red-500"
     },
     {
-      icon: <Shield className="w-8 h-8" />,
+      icon: <ShieldCheck className="w-8 h-8" strokeWidth={1.5} aria-hidden="true" />,
       title: t("home.features.4.title"),
       description: t("home.features.4.description"),
       gradient: "from-indigo-500 to-purple-500"
     },
     {
-      icon: <Sparkles className="w-8 h-8" />,
+      icon: <Compass className="w-8 h-8" strokeWidth={1.5} aria-hidden="true" />,
       title: t("home.features.5.title"),
       description: t("home.features.5.description"),
       gradient: "from-pink-500 to-rose-500"
     },
     {
-      icon: <Globe className="w-8 h-8" />,
+      icon: <Globe className="w-8 h-8" strokeWidth={1.5} aria-hidden="true" />,
       title: t("home.features.6.title"),
       description: t("home.features.6.description"),
       gradient: "from-emerald-500 to-cyan-500"
@@ -83,21 +83,21 @@ const AdvancedBusinessWebsite = () => {
       role: t("home.testimonials.0.role"),
       content: t("home.testimonials.0.content"),
       rating: 5,
-      avatar: "🧬"
+      avatar: "SC"
     },
     {
       name: t("home.testimonials.1.name"),
       role: t("home.testimonials.1.role"),
       content: t("home.testimonials.1.content"),
       rating: 5,
-      avatar: "🚀"
+      avatar: "MR"
     },
     {
       name: t("home.testimonials.2.name"),
       role: t("home.testimonials.2.role"),
       content: t("home.testimonials.2.content"),
       rating: 5,
-      avatar: "⚡"
+      avatar: "JT"
     }
   ];
 
