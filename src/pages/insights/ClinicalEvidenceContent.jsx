@@ -15,6 +15,7 @@ import {
 import { Bar, Doughnut, Line } from "react-chartjs-2";
 import { useI18n } from "../../app/i18n/I18nContext";
 import { Helmet } from "react-helmet-async";
+import { Scale, GraduationCap, Landmark, Ban, Bot, Link2, Heart } from "lucide-react";
 
 // Register ChartJS
 ChartJS.register(
@@ -365,28 +366,28 @@ const ClinicalEvidenceContent = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                         <div>
                             <div className="flex items-center gap-2 mb-2 text-amber-500">
-                                <span className="text-xl">⚖️</span>
+                                <Scale size={20} strokeWidth={1.5} aria-hidden="true" />
                                 <h3 className="font-bold text-sm uppercase">{t('clinicalEvidence.standards.court.title')}</h3>
                             </div>
                             <p className="text-xs text-gray-500 leading-relaxed">{t('clinicalEvidence.standards.court.desc')}</p>
                         </div>
                         <div>
                             <div className="flex items-center gap-2 mb-2 text-emerald-500">
-                                <span className="text-xl">🎓</span>
+                                <GraduationCap size={20} strokeWidth={1.5} aria-hidden="true" />
                                 <h3 className="font-bold text-sm uppercase">{t('clinicalEvidence.standards.academic.title')}</h3>
                             </div>
                             <p className="text-xs text-gray-500 leading-relaxed">{t('clinicalEvidence.standards.academic.desc')}</p>
                         </div>
                         <div>
                             <div className="flex items-center gap-2 mb-2 text-blue-500">
-                                <span className="text-xl">🏛️</span>
+                                <Landmark size={20} strokeWidth={1.5} aria-hidden="true" />
                                 <h3 className="font-bold text-sm uppercase">{t('clinicalEvidence.standards.govt.title')}</h3>
                             </div>
                             <p className="text-xs text-gray-500 leading-relaxed">{t('clinicalEvidence.standards.govt.desc')}</p>
                         </div>
                         <div>
                             <div className="flex items-center gap-2 mb-2 text-red-500">
-                                <span className="text-xl">🚫</span>
+                                <Ban size={20} strokeWidth={1.5} aria-hidden="true" />
                                 <h3 className="font-bold text-sm uppercase">{t('clinicalEvidence.standards.rejected.title')}</h3>
                             </div>
                             <p className="text-xs text-gray-500 leading-relaxed">{t('clinicalEvidence.standards.rejected.desc')}</p>
@@ -429,21 +430,27 @@ const ClinicalEvidenceContent = () => {
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         <div className="p-8 rounded-3xl bg-gradient-to-br from-indigo-500/10 to-indigo-600/5 border border-indigo-500/20 text-center">
-                            <div className="w-12 h-12 rounded-full bg-indigo-500/20 flex items-center justify-center mx-auto mb-6 text-2xl">🤖</div>
+                            <div className="w-12 h-12 rounded-full bg-indigo-500/20 flex items-center justify-center mx-auto mb-6">
+                                <Bot size={24} strokeWidth={1.5} aria-hidden="true" className="text-indigo-400" />
+                            </div>
                             <h3 className="text-xl font-bold text-white mb-4">{t('clinicalEvidence.actions.action1.title')}</h3>
                             <p className="text-sm text-gray-300 mb-2 font-medium">{t('clinicalEvidence.actions.action1.evidence')}</p>
                             <p className="text-xs text-indigo-400 font-bold uppercase tracking-wider">{t('clinicalEvidence.actions.action1.next')}</p>
                         </div>
 
                         <div className="p-8 rounded-3xl bg-gradient-to-br from-cyan-500/10 to-cyan-600/5 border border-cyan-500/20 text-center">
-                            <div className="w-12 h-12 rounded-full bg-cyan-500/20 flex items-center justify-center mx-auto mb-6 text-2xl">🔗</div>
+                            <div className="w-12 h-12 rounded-full bg-cyan-500/20 flex items-center justify-center mx-auto mb-6">
+                                <Link2 size={24} strokeWidth={1.5} aria-hidden="true" className="text-cyan-400" />
+                            </div>
                             <h3 className="text-xl font-bold text-white mb-4">{t('clinicalEvidence.actions.action2.title')}</h3>
                             <p className="text-sm text-gray-300 mb-2 font-medium">{t('clinicalEvidence.actions.action2.evidence')}</p>
                             <p className="text-xs text-cyan-400 font-bold uppercase tracking-wider">{t('clinicalEvidence.actions.action2.next')}</p>
                         </div>
 
                         <div className="p-8 rounded-3xl bg-gradient-to-br from-rose-500/10 to-rose-600/5 border border-rose-500/20 text-center">
-                            <div className="w-12 h-12 rounded-full bg-rose-500/20 flex items-center justify-center mx-auto mb-6 text-2xl">❤️</div>
+                            <div className="w-12 h-12 rounded-full bg-rose-500/20 flex items-center justify-center mx-auto mb-6">
+                                <Heart size={24} strokeWidth={1.5} aria-hidden="true" className="text-rose-400" />
+                            </div>
                             <h3 className="text-xl font-bold text-white mb-4">{t('clinicalEvidence.actions.action3.title')}</h3>
                             <p className="text-sm text-gray-300 mb-2 font-medium">{t('clinicalEvidence.actions.action3.evidence')}</p>
                             <p className="text-xs text-rose-400 font-bold uppercase tracking-wider">{t('clinicalEvidence.actions.action3.next')}</p>
@@ -1161,7 +1168,7 @@ const ClinicalEvidenceContent = () => {
                 <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                     <div>
                         <h2 className="text-3xl font-bold mb-6 flex items-center gap-3">
-                            <span className="text-amber-500">⚖️</span>
+                            <Scale size={28} strokeWidth={1.5} aria-hidden="true" className="text-amber-500" />
                             {t('clinicalEvidence.legal.title')}
                         </h2>
                         <div className="space-y-8">

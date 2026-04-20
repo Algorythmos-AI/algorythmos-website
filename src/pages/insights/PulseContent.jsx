@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { Mic } from "lucide-react";
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -192,7 +193,9 @@ const PulseContent = ({ t, getRegionPath }) => {
                 <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
                     {/* Scribe Tax */}
                     <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 p-8 rounded-3xl hover:border-violet-500/50 hover:shadow-[0_0_20px_rgba(124,58,237,0.2)] transition-all duration-300 group">
-                        <div className="h-12 w-12 bg-rose-500/10 rounded-xl flex items-center justify-center text-2xl mb-6">🎙️</div>
+                        <div className="h-12 w-12 bg-rose-500/10 rounded-xl flex items-center justify-center mb-6">
+                            <Mic size={24} strokeWidth={1.5} aria-hidden="true" className="text-rose-400" />
+                        </div>
                         <h4 className="text-xl font-extrabold mb-3">
                             {t("blogDetail.posts.pulse-clinical-ai.diagnosis.scribe.title")}
                         </h4>
