@@ -8,6 +8,7 @@ import {
   BookOpen,
   FileText,
   Mail,
+  UserPlus,
   ExternalLink,
   Globe,
   Book,
@@ -46,6 +47,7 @@ const MobileMenu = ({ isOpen, onClose }) => {
     { key: 'nav.blog', path: getRegionPath('/blog'), icon: BookOpen },
     { key: 'nav.caseStudies', path: getRegionPath('/case-studies'), icon: FileText },
     { key: 'nav.contact', path: getRegionPath('/contact'), icon: Mail },
+    { key: 'nav.careers', path: getRegionPath('/careers'), icon: UserPlus },
   ];
 
   // Ecosystem links
