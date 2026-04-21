@@ -1,7 +1,7 @@
 import React from "react";
 import { MeshHero, ProseContent, GlassCard } from "../../../components/ui/blog/BlogRefactorSystem";
 
-export const StandardLayout = ({ t, post }) => {
+export const StandardLayout = ({ t: _t, post }) => {
     return (
         <div className="min-h-screen bg-[#020617] text-white">
             <MeshHero
