@@ -84,12 +84,13 @@ const NavBar = () => {
   // Close menus on route change or escape
   useEffect(() => setIsMenuOpen(false), [region]);
   useEffect(() => {
+    // Only react to Escape, and bail early on every other key so we
+    // don't queue a macro-task for, say, typing in a form field.
     const handleEscape = (e) => {
-      if (e.key === 'Escape') {
-        setIsMenuOpen(false);
-        setIsEcosystemOpen(false);
-        setActiveMega(null);
-      }
+      if (e.key !== 'Escape') return;
+      setIsMenuOpen(false);
+      setIsEcosystemOpen(false);
+      setActiveMega(null);
     };
     window.addEventListener('keydown', handleEscape);
     return () => window.removeEventListener('keydown', handleEscape);
