@@ -29,6 +29,7 @@ import GlobalCtaTracker from './components/common/GlobalCtaTracker.jsx';
 import PageLoader from './components/common/PageLoader.jsx';
 import RegionLayout from './pages/regions/RegionLayout.jsx';
 import { GeoRouter } from './components/routing/GeoRouter.jsx';
+import ScrollToTop from './components/routing/ScrollToTop.jsx';
 import { SeoHead } from './components/seo/SeoHead.jsx';
 import { AuthProvider } from './app/auth/AuthContext.jsx';
 
@@ -163,6 +164,7 @@ function App() {
   return (
     <AuthProvider>
       <GeoRouter />
+      <ScrollToTop />
       <SeoHead />
       <Helmet>
         <script type="application/ld+json">
