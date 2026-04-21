@@ -161,6 +161,12 @@ const CareersPage = () => {
                 {t('careers.roles.noRoles.cta')}
               </a>
             </div>
+            <p className="text-sm text-gray-500 mt-6">
+              {t('careers.roles.noRoles.emailFallback')}{' '}
+              <a href="mailto:careers@algorythmos.com" className="text-violet-400 hover:text-violet-300 underline underline-offset-2">
+                careers@algorythmos.com
+              </a>
+            </p>
           </div>
         </div>
       </section>

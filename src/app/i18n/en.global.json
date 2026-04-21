@@ -1901,5 +1901,6 @@
   "careers.roles.noRoles.linkedinNote": "We post every new opening on LinkedIn first. Follow our company page so you don't miss the next role.",
   "careers.roles.noRoles.ctaLinkedin": "Follow us on LinkedIn",
   "careers.roles.noRoles.cta": "Join our talent network",
+  "careers.roles.noRoles.emailFallback": "Not on LinkedIn? Email us at",
   "careers.eeo": "Algorythmos is an equal opportunity employer. We welcome applicants regardless of race, religion, colour, national origin, gender, sexual orientation, age, marital status, veteran status, or disability status. We are committed to building a team that reflects the diversity of the organisations we serve."
 }

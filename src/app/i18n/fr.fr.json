@@ -1857,6 +1857,7 @@
   "careers.roles.noRoles.linkedinNote": "Nous publions chaque nouvelle ouverture d'abord sur LinkedIn. Suivez notre page entreprise pour ne manquer aucun poste.",
   "careers.roles.noRoles.ctaLinkedin": "Suivez-nous sur LinkedIn",
   "careers.roles.noRoles.cta": "Rejoindre notre réseau de talents",
+  "careers.roles.noRoles.emailFallback": "Pas sur LinkedIn ? Écrivez-nous à",
   "careers.eeo": "Algorythmos est un employeur qui prône l'égalité des chances. Nous accueillons les candidatures sans distinction de race, religion, couleur, origine nationale, genre, orientation sexuelle, âge, statut marital, statut d'ancien combattant ou handicap. Nous nous engageons à construire une équipe qui reflète la diversité des organisations que nous servons.",
   "blog.posts.10.title": "Pulse : Playbook de mise en œuvre de l'IA clinique pour la santé australienne",
   "blog.posts.10.snippet": "Comment les hôpitaux peuvent résoudre le piège de la capacité avec des modules d'IA ciblés — sans remplacer les DME hérités. Une feuille de route basée sur les données pour récupérer plus de 3 000 ETP médecins de la fatigue administrative.",
