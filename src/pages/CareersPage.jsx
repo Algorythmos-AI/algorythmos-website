@@ -41,6 +41,7 @@ const locations = [
 ];
 
 const LINKEDIN_URL = 'https://www.linkedin.com/company/algorythmos/';
+const LINKEDIN_DM_URL = 'https://www.linkedin.com/messaging/compose/?recipient=samkalaliya';
 
 const CareersPage = () => {
   const { t, region } = useI18n();
@@ -151,7 +152,9 @@ const CareersPage = () => {
                 {t('careers.roles.noRoles.ctaLinkedin')}
               </a>
               <a
-                href="mailto:careers@algorythmos.com?subject=Talent%20Network%20—%20Expression%20of%20Interest"
+                href={LINKEDIN_DM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] text-white font-semibold transition-all duration-200"
               >
                 <Mail size={18} strokeWidth={1.5} aria-hidden="true" />
