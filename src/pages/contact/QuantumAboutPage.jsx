@@ -1,5 +1,5 @@
 // src/pages/contact/QuantumAboutPage.jsx
-import React, { useState, useEffect, useRef, Suspense, lazy } from "react";
+import React, { useState, useEffect, useRef, useMemo, Suspense, lazy } from "react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import AnimatedSection from "../../components/ui/AnimatedSection";
@@ -57,29 +57,31 @@ const QuantumAboutPage = () => {
   const [scrollY, setScrollY] = useState(0);
   const [activeTab, setActiveTab] = useState("mission");
 
-  // Build dynamic data from translations
-  const STATS = [
+  // Build dynamic data from translations — memoise so a scroll-driven
+  // re-render doesn't rebuild 20+ translated arrays and call t() ~60 times
+  // per frame. Locale/region changes invalidate via the t dependency.
+  const STATS = useMemo(() => [
     { icon: Rocket, value: "2025", label: t("about.stats.founded") },
     { icon: Globe, value: "Suresnes, FR", label: t("about.stats.headquarters") },
     { icon: Users, value: "2–10", label: t("about.stats.teamSize") },
     { icon: Shield, value: "GDPR • EU AI Act", label: t("about.stats.complianceReady") },
-  ];
+  ], [t]);
 
-  const VALUES = VALUE_ICONS.map((icon, i) => ({
+  const VALUES = useMemo(() => VALUE_ICONS.map((icon, i) => ({
     icon,
     title: t(`about.values.${i}.title`),
     description: t(`about.values.${i}.description`),
     gradient: VALUE_GRADIENTS[i],
-  }));
+  })), [t]);
 
-  const TIMELINE = Array.from({ length: 13 }, (_, i) => ({
+  const TIMELINE = useMemo(() => Array.from({ length: 13 }, (_, i) => ({
     year: t(`about.journey.${i}.year`),
     title: t(`about.journey.${i}.title`),
     description: t(`about.journey.${i}.description`),
     icon: React.createElement(TIMELINE_ICONS[i], { className: "w-8 h-8" }),
-  }));
+  })), [t]);
 
-  const TAB_CONTENT = {
+  const TAB_CONTENT = useMemo(() => ({
     mission: {
       title: t("about.mission.title"),
       content: t("about.mission.content"),
@@ -92,7 +94,7 @@ const QuantumAboutPage = () => {
       title: t("about.impact.title"),
       content: t("about.impact.content"),
     },
-  };
+  }), [t]);
 
   // Page view tracking with UTM context
   useEffect(() => {
@@ -128,16 +130,36 @@ const QuantumAboutPage = () => {
     }));
   }, []);
 
-  // Mouse + scroll listeners
+  // Mouse + scroll listeners — both rAF-throttled, and scroll only
+  // triggers a React re-render when the gradient blobs would move by a
+  // visible amount (>=20px). Without this guard the parallax fires setState
+  // on every scroll pixel and the whole page re-renders at ~60 Hz, which
+  // crushes INP.
   useEffect(() => {
     if (typeof window === "undefined") return;
 
+    let mouseTicking = false;
     const handleMouse = (e) => {
-      mouseRef.current = { x: e.clientX, y: e.clientY };
+      if (mouseTicking) return;
+      mouseTicking = true;
+      requestAnimationFrame(() => {
+        mouseRef.current = { x: e.clientX, y: e.clientY };
+        mouseTicking = false;
+      });
     };
-    const handleScroll = () => setScrollY(window.scrollY);
 
-    window.addEventListener("mousemove", handleMouse);
+    let scrollTicking = false;
+    const handleScroll = () => {
+      if (scrollTicking) return;
+      scrollTicking = true;
+      requestAnimationFrame(() => {
+        const y = window.scrollY;
+        setScrollY((prev) => (Math.abs(prev - y) >= 20 ? y : prev));
+        scrollTicking = false;
+      });
+    };
+
+    window.addEventListener("mousemove", handleMouse, { passive: true });
     window.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
