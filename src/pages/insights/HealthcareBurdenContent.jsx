@@ -219,22 +219,6 @@ const HealthcareBurdenContent = () => {
         }]
     };
 
-    // GP Impact Chart
-    const gpImpactData = {
-        labels: [
-            t('caseStudyDetail.studies.healthcare-burden.charts.gpImpact.reducedSlots'),
-            t('caseStudyDetail.studies.healthcare-burden.charts.gpImpact.limitedTime'),
-            t('caseStudyDetail.studies.healthcare-burden.charts.gpImpact.reducedHours')
-        ],
-        datasets: [{
-            label: '% of GPs',
-            data: [66, 60, 51],
-            backgroundColor: `linear-gradient(90deg, ${COLORS.rose}, ${COLORS.magenta})`,
-            borderRadius: 6,
-            barPercentage: 0.6
-        }]
-    };
-
     // Patient Volume Chart
     const patientVolumeData = {
         labels: [

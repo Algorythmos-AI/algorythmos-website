@@ -69,7 +69,7 @@ export const BlogChart = ({ type, data, title, caption, height = "h-80" }) => {
                     font: { family: "'Inter', sans-serif", size: 10 },
                     maxRotation: 45,
                     minRotation: 0,
-                    callback: function (val, index) {
+                    callback: function (val, _index) {
                         // Label wrapping logic (approx simple version)
                         const label = this.getLabelForValue(val);
                         if (typeof label === 'string' && label.length > 16) {
