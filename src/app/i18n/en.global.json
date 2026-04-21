@@ -1817,6 +1817,7 @@
   "clinicalEvidence.standards.govt.title": "Government Authority",
   "clinicalEvidence.standards.govt.desc": "Productivity Commission 2024 (Statutory Authority). RACGP Health of Nation 2024 (3,006 GPs). Commonwealth Fund 2025.",
   "clinicalEvidence.standards.rejected.title": "What We Rejected",
+  "clinicalEvidence.standards.rejected.desc": "European data, unverified stats. We use only verified Australian evidence.",
   "clinicalEvidence.roi.title": "Return on Investment",
   "clinicalEvidence.roi.card1.title": "Current Costs",
   "clinicalEvidence.roi.card1.subtitle": "Already Paid",
