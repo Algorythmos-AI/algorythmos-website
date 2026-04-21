@@ -8,6 +8,7 @@ import {
   Zap,
   Mail,
   MapPin,
+  Linkedin,
 } from 'lucide-react';
 import { useI18n } from '../app/i18n/I18nContext.jsx';
 import { RegionHelmet } from '../app/seo';
@@ -34,9 +35,12 @@ const benefits = [
 
 const locations = [
   { key: 'london' },
+  { key: 'paris' },
   { key: 'sydney' },
   { key: 'remote' },
 ];
+
+const LINKEDIN_URL = 'https://www.linkedin.com/company/algorythmos/';
 
 const CareersPage = () => {
   const { t, region } = useI18n();
@@ -107,7 +111,7 @@ const CareersPage = () => {
           <ScrollReveal>
             <h2 className="text-3xl font-bold text-center mb-12">{t('careers.locations.title')}</h2>
           </ScrollReveal>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {locations.map(({ key }) => (
               <div key={key} className="flex items-center gap-4 p-6 rounded-2xl border border-white/5 bg-slate-900/40">
                 <MapPin size={20} strokeWidth={1.5} aria-hidden="true" className="text-violet-400 shrink-0" />
@@ -130,16 +134,30 @@ const CareersPage = () => {
           <div className="p-10 rounded-3xl border border-white/10 bg-gradient-to-br from-violet-500/5 to-indigo-500/5">
             <TrendingUp size={32} strokeWidth={1.5} aria-hidden="true" className="text-violet-400 mx-auto mb-6" />
             <h3 className="text-xl font-bold mb-4">{t('careers.roles.noRoles.title')}</h3>
-            <p className="text-gray-400 mb-8 leading-relaxed max-w-xl mx-auto">
+            <p className="text-gray-400 mb-4 leading-relaxed max-w-xl mx-auto">
               {t('careers.roles.noRoles.description')}
             </p>
-            <a
-              href="mailto:careers@algorythmos.com?subject=Talent%20Network%20—%20Expression%20of%20Interest"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-semibold transition-all duration-200 shadow-lg shadow-violet-500/20"
-            >
-              <Mail size={18} strokeWidth={1.5} aria-hidden="true" />
-              {t('careers.roles.noRoles.cta')}
-            </a>
+            <p className="text-gray-400 mb-8 leading-relaxed max-w-xl mx-auto">
+              {t('careers.roles.noRoles.linkedinNote')}
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+              <a
+                href={LINKEDIN_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-semibold transition-all duration-200 shadow-lg shadow-violet-500/20"
+              >
+                <Linkedin size={18} strokeWidth={1.5} aria-hidden="true" />
+                {t('careers.roles.noRoles.ctaLinkedin')}
+              </a>
+              <a
+                href="mailto:careers@algorythmos.com?subject=Talent%20Network%20—%20Expression%20of%20Interest"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] text-white font-semibold transition-all duration-200"
+              >
+                <Mail size={18} strokeWidth={1.5} aria-hidden="true" />
+                {t('careers.roles.noRoles.cta')}
+              </a>
+            </div>
           </div>
         </div>
       </section>

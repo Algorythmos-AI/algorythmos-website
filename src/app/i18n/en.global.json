@@ -1889,6 +1889,8 @@
   "careers.locations.title": "Where we are",
   "careers.locations.london.city": "London",
   "careers.locations.london.country": "United Kingdom",
+  "careers.locations.paris.city": "Paris",
+  "careers.locations.paris.country": "France",
   "careers.locations.sydney.city": "Sydney",
   "careers.locations.sydney.country": "Australia",
   "careers.locations.remote.city": "Remote",
@@ -1896,6 +1898,8 @@
   "careers.roles.title": "Open roles",
   "careers.roles.noRoles.title": "We are not actively hiring right now",
   "careers.roles.noRoles.description": "We only open roles when we have the work to match. If you would be a fit for future openings — senior ML engineers, AI platform engineers, applied researchers, solution architects — join our talent network and we will reach out when the right role opens.",
+  "careers.roles.noRoles.linkedinNote": "We post every new opening on LinkedIn first. Follow our company page so you don't miss the next role.",
+  "careers.roles.noRoles.ctaLinkedin": "Follow us on LinkedIn",
   "careers.roles.noRoles.cta": "Join our talent network",
   "careers.eeo": "Algorythmos is an equal opportunity employer. We welcome applicants regardless of race, religion, colour, national origin, gender, sexual orientation, age, marital status, veteran status, or disability status. We are committed to building a team that reflects the diversity of the organisations we serve."
 }
