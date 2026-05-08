@@ -43,16 +43,16 @@ export const TEAM = [
     image: "elena-fusion.jpg",
   },
   {
-    slug: "alex-velocity",
-    name: "Alex Velocity",
-    roleKey: "team.alex-velocity.role",
-    taglineKey: "team.alex-velocity.tagline",
-    blurbKey: "team.alex-velocity.blurb",
+    slug: "ali-algan",
+    name: "Ali Algan",
+    roleKey: "team.ali-algan.role",
+    taglineKey: "team.ali-algan.tagline",
+    blurbKey: "team.ali-algan.blurb",
     links: {
-      linkedin: "#",
+      linkedin: "https://www.linkedin.com/in/ali-ümit-algan/",
       x: "#",
       github: "#",
     },
-    image: "alex-velocity.jpg",
+    image: "ali-algan.png",
   },
 ];
