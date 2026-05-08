@@ -49,7 +49,7 @@ export const TEAM = [
     taglineKey: "team.ali-algan.tagline",
     blurbKey: "team.ali-algan.blurb",
     links: {
-      linkedin: "https://www.linkedin.com/in/ali-ümit-algan/",
+      linkedin: "https://www.linkedin.com/in/ali-%C3%BCmit-algan/",
       x: "#",
       github: "#",
     },
