@@ -1,13 +1,20 @@
 /**
  * Vercel serverless function — contact form handler.
- * Keeps the Astro site fully static (no @astrojs/vercel adapter, avoids its
- * build-time path-to-regexp advisory). Secrets stay server-side.
+ * Open-source mail via Nodemailer → your Zoho Mail SMTP (no third-party SaaS).
+ * Keeps the Astro site fully static; SMTP creds stay server-side.
  *
- * Configure in Vercel project env (Settings → Environment Variables):
- *   EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, EMAILJS_PUBLIC_KEY, EMAILJS_PRIVATE_KEY
- * Until configured, submissions are accepted (202) and logged so UX works.
+ * Configure in Vercel → Settings → Environment Variables:
+ *   ZOHO_SMTP_HOST   (default smtp.zoho.com.au — your account is on the .com.au DC)
+ *   ZOHO_SMTP_PORT   (default 465, SSL)
+ *   ZOHO_SMTP_USER   a real mailbox, e.g. noreply@algorythmos.com  (the SMTP login)
+ *   ZOHO_SMTP_PASS   a Zoho *app-specific password* for that mailbox (Security → App Passwords)
+ *   CONTACT_TO       where enquiries land, e.g. contact@algorythmos.com (defaults to ZOHO_SMTP_USER)
+ * Until configured, submissions are accepted (202) and logged so the UX works.
  */
+import nodemailer from 'nodemailer';
+
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const esc = (s) => String(s).replace(/[<>&]/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' })[c]);
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -25,31 +32,44 @@ export default async function handler(req, res) {
       return res.status(400).json({ ok: false, error: 'Invalid input' });
     }
 
-    const { EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, EMAILJS_PUBLIC_KEY, EMAILJS_PRIVATE_KEY } = process.env;
-    if (!EMAILJS_SERVICE_ID || !EMAILJS_TEMPLATE_ID || !EMAILJS_PUBLIC_KEY || !EMAILJS_PRIVATE_KEY) {
-      console.warn('[contact] EmailJS env not configured — message not delivered:', { name, email, company });
+    const {
+      ZOHO_SMTP_HOST = 'smtp.zoho.com.au',
+      ZOHO_SMTP_PORT = '465',
+      ZOHO_SMTP_USER,
+      ZOHO_SMTP_PASS,
+      CONTACT_TO,
+    } = process.env;
+
+    if (!ZOHO_SMTP_USER || !ZOHO_SMTP_PASS) {
+      console.warn('[contact] Zoho SMTP not configured — message not delivered:', { name, email, company });
       return res.status(202).json({ ok: true, delivered: false });
     }
 
-    const r = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        service_id: EMAILJS_SERVICE_ID,
-        template_id: EMAILJS_TEMPLATE_ID,
-        user_id: EMAILJS_PUBLIC_KEY,
-        accessToken: EMAILJS_PRIVATE_KEY,
-        template_params: { from_name: name, reply_to: email, company, message },
-      }),
+    const port = Number(ZOHO_SMTP_PORT);
+    const transporter = nodemailer.createTransport({
+      host: ZOHO_SMTP_HOST,
+      port,
+      secure: port === 465, // 465 = implicit SSL; 587 = STARTTLS
+      auth: { user: ZOHO_SMTP_USER, pass: ZOHO_SMTP_PASS },
     });
-    if (!r.ok) {
-      const detail = await r.text().catch(() => '');
-      console.error('[contact] EmailJS error', r.status, detail);
-      return res.status(502).json({ ok: false, error: 'Delivery failed' });
-    }
+
+    await transporter.sendMail({
+      // `from` must be the authenticated Zoho mailbox (or one of its verified aliases)
+      from: `"Algorythmos Website" <${ZOHO_SMTP_USER}>`,
+      to: CONTACT_TO || ZOHO_SMTP_USER,
+      replyTo: `"${name}" <${email}>`,
+      subject: `New enquiry — ${name}${company ? ` (${company})` : ''}`,
+      text: `Name: ${name}\nEmail: ${email}\nCompany: ${company || '—'}\n\n${message}`,
+      html: `<table style="font-family:system-ui,sans-serif;font-size:15px;line-height:1.6">
+        <tr><td><strong>Name</strong></td><td>${esc(name)}</td></tr>
+        <tr><td><strong>Email</strong></td><td><a href="mailto:${esc(email)}">${esc(email)}</a></td></tr>
+        <tr><td><strong>Company</strong></td><td>${esc(company) || '—'}</td></tr>
+      </table><hr><p style="white-space:pre-wrap;font-family:system-ui,sans-serif;font-size:15px;line-height:1.6">${esc(message)}</p>`,
+    });
+
     return res.status(200).json({ ok: true, delivered: true });
   } catch (e) {
-    console.error('[contact]', e);
-    return res.status(500).json({ ok: false, error: 'Server error' });
+    console.error('[contact] send failed:', e);
+    return res.status(502).json({ ok: false, error: 'Delivery failed' });
   }
 }
