@@ -1,32 +1,32 @@
 /* ============================================================
-   Dual-theme semantic color tokens.
+   Dual-theme semantic color tokens. Mood: KINETIC GRADIENT.
    Stored as space-separated RGB channels for Tailwind's
    `rgb(var(--x) / <alpha-value>)` integration. Components use
-   ONLY these semantic tokens — never raw palette — so both
-   themes work without per-component forks. WCAG AA in both.
-   Default (no attribute) = dark; the no-flash script always
-   sets data-theme before paint.
+   ONLY these semantic tokens. WCAG AA for text in both themes
+   (gradients/aurora are decorative, not text-on-bg).
+   Default (no attribute) = dark; no-flash script sets data-theme
+   before paint.
    ============================================================ */
 :root,
 :root[data-theme='dark'] {
   color-scheme: dark;
 
-  --bg: 8 8 12;            /* deep neutral, not pure black */
+  --bg: 8 8 12;
   --surface-1: 17 17 26;
   --surface-2: 26 26 39;
   --surface-3: 36 36 54;
 
-  --text: 244 244 247;     /* AA on --bg */
+  --text: 244 244 247;
   --text-muted: 168 170 188;
   --text-subtle: 124 126 144;
 
   --border: 40 40 60;
   --border-strong: 60 60 88;
 
-  --brand: 167 139 250;    /* violet-400 — AA on dark surfaces */
+  --brand: 167 139 250;
   --brand-strong: 139 92 246;
   --on-brand: 255 255 255;
-  --accent: 34 211 238;    /* cyan-400 */
+  --accent: 34 211 238;
 
   --ring: 167 139 250;
   --success: 52 211 153;
@@ -36,30 +36,38 @@
   --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.5);
   --shadow-md: 0 8px 24px -8px rgb(0 0 0 / 0.6);
   --shadow-lg: 0 24px 60px -16px rgb(0 0 0 / 0.7);
-  --glow: 0 0 40px -8px rgb(167 139 250 / 0.45);
-  --grad-brand: linear-gradient(135deg, rgb(167 139 250) 0%, rgb(34 211 238) 100%);
-  --grad-surface: linear-gradient(180deg, rgb(255 255 255 / 0.04) 0%, rgb(255 255 255 / 0.01) 100%);
+  --glow: 0 0 48px -8px rgb(167 139 250 / 0.5);
+
+  /* Kinetic gradient mood */
+  --grad-brand: linear-gradient(120deg, rgb(167 139 250) 0%, rgb(99 179 237) 45%, rgb(34 211 238) 100%);
+  --grad-cta: linear-gradient(120deg, rgb(139 92 246) 0%, rgb(79 70 229) 100%);
+  --grad-surface: linear-gradient(180deg, rgb(255 255 255 / 0.05) 0%, rgb(255 255 255 / 0.01) 100%);
+  --glass-bg: rgb(255 255 255 / 0.05);
+  --glass-border: rgb(255 255 255 / 0.10);
+  --aurora-1: rgb(167 139 250 / 0.55);
+  --aurora-2: rgb(34 211 238 / 0.45);
+  --aurora-3: rgb(236 72 153 / 0.32);
 }
 
 :root[data-theme='light'] {
   color-scheme: light;
 
-  --bg: 250 250 249;       /* warm paper */
+  --bg: 250 250 249;
   --surface-1: 255 255 255;
   --surface-2: 246 246 248;
   --surface-3: 238 238 243;
 
-  --text: 17 18 24;        /* ink, ~16:1 on --bg */
-  --text-muted: 79 82 99;  /* AA on light surfaces */
+  --text: 17 18 24;
+  --text-muted: 79 82 99;
   --text-subtle: 110 114 130;
 
   --border: 226 228 233;
   --border-strong: 201 204 213;
 
-  --brand: 109 40 217;     /* violet-700 — AA (~6.4:1) on white */
+  --brand: 109 40 217;
   --brand-strong: 91 33 182;
   --on-brand: 255 255 255;
-  --accent: 14 116 144;    /* cyan-800 — AA on white */
+  --accent: 14 116 144;
 
   --ring: 124 58 237;
   --success: 5 150 105;
@@ -69,7 +77,15 @@
   --shadow-sm: 0 1px 2px rgb(17 24 39 / 0.06);
   --shadow-md: 0 10px 28px -12px rgb(17 24 39 / 0.14);
   --shadow-lg: 0 28px 64px -20px rgb(17 24 39 / 0.18);
-  --glow: 0 8px 28px -12px rgb(109 40 217 / 0.25);
-  --grad-brand: linear-gradient(135deg, rgb(109 40 217) 0%, rgb(14 116 144) 100%);
+  --glow: 0 12px 40px -16px rgb(109 40 217 / 0.3);
+
+  /* Kinetic gradient mood (tuned for light) */
+  --grad-brand: linear-gradient(120deg, rgb(124 58 237) 0%, rgb(37 99 235) 45%, rgb(14 116 144) 100%);
+  --grad-cta: linear-gradient(120deg, rgb(124 58 237) 0%, rgb(67 56 202) 100%);
   --grad-surface: linear-gradient(180deg, rgb(17 24 39 / 0.02) 0%, rgb(17 24 39 / 0) 100%);
+  --glass-bg: rgb(255 255 255 / 0.7);
+  --glass-border: rgb(17 24 39 / 0.08);
+  --aurora-1: rgb(124 58 237 / 0.2);
+  --aurora-2: rgb(37 99 235 / 0.16);
+  --aurora-3: rgb(236 72 153 / 0.12);
 }

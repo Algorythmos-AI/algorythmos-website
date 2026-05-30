@@ -13,8 +13,9 @@ const base =
   'inline-flex items-center justify-center gap-2 rounded-lg font-semibold transition-[background-color,border-color,color,box-shadow] duration-200 ease-smooth focus-visible:outline-none disabled:opacity-50 disabled:pointer-events-none';
 
 const variants: Record<string, string> = {
-  primary: 'bg-brand text-brand-fg shadow-e2 hover:bg-brand-strong',
-  secondary: 'border border-line-strong bg-surface text-ink hover:border-brand hover:text-brand',
+  primary:
+    'bg-grad-cta bg-[length:180%_auto] bg-left text-white shadow-e2 hover:bg-right hover:shadow-glow',
+  secondary: 'border border-line-strong bg-surface/60 text-ink backdrop-blur hover:border-brand hover:text-brand',
   ghost: 'text-ink-muted hover:text-ink hover:bg-surface-2',
 };
 

@@ -1,39 +1,38 @@
 ---
 import { asLocale, useTranslations, localizePath } from '@/i18n';
 import Button from '@/components/ui/Button.astro';
+import Aurora from '@/components/ui/Aurora.astro';
 
 const locale = asLocale(Astro.currentLocale);
 const t = useTranslations(locale);
 ---
 
 <section class="relative overflow-hidden">
-  <div aria-hidden="true" class="pointer-events-none absolute inset-0 -z-10">
-    <div
-      class="absolute left-1/2 top-[-12%] h-[460px] w-[min(860px,95vw)] -translate-x-1/2 rounded-full opacity-25 blur-3xl"
-      style="background: var(--grad-brand);"
-    >
-    </div>
-    <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-line-strong to-transparent"></div>
-  </div>
-
-  <div class="container-page pb-20 pt-20 sm:pt-28">
-    <p class="inline-flex items-center gap-2 rounded-full border border-line bg-surface-2 px-3 py-1 text-xs font-medium text-ink-muted">
+  <Aurora />
+  <div class="container-page pb-24 pt-24 sm:pt-32">
+    <p data-reveal class="inline-flex items-center gap-2 rounded-full glass px-3.5 py-1.5 text-xs font-medium text-ink-muted">
       <span class="h-1.5 w-1.5 rounded-full bg-accent"></span>
       AI Consultancy · Sydney · Paris
     </p>
 
-    <h1 class="mt-6 max-w-4xl text-display font-bold tracking-tight text-ink">
+    <h1
+      data-reveal
+      style="--reveal-delay: 60ms"
+      class="mt-6 max-w-5xl text-mega font-extrabold tracking-tight text-ink"
+    >
       <span class="text-gradient-brand">{t('hero.title')}</span>
     </h1>
 
-    <p class="mt-6 max-w-2xl text-lead text-ink-muted">{t('hero.subtitle')}</p>
+    <p data-reveal style="--reveal-delay: 120ms" class="mt-6 max-w-2xl text-lead text-ink-muted">
+      {t('hero.subtitle')}
+    </p>
 
-    <div class="mt-10 flex flex-wrap items-center gap-4">
+    <div data-reveal style="--reveal-delay: 180ms" class="mt-10 flex flex-wrap items-center gap-4">
       <Button href={localizePath(locale, '/contact')} size="lg">{t('hero.cta.primary')}</Button>
       <Button href={localizePath(locale, '/pricing')} size="lg" variant="secondary">{t('hero.cta.secondary')}</Button>
     </div>
 
-    <p class="mt-8 text-sm text-ink-subtle">
+    <p data-reveal style="--reveal-delay: 240ms" class="mt-10 text-sm text-ink-subtle">
       Senior engineers · EU GDPR &amp; Australian Privacy aligned · Outcome-based delivery
     </p>
   </div>

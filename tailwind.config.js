@@ -50,6 +50,7 @@ export default {
       },
       // Fluid display scale (adds text-display/h1/h2/h3/lead; numeric scale untouched)
       fontSize: {
+        mega: ['clamp(2.75rem, 1.1rem + 7.2vw, 6.5rem)', { lineHeight: '0.98', letterSpacing: '-0.03em' }],
         display: ['clamp(2.5rem, 1.4rem + 4.6vw, 4.75rem)', { lineHeight: '1.04', letterSpacing: '-0.025em' }],
         h1: ['clamp(2rem, 1.4rem + 2.6vw, 3.25rem)', { lineHeight: '1.1', letterSpacing: '-0.02em' }],
         h2: ['clamp(1.5rem, 1.2rem + 1.4vw, 2.25rem)', { lineHeight: '1.16', letterSpacing: '-0.015em' }],
@@ -75,6 +76,7 @@ export default {
       },
       backgroundImage: {
         'grad-brand': 'var(--grad-brand)',
+        'grad-cta': 'var(--grad-cta)',
         'grad-surface': 'var(--grad-surface)',
       },
       keyframes: {

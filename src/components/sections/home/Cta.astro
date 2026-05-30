@@ -1,21 +1,22 @@
 ---
 import { asLocale, useTranslations, localizePath } from '@/i18n';
 import Button from '@/components/ui/Button.astro';
+import Aurora from '@/components/ui/Aurora.astro';
 
 const locale = asLocale(Astro.currentLocale);
 const t = useTranslations(locale);
 ---
 
-<section class="container-page py-24">
-  <div class="relative overflow-hidden rounded-3xl border border-line bg-surface px-6 py-16 text-center shadow-e2 sm:px-12">
-    <div aria-hidden="true" class="pointer-events-none absolute inset-0 -z-10 opacity-[0.18]" style="background: var(--grad-brand);"></div>
-    <h2 class="mx-auto max-w-2xl text-h1 font-bold tracking-tight text-ink">
-      Ready to put AI to work — properly?
+<section class="container-page py-28">
+  <div data-reveal class="relative overflow-hidden rounded-[2rem] border border-line glass px-6 py-20 text-center shadow-e2 sm:px-12">
+    <Aurora class="opacity-70" />
+    <h2 class="mx-auto max-w-3xl text-display font-extrabold tracking-tight text-ink">
+      Ready to put AI to work — <span class="text-gradient-brand">properly?</span>
     </h2>
-    <p class="mx-auto mt-4 max-w-xl text-lead text-ink-muted">
+    <p class="mx-auto mt-5 max-w-xl text-lead text-ink-muted">
       Book a free discovery call. We'll map the highest-leverage AI opportunity in your business and how to ship it.
     </p>
-    <div class="mt-9 flex flex-wrap justify-center gap-4">
+    <div class="mt-10 flex flex-wrap justify-center gap-4">
       <Button href={localizePath(locale, '/contact')} size="lg">{t('hero.cta.primary')}</Button>
       <Button href={localizePath(locale, '/case-studies')} size="lg" variant="secondary">{t('nav.caseStudies')}</Button>
     </div>

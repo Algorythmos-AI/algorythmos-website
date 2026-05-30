@@ -8,13 +8,15 @@ const points = [
 ];
 ---
 
-<section class="border-y border-line bg-surface-2/40">
-  <div class="container-page py-20">
-    <h2 class="max-w-2xl text-h2 font-bold tracking-tight text-ink">Why teams choose Algorythmos</h2>
-    <div class="mt-12 grid gap-x-10 gap-y-12 sm:grid-cols-2">
+<section class="relative overflow-hidden border-y border-line bg-surface-2/40">
+  <div class="container-page py-24">
+    <h2 data-reveal class="max-w-2xl text-h2 font-bold tracking-tight text-ink">
+      Why teams choose <span class="text-gradient-brand">Algorythmos</span>
+    </h2>
+    <div class="mt-14 grid gap-x-10 gap-y-12 sm:grid-cols-2">
       {points.map((p, i) => (
-        <div class="flex gap-4">
-          <span class="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-line bg-surface text-sm font-semibold text-brand">
+        <div data-reveal style={`--reveal-delay: ${i * 80}ms`} class="flex gap-4">
+          <span class="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-grad-cta text-sm font-bold text-white shadow-e1">
             {String(i + 1).padStart(2, '0')}
           </span>
           <div>

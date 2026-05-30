@@ -13,26 +13,28 @@ const services = [
 ];
 ---
 
-<section class="container-page py-20">
-  <div class="max-w-2xl">
+<section class="container-page py-24">
+  <div data-reveal class="max-w-2xl">
     <h2 class="text-h2 font-bold tracking-tight text-ink">{t('nav.services')}</h2>
     <p class="mt-3 text-ink-muted">{t('nav.servicesDesc')}</p>
   </div>
 
-  <div class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-    {services.map((s) => (
+  <div class="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    {services.map((s, i) => (
       <a
         href={localizePath(locale, `/services/${s.slug}`)}
-        class="group relative flex flex-col rounded-2xl border border-line bg-surface p-6 shadow-e1 transition-[border-color,box-shadow,transform] duration-200 ease-smooth hover:-translate-y-0.5 hover:border-brand/60 hover:shadow-e2"
+        data-reveal
+        style={`--reveal-delay: ${i * 70}ms`}
+        class="group ring-gradient relative flex flex-col rounded-2xl border border-line glass p-6 transition-[transform,box-shadow] duration-300 ease-smooth hover:-translate-y-1 hover:shadow-glow"
       >
-        <span class="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-grad-brand text-brand-fg">
+        <span class="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-grad-cta text-white shadow-e1">
           <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={s.icon} /></svg>
         </span>
         <h3 class="mt-5 text-h3 font-semibold text-ink">{s.name}</h3>
         <p class="mt-2 flex-1 text-sm leading-relaxed text-ink-muted">{s.desc}</p>
         <span class="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-brand">
           Learn more
-          <svg class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+          <svg class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
         </span>
       </a>
     ))}

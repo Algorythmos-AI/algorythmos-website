@@ -15,7 +15,6 @@
     @apply bg-bg text-ink font-sans antialiased;
     min-height: 100svh;
   }
-  /* Brand-tuned visible focus ring, both themes */
   :focus-visible {
     outline: 2px solid rgb(var(--ring));
     outline-offset: 2px;
@@ -25,11 +24,9 @@
     background: rgb(var(--brand) / 0.28);
     color: rgb(var(--text));
   }
-  /* Fluid French hyphenation */
   :lang(fr) {
     hyphens: auto;
   }
-  /* Respect reduced motion globally */
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -49,10 +46,86 @@
     margin-inline: auto;
     padding-inline: var(--gutter);
   }
+
+  /* Kinetic animated gradient text */
   .text-gradient-brand {
     background-image: var(--grad-brand);
+    background-size: 220% auto;
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
+  }
+
+  /* Frosted glass surface (theme-aware) */
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    border: 1px solid var(--glass-border);
+  }
+
+  /* Gradient hairline border via mask (works both themes) */
+  .ring-gradient {
+    position: relative;
+  }
+  .ring-gradient::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: var(--grad-brand);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity var(--dur) var(--ease-smooth);
+    pointer-events: none;
+  }
+  .ring-gradient:hover::before {
+    opacity: 1;
+  }
+}
+
+@layer utilities {
+  /* Scroll-reveal — hidden→shown; under reduced-motion content is always visible */
+  @media (prefers-reduced-motion: no-preference) {
+    [data-reveal] {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.7s var(--ease-quint), transform 0.7s var(--ease-quint);
+      transition-delay: var(--reveal-delay, 0ms);
+    }
+    [data-reveal].is-visible {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+/* Animations (outside layers so they aren't purged) */
+@media (prefers-reduced-motion: no-preference) {
+  .text-gradient-brand {
+    animation: gradient-pan 9s linear infinite;
+  }
+  .aurora-blob {
+    animation: aurora-drift var(--aurora-dur, 26s) ease-in-out infinite;
+    will-change: transform;
+  }
+}
+@keyframes gradient-pan {
+  to {
+    background-position: 220% center;
+  }
+}
+@keyframes aurora-drift {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+  }
+  50% {
+    transform: translate3d(4%, -3%, 0) rotate(10deg) scale(1.12);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
   }
 }
