@@ -1,0 +1,71 @@
+---
+import { asLocale, useTranslations, localizePath } from '@/i18n';
+
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const year = new Date().getFullYear();
+
+const cols = [
+  {
+    title: t('footer.services'),
+    links: [
+      { label: t('nav.services'), path: '/services' },
+      { label: 'Agentic Automation', path: '/services/agentic-automation' },
+      { label: 'Document Intelligence', path: '/services/document-intelligence' },
+      { label: 'MLOps & CI/CD', path: '/services/mlops-cicd' },
+    ],
+  },
+  {
+    title: t('footer.company'),
+    links: [
+      { label: t('nav.about'), path: '/about' },
+      { label: t('nav.caseStudies'), path: '/case-studies' },
+      { label: t('nav.blog'), path: '/blog' },
+      { label: t('nav.careers'), path: '/careers' },
+    ],
+  },
+  {
+    title: t('footer.legal'),
+    links: [
+      { label: t('nav.privacy'), path: '/privacy' },
+      { label: t('nav.terms'), path: '/terms' },
+      { label: t('nav.contact'), path: '/contact' },
+    ],
+  },
+];
+---
+
+<footer class="mt-24 border-t border-line bg-surface-2/40">
+  <div class="container-page grid gap-12 py-16 md:grid-cols-[1.4fr_repeat(3,1fr)]">
+    <div>
+      <a href={localizePath(locale, '/')} class="text-lg font-bold tracking-tight text-ink">
+        Algoryth<span class="text-gradient-brand">mos</span>
+      </a>
+      <p class="mt-4 max-w-xs text-sm leading-relaxed text-ink-muted">{t('footer.description')}</p>
+      <p class="mt-4 text-sm font-medium text-ink-subtle">Sydney · Paris</p>
+    </div>
+
+    {cols.map((col) => (
+      <div>
+        <h2 class="text-sm font-semibold text-ink">{col.title}</h2>
+        <ul class="mt-4 space-y-3">
+          {col.links.map((l) => (
+            <li>
+              <a href={localizePath(locale, l.path)} class="text-sm text-ink-muted transition-colors hover:text-ink">{l.label}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </div>
+
+  <div class="border-t border-line">
+    <div class="container-page flex flex-col items-center justify-between gap-3 py-6 text-sm text-ink-subtle sm:flex-row">
+      <p>© {year} Algorythmos. All rights reserved.</p>
+      <div class="flex items-center gap-4">
+        <a href="https://www.linkedin.com/company/algorythmos" rel="me noopener" target="_blank" class="hover:text-ink">LinkedIn</a>
+        <a href="https://x.com/algorythmos" rel="me noopener" target="_blank" class="hover:text-ink">X</a>
+      </div>
+    </div>
+  </div>
+</footer>
