@@ -14,5 +14,13 @@ export default defineConfig({
     locales: ['en', 'au-en', 'fr-fr'],
     routing: { prefixDefaultLocale: false },
   },
-  integrations: [react(), sitemap()],
+  integrations: [
+    react(),
+    sitemap({
+      i18n: {
+        defaultLocale: 'en',
+        locales: { en: 'en', 'au-en': 'en-AU', 'fr-fr': 'fr-FR' },
+      },
+    }),
+  ],
 });
