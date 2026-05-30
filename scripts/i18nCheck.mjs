@@ -17,9 +17,9 @@ import { dirname, join } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Paths to i18n files
-const EN_PATH = join(__dirname, '../src/app/i18n/en.global.json');
-const FR_PATH = join(__dirname, '../src/app/i18n/fr.fr.json');
+// Paths to i18n files (Astro 6: dictionaries live under src/i18n/ui/)
+const EN_PATH = join(__dirname, '../src/i18n/ui/en.global.json');
+const FR_PATH = join(__dirname, '../src/i18n/ui/fr.fr.json');
 
 // Keys to ignore when checking for identical values (these are intentionally the same)
 const IGNORE_IDENTICAL = [

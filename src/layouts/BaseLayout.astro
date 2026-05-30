@@ -8,6 +8,8 @@ import Footer from '@/components/layout/Footer.astro';
 import SEO from '@/components/seo/SEO.astro';
 import JsonLd from '@/components/seo/JsonLd.astro';
 import { orgGraph } from '@/seo/schema';
+import RegionBanner from '@/components/RegionBanner.astro';
+import ConsentBanner from '@/components/ConsentBanner.astro';
 
 interface Props {
   title?: string;
@@ -54,6 +56,16 @@ const lang = REGIONS[locale].lang;
         }
       })();
     </script>
+    <script is:inline>
+      /* Returning visitor with an explicit region choice → redirect home only. Bots (no JS) stay global. */
+      (function () {
+        try {
+          if (location.pathname !== '/') return;
+          var m = document.cookie.match(/(?:^|; )locale=(au-en|fr-fr)/);
+          if (m) location.replace('/' + m[1]);
+        } catch (e) {}
+      })();
+    </script>
     <SEO title={title} description={description} path={path} ogType={ogType} image={image} noindex={noindex} />
     <meta name="generator" content={Astro.generator} />
     <JsonLd data={orgGraph} />
@@ -73,6 +85,8 @@ const lang = REGIONS[locale].lang;
     <Header />
     <main id="main"><slot /></main>
     <Footer />
+    <RegionBanner />
+    <ConsentBanner />
     {/* Re-assert theme after View-Transition swaps */}
     <script is:inline>
       document.addEventListener('astro:after-swap', function () {
