@@ -1,5 +1,6 @@
 export default {
-  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  content: ['./src/**/*.{astro,html,js,ts,jsx,tsx,md,mdx}'],
+  darkMode: ['selector', '[data-theme="dark"]'],
   theme: {
     extend: {
       // 2025 "Neural" Color System
