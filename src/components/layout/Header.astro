@@ -1,0 +1,71 @@
+---
+import { asLocale, useTranslations, localizePath } from '@/i18n';
+import ThemeToggle from '@/components/ui/ThemeToggle.astro';
+import Button from '@/components/ui/Button.astro';
+
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const here = Astro.url.pathname.replace(/\/$/, '') || '/';
+
+const nav = [
+  { key: 'nav.services', path: '/services' },
+  { key: 'nav.caseStudies', path: '/case-studies' },
+  { key: 'nav.blog', path: '/blog' },
+  { key: 'nav.pricing', path: '/pricing' },
+  { key: 'nav.about', path: '/about' },
+];
+
+const isActive = (path: string) => {
+  const target = localizePath(locale, path).replace(/\/$/, '') || '/';
+  return here === target || (path !== '/' && here.startsWith(target + '/'));
+};
+const home = localizePath(locale, '/');
+const contact = localizePath(locale, '/contact');
+---
+
+<header class="sticky top-0 z-[var(--z-nav)] border-b border-line/80 bg-bg/80 backdrop-blur-xl">
+  <div class="container-page flex h-16 items-center justify-between gap-6">
+    <a href={home} class="text-lg font-bold tracking-tight text-ink" aria-label="Algorythmos home">
+      Algoryth<span class="text-gradient-brand">mos</span>
+    </a>
+
+    <nav class="hidden items-center gap-1 md:flex" aria-label="Primary">
+      {nav.map((item) => (
+        <a
+          href={localizePath(locale, item.path)}
+          class:list={[
+            'rounded-md px-3 py-2 text-sm font-medium transition-colors hover:text-ink',
+            isActive(item.path) ? 'text-ink' : 'text-ink-muted',
+          ]}
+          aria-current={isActive(item.path) ? 'page' : undefined}
+        >
+          {t(item.key)}
+        </a>
+      ))}
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <ThemeToggle />
+      <Button href={contact} size="md" class="hidden sm:inline-flex">{t('nav.contactUs')}</Button>
+
+      {/* Mobile disclosure menu — no JS required */}
+      <details class="md:hidden [&_svg.close]:hidden [&[open]_svg.open]:hidden [&[open]_svg.close]:block">
+        <summary
+          class="flex h-10 w-10 cursor-pointer list-none items-center justify-center rounded-lg border border-line text-ink-muted [&::-webkit-details-marker]:hidden"
+          aria-label="Open menu"
+        >
+          <svg class="open h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+          <svg class="close h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </summary>
+        <div class="absolute inset-x-0 top-16 border-b border-line bg-bg/95 backdrop-blur-xl">
+          <nav class="container-page flex flex-col gap-1 py-4" aria-label="Mobile">
+            {nav.map((item) => (
+              <a href={localizePath(locale, item.path)} class="rounded-md px-3 py-3 text-base font-medium text-ink-muted hover:bg-surface-2 hover:text-ink" aria-current={isActive(item.path) ? 'page' : undefined}>{t(item.key)}</a>
+            ))}
+            <Button href={contact} size="lg" class="mt-2">{t('nav.contactUs')}</Button>
+          </nav>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>

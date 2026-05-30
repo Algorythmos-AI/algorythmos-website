@@ -1,5 +1,10 @@
 ---
+import '@fontsource-variable/inter';
 import '@/styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+import { asLocale, REGIONS } from '@/i18n';
+import Header from '@/components/layout/Header.astro';
+import Footer from '@/components/layout/Footer.astro';
 
 interface Props {
   title?: string;
@@ -11,7 +16,8 @@ const {
   description = 'Boutique AI consultancy delivering agentic automation, document intelligence, and MLOps for SMEs in Sydney and Paris.',
 } = Astro.props;
 
-const lang = Astro.currentLocale ?? 'en';
+const locale = asLocale(Astro.currentLocale);
+const lang = REGIONS[locale].lang;
 ---
 
 <!doctype html>
@@ -19,11 +25,46 @@ const lang = Astro.currentLocale ?? 'en';
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {/* No-flash theme init — before paint */}
+    <script is:inline>
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+          }
+          document.documentElement.dataset.theme = t;
+        } catch (e) {
+          document.documentElement.dataset.theme = 'dark';
+        }
+      })();
+    </script>
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
     <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" href="/favicon-192.png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <ClientRouter />
   </head>
   <body>
-    <slot />
+    <a
+      href="#main"
+      class="sr-only rounded-lg bg-brand px-4 py-2 font-semibold text-brand-fg focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[var(--z-toast)]"
+    >
+      Skip to content
+    </a>
+    <Header />
+    <main id="main"><slot /></main>
+    <Footer />
+    {/* Re-assert theme after View-Transition swaps */}
+    <script is:inline>
+      document.addEventListener('astro:after-swap', function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+        } catch (e) {}
+      });
+    </script>
   </body>
 </html>
