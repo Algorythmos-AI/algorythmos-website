@@ -66,5 +66,27 @@ const lang = REGIONS[locale].lang;
         } catch (e) {}
       });
     </script>
+    <script>
+      function setupReveal() {
+        const els = document.querySelectorAll('[data-reveal]:not(.is-visible)');
+        if (!('IntersectionObserver' in window)) {
+          els.forEach((e) => e.classList.add('is-visible'));
+          return;
+        }
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((en) => {
+              if (en.isIntersecting) {
+                en.target.classList.add('is-visible');
+                io.unobserve(en.target);
+              }
+            });
+          },
+          { rootMargin: '0px 0px -10% 0px', threshold: 0.05 },
+        );
+        els.forEach((e) => io.observe(e));
+      }
+      document.addEventListener('astro:page-load', setupReveal);
+    </script>
   </body>
 </html>
