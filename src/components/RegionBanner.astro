@@ -1,0 +1,59 @@
+---
+/**
+ * Region SUGGESTION banner — never auto-redirects (avoids the Google
+ * geo-redirect anti-pattern). Shows on global (non-prefixed) pages to a
+ * first-time visitor whose browser language hints AU/FR. Bots run no JS,
+ * so they always see the global page. Returning users with an explicit
+ * `locale` cookie are redirected on `/` by the inline script in BaseLayout.
+ */
+---
+
+<div
+  id="region-banner"
+  hidden
+  role="region"
+  aria-label="Regional site suggestion"
+  class="fixed bottom-4 left-1/2 z-[var(--z-banner)] w-[min(92vw,32rem)] -translate-x-1/2 rounded-2xl border border-line glass p-4 shadow-e3"
+>
+  <div class="flex items-center gap-4">
+    <p id="region-banner-text" class="flex-1 text-sm text-ink"></p>
+    <div class="flex shrink-0 items-center gap-2">
+      <a id="region-banner-go" href="/" class="rounded-lg bg-grad-cta px-3 py-1.5 text-sm font-semibold text-white">View</a>
+      <button id="region-banner-dismiss" type="button" aria-label="Dismiss" class="rounded-lg border border-line-strong px-2.5 py-1.5 text-sm text-ink-muted hover:text-ink">✕</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function getCookie(name: string): string | null {
+    const m = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]+)'));
+    return m ? m[1] : null;
+  }
+  function setupRegionBanner() {
+    const el = document.getElementById('region-banner');
+    if (!el) return;
+    if (getCookie('locale') || getCookie('region-dismiss')) return;
+    if (/^\/(au-en|fr-fr)(\/|$)/.test(location.pathname)) return; // already regional
+    const lang = (navigator.language || '').toLowerCase();
+    let target: string | null = null;
+    let label = '';
+    if (lang.startsWith('fr')) { target = '/fr-fr'; label = 'France'; }
+    else if (lang === 'en-au' || lang.startsWith('en-au')) { target = '/au-en'; label = 'Australia'; }
+    if (!target) return;
+
+    const go = el.querySelector('#region-banner-go') as HTMLAnchorElement | null;
+    const txt = el.querySelector('#region-banner-text');
+    if (!go || !txt) return;
+    go.href = target;
+    txt.textContent = `Visiting from ${label}? See the ${label} site.`;
+    go.addEventListener('click', () => {
+      document.cookie = `locale=${target!.slice(1)};path=/;max-age=31536000;samesite=lax`;
+    });
+    el.querySelector('#region-banner-dismiss')?.addEventListener('click', () => {
+      document.cookie = 'region-dismiss=1;path=/;max-age=2592000;samesite=lax';
+      el.hidden = true;
+    });
+    el.hidden = false;
+  }
+  document.addEventListener('astro:page-load', setupRegionBanner);
+</script>
