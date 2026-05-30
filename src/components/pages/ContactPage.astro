@@ -153,6 +153,7 @@ const offices = [
 
           <div class="mt-7 flex flex-wrap items-center gap-4">
             <Button type="submit" size="lg" id="cf-submit">{t('contactPage.form.submitButton')}</Button>
+            <p id="cf-form-error" class="hidden w-full text-sm text-danger" role="alert"></p>
             {/* Accessible success message — announced to assistive tech on submit. */}
             <p
               id="cf-success"
@@ -284,10 +285,35 @@ const offices = [
         return;
       }
 
-      // TODO P7: replace with real Astro Action submission. For now, show vanilla success UX.
-      form.reset();
-      success?.classList.remove('hidden');
-      success?.classList.add('inline-flex');
+      const submitBtn = form.querySelector('button[type="submit"]') as HTMLButtonElement | null;
+      const payload = {
+        name: fields.name.value.trim(),
+        email: fields.email.value.trim(),
+        message: fields.message.value.trim(),
+        company: (form.querySelector('#cf-company') as HTMLInputElement | null)?.value.trim() || '',
+      };
+      if (submitBtn) submitBtn.disabled = true;
+      fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+        .then((r) => {
+          if (!r.ok) throw new Error('send failed');
+          form.reset();
+          success?.classList.remove('hidden');
+          success?.classList.add('inline-flex');
+        })
+        .catch(() => {
+          const errEl = document.getElementById('cf-form-error');
+          if (errEl) {
+            errEl.textContent = 'Something went wrong — please email contact@algorythmos.com directly.';
+            errEl.classList.remove('hidden');
+          }
+        })
+        .finally(() => {
+          if (submitBtn) submitBtn.disabled = false;
+        });
     });
   }
 
