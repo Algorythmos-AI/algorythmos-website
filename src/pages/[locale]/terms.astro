@@ -1,0 +1,10 @@
+---
+import TermsPage from '@/components/pages/TermsPage.astro';
+import { PREFIXED_LOCALES } from '@/i18n';
+
+export function getStaticPaths() {
+  return PREFIXED_LOCALES.map((locale) => ({ params: { locale } }));
+}
+---
+
+<TermsPage />

@@ -1,0 +1,13 @@
+---
+import BlogPostPage from '@/components/pages/BlogPostPage.astro';
+import { PREFIXED_LOCALES } from '@/i18n';
+import { blogSlugs } from '@/data/blog';
+
+export function getStaticPaths() {
+  return PREFIXED_LOCALES.flatMap((locale) => blogSlugs.map((slug) => ({ params: { locale, slug } })));
+}
+
+const { slug } = Astro.params;
+---
+
+<BlogPostPage slug={slug!} />
