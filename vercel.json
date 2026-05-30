@@ -1,62 +1,51 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "redirects": [
     {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.algorythmos.com" }],
+      "destination": "https://algorythmos.com/:path*",
+      "permanent": true
+    },
+    {
       "source": "/:locale(fr-fr|au-en)/:path*",
-      "has": [
-        {
-          "type": "host",
-          "value": "(www\\.)?algorythmos\\.com\\.au"
-        }
-      ],
+      "has": [{ "type": "host", "value": "(www\\.)?algorythmos\\.com\\.au" }],
       "destination": "https://algorythmos.com/:locale/:path*",
       "permanent": true
     },
     {
       "source": "/:locale(fr-fr|au-en)/:path*",
-      "has": [
-        {
-          "type": "host",
-          "value": "(www\\.)?algorythmos\\.fr"
-        }
-      ],
+      "has": [{ "type": "host", "value": "(www\\.)?algorythmos\\.fr" }],
       "destination": "https://algorythmos.com/:locale/:path*",
       "permanent": true
     },
     {
       "source": "/:path*",
-      "has": [
-        {
-          "type": "host",
-          "value": "(www\\.)?algorythmos\\.com\\.au"
-        }
-      ],
+      "has": [{ "type": "host", "value": "(www\\.)?algorythmos\\.com\\.au" }],
       "destination": "https://algorythmos.com/au-en/:path*",
       "permanent": true
     },
     {
       "source": "/:path*",
-      "has": [
-        {
-          "type": "host",
-          "value": "(www\\.)?algorythmos\\.fr"
-        }
-      ],
+      "has": [{ "type": "host", "value": "(www\\.)?algorythmos\\.fr" }],
       "destination": "https://algorythmos.com/fr-fr/:path*",
       "permanent": true
     }
   ],
-  "rewrites": [
-    {
-      "source": "/au-en(.*)",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/fr-fr(.*)",
-      "destination": "/index.html"
-    },
+  "headers": [
     {
       "source": "/(.*)",
-      "destination": "/index.html"
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://vitals.vercel-insights.com https://va.vercel-scripts.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests"
+        },
+        { "key": "Strict-Transport-Security", "value": "max-age=63072000; includeSubDomains; preload" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=(), browsing-topics=()" }
+      ]
     }
   ]
 }
