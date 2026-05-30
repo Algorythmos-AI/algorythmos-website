@@ -1,0 +1,142 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeader from '@/components/sections/PageHeader.astro';
+import Button from '@/components/ui/Button.astro';
+import Aurora from '@/components/ui/Aurora.astro';
+import { asLocale, useTranslations, localizePath } from '@/i18n';
+import { breadcrumb, SITE } from '@/seo/schema';
+
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const path = '/careers';
+const abs = (p: string) => SITE + localizePath(locale, p);
+
+const crumbs = breadcrumb([
+  { name: 'Home', url: abs('/') },
+  { name: t('careers.breadcrumb'), url: abs(path) },
+]);
+
+const values = (['impact', 'rigor', 'partnership', 'remote'] as const).map((k) => ({
+  title: t(`careers.values.${k}.title`),
+  body: t(`careers.values.${k}.body`),
+}));
+
+const benefits = [
+  'compensation',
+  'remote',
+  'learning',
+  'hardware',
+  'health',
+  'pto',
+  'research',
+  'mentorship',
+].map((k) => t(`careers.benefits.${k}`));
+
+const locations = (['london', 'paris', 'sydney', 'remote'] as const).map((k) => ({
+  city: t(`careers.locations.${k}.city`),
+  country: t(`careers.locations.${k}.country`),
+}));
+---
+
+<BaseLayout
+  title={`${t('careers.breadcrumb')} — Algorythmos`}
+  description={t('careers.hero.description')}
+  path={path}
+  jsonLd={[crumbs]}
+>
+  <PageHeader eyebrow={t('careers.hero.eyebrow')} title={t('careers.hero.title')} lead={t('careers.hero.description')} />
+
+  {/* How we work — values */}
+  <section class="container-page py-24">
+    <h2 data-reveal class="max-w-2xl text-h2 font-bold tracking-tight text-ink">{t('careers.values.title')}</h2>
+    <div class="mt-14 grid gap-x-10 gap-y-12 sm:grid-cols-2">
+      {values.map((v, i) => (
+        <div data-reveal style={`--reveal-delay: ${i * 80}ms`} class="flex gap-4">
+          <span class="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-grad-cta text-sm font-bold text-white shadow-e1">
+            {String(i + 1).padStart(2, '0')}
+          </span>
+          <div>
+            <h3 class="text-h3 font-semibold text-ink">{v.title}</h3>
+            <p class="mt-2 text-ink-muted">{v.body}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  {/* Benefits */}
+  <section class="relative overflow-hidden border-y border-line bg-surface-2/40">
+    <div class="container-page py-24">
+      <h2 data-reveal class="max-w-2xl text-h2 font-bold tracking-tight text-ink">{t('careers.benefits.title')}</h2>
+      <ul class="mt-12 grid gap-4 sm:grid-cols-2">
+        {benefits.map((b, i) => (
+          <li
+            data-reveal
+            style={`--reveal-delay: ${i * 60}ms`}
+            class="flex items-start gap-3 rounded-2xl border border-line glass p-5 shadow-e1"
+          >
+            <svg class="mt-0.5 h-5 w-5 shrink-0 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
+            <span class="text-ink-muted">{b}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  {/* Where we are */}
+  <section class="container-page py-24">
+    <h2 data-reveal class="max-w-2xl text-h2 font-bold tracking-tight text-ink">{t('careers.locations.title')}</h2>
+    <div class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      {locations.map((loc, i) => (
+        <div
+          data-reveal
+          style={`--reveal-delay: ${i * 70}ms`}
+          class="ring-gradient relative rounded-2xl border border-line glass p-6 shadow-e1"
+        >
+          <span class="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-grad-cta text-white shadow-e1">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" /><circle cx="12" cy="10" r="3" /></svg>
+          </span>
+          <h3 class="mt-5 text-h3 font-semibold text-ink">{loc.city}</h3>
+          <p class="mt-1 text-sm font-medium text-brand">{loc.country}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  {/* Open roles — talent network */}
+  <section class="relative overflow-hidden border-y border-line bg-surface-2/40">
+    <div class="container-page py-24">
+      <h2 data-reveal class="text-h2 font-bold tracking-tight text-ink">{t('careers.roles.title')}</h2>
+      <div data-reveal style="--reveal-delay: 80ms" class="mt-10 rounded-[2rem] border border-line glass p-8 shadow-e2 sm:p-12">
+        <h3 class="max-w-2xl text-h3 font-semibold text-ink">{t('careers.roles.noRoles.title')}</h3>
+        <p class="mt-4 max-w-3xl text-ink-muted">{t('careers.roles.noRoles.description')}</p>
+        <p class="mt-6 max-w-3xl text-sm text-ink-subtle">{t('careers.roles.noRoles.linkedinNote')}</p>
+        <div class="mt-8 flex flex-wrap gap-4">
+          <Button href="https://www.linkedin.com/company/algorythmos" size="lg">{t('careers.roles.noRoles.ctaLinkedin')}</Button>
+          <Button href={localizePath(locale, '/contact')} size="lg" variant="secondary">{t('careers.roles.noRoles.cta')}</Button>
+        </div>
+        <p class="mt-6 text-sm text-ink-subtle">
+          {t('careers.roles.noRoles.emailFallback')}{' '}
+          <a href="mailto:careers@algorythmos.com" class="font-semibold text-brand underline-offset-4 hover:underline">careers@algorythmos.com</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  {/* Get in touch CTA */}
+  <section class="container-page py-28">
+    <div data-reveal class="relative overflow-hidden rounded-[2rem] border border-line glass px-6 py-20 text-center shadow-e2 sm:px-12">
+      <Aurora class="opacity-70" />
+      <h2 class="mx-auto max-w-3xl text-display font-extrabold tracking-tight text-ink">
+        Let's <span class="text-gradient-brand">build together</span>
+      </h2>
+      <p class="mx-auto mt-5 max-w-xl text-lead text-ink-muted">{t('careers.hero.description')}</p>
+      <div class="mt-10 flex flex-wrap justify-center gap-4">
+        <Button href={localizePath(locale, '/contact')} size="lg">{t('nav.contact')}</Button>
+        <Button href="https://www.linkedin.com/company/algorythmos" size="lg" variant="secondary">{t('careers.roles.noRoles.ctaLinkedin')}</Button>
+      </div>
+    </div>
+
+    <p data-reveal class="mx-auto mt-12 max-w-3xl text-center text-sm text-ink-subtle">{t('careers.eeo')}</p>
+  </section>
+</BaseLayout>
