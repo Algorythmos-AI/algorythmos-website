@@ -109,7 +109,7 @@
     animation: gradient-pan 9s linear infinite;
   }
   .aurora-blob {
-    animation: aurora-drift var(--aurora-dur, 26s) ease-in-out infinite;
+    animation: aurora-drift var(--aurora-dur, 38s) ease-in-out infinite;
     will-change: transform;
   }
 }
@@ -123,7 +123,7 @@
     transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
   }
   50% {
-    transform: translate3d(4%, -3%, 0) rotate(10deg) scale(1.12);
+    transform: translate3d(2%, -1.5%, 0) rotate(4deg) scale(1.04);
   }
   100% {
     transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
