@@ -11,7 +11,7 @@ const path = '/contact';
 const abs = (p: string) => SITE + localizePath(locale, p);
 
 /* No real contact email key exists yet; use the canonical org address. */
-const EMAIL = 'contact@algorythmos.com';
+const EMAIL = 'info@algorythmos.com.au';
 
 const crumbs = breadcrumb([
   { name: t('nav.home'), url: abs('/') },
@@ -307,7 +307,7 @@ const offices = [
         .catch(() => {
           const errEl = document.getElementById('cf-form-error');
           if (errEl) {
-            errEl.textContent = 'Something went wrong — please email contact@algorythmos.com directly.';
+            errEl.textContent = 'Something went wrong — please email info@algorythmos.com.au directly.';
             errEl.classList.remove('hidden');
           }
         })
