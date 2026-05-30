@@ -1,0 +1,29 @@
+---
+import '@/styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Algorythmos — AI Consultancy for SMEs',
+  description = 'Boutique AI consultancy delivering agentic automation, document intelligence, and MLOps for SMEs in Sydney and Paris.',
+} = Astro.props;
+
+const lang = Astro.currentLocale ?? 'en';
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" href="/favicon.ico" />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
