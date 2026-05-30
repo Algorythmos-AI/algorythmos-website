@@ -1,17 +1,12 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import Hero from '@/components/sections/home/Hero.astro';
-import Services from '@/components/sections/home/Services.astro';
-import Outcomes from '@/components/sections/home/Outcomes.astro';
-import Cta from '@/components/sections/home/Cta.astro';
+import HomePage from '@/components/pages/HomePage.astro';
 ---
 
 <BaseLayout
   title="Algorythmos — AI consultancy for SMEs in Sydney & Paris"
   description="Boutique AI consultancy delivering agentic automation, document intelligence, SQL dashboards, and MLOps for SMEs across Australia and France."
+  path="/"
 >
-  <Hero />
-  <Services />
-  <Outcomes />
-  <Cta />
+  <HomePage />
 </BaseLayout>

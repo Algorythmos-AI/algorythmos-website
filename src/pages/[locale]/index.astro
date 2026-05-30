@@ -1,0 +1,23 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import HomePage from '@/components/pages/HomePage.astro';
+import { PREFIXED_LOCALES, asLocale, localeToRegion, useTranslations } from '@/i18n';
+import { professionalService } from '@/seo/schema';
+
+export function getStaticPaths() {
+  return PREFIXED_LOCALES.map((locale) => ({ params: { locale } }));
+}
+
+const locale = asLocale(Astro.params.locale);
+const region = localeToRegion(locale) as 'AU' | 'FR';
+const t = useTranslations(locale);
+
+const titles: Record<'AU' | 'FR', string> = {
+  AU: 'Algorythmos Australia — AI consultancy for Australian SMEs',
+  FR: 'Algorythmos France — Cabinet de conseil en IA pour PME & ETI',
+};
+---
+
+<BaseLayout title={titles[region]} description={t('hero.subtitle')} path="/" jsonLd={[professionalService(region)]}>
+  <HomePage />
+</BaseLayout>

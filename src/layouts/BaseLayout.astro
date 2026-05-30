@@ -5,15 +5,30 @@ import { ClientRouter } from 'astro:transitions';
 import { asLocale, REGIONS } from '@/i18n';
 import Header from '@/components/layout/Header.astro';
 import Footer from '@/components/layout/Footer.astro';
+import SEO from '@/components/seo/SEO.astro';
+import JsonLd from '@/components/seo/JsonLd.astro';
+import { orgGraph } from '@/seo/schema';
 
 interface Props {
   title?: string;
   description?: string;
+  /** region-relative canonical path, e.g. '/services' */
+  path?: string;
+  ogType?: 'website' | 'article';
+  image?: string;
+  noindex?: boolean;
+  /** extra per-page JSON-LD blocks (Service, Article, BreadcrumbList, …) */
+  jsonLd?: (Record<string, unknown> | Record<string, unknown>[])[];
 }
 
 const {
   title = 'Algorythmos — AI Consultancy for SMEs',
   description = 'Boutique AI consultancy delivering agentic automation, document intelligence, and MLOps for SMEs in Sydney and Paris.',
+  path = '/',
+  ogType = 'website',
+  image,
+  noindex = false,
+  jsonLd = [],
 } = Astro.props;
 
 const locale = asLocale(Astro.currentLocale);
@@ -39,9 +54,10 @@ const lang = REGIONS[locale].lang;
         }
       })();
     </script>
-    <title>{title}</title>
-    <meta name="description" content={description} />
+    <SEO title={title} description={description} path={path} ogType={ogType} image={image} noindex={noindex} />
     <meta name="generator" content={Astro.generator} />
+    <JsonLd data={orgGraph} />
+    {jsonLd.map((d) => <JsonLd data={d} />)}
     <link rel="icon" href="/favicon.ico" />
     <link rel="icon" type="image/png" href="/favicon-192.png" sizes="192x192" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
