@@ -4,7 +4,8 @@ import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 
 // Astro 6 — static-first world-class rebuild.
-// Adapter (@astrojs/vercel) + Actions are added in P0.5 when forms land.
+// Pure static output (no adapter): forms use a Vercel serverless function at /api/contact,
+// which keeps the build adapter-free (and avoids that adapter's transitive advisories).
 export default defineConfig({
   site: 'https://algorythmos.com',
   trailingSlash: 'never',
