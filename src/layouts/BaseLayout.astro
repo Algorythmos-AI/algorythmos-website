@@ -73,6 +73,15 @@ const lang = REGIONS[locale].lang;
     <link rel="icon" href="/favicon.ico" />
     <link rel="icon" type="image/png" href="/favicon-192.png" sizes="192x192" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    {import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION && (
+      <meta name="google-site-verification" content={import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION} />
+    )}
+    {import.meta.env.PUBLIC_BING_VERIFICATION && (
+      <meta name="msvalidate.01" content={import.meta.env.PUBLIC_BING_VERIFICATION} />
+    )}
+    {import.meta.env.PUBLIC_YANDEX_VERIFICATION && (
+      <meta name="yandex-verification" content={import.meta.env.PUBLIC_YANDEX_VERIFICATION} />
+    )}
     <ClientRouter />
   </head>
   <body>
