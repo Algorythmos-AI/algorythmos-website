@@ -5,6 +5,7 @@ import Button from '@/components/ui/Button.astro';
 import { asLocale, useTranslations, localizePath } from '@/i18n';
 import { getService } from '@/data/services';
 import { breadcrumb, SITE, ORG_ID, ogImageUrl } from '@/seo/schema';
+import { BOOKING_URL } from '@/lib/links';
 
 interface Props {
   slug: string;
@@ -102,7 +103,7 @@ const faqLd = faqs.length
             </li>
           ))}
         </ul>
-        <Button href={localizePath(locale, '/contact')} size="lg" class="mt-8 w-full">{t('hero.cta.primary')}</Button>
+        <Button href={BOOKING_URL} target="_blank" rel="noopener" size="lg" class="mt-8 w-full">{t('hero.cta.primary')}</Button>
       </aside>
     </div>
   </section>

@@ -7,6 +7,7 @@ import { asLocale, useTranslations, localizePath } from '@/i18n';
 import { getCaseStudy } from '@/data/caseStudies';
 import { caseStudyCharts } from '@/data/caseStudyCharts';
 import { breadcrumb, SITE, ORG_ID, ogImageUrl } from '@/seo/schema';
+import { BOOKING_URL } from '@/lib/links';
 
 interface Props {
   slug: string;
@@ -96,7 +97,7 @@ const charts = caseStudyCharts[slug] ?? [];
           ))}
         </ul>
         {study.cta && <p class="mt-6 text-sm text-ink-subtle">{study.cta}</p>}
-        <Button href={localizePath(locale, '/contact')} size="lg" class="mt-6 w-full">{t('caseStudyDetail.cta.button')}</Button>
+        <Button href={BOOKING_URL} target="_blank" rel="noopener" size="lg" class="mt-6 w-full">{t('caseStudyDetail.cta.button')}</Button>
       </aside>
     </div>
   </section>
