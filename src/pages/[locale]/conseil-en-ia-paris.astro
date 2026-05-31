@@ -1,0 +1,54 @@
+---
+import LocalLanding from '@/components/pages/LocalLanding.astro';
+
+// Single-locale local landing page — France (Paris) only.
+export function getStaticPaths() {
+  return [{ params: { locale: 'fr-fr' } }];
+}
+
+const content = {
+  region: 'FR' as const,
+  path: '/conseil-en-ia-paris',
+  title: 'Conseil en IA à Paris | Algorythmos',
+  description:
+    "Cabinet de conseil en IA à Paris pour PME et ETI — automatisation agentique, intelligence documentaire, tableaux de bord SQL et MLOps. Ingénieurs seniors, conforme RGPD et EU AI Act, résultats en quelques semaines.",
+  eyebrow: 'Paris · France',
+  h1: 'Conseil en IA à Paris',
+  lead: "Une IA concrète et prête pour la production, pour les entreprises parisiennes — conçue par des ingénieurs seniors, cadrée sur des résultats mesurables et livrée en semaines, pas en trimestres.",
+  ctaPrimary: 'Réserver un appel découverte',
+  ctaContact: 'Nous contacter',
+  introHeading: "L'IA pensée pour les entreprises parisiennes",
+  introBody: [
+    "Algorythmos est un cabinet de conseil en IA qui accompagne les PME et ETI à Paris, en Île-de-France et partout en France. Nous travaillons dans votre fuseau horaire, maîtrisons le cadre réglementaire local et vous accompagnons de bout en bout — de la première idée jusqu'à un système fiable en production.",
+    "Vous échangez directement avec des ingénieurs seniors, pas avec une équipe commerciale qui délègue ensuite à des juniors. Chaque mission est cadrée sur un résultat métier mesurable — du temps gagné, moins d'erreurs, des décisions plus rapides — et nous livrons un logiciel fonctionnel en quelques semaines, puis l'améliorons en continu.",
+  ],
+  servicesHeading: 'Ce que nous faisons pour les équipes parisiennes',
+  services: [
+    { name: 'Automatisation agentique', desc: 'Des workflows autonomes multi-étapes, avec garde-fous et points de validation humaine.', slug: 'agentic-automation' },
+    { name: 'Intelligence documentaire', desc: 'Transformez factures, contrats et formulaires en données structurées et validées.', slug: 'document-intelligence' },
+    { name: 'Tableaux de bord SQL', desc: 'Des tableaux de bord décisionnels sur une couche sémantique fiable.', slug: 'sql-dashboards' },
+    { name: 'MLOps & CI/CD', desc: 'Industrialisez le ML : monitoring, ré-entraînement et déploiements sûrs et réversibles.', slug: 'mlops-cicd' },
+    { name: "Sites web augmentés par l'IA", desc: 'Des sites rapides, optimisés SEO et prêts pour les moteurs de recherche et les agents IA.', slug: 'ai-websites' },
+  ],
+  industriesHeading: 'Les secteurs que nous servons en France',
+  industriesLead: 'Une expérience approfondie dans les secteurs réglementés et riches en données, où précision et responsabilité comptent.',
+  industries: ['Santé', 'Services financiers', 'Industrie & Manufacturing', 'Commerce & E-commerce', 'Logistique & Supply Chain', 'Mines & Ressources'],
+  complianceHeading: 'Conforme et sécurisé dès la conception',
+  complianceBody: [
+    "Les entreprises françaises et européennes opèrent sous le RGPD et l'EU AI Act. Nous concevons avec la confidentialité et la sécurité dès le premier jour — minimisation des données, contrôles d'accès, journaux d'audit et supervision humaine là où les décisions comptent.",
+    "Vous avez aussi des clients hors d'Europe ? Nous construisons également selon les principes de confidentialité australiens, afin qu'une même solution serve plusieurs marchés. Les déploiements peuvent s'exécuter dans votre propre cloud (AWS, GCP, Azure) ou entièrement sur site pour les données sensibles.",
+  ],
+  faqHeading: 'Conseil en IA à Paris — questions fréquentes',
+  faqs: [
+    { q: 'Êtes-vous basés à Paris ?', a: "Nous servons nos clients français et européens depuis Paris (en complément de notre pratique de Sydney), dans votre fuseau horaire, sur site ou à distance selon vos préférences." },
+    { q: 'Travaillez-vous uniquement avec des entreprises parisiennes ?', a: "Non. Paris et l'Île-de-France sont notre terrain principal, mais nous intervenons partout en France et à l'international. La plupart des missions se déroulent à distance, avec des points réguliers et des déplacements pour les lancements et jalons clés." },
+    { q: 'En combien de temps livrez-vous ?', a: "Nous cadrons pour livrer un logiciel fonctionnel en quelques semaines, pas en trimestres — généralement un pilote ciblé d'abord, puis des itérations. Le calendrier dépend de l'accès aux données et de la complexité d'intégration, que nous cartographions en amont." },
+    { q: 'Pouvez-vous gérer des données sensibles ou réglementées ?', a: "Oui. Nous respectons le RGPD et l'EU AI Act (ainsi que les principes de confidentialité australiens), prenons en charge les déploiements en cloud privé et sur site, et intégrons contrôles d'accès, journalisation d'audit et supervision humaine." },
+    { q: 'Quel est le coût ?', a: "Les missions démarrent avec des forfaits mensuels transparents, les coûts d'usage étant facturés au prix coûtant (sans marge). Nous vous recommanderons le forfait adapté lors d'un appel découverte gratuit." },
+  ],
+  closingHeading: "Prêt à mettre l'IA au travail dans votre entreprise ?",
+  closingBody: "Réservez un appel découverte gratuit de 30 minutes. Nous identifierons l'opportunité IA à plus fort levier dans votre entreprise et comment la concrétiser.",
+};
+---
+
+<LocalLanding {...content} />
