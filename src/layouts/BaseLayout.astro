@@ -19,6 +19,8 @@ interface Props {
   ogType?: 'website' | 'article';
   image?: string;
   noindex?: boolean;
+  /** Single-locale page (local landing pages): self-canonical only, no cross-locale hreflang. */
+  standalone?: boolean;
   /** extra per-page JSON-LD blocks (Service, Article, BreadcrumbList, …) */
   jsonLd?: (Record<string, unknown> | Record<string, unknown>[])[];
 }
@@ -30,6 +32,7 @@ const {
   ogType = 'website',
   image,
   noindex = false,
+  standalone = false,
   jsonLd = [],
 } = Astro.props;
 
@@ -66,7 +69,7 @@ const lang = REGIONS[locale].lang;
         } catch (e) {}
       })();
     </script>
-    <SEO title={title} description={description} path={path} ogType={ogType} image={image} noindex={noindex} />
+    <SEO title={title} description={description} path={path} ogType={ogType} image={image} noindex={noindex} standalone={standalone} />
     <meta name="generator" content={Astro.generator} />
     <JsonLd data={orgGraph} />
     {jsonLd.map((d) => <JsonLd data={d} />)}

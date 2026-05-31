@@ -9,9 +9,11 @@ interface Props {
   ogType?: 'website' | 'article';
   image?: string;
   noindex?: boolean;
+  /** Single-locale page (e.g. a local landing page): emit a self-canonical only, no cross-locale hreflang. */
+  standalone?: boolean;
 }
 
-const { title, description, path = '/', ogType = 'website', image, noindex = false } = Astro.props;
+const { title, description, path = '/', ogType = 'website', image, noindex = false, standalone = false } = Astro.props;
 
 const locale = asLocale(Astro.currentLocale);
 const site = (Astro.site?.toString() ?? 'https://algorythmos.com').replace(/\/$/, '');
@@ -28,9 +30,9 @@ const robots = noindex || isPreview ? 'noindex, nofollow' : 'index, follow, max-
 <meta name="robots" content={robots} />
 <link rel="canonical" href={canonical} />
 
-{/* hreflang — reciprocal, absolute; x-default → global */}
-{LOCALES.map((l) => <link rel="alternate" hreflang={REGIONS[l].hreflang} href={abs(l, path)} />)}
-<link rel="alternate" hreflang="x-default" href={abs('en', path)} />
+{/* hreflang — reciprocal; skipped for standalone single-locale pages (local landing pages) */}
+{!standalone && LOCALES.map((l) => <link rel="alternate" hreflang={REGIONS[l].hreflang} href={abs(l, path)} />)}
+{!standalone && <link rel="alternate" hreflang="x-default" href={abs('en', path)} />}
 
 {/* Open Graph */}
 <meta property="og:type" content={ogType} />

@@ -31,6 +31,8 @@ export const GET: APIRoute = () => {
   L.push('## Regions');
   L.push(`- [Australia — Sydney](${SITE}/au-en): AI consultancy for Australian SMEs and enterprises.`);
   L.push(`- [France — Paris](${SITE}/fr-fr): Cabinet de conseil en IA, conforme RGPD et EU AI Act.`);
+  L.push(`- [AI Consultancy in Sydney](${SITE}/au-en/ai-consultancy-sydney): Local landing page for businesses in Sydney, NSW & Australia.`);
+  L.push(`- [Conseil en IA à Paris](${SITE}/fr-fr/conseil-en-ia-paris): Page locale pour les PME et ETI à Paris et en Île-de-France.`);
   L.push('');
   L.push('## Blog');
   L.push(`- [Blog index](${SITE}/blog)`);

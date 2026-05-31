@@ -47,6 +47,16 @@ for (const loc of LOCALES) {
   }
 }
 
+// Single-locale local landing pages (one card each, matching their standalone routes).
+pages[ogKey(localizePath('au-en', '/ai-consultancy-sydney'))] = {
+  title: 'AI Consultancy in Sydney',
+  description: 'Production-grade AI for Sydney businesses — senior engineers, outcomes in weeks.',
+};
+pages[ogKey(localizePath('fr-fr', '/conseil-en-ia-paris'))] = {
+  title: 'Conseil en IA à Paris',
+  description: 'Une IA concrète et prête pour la production, pour les PME et ETI parisiennes.',
+};
+
 export const { getStaticPaths, GET } = await OGImageRoute({
   param: 'route',
   pages,
