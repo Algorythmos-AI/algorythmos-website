@@ -53,6 +53,10 @@ export function professionalService(region: 'AU' | 'FR') {
     AU: { name: 'Algorythmos Australia', path: '/au-en', city: 'Sydney', adminArea: 'NSW', country: 'AU', lat: -33.8688, lng: 151.2093 },
     FR: { name: 'Algorythmos France', path: '/fr-fr', city: 'Paris', adminArea: 'Île-de-France', country: 'FR', lat: 48.87, lng: 2.22 },
   }[region];
+  const description =
+    region === 'AU'
+      ? 'AI consultancy for Australian SMEs — agentic automation, document intelligence, SQL dashboards, and MLOps, delivered from Sydney.'
+      : 'Cabinet de conseil en IA pour PME et ETI — automatisation agentique, intelligence documentaire, tableaux de bord SQL et MLOps, basé à Paris.';
   return {
     '@context': 'https://schema.org',
     '@type': 'ProfessionalService',
@@ -60,11 +64,14 @@ export function professionalService(region: 'AU' | 'FR') {
     name: map.name,
     url: `${SITE}${map.path}`,
     image: OG_IMAGE,
+    description,
     parentOrganization: { '@id': ORG_ID },
     address: { '@type': 'PostalAddress', addressLocality: map.city, addressRegion: map.adminArea, addressCountry: map.country },
     geo: { '@type': 'GeoCoordinates', latitude: map.lat, longitude: map.lng },
     areaServed: [{ '@type': 'City', name: map.city }, { '@type': 'Country', name: map.country === 'AU' ? 'Australia' : 'France' }],
     serviceType: ['AI Consulting', 'Agentic Automation', 'Document Intelligence', 'SQL Dashboards', 'MLOps'],
+    knowsLanguage: ['en', 'fr'],
+    priceRange: region === 'AU' ? '$$' : '€€',
   };
 }
 
