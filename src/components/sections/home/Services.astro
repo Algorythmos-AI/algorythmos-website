@@ -1,0 +1,42 @@
+---
+import { asLocale, useTranslations, localizePath } from '@/i18n';
+
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+
+const services = [
+  { slug: 'agentic-automation', name: 'Agentic Automation', desc: 'Autonomous multi-step AI workflows with guardrails, human-in-the-loop, and full audit trails.', icon: 'm12 8 1.9 3.9L18 13.8l-3.2 2.8.8 4.4-3.6-2-3.6 2 .8-4.4L2.9 13.8 8 11.9z' },
+  { slug: 'document-intelligence', name: 'Document Intelligence', desc: 'OCR + NLP extraction for invoices, contracts, and reports — structured data from messy documents.', icon: 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M8 13h8M8 17h6' },
+  { slug: 'sql-dashboards', name: 'SQL Dashboards', desc: 'Modelled metrics and executive dashboards your team can actually trust and act on.', icon: 'M4 20V10M10 20V4M16 20v-8M22 20H2' },
+  { slug: 'mlops-cicd', name: 'MLOps & CI/CD', desc: 'Productionise and operate ML systems reliably — monitoring, retraining, and safe deploys.', icon: 'M6 3v12M18 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM6 15a9 9 0 0 0 9-9' },
+  { slug: 'ai-websites', name: 'AI-Powered Websites', desc: 'Fast, SEO-first sites with AI built in — crawlable by search engines and AI agents alike.', icon: 'M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20zM12 2a10 10 0 0 0 0 20' },
+];
+---
+
+<section class="container-page py-24">
+  <div data-reveal class="max-w-2xl">
+    <h2 class="text-h2 font-bold tracking-tight text-ink">{t('nav.services')}</h2>
+    <p class="mt-3 text-ink-muted">{t('nav.servicesDesc')}</p>
+  </div>
+
+  <div class="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    {services.map((s, i) => (
+      <a
+        href={localizePath(locale, `/services/${s.slug}`)}
+        data-reveal
+        style={`--reveal-delay: ${i * 70}ms`}
+        class="group ring-gradient relative flex flex-col rounded-2xl border border-line glass p-6 transition-[transform,box-shadow] duration-300 ease-smooth hover:-translate-y-1 hover:shadow-glow"
+      >
+        <span class="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-grad-cta text-white shadow-e1">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={s.icon} /></svg>
+        </span>
+        <h3 class="mt-5 text-h3 font-semibold text-ink">{s.name}</h3>
+        <p class="mt-2 flex-1 text-sm leading-relaxed text-ink-muted">{s.desc}</p>
+        <span class="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-brand">
+          Learn more
+          <svg class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+        </span>
+      </a>
+    ))}
+  </div>
+</section>

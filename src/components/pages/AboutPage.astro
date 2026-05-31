@@ -1,0 +1,165 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeader from '@/components/sections/PageHeader.astro';
+import Button from '@/components/ui/Button.astro';
+import Aurora from '@/components/ui/Aurora.astro';
+import { asLocale, useTranslations, localizePath } from '@/i18n';
+import { breadcrumb, SITE } from '@/seo/schema';
+
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const path = '/about';
+const abs = (p: string) => SITE + localizePath(locale, p);
+
+const crumbs = breadcrumb([
+  { name: 'Home', url: abs('/') },
+  { name: t('nav.about'), url: abs(path) },
+]);
+
+const values = [0, 1, 2, 3].map((i) => ({
+  title: t(`about.values.${i}.title`),
+  description: t(`about.values.${i}.description`),
+}));
+
+const pillars = (['mission', 'vision', 'impact'] as const).map((k) => ({
+  title: t(`about.${k}.title`),
+  content: t(`about.${k}.content`),
+}));
+
+const stats = [
+  { label: t('about.stats.founded'), value: t('about.journey.milestones.1.year') },
+  { label: t('about.stats.headquarters'), value: t('careers.locations.paris.city') },
+  { label: t('about.stats.complianceReady'), value: t('about.cta.badge1') },
+];
+---
+
+<BaseLayout title={t('about.meta.title')} description={t('about.meta.description')} path={path} jsonLd={[crumbs]}>
+  <PageHeader eyebrow={t('about.hero.badge')} title={`${t('about.hero.title1')} ${t('about.hero.title2')}`} />
+
+  {/* Hero subtitle carries inline <highlight> markup → render rich */}
+  <section class="container-page pt-8">
+    <p data-reveal class="rich-copy max-w-3xl text-lead text-ink-muted" set:html={t('about.hero.subtitle')}></p>
+  </section>
+
+  {/* Etymology — what "Algorythmos" means */}
+  <section class="container-page py-24">
+    <h2 data-reveal class="max-w-2xl text-h2 font-bold tracking-tight text-ink">{t('about.meaning.title')}</h2>
+
+    <div class="mt-12 grid gap-5 lg:grid-cols-2">
+      <div data-reveal class="ring-gradient relative rounded-2xl border border-line glass p-8 shadow-e1">
+        <p class="text-sm font-semibold uppercase tracking-widest text-brand">{t('about.meaning.algorithm.title')}</p>
+        <p class="mt-2 text-lead text-ink">{t('about.meaning.algorithm.tagline')}</p>
+        <code class="mt-6 block rounded-lg border border-line bg-surface-2 px-4 py-3 font-mono text-sm text-ink-muted">
+          {t('about.meaning.algorithm.snippet')}
+        </code>
+      </div>
+
+      <div data-reveal style="--reveal-delay: 80ms" class="ring-gradient relative rounded-2xl border border-line glass p-8 shadow-e1">
+        <p class="text-sm font-semibold uppercase tracking-widest text-accent">{t('about.meaning.rhythmos.title')}</p>
+        <p class="mt-2 text-lead text-ink">{t('about.meaning.rhythmos.tagline')}</p>
+        <p class="mt-6 text-sm text-ink-muted">
+          <span class="font-semibold text-ink">{t('about.meaning.rhythmos.greek')}</span>
+          <span class="ml-2 font-mono text-base text-ink">{t('about.meaning.rhythmos.word')}</span>
+          <span class="ml-1 text-ink-subtle">{t('about.meaning.rhythmos.pronunciation')}</span>
+          <span class="mt-1 block italic">{t('about.meaning.rhythmos.translation')}</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="mt-10 max-w-3xl space-y-5">
+      <p data-reveal class="rich-copy text-lead text-ink-muted" set:html={t('about.meaning.p1')}></p>
+      <p data-reveal style="--reveal-delay: 60ms" class="text-ink-muted">{t('about.meaning.p2')}</p>
+      <p data-reveal style="--reveal-delay: 120ms" class="text-ink-muted">{t('about.meaning.p3')}</p>
+    </div>
+  </section>
+
+  {/* Mission / Vision / Impact */}
+  <section class="relative overflow-hidden border-y border-line bg-surface-2/40">
+    <div class="container-page py-24">
+      <div class="grid gap-x-10 gap-y-12 md:grid-cols-3">
+        {pillars.map((p, i) => (
+          <div data-reveal style={`--reveal-delay: ${i * 80}ms`} class="flex flex-col">
+            <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-grad-cta text-sm font-bold text-white shadow-e1">
+              {String(i + 1).padStart(2, '0')}
+            </span>
+            <h2 class="mt-5 text-h3 font-semibold text-ink">{p.title}</h2>
+            <p class="mt-3 text-ink-muted">{p.content}</p>
+          </div>
+        ))}
+      </div>
+
+      <dl class="mt-16 grid gap-5 sm:grid-cols-3">
+        {stats.map((s, i) => (
+          <div data-reveal style={`--reveal-delay: ${i * 70}ms`} class="rounded-2xl border border-line glass p-6 text-center shadow-e1">
+            <dt class="text-sm font-medium uppercase tracking-wide text-ink-subtle">{s.label}</dt>
+            <dd class="mt-2 text-h3 font-bold text-gradient-brand">{s.value}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  {/* Values */}
+  <section class="container-page py-24">
+    <h2 data-reveal class="max-w-2xl text-h2 font-bold tracking-tight text-ink">
+      {t('about.values.title')} <span class="text-gradient-brand">{t('about.values.titleHighlight')}</span>
+    </h2>
+    <p data-reveal style="--reveal-delay: 60ms" class="mt-4 max-w-2xl text-lead text-ink-muted">{t('about.values.subtitle')}</p>
+
+    <div class="mt-14 grid gap-5 sm:grid-cols-2">
+      {values.map((v, i) => (
+        <div
+          data-reveal
+          style={`--reveal-delay: ${i * 70}ms`}
+          class="ring-gradient relative rounded-2xl border border-line glass p-7 shadow-e1 transition-[transform,box-shadow] duration-300 ease-smooth hover:-translate-y-1 hover:shadow-glow"
+        >
+          <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-grad-cta text-sm font-bold text-white shadow-e1">
+            {String(i + 1).padStart(2, '0')}
+          </span>
+          <h3 class="mt-5 text-h3 font-semibold text-ink">{v.title}</h3>
+          <p class="mt-3 text-ink-muted">{v.description}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  {/* CTA */}
+  <section class="container-page pb-28">
+    <div data-reveal class="relative overflow-hidden rounded-[2rem] border border-line glass px-6 py-20 text-center shadow-e2 sm:px-12">
+      <Aurora class="opacity-70" />
+      <h2 class="mx-auto max-w-3xl text-display font-extrabold tracking-tight text-ink">
+        {t('about.cta.title')} <span class="text-gradient-brand">{t('about.cta.titleHighlight')}</span>
+      </h2>
+      <p class="mx-auto mt-5 max-w-xl text-lead text-ink-muted">{t('about.cta.subtitle')}</p>
+      <div class="mt-8 flex flex-wrap justify-center gap-3">
+        {[t('about.cta.badge1'), t('about.cta.badge2'), t('about.cta.badge3')].map((b) => (
+          <span class="rounded-full border border-line bg-surface-2 px-4 py-1.5 text-sm font-medium text-ink-muted">{b}</span>
+        ))}
+      </div>
+      <div class="mt-10 flex flex-wrap justify-center gap-4">
+        <Button href={localizePath(locale, '/contact')} size="lg">{t('hero.cta.primary')}</Button>
+        <Button href={localizePath(locale, '/pricing')} size="lg" variant="secondary">{t('hero.cta.secondary')}</Button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* Style the inline pseudo-tags carried inside translated strings (theme-aware). */
+  .rich-copy :global(highlight) {
+    background-image: var(--grad-brand);
+    background-size: 220% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: 600;
+  }
+  .rich-copy :global(blue) {
+    color: rgb(var(--brand));
+    font-weight: 600;
+  }
+  .rich-copy :global(purple) {
+    color: rgb(var(--accent));
+    font-weight: 600;
+  }
+</style>

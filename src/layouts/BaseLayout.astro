@@ -1,0 +1,134 @@
+---
+import '@fontsource-variable/inter';
+import '@/styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+import { asLocale, REGIONS } from '@/i18n';
+import Header from '@/components/layout/Header.astro';
+import Footer from '@/components/layout/Footer.astro';
+import SEO from '@/components/seo/SEO.astro';
+import JsonLd from '@/components/seo/JsonLd.astro';
+import { orgGraph } from '@/seo/schema';
+import RegionBanner from '@/components/RegionBanner.astro';
+import ConsentBanner from '@/components/ConsentBanner.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** region-relative canonical path, e.g. '/services' */
+  path?: string;
+  ogType?: 'website' | 'article';
+  image?: string;
+  noindex?: boolean;
+  /** Single-locale page (local landing pages): self-canonical only, no cross-locale hreflang. */
+  standalone?: boolean;
+  /** extra per-page JSON-LD blocks (Service, Article, BreadcrumbList, …) */
+  jsonLd?: (Record<string, unknown> | Record<string, unknown>[])[];
+}
+
+const {
+  title = 'Algorythmos — AI Consultancy for SMEs',
+  description = 'Boutique AI consultancy delivering agentic automation, document intelligence, and MLOps for SMEs in Sydney and Paris.',
+  path = '/',
+  ogType = 'website',
+  image,
+  noindex = false,
+  standalone = false,
+  jsonLd = [],
+} = Astro.props;
+
+const locale = asLocale(Astro.currentLocale);
+const lang = REGIONS[locale].lang;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {/* No-flash theme init — before paint */}
+    <script is:inline>
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+          }
+          document.documentElement.dataset.theme = t;
+        } catch (e) {
+          document.documentElement.dataset.theme = 'dark';
+        }
+      })();
+    </script>
+    <script is:inline>
+      /* Returning visitor with an explicit region choice → redirect home only. Bots (no JS) stay global. */
+      (function () {
+        try {
+          if (location.pathname !== '/') return;
+          var m = document.cookie.match(/(?:^|; )locale=(au-en|fr-fr)/);
+          if (m) location.replace('/' + m[1]);
+        } catch (e) {}
+      })();
+    </script>
+    <SEO title={title} description={description} path={path} ogType={ogType} image={image} noindex={noindex} standalone={standalone} />
+    <meta name="generator" content={Astro.generator} />
+    <JsonLd data={orgGraph} />
+    {jsonLd.map((d) => <JsonLd data={d} />)}
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" href="/favicon-192.png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    {import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION && (
+      <meta name="google-site-verification" content={import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION} />
+    )}
+    {import.meta.env.PUBLIC_BING_VERIFICATION && (
+      <meta name="msvalidate.01" content={import.meta.env.PUBLIC_BING_VERIFICATION} />
+    )}
+    {import.meta.env.PUBLIC_YANDEX_VERIFICATION && (
+      <meta name="yandex-verification" content={import.meta.env.PUBLIC_YANDEX_VERIFICATION} />
+    )}
+    <ClientRouter />
+  </head>
+  <body>
+    <a
+      href="#main"
+      class="sr-only rounded-lg bg-brand px-4 py-2 font-semibold text-brand-fg focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[var(--z-toast)]"
+    >
+      Skip to content
+    </a>
+    <Header />
+    <main id="main"><slot /></main>
+    <Footer />
+    <RegionBanner />
+    <ConsentBanner />
+    {/* Re-assert theme after View-Transition swaps */}
+    <script is:inline>
+      document.addEventListener('astro:after-swap', function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+        } catch (e) {}
+      });
+    </script>
+    <script>
+      function setupReveal() {
+        const els = document.querySelectorAll('[data-reveal]:not(.is-visible)');
+        if (!('IntersectionObserver' in window)) {
+          els.forEach((e) => e.classList.add('is-visible'));
+          return;
+        }
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((en) => {
+              if (en.isIntersecting) {
+                en.target.classList.add('is-visible');
+                io.unobserve(en.target);
+              }
+            });
+          },
+          { rootMargin: '0px 0px -10% 0px', threshold: 0.05 },
+        );
+        els.forEach((e) => io.observe(e));
+      }
+      document.addEventListener('astro:page-load', setupReveal);
+    </script>
+  </body>
+</html>

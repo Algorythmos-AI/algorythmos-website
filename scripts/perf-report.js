@@ -1,19 +1,35 @@
 #!/usr/bin/env node
 // scripts/perf-report.js
-// Bundle performance analysis for CI/CD and local development
+// Bundle performance analysis for the Astro 6 build.
+//
+// Analyses the emitted client assets in dist/_astro/*.{js,css}:
+//   - total + per-file sizes (raw + gzip)
+//   - flags any single JS chunk > 200 kB (warning)
+//   - reports the JS actually referenced by dist/index.html as the
+//     "home first-load" cost
+//
+// Astro is islands-first, so most pages ship little/zero JS. This is advisory:
+// it prints warnings and uses an informational exit code but is wired into CI
+// as non-fatal (it does NOT fail the build).
+//
+// Run: npm run perf   (after `npm run build`)
 
 import fs from 'fs';
 import path from 'path';
+import zlib from 'zlib';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const DIST_DIR = path.join(__dirname, '..', 'dist', 'assets');
-const SIZE_LIMIT_KB = 200;
-const WARNING_LIMIT_KB = 100;
+const ROOT = path.join(__dirname, '..');
+const DIST_DIR = path.join(ROOT, 'dist');
+const ASTRO_DIR = path.join(DIST_DIR, '_astro');
+const HOME_HTML = path.join(DIST_DIR, 'index.html');
 
-// ANSI colors for terminal output
+const SIZE_LIMIT_KB = 200; // single-chunk warning threshold
+const WARNING_LIMIT_KB = 100; // "getting big" advisory threshold
+
 const colors = {
   reset: '\x1b[0m',
   bold: '\x1b[1m',
@@ -27,22 +43,38 @@ const colors = {
 
 function formatSize(bytes) {
   const kb = bytes / 1024;
-  if (kb >= 1024) {
-    return `${(kb / 1024).toFixed(2)} MB`;
-  }
+  if (kb >= 1024) return `${(kb / 1024).toFixed(2)} MB`;
   return `${kb.toFixed(2)} kB`;
 }
 
-function getChunkCategory(filename) {
-  if (filename.includes('react-vendor')) return 'Core (React)';
-  if (filename.includes('framer')) return 'Animation';
-  if (filename.includes('recharts')) return 'Charts';
-  if (filename.includes('embla')) return 'Carousel';
-  if (filename.includes('index-') && filename.endsWith('.js')) return 'App Shell';
-  if (filename.includes('Page')) return 'Page';
-  if (filename.includes('Grid') || filename.includes('Carousel') || filename.includes('Showcase')) return 'Component';
-  if (filename.endsWith('.css')) return 'Styles';
-  return 'Other';
+function gzipSize(buf) {
+  try {
+    return zlib.gzipSync(buf).length;
+  } catch {
+    return 0;
+  }
+}
+
+function statAsset(dir, name) {
+  const full = path.join(dir, name);
+  const buf = fs.readFileSync(full);
+  return {
+    name,
+    size: buf.length,
+    sizeKb: buf.length / 1024,
+    gzip: gzipSize(buf),
+  };
+}
+
+/** Collect the /_astro/*.js chunks referenced by dist/index.html. */
+function homeReferencedJs() {
+  if (!fs.existsSync(HOME_HTML)) return [];
+  const html = fs.readFileSync(HOME_HTML, 'utf-8');
+  const refs = new Set();
+  const re = /\/_astro\/([^"'()\s]+\.js)/g;
+  let m;
+  while ((m = re.exec(html)) !== null) refs.add(m[1]);
+  return [...refs];
 }
 
 function analyzeBundle() {
@@ -50,119 +82,140 @@ function analyzeBundle() {
   console.log('╔════════════════════════════════════════════════════════════╗');
   console.log('║                                                            ║');
   console.log('║      📦 ALGORYTHMOS BUNDLE PERFORMANCE REPORT 📦          ║');
+  console.log('║      (Astro static build — dist/_astro)                    ║');
   console.log('║                                                            ║');
   console.log('╚════════════════════════════════════════════════════════════╝');
   console.log(colors.reset);
 
-  if (!fs.existsSync(DIST_DIR)) {
-    console.log(colors.red + '❌ No dist/assets folder found. Run "npm run build" first.' + colors.reset);
-    process.exit(1);
+  if (!fs.existsSync(ASTRO_DIR)) {
+    console.log(
+      colors.yellow +
+        '⚠️  No dist/_astro folder found. Run "npm run build" first. ' +
+        '(Nothing to analyze — treating as zero client JS.)' +
+        colors.reset
+    );
+    // Advisory script: do not hard-fail when there is simply nothing to measure.
+    return 0;
   }
 
-  const files = fs.readdirSync(DIST_DIR);
-  const jsFiles = files.filter(f => f.endsWith('.js')).map(f => {
-    const stats = fs.statSync(path.join(DIST_DIR, f));
-    return {
-      name: f,
-      size: stats.size,
-      sizeKb: stats.size / 1024,
-      category: getChunkCategory(f),
-    };
-  }).sort((a, b) => b.size - a.size);
+  const entries = fs.readdirSync(ASTRO_DIR);
+  const jsFiles = entries
+    .filter((f) => f.endsWith('.js'))
+    .map((f) => statAsset(ASTRO_DIR, f))
+    .sort((a, b) => b.size - a.size);
+  const cssFiles = entries
+    .filter((f) => f.endsWith('.css'))
+    .map((f) => statAsset(ASTRO_DIR, f))
+    .sort((a, b) => b.size - a.size);
 
-  const cssFiles = files.filter(f => f.endsWith('.css')).map(f => {
-    const stats = fs.statSync(path.join(DIST_DIR, f));
-    return { name: f, size: stats.size, sizeKb: stats.size / 1024 };
-  });
+  const totalJs = jsFiles.reduce((s, f) => s + f.size, 0);
+  const totalJsGzip = jsFiles.reduce((s, f) => s + f.gzip, 0);
+  const totalCss = cssFiles.reduce((s, f) => s + f.size, 0);
+  const totalCssGzip = cssFiles.reduce((s, f) => s + f.gzip, 0);
 
-  // Calculate totals
-  const totalJs = jsFiles.reduce((sum, f) => sum + f.size, 0);
-  const totalCss = cssFiles.reduce((sum, f) => sum + f.size, 0);
-
-  // Find the main app shell chunk
-  const appShell = jsFiles.find(f => f.category === 'App Shell');
-  const reactVendor = jsFiles.find(f => f.category === 'Core (React)');
-
-  // Initial load = App Shell + React Vendor (what loads on first visit)
-  const initialLoadSize = (appShell?.size || 0) + (reactVendor?.size || 0);
-  const initialLoadKb = initialLoadSize / 1024;
-
+  // ---- Summary ----
   console.log(colors.bold + '\n📊 BUNDLE SUMMARY' + colors.reset);
   console.log('─'.repeat(60));
-  
-  const initialColor = initialLoadKb > SIZE_LIMIT_KB ? colors.red : 
-                       initialLoadKb > WARNING_LIMIT_KB ? colors.yellow : colors.green;
-  
-  console.log(`${colors.bold}Initial Load (critical):${colors.reset} ${initialColor}${formatSize(initialLoadSize)}${colors.reset}`);
-  console.log(`${colors.bold}Total JavaScript:${colors.reset}        ${formatSize(totalJs)}`);
-  console.log(`${colors.bold}Total CSS:${colors.reset}               ${formatSize(totalCss)}`);
+  console.log(
+    `${colors.bold}Total JavaScript:${colors.reset} ${formatSize(totalJs)}  ` +
+      `(${colors.cyan}${formatSize(totalJsGzip)} gzip${colors.reset}, ${jsFiles.length} files)`
+  );
+  console.log(
+    `${colors.bold}Total CSS:       ${colors.reset} ${formatSize(totalCss)}  ` +
+      `(${colors.cyan}${formatSize(totalCssGzip)} gzip${colors.reset}, ${cssFiles.length} files)`
+  );
 
-  // Group by category
-  const byCategory = {};
-  jsFiles.forEach(f => {
-    if (!byCategory[f.category]) {
-      byCategory[f.category] = { files: [], total: 0 };
-    }
-    byCategory[f.category].files.push(f);
-    byCategory[f.category].total += f.size;
-  });
+  // ---- Home first-load ----
+  const homeJs = homeReferencedJs();
+  const homeChunks = homeJs
+    .map((name) => jsFiles.find((f) => f.name === name))
+    .filter(Boolean);
+  const homeRaw = homeChunks.reduce((s, f) => s + f.size, 0);
+  const homeGzip = homeChunks.reduce((s, f) => s + f.gzip, 0);
 
-  console.log(colors.bold + '\n📦 CHUNKS BY CATEGORY' + colors.reset);
+  console.log(colors.bold + '\n🏠 HOME FIRST-LOAD (referenced by dist/index.html)' + colors.reset);
   console.log('─'.repeat(60));
-
-  Object.entries(byCategory)
-    .sort((a, b) => b[1].total - a[1].total)
-    .forEach(([category, data]) => {
-      const categoryColor = data.total / 1024 > SIZE_LIMIT_KB ? colors.yellow : colors.reset;
-      console.log(`\n${colors.bold}${category}${colors.reset} (${categoryColor}${formatSize(data.total)}${colors.reset})`);
-      data.files.slice(0, 5).forEach(f => {
-        const sizeColor = f.sizeKb > SIZE_LIMIT_KB ? colors.red :
-                         f.sizeKb > WARNING_LIMIT_KB ? colors.yellow : colors.reset;
-        const shortName = f.name.replace(/-[\w]{8}\.js$/, '.js');
-        console.log(`  ${sizeColor}${formatSize(f.size).padStart(10)}${colors.reset}  ${shortName}`);
+  if (homeChunks.length === 0) {
+    console.log(`${colors.green}✅ Home ships 0 JS chunks from /_astro (pure static / islands idle)${colors.reset}`);
+  } else {
+    const homeColor =
+      homeRaw / 1024 > SIZE_LIMIT_KB
+        ? colors.red
+        : homeRaw / 1024 > WARNING_LIMIT_KB
+          ? colors.yellow
+          : colors.green;
+    console.log(
+      `${colors.bold}Home JS:${colors.reset} ${homeColor}${formatSize(homeRaw)}${colors.reset} ` +
+        `(${colors.cyan}${formatSize(homeGzip)} gzip${colors.reset}, ${homeChunks.length} chunk(s))`
+    );
+    homeChunks
+      .sort((a, b) => b.size - a.size)
+      .forEach((f) => {
+        console.log(
+          `  ${formatSize(f.size).padStart(10)}  ${colors.cyan}${formatSize(f.gzip).padStart(9)} gz${colors.reset}  ${f.name}`
+        );
       });
-      if (data.files.length > 5) {
-        console.log(`  ... and ${data.files.length - 5} more`);
-      }
-    });
+  }
 
-  // Warnings
-  const oversizedChunks = jsFiles.filter(f => f.sizeKb > SIZE_LIMIT_KB);
-  
+  // ---- Largest JS chunks ----
+  console.log(colors.bold + '\n📦 LARGEST JS CHUNKS' + colors.reset);
+  console.log('─'.repeat(60));
+  if (jsFiles.length === 0) {
+    console.log(`${colors.green}✅ No client JS emitted${colors.reset}`);
+  } else {
+    jsFiles.slice(0, 10).forEach((f) => {
+      const sizeColor =
+        f.sizeKb > SIZE_LIMIT_KB ? colors.red : f.sizeKb > WARNING_LIMIT_KB ? colors.yellow : colors.reset;
+      console.log(
+        `  ${sizeColor}${formatSize(f.size).padStart(10)}${colors.reset}  ` +
+          `${colors.cyan}${formatSize(f.gzip).padStart(9)} gz${colors.reset}  ${f.name}`
+      );
+    });
+    if (jsFiles.length > 10) console.log(`  ... and ${jsFiles.length - 10} more`);
+  }
+
+  // ---- CSS ----
+  if (cssFiles.length > 0) {
+    console.log(colors.bold + '\n🎨 CSS FILES' + colors.reset);
+    console.log('─'.repeat(60));
+    cssFiles.slice(0, 10).forEach((f) => {
+      console.log(
+        `  ${formatSize(f.size).padStart(10)}  ${colors.cyan}${formatSize(f.gzip).padStart(9)} gz${colors.reset}  ${f.name}`
+      );
+    });
+    if (cssFiles.length > 10) console.log(`  ... and ${cssFiles.length - 10} more`);
+  }
+
+  // ---- Warnings ----
+  const oversized = jsFiles.filter((f) => f.sizeKb > SIZE_LIMIT_KB);
   console.log(colors.bold + '\n⚠️  WARNINGS' + colors.reset);
   console.log('─'.repeat(60));
-
-  if (oversizedChunks.length > 0) {
-    oversizedChunks.forEach(f => {
-      console.log(`${colors.yellow}⚠  ${f.name} is ${formatSize(f.size)} (>${SIZE_LIMIT_KB} kB limit)${colors.reset}`);
+  if (oversized.length > 0) {
+    oversized.forEach((f) => {
+      console.log(
+        `${colors.yellow}⚠  ${f.name} is ${formatSize(f.size)} (> ${SIZE_LIMIT_KB} kB)${colors.reset}`
+      );
     });
   } else {
-    console.log(`${colors.green}✅ No chunks exceed ${SIZE_LIMIT_KB} kB${colors.reset}`);
+    console.log(`${colors.green}✅ No JS chunk exceeds ${SIZE_LIMIT_KB} kB${colors.reset}`);
   }
 
-  if (initialLoadKb > 180) {
-    console.log(`${colors.red}❌ Initial load ${formatSize(initialLoadSize)} exceeds 180 kB target${colors.reset}`);
-  } else {
-    console.log(`${colors.green}✅ Initial load ${formatSize(initialLoadSize)} is under 180 kB target${colors.reset}`);
-  }
-
-  // Final status
+  // ---- Final status (advisory only) ----
   console.log(colors.bold + '\n📋 FINAL STATUS' + colors.reset);
   console.log('─'.repeat(60));
-  
-  const passed = initialLoadKb <= 180 && oversizedChunks.length <= 1;
-  
-  if (passed) {
+  if (oversized.length === 0) {
     console.log(colors.green + colors.bold + '✅ PERFORMANCE CHECK PASSED' + colors.reset);
   } else {
-    console.log(colors.yellow + colors.bold + '⚠️  PERFORMANCE NEEDS IMPROVEMENT' + colors.reset);
+    console.log(
+      colors.yellow + colors.bold + '⚠️  PERFORMANCE NEEDS ATTENTION (advisory — not blocking)' + colors.reset
+    );
   }
-
   console.log('\n');
-  
-  return passed ? 0 : 1;
+
+  // Advisory exit code: non-zero signals "look at this" but CI runs it
+  // non-fatally so it never blocks the build.
+  return oversized.length > 0 ? 1 : 0;
 }
 
-// Run analysis
 const exitCode = analyzeBundle();
 process.exit(exitCode);

@@ -1,0 +1,34 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Button from '@/components/ui/Button.astro';
+import Aurora from '@/components/ui/Aurora.astro';
+import { useTranslations, localizePath } from '@/i18n';
+
+/* Single branded global 404 (no [locale] variant). Always English shell. */
+const t = useTranslations('en');
+---
+
+<BaseLayout title={t('notFoundPage.meta.title')} description={t('notFoundPage.meta.description')} path="/404" noindex={true}>
+  <section class="relative flex min-h-[70vh] items-center overflow-hidden border-b border-line">
+    <Aurora class="opacity-60" />
+    <div class="container-page py-24 text-center">
+      <p data-reveal class="text-gradient-brand text-mega font-extrabold leading-none tracking-tight">
+        {t('notFoundPage.errorCode')}
+      </p>
+      <h1 data-reveal style="--reveal-delay: 60ms" class="mt-4 text-h1 font-extrabold tracking-tight text-ink">
+        {t('notFoundPage.title')}
+      </h1>
+      <p data-reveal style="--reveal-delay: 120ms" class="mx-auto mt-5 max-w-xl text-lead text-ink-muted">
+        {t('notFoundPage.subtitle')}
+      </p>
+      <p data-reveal style="--reveal-delay: 160ms" class="mx-auto mt-3 max-w-lg text-ink-subtle">
+        {t('notFoundPage.description')}
+      </p>
+      <div data-reveal style="--reveal-delay: 220ms" class="mt-10 flex flex-wrap items-center justify-center gap-4">
+        <Button href={localizePath('en', '/')} size="lg">{t('notFoundPage.cta.home')}</Button>
+        <Button href={localizePath('en', '/services')} variant="secondary" size="lg">{t('nav.services')}</Button>
+        <Button href={localizePath('en', '/contact')} variant="secondary" size="lg">{t('notFoundPage.cta.contact')}</Button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

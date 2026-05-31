@@ -1,0 +1,9 @@
+legacy/
+node_modules/
+dist/
+.astro/
+tests/
+e2e/
+playwright-report/
+test-results/
+.claude/

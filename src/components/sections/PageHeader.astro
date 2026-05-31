@@ -1,0 +1,21 @@
+---
+import Aurora from '@/components/ui/Aurora.astro';
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  lead?: string;
+}
+const { eyebrow, title, lead } = Astro.props;
+---
+
+<section class="relative overflow-hidden border-b border-line">
+  <Aurora class="opacity-60" />
+  <div class="container-page py-16 sm:py-24">
+    {eyebrow && <p data-reveal class="text-sm font-semibold uppercase tracking-widest text-accent">{eyebrow}</p>}
+    <h1 data-reveal style="--reveal-delay: 60ms" class="mt-3 max-w-4xl text-h1 font-extrabold tracking-tight text-ink">
+      {title}
+    </h1>
+    {lead && <p data-reveal style="--reveal-delay: 120ms" class="mt-5 max-w-2xl text-lead text-ink-muted">{lead}</p>}
+  </div>
+</section>

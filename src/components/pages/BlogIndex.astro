@@ -1,0 +1,71 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeader from '@/components/sections/PageHeader.astro';
+import { asLocale, useTranslations, localizePath } from '@/i18n';
+import { blog } from '@/data/blog';
+import { breadcrumb, SITE } from '@/seo/schema';
+
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const abs = (p: string) => SITE + localizePath(locale, p);
+
+const posts = blog.map((p) => ({
+  slug: p.slug,
+  title: t(`blog.posts.${p.postIndex}.title`),
+  snippet: t(`blog.posts.${p.postIndex}.snippet`),
+  date: t(`blog.posts.${p.postIndex}.date`),
+  href: localizePath(locale, `/blog/${p.slug}`),
+  url: abs(`/blog/${p.slug}`),
+}));
+
+const collection = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: t('blog.meta.title'),
+  description: t('blog.meta.description'),
+  url: abs('/blog'),
+  mainEntity: {
+    '@type': 'ItemList',
+    itemListElement: posts.map((p, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      url: p.url,
+      name: p.title,
+    })),
+  },
+};
+const crumbs = breadcrumb([
+  { name: 'Home', url: abs('/') },
+  { name: t('blog.hero.title'), url: abs('/blog') },
+]);
+---
+
+<BaseLayout
+  title={t('blog.meta.title')}
+  description={t('blog.meta.description')}
+  path="/blog"
+  jsonLd={[collection, crumbs]}
+>
+  <PageHeader eyebrow={t('blog.hero.title')} title={t('blog.hero.title')} lead={t('blog.hero.subtitle')} />
+
+  <section class="container-page py-20">
+    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {posts.map((p, i) => (
+        <a
+          href={p.href}
+          data-reveal
+          style={`--reveal-delay: ${i * 70}ms`}
+          class="group ring-gradient relative flex flex-col rounded-2xl border border-line glass p-6 transition-[transform,box-shadow] duration-300 ease-smooth hover:-translate-y-1 hover:shadow-glow"
+        >
+          <p class="text-sm font-semibold uppercase tracking-widest text-accent">{p.date}</p>
+          <h2 class="mt-3 text-h3 font-semibold text-ink">{p.title}</h2>
+          <p class="mt-3 flex-1 text-sm leading-relaxed text-ink-muted">{p.snippet}</p>
+          <span class="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-brand">
+            Read article
+            <svg class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+          </span>
+        </a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

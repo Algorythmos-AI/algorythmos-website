@@ -1,0 +1,172 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 800" width="1280" height="800" role="img" aria-label="Algorythmos AI console">
+  <defs>
+    <linearGradient id="hh-area" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#a78bfa" stop-opacity="0.34"/>
+      <stop offset="1" stop-color="#a78bfa" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="hh-line" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#a78bfa"/>
+      <stop offset="1" stop-color="#22d3ee"/>
+    </linearGradient>
+    <linearGradient id="hh-cta" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8b5cf6"/>
+      <stop offset="1" stop-color="#6366f1"/>
+    </linearGradient>
+    <style>
+      text{font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;}
+      .h{fill:#f3f3f8;} .m{fill:#9a9cb4;} .s{fill:#6c6e86;}
+    </style>
+  </defs>
+
+  <!-- canvas -->
+  <rect width="1280" height="800" fill="#0c0c13"/>
+
+  <!-- chrome bar -->
+  <rect width="1280" height="52" fill="#14141e"/>
+  <line x1="0" y1="52" x2="1280" y2="52" stroke="#ffffff" stroke-opacity="0.07"/>
+  <circle cx="26" cy="26" r="5.5" fill="#ffffff" fill-opacity="0.18"/>
+  <circle cx="46" cy="26" r="5.5" fill="#ffffff" fill-opacity="0.18"/>
+  <circle cx="66" cy="26" r="5.5" fill="#ffffff" fill-opacity="0.18"/>
+  <rect x="452" y="13" width="376" height="26" rx="13" fill="#222232"/>
+  <circle cx="476" cy="26" r="3.5" fill="#34d399"/>
+  <text x="492" y="30" font-size="12.5" class="m">app.algorythmos.com/agents</text>
+
+  <!-- sidebar -->
+  <rect x="0" y="52" width="216" height="748" fill="#0f0f17"/>
+  <line x1="216" y1="52" x2="216" y2="800" stroke="#ffffff" stroke-opacity="0.07"/>
+  <rect x="24" y="80" width="26" height="26" rx="8" fill="url(#hh-cta)"/>
+  <circle cx="46" cy="84" r="5" fill="#22d3ee"/>
+  <text x="60" y="101" font-size="15" font-weight="600" class="h">Algorythmos</text>
+
+  <!-- nav -->
+  <rect x="16" y="146" width="184" height="36" rx="9" fill="#ffffff" fill-opacity="0.06"/>
+  <rect x="16" y="146" width="3" height="36" rx="1.5" fill="#a78bfa"/>
+  <circle cx="36" cy="164" r="4" fill="#a78bfa"/>
+  <text x="52" y="169" font-size="13.5" class="h">Agents</text>
+  <circle cx="36" cy="208" r="4" fill="#5a5c74"/>
+  <text x="52" y="213" font-size="13.5" class="m">Overview</text>
+  <circle cx="36" cy="248" r="4" fill="#5a5c74"/>
+  <text x="52" y="253" font-size="13.5" class="m">Documents</text>
+  <circle cx="36" cy="288" r="4" fill="#5a5c74"/>
+  <text x="52" y="293" font-size="13.5" class="m">Dashboards</text>
+  <circle cx="36" cy="328" r="4" fill="#5a5c74"/>
+  <text x="52" y="333" font-size="13.5" class="m">Pipelines</text>
+  <circle cx="36" cy="368" r="4" fill="#5a5c74"/>
+  <text x="52" y="373" font-size="13.5" class="m">Monitoring</text>
+  <line x1="24" y1="724" x2="192" y2="724" stroke="#ffffff" stroke-opacity="0.06"/>
+  <circle cx="36" cy="756" r="9" fill="#262636"/>
+  <text x="52" y="753" font-size="12.5" class="m">Sam K.</text>
+  <text x="52" y="769" font-size="11" class="s">Admin</text>
+
+  <!-- header -->
+  <text x="252" y="100" font-size="22" font-weight="600" class="h">Agent runs</text>
+  <text x="252" y="124" font-size="13" class="m">Production workspace · last 24 hours</text>
+  <rect x="930" y="84" width="86" height="30" rx="15" fill="#34d399" fill-opacity="0.12"/>
+  <circle cx="950" cy="99" r="4" fill="#34d399"/>
+  <text x="962" y="103" font-size="12.5" fill="#34d399">Live</text>
+  <rect x="1028" y="84" width="120" height="30" rx="9" fill="url(#hh-cta)"/>
+  <text x="1052" y="104" font-size="13" font-weight="600" fill="#ffffff">+ New agent</text>
+
+  <!-- KPI cards -->
+  <g>
+    <rect x="252" y="148" width="288" height="104" rx="14" fill="#16161f" stroke="#ffffff" stroke-opacity="0.07"/>
+    <text x="272" y="180" font-size="12.5" class="m">Runs today</text>
+    <text x="272" y="214" font-size="27" font-weight="700" class="h">1,284</text>
+    <text x="272" y="236" font-size="11.5" fill="#34d399">▲ 12.4% vs yesterday</text>
+    <polyline points="452,228 466,222 480,226 494,214 508,218 522,206" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g>
+    <rect x="556" y="148" width="288" height="104" rx="14" fill="#16161f" stroke="#ffffff" stroke-opacity="0.07"/>
+    <text x="576" y="180" font-size="12.5" class="m">Success rate</text>
+    <text x="576" y="214" font-size="27" font-weight="700" class="h">99.2%</text>
+    <text x="576" y="236" font-size="11.5" fill="#34d399">▲ 0.3 pts</text>
+    <polyline points="756,226 770,224 784,220 798,221 812,214 826,210" fill="none" stroke="#22d3ee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g>
+    <rect x="860" y="148" width="288" height="104" rx="14" fill="#16161f" stroke="#ffffff" stroke-opacity="0.07"/>
+    <text x="880" y="180" font-size="12.5" class="m">Avg latency</text>
+    <text x="880" y="214" font-size="27" font-weight="700" class="h">1.8s</text>
+    <text x="880" y="236" font-size="11.5" class="s">p95 · steady</text>
+    <polyline points="1060,220 1074,224 1088,218 1102,222 1116,219 1130,221" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- throughput chart -->
+  <rect x="252" y="276" width="592" height="236" rx="14" fill="#16161f" stroke="#ffffff" stroke-opacity="0.07"/>
+  <text x="276" y="308" font-size="14" font-weight="600" class="h">Throughput</text>
+  <text x="276" y="328" font-size="11.5" class="s">completed runs / hour</text>
+  <g stroke="#ffffff" stroke-opacity="0.05">
+    <line x1="276" y1="356" x2="820" y2="356"/>
+    <line x1="276" y1="404" x2="820" y2="404"/>
+    <line x1="276" y1="452" x2="820" y2="452"/>
+  </g>
+  <path d="M276 452 L276 430 L344 436 L412 408 L480 416 L548 380 L616 392 L684 356 L752 372 L820 344 L820 452 Z" fill="url(#hh-area)"/>
+  <polyline points="276,430 344,436 412,408 480,416 548,380 616,392 684,356 752,372 820,344" fill="none" stroke="url(#hh-line)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="820" cy="344" r="3.5" fill="#22d3ee"/>
+  <g font-size="11" class="s">
+    <text x="276" y="478">00:00</text>
+    <text x="412" y="478">06:00</text>
+    <text x="548" y="478">12:00</text>
+    <text x="684" y="478">18:00</text>
+    <text x="800" y="478">now</text>
+  </g>
+
+  <!-- recent runs -->
+  <rect x="860" y="276" width="288" height="236" rx="14" fill="#16161f" stroke="#ffffff" stroke-opacity="0.07"/>
+  <text x="880" y="308" font-size="14" font-weight="600" class="h">Recent runs</text>
+  <g>
+    <circle cx="884" cy="340" r="4" fill="#34d399"/>
+    <text x="900" y="344" font-size="12.5" class="h">Invoice triage</text>
+    <text x="1060" y="344" font-size="11" class="s">2m ago</text>
+    <text x="900" y="360" font-size="10.5" class="s">4/4 steps · done</text>
+  </g>
+  <line x1="880" y1="376" x2="1128" y2="376" stroke="#ffffff" stroke-opacity="0.05"/>
+  <g>
+    <circle cx="884" cy="400" r="4" fill="#22d3ee"/>
+    <text x="900" y="404" font-size="12.5" class="h">Contract review</text>
+    <text x="1060" y="404" font-size="11" class="s">running</text>
+    <text x="900" y="420" font-size="10.5" class="s">3/5 steps · awaiting approval</text>
+  </g>
+  <line x1="880" y1="436" x2="1128" y2="436" stroke="#ffffff" stroke-opacity="0.05"/>
+  <g>
+    <circle cx="884" cy="460" r="4" fill="#34d399"/>
+    <text x="900" y="464" font-size="12.5" class="h">Ledger sync</text>
+    <text x="1060" y="464" font-size="11" class="s">9m ago</text>
+    <text x="900" y="480" font-size="10.5" class="s">6/6 steps · done</text>
+  </g>
+
+  <!-- agentic workflow strip -->
+  <rect x="252" y="540" width="896" height="180" rx="14" fill="#16161f" stroke="#ffffff" stroke-opacity="0.07"/>
+  <text x="276" y="572" font-size="14" font-weight="600" class="h">Agent workflow</text>
+  <text x="276" y="592" font-size="11.5" class="s">contract-review · with human-in-the-loop approval</text>
+  <line x1="330" y1="650" x2="1070" y2="650" stroke="#ffffff" stroke-opacity="0.12"/>
+  <line x1="330" y1="650" x2="700" y2="650" stroke="url(#hh-line)" stroke-width="2"/>
+  <!-- nodes -->
+  <g>
+    <circle cx="330" cy="650" r="16" fill="#1d1d2b" stroke="#a78bfa" stroke-width="1.5"/>
+    <text x="330" y="654" font-size="11" font-weight="600" text-anchor="middle" class="h">1</text>
+    <text x="330" y="688" font-size="11" text-anchor="middle" class="m">Ingest</text>
+  </g>
+  <g>
+    <circle cx="515" cy="650" r="16" fill="#1d1d2b" stroke="#a78bfa" stroke-width="1.5"/>
+    <text x="515" y="654" font-size="11" font-weight="600" text-anchor="middle" class="h">2</text>
+    <text x="515" y="688" font-size="11" text-anchor="middle" class="m">Extract</text>
+  </g>
+  <g>
+    <circle cx="700" cy="650" r="16" fill="#1d1d2b" stroke="#22d3ee" stroke-width="1.5"/>
+    <text x="700" y="654" font-size="11" font-weight="600" text-anchor="middle" class="h">3</text>
+    <text x="700" y="688" font-size="11" text-anchor="middle" fill="#22d3ee">Review</text>
+  </g>
+  <g>
+    <circle cx="885" cy="650" r="16" fill="#15151f" stroke="#3a3a4e" stroke-width="1.5"/>
+    <text x="885" y="654" font-size="11" font-weight="600" text-anchor="middle" class="s">4</text>
+    <text x="885" y="688" font-size="11" text-anchor="middle" class="s">Approve</text>
+  </g>
+  <g>
+    <circle cx="1070" cy="650" r="16" fill="#15151f" stroke="#3a3a4e" stroke-width="1.5"/>
+    <text x="1070" y="654" font-size="11" font-weight="600" text-anchor="middle" class="s">5</text>
+    <text x="1070" y="688" font-size="11" text-anchor="middle" class="s">Post</text>
+  </g>
+  <!-- human approval marker on node 4 -->
+  <rect x="852" y="604" width="66" height="20" rx="10" fill="#22d3ee" fill-opacity="0.12"/>
+  <text x="885" y="618" font-size="10" text-anchor="middle" fill="#22d3ee">human</text>
+</svg>

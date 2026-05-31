@@ -1,0 +1,26 @@
+---
+/** "Trusted by" logo strip. Renders nothing until `partnerLogos` is populated. */
+import { partnerLogos } from '@/data/socialProof';
+const cls = 'h-7 w-auto opacity-60 grayscale transition hover:opacity-100 hover:grayscale-0';
+---
+
+{partnerLogos.length > 0 && (
+  <section class="border-b border-line bg-surface-2/30">
+    <div class="container-page py-10">
+      <p data-reveal class="text-center text-xs font-semibold uppercase tracking-[0.2em] text-ink-subtle">
+        Trusted by teams at
+      </p>
+      <div data-reveal class="mt-6 flex flex-wrap items-center justify-center gap-x-12 gap-y-6">
+        {partnerLogos.map((logo) =>
+          logo.href ? (
+            <a href={logo.href} target="_blank" rel="noopener" aria-label={logo.name}>
+              <img src={logo.src} alt={logo.name} loading="lazy" decoding="async" class={cls} />
+            </a>
+          ) : (
+            <img src={logo.src} alt={logo.name} loading="lazy" decoding="async" class={cls} />
+          ),
+        )}
+      </div>
+    </div>
+  </section>
+)}

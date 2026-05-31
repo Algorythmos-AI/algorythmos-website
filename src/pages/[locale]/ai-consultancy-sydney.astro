@@ -1,0 +1,54 @@
+---
+import LocalLanding from '@/components/pages/LocalLanding.astro';
+
+// Single-locale local landing page — Australia (Sydney) only.
+export function getStaticPaths() {
+  return [{ params: { locale: 'au-en' } }];
+}
+
+const content = {
+  region: 'AU' as const,
+  path: '/ai-consultancy-sydney',
+  title: 'AI Consultancy in Sydney | Algorythmos',
+  description:
+    'AI consultancy in Sydney for Australian SMEs — agentic automation, document intelligence, SQL dashboards and MLOps. Senior engineers, aligned to the Australian Privacy Principles, outcomes in weeks.',
+  eyebrow: 'Sydney · Australia',
+  h1: 'AI Consultancy in Sydney',
+  lead: 'Practical, production-grade AI for Sydney businesses — built by senior engineers, scoped to measurable outcomes, and shipped in weeks, not quarters.',
+  ctaPrimary: 'Book a discovery call',
+  ctaContact: 'Contact us',
+  introHeading: 'AI built for Sydney businesses',
+  introBody: [
+    'Algorythmos is a boutique AI consultancy serving small and mid-sized businesses across Sydney, New South Wales, and wider Australia. We work in your timezone, understand the local regulatory landscape, and partner with you end to end — from the first idea to a system running reliably in production.',
+    'You work directly with senior engineers, not a sales team that hands you to juniors. Every engagement is scoped to a measurable business outcome — hours saved, errors cut, decisions made faster — and we ship working software in weeks, then keep improving it.',
+  ],
+  servicesHeading: 'What we do for Sydney teams',
+  services: [
+    { name: 'Agentic Automation', desc: 'Autonomous, multi-step workflows with guardrails and human-in-the-loop checkpoints.', slug: 'agentic-automation' },
+    { name: 'Document Intelligence', desc: 'Turn invoices, contracts and forms into clean, structured, validated data.', slug: 'document-intelligence' },
+    { name: 'SQL Dashboards', desc: 'Executive dashboards on a trusted semantic layer — metrics your team can rely on.', slug: 'sql-dashboards' },
+    { name: 'MLOps & CI/CD', desc: 'Productionise ML with monitoring, retraining and safe, reversible deployments.', slug: 'mlops-cicd' },
+    { name: 'AI-Powered Websites', desc: 'Fast, SEO-first, AI-ready sites built to be found by search engines and AI agents.', slug: 'ai-websites' },
+  ],
+  industriesHeading: 'Industries we serve in Australia',
+  industriesLead: 'Deep experience in regulated, data-intensive sectors where accuracy and accountability matter.',
+  industries: ['Healthcare', 'Financial Services', 'Manufacturing', 'Retail & E-commerce', 'Logistics & Supply Chain', 'Mining & Resources'],
+  complianceHeading: 'Compliant and secure by design',
+  complianceBody: [
+    'Australian businesses operate under the Privacy Act and the Australian Privacy Principles (APPs). We design with privacy and security from day one — data minimisation, access controls, audit trails, and human review where decisions carry weight.',
+    'Work with EU customers too? We also build to GDPR and the EU AI Act, so a single solution can serve both markets. Deployments can run in your own cloud (AWS, GCP, Azure) or fully on-premise for sensitive data.',
+  ],
+  faqHeading: 'Sydney AI consultancy — FAQs',
+  faqs: [
+    { q: 'Are you based in Sydney?', a: 'We serve Australian clients from Sydney (alongside a Paris practice for Europe), working in your timezone and meeting on-site or remotely as suits you.' },
+    { q: 'Do you only work with Sydney businesses?', a: 'No. Sydney and NSW are home turf, but we deliver across Australia and internationally. Most work is done remotely with regular check-ins; we travel for kick-offs and key milestones where it helps.' },
+    { q: 'How quickly can you deliver?', a: 'We scope to ship working software in weeks, not quarters — typically a focused pilot first, then iterate. The exact timeline depends on data access and integration complexity, which we map out up front.' },
+    { q: 'Can you handle sensitive or regulated data?', a: 'Yes. We align to the Australian Privacy Principles (and GDPR for EU data), support private-cloud and on-premise deployments, and build in access controls, audit logging and human review.' },
+    { q: 'What does it cost?', a: 'Engagements start at transparent monthly tiers with usage billed at cost (no markup). We will recommend the right tier on a free discovery call once we understand your goals.' },
+  ],
+  closingHeading: 'Ready to put AI to work in your Sydney business?',
+  closingBody: "Book a free 30-minute discovery call. We'll map the highest-leverage AI opportunity in your business and exactly how to ship it.",
+};
+---
+
+<LocalLanding {...content} />

@@ -1,0 +1,122 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeader from '@/components/sections/PageHeader.astro';
+import Button from '@/components/ui/Button.astro';
+import Chart from '@/components/islands/Chart';
+import { asLocale, useTranslations, localizePath } from '@/i18n';
+import { getCaseStudy } from '@/data/caseStudies';
+import { caseStudyCharts } from '@/data/caseStudyCharts';
+import { breadcrumb, SITE, ORG_ID, ogImageUrl } from '@/seo/schema';
+import { BOOKING_URL } from '@/lib/links';
+
+interface Props {
+  slug: string;
+}
+const { slug } = Astro.props;
+const cs = getCaseStudy(slug);
+if (!cs) throw new Error(`Unknown case study slug: ${slug}`);
+
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const path = `/case-studies/${cs.slug}`;
+const abs = (p: string) => SITE + localizePath(locale, p);
+const ogImg = ogImageUrl(localizePath(locale, path));
+
+/**
+ * Normalise both content shapes into one view model:
+ *  - i18n-backed (4 studies) → caseStudyDetail.studies.<slug>.*
+ *  - inline EN (2 studies)   → data module
+ */
+// Prefer authored inline content (the 2 originally-hardcoded studies have BOTH an
+// i18nIndex for their card AND inline detail); fall back to i18n detail keys (4 studies).
+const study = cs.inline
+  ? {
+      title: cs.inline.title,
+      meta: cs.inline.meta,
+      challenge: cs.inline.challenge,
+      solution: cs.inline.solution,
+      results: cs.inline.result,
+      cta: cs.inline.cta,
+    }
+  : {
+      title: t(`caseStudyDetail.studies.${slug}.title`),
+      meta: t(`caseStudyDetail.studies.${slug}.meta`),
+      challenge: t(`caseStudyDetail.studies.${slug}.challenge`),
+      solution: t(`caseStudyDetail.studies.${slug}.solution`),
+      results: [
+        t(`caseStudyDetail.studies.${slug}.results.0`),
+        t(`caseStudyDetail.studies.${slug}.results.1`),
+        t(`caseStudyDetail.studies.${slug}.results.2`),
+      ],
+      cta: t(`caseStudyDetail.studies.${slug}.cta`),
+    };
+
+const articleLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: study.title,
+  description: study.meta,
+  about: study.challenge,
+  author: { '@id': ORG_ID },
+  publisher: { '@id': ORG_ID },
+  inLanguage: locale === 'fr-fr' ? 'fr' : 'en',
+  image: ogImg,
+  url: abs(path),
+};
+const crumbs = breadcrumb([
+  { name: 'Home', url: abs('/') },
+  { name: t('nav.caseStudies'), url: abs('/case-studies') },
+  { name: study.title, url: abs(path) },
+]);
+
+/** Charts exist only for the two data-heavy inline studies; undefined → [] otherwise. */
+const charts = caseStudyCharts[slug] ?? [];
+---
+
+<BaseLayout title={`${study.title} — Algorythmos`} description={study.meta} path={path} ogType="article" image={ogImg} jsonLd={[articleLd, crumbs]}>
+  <PageHeader eyebrow={t('nav.caseStudies')} title={study.title} lead={study.meta} />
+
+  <section class="container-page py-20">
+    <div class="grid gap-12 lg:grid-cols-[1.5fr_1fr]">
+      <div data-reveal>
+        <h2 class="text-h3 font-semibold text-ink">{t('caseStudyDetail.sections.challenge')}</h2>
+        <p class="mt-4 text-lead text-ink-muted">{study.challenge}</p>
+
+        <h2 class="mt-12 text-h3 font-semibold text-ink">{t('caseStudyDetail.sections.solution')}</h2>
+        <p class="mt-4 text-lead text-ink-muted">{study.solution}</p>
+      </div>
+
+      <aside data-reveal style="--reveal-delay: 80ms" class="h-fit rounded-2xl border border-line glass p-6">
+        <h2 class="text-h3 font-semibold text-ink">{t('caseStudyDetail.sections.results')}</h2>
+        <ul class="mt-4 space-y-3">
+          {study.results.map((r) => (
+            <li class="flex items-start gap-3 text-sm text-ink-muted">
+              <svg class="mt-0.5 h-5 w-5 shrink-0 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
+              <span>{r}</span>
+            </li>
+          ))}
+        </ul>
+        {study.cta && <p class="mt-6 text-sm text-ink-subtle">{study.cta}</p>}
+        <Button href={BOOKING_URL} target="_blank" rel="noopener" size="lg" class="mt-6 w-full">{t('caseStudyDetail.cta.button')}</Button>
+      </aside>
+    </div>
+  </section>
+
+  {charts.length > 0 && (
+    <section class="container-page pb-20">
+      <div class="grid gap-6 md:grid-cols-2">
+        {charts.map((c) => (
+          <figure data-reveal class="rounded-2xl border border-line glass p-5">
+            <figcaption>
+              <h3 class="text-base font-semibold text-ink">{c.title}</h3>
+              {c.caption && <p class="mt-1 text-sm text-ink-muted">{c.caption}</p>}
+            </figcaption>
+            <div class="mt-4">
+              <Chart client:only="react" type={c.type} data={c.data} title={c.title} height={340} />
+            </div>
+          </figure>
+        ))}
+      </div>
+    </section>
+  )}
+</BaseLayout>

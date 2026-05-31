@@ -1,0 +1,13 @@
+---
+import ServiceDetailPage from '@/components/pages/ServiceDetailPage.astro';
+import { PREFIXED_LOCALES } from '@/i18n';
+import { serviceSlugs } from '@/data/services';
+
+export function getStaticPaths() {
+  return PREFIXED_LOCALES.flatMap((locale) => serviceSlugs.map((slug) => ({ params: { locale, slug } })));
+}
+
+const { slug } = Astro.params;
+---
+
+<ServiceDetailPage slug={slug!} />

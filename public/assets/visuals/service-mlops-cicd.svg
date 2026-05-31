@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 760" width="1120" height="760" role="img" aria-label="MLOps pipeline view">
+  <defs>
+    <linearGradient id="ml-line" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#a78bfa"/><stop offset="1" stop-color="#22d3ee"/></linearGradient>
+    <style>text{font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;}.h{fill:#f3f3f8;}.m{fill:#9a9cb4;}.s{fill:#6c6e86;}</style>
+  </defs>
+  <rect width="1120" height="760" fill="#0c0c13"/>
+  <rect width="1120" height="48" fill="#14141e"/>
+  <line x1="0" y1="48" x2="1120" y2="48" stroke="#ffffff" stroke-opacity="0.07"/>
+  <circle cx="24" cy="24" r="5" fill="#ffffff" fill-opacity="0.18"/><circle cx="42" cy="24" r="5" fill="#ffffff" fill-opacity="0.18"/><circle cx="60" cy="24" r="5" fill="#ffffff" fill-opacity="0.18"/>
+  <rect x="392" y="12" width="336" height="24" rx="12" fill="#222232"/>
+  <text x="560" y="29" font-size="12" text-anchor="middle" class="m">app.algorythmos.com/pipelines</text>
+  <text x="40" y="92" font-size="18" font-weight="600" class="h">MLOps pipeline</text>
+  <text x="40" y="114" font-size="12.5" class="m">demand-forecast · v3.2 · CI/CD run #418</text>
+  <rect x="946" y="76" width="134" height="28" rx="14" fill="#22d3ee" fill-opacity="0.12"/>
+  <circle cx="968" cy="90" r="4" fill="#22d3ee"/><text x="982" y="94" font-size="11.5" fill="#22d3ee">deploying · canary</text>
+
+  <!-- pipeline stages -->
+  <line x1="120" y1="200" x2="1000" y2="200" stroke="#ffffff" stroke-opacity="0.1"/>
+  <line x1="120" y1="200" x2="780" y2="200" stroke="url(#ml-line)" stroke-width="2.5"/>
+  <!-- stage cards -->
+  <g>
+    <rect x="40" y="150" width="160" height="150" rx="13" fill="#15151f" stroke="#ffffff" stroke-opacity="0.07"/>
+    <circle cx="120" cy="200" r="15" fill="#1d1d2b" stroke="#34d399" stroke-width="1.5"/><path d="M114 200 l4 4 l8 -9" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="120" y="246" font-size="12.5" font-weight="600" text-anchor="middle" class="h">Source</text>
+    <text x="120" y="266" font-size="10.5" text-anchor="middle" class="s">data + features</text>
+  </g>
+  <g>
+    <rect x="230" y="150" width="160" height="150" rx="13" fill="#15151f" stroke="#ffffff" stroke-opacity="0.07"/>
+    <circle cx="310" cy="200" r="15" fill="#1d1d2b" stroke="#34d399" stroke-width="1.5"/><path d="M304 200 l4 4 l8 -9" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="310" y="246" font-size="12.5" font-weight="600" text-anchor="middle" class="h">Train</text>
+    <text x="310" y="266" font-size="10.5" text-anchor="middle" class="s">reproducible</text>
+  </g>
+  <g>
+    <rect x="420" y="150" width="160" height="150" rx="13" fill="#15151f" stroke="#ffffff" stroke-opacity="0.07"/>
+    <circle cx="500" cy="200" r="15" fill="#1d1d2b" stroke="#34d399" stroke-width="1.5"/><path d="M494 200 l4 4 l8 -9" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="500" y="246" font-size="12.5" font-weight="600" text-anchor="middle" class="h">Evaluate</text>
+    <text x="500" y="266" font-size="10.5" text-anchor="middle" class="s">tests + evals</text>
+  </g>
+  <g>
+    <rect x="610" y="150" width="160" height="150" rx="13" fill="#15151f" stroke="#22d3ee" stroke-opacity="0.5"/>
+    <circle cx="690" cy="200" r="15" fill="#1d1d2b" stroke="#22d3ee" stroke-width="1.5"/><circle cx="690" cy="200" r="4" fill="#22d3ee"/>
+    <text x="690" y="246" font-size="12.5" font-weight="600" text-anchor="middle" class="h">Deploy</text>
+    <text x="690" y="266" font-size="10.5" text-anchor="middle" fill="#22d3ee">canary 25%</text>
+  </g>
+  <g>
+    <rect x="800" y="150" width="160" height="150" rx="13" fill="#13131c" stroke="#ffffff" stroke-opacity="0.06"/>
+    <circle cx="880" cy="200" r="15" fill="#13131c" stroke="#3a3a4e" stroke-width="1.5"/><text x="880" y="205" font-size="12" text-anchor="middle" class="s">5</text>
+    <text x="880" y="246" font-size="12.5" font-weight="600" text-anchor="middle" class="m">Monitor</text>
+    <text x="880" y="266" font-size="10.5" text-anchor="middle" class="s">drift + alerts</text>
+  </g>
+
+  <!-- model metrics -->
+  <rect x="40" y="332" width="520" height="368" rx="14" fill="#15151f" stroke="#ffffff" stroke-opacity="0.07"/>
+  <text x="64" y="368" font-size="14" font-weight="600" class="h">Model health</text>
+  <g>
+    <text x="64" y="408" font-size="12" class="m">Accuracy</text><text x="536" y="408" font-size="13" font-weight="600" text-anchor="end" class="h">94.6%</text>
+    <rect x="64" y="418" width="472" height="6" rx="3" fill="#ffffff" fill-opacity="0.08"/><rect x="64" y="418" width="446" height="6" rx="3" fill="#34d399"/>
+    <text x="64" y="456" font-size="12" class="m">Precision / Recall</text><text x="536" y="456" font-size="13" font-weight="600" text-anchor="end" class="h">0.93 / 0.91</text>
+    <rect x="64" y="466" width="472" height="6" rx="3" fill="#ffffff" fill-opacity="0.08"/><rect x="64" y="466" width="430" height="6" rx="3" fill="#a78bfa"/>
+    <text x="64" y="504" font-size="12" class="m">Feature drift (PSI)</text><text x="536" y="504" font-size="13" font-weight="600" text-anchor="end" fill="#34d399">0.04 · stable</text>
+    <rect x="64" y="514" width="472" height="6" rx="3" fill="#ffffff" fill-opacity="0.08"/><rect x="64" y="514" width="70" height="6" rx="3" fill="#34d399"/>
+    <text x="64" y="552" font-size="12" class="m">Inference latency p95</text><text x="536" y="552" font-size="13" font-weight="600" text-anchor="end" class="h">38 ms</text>
+    <rect x="64" y="562" width="472" height="6" rx="3" fill="#ffffff" fill-opacity="0.08"/><rect x="64" y="562" width="120" height="6" rx="3" fill="#22d3ee"/>
+  </g>
+  <rect x="64" y="612" width="472" height="60" rx="10" fill="#16161f" stroke="#ffffff" stroke-opacity="0.06"/>
+  <circle cx="88" cy="642" r="4" fill="#34d399"/><text x="104" y="638" font-size="11.5" class="h">Auto-rollback armed</text><text x="104" y="656" font-size="10.5" class="s">reverts on accuracy &lt; 92% or drift &gt; 0.2</text>
+
+  <!-- run history -->
+  <rect x="580" y="332" width="500" height="368" rx="14" fill="#15151f" stroke="#ffffff" stroke-opacity="0.07"/>
+  <text x="604" y="368" font-size="14" font-weight="600" class="h">CI/CD runs</text>
+  <g font-size="12">
+    <circle cx="608" cy="402" r="4" fill="#34d399"/><text x="624" y="406" class="h">#418 retrain + deploy</text><text x="1056" y="406" text-anchor="end" class="s">now</text>
+    <line x1="604" y1="426" x2="1056" y2="426" stroke="#ffffff" stroke-opacity="0.05"/>
+    <circle cx="608" cy="450" r="4" fill="#34d399"/><text x="624" y="454" class="h">#417 eval gate passed</text><text x="1056" y="454" text-anchor="end" class="s">26m</text>
+    <line x1="604" y1="474" x2="1056" y2="474" stroke="#ffffff" stroke-opacity="0.05"/>
+    <circle cx="608" cy="498" r="4" fill="#34d399"/><text x="624" y="502" class="h">#416 feature build</text><text x="1056" y="502" text-anchor="end" class="s">1h</text>
+    <line x1="604" y1="522" x2="1056" y2="522" stroke="#ffffff" stroke-opacity="0.05"/>
+    <circle cx="608" cy="546" r="4" fill="#facc15"/><text x="624" y="550" class="h">#415 drift alert · retrain</text><text x="1056" y="550" text-anchor="end" class="s">3h</text>
+    <line x1="604" y1="570" x2="1056" y2="570" stroke="#ffffff" stroke-opacity="0.05"/>
+    <circle cx="608" cy="594" r="4" fill="#34d399"/><text x="624" y="598" class="h">#414 nightly eval</text><text x="1056" y="598" text-anchor="end" class="s">12h</text>
+  </g>
+</svg>

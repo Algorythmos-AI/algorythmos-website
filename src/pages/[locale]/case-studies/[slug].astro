@@ -1,0 +1,13 @@
+---
+import CaseStudyDetail from '@/components/pages/CaseStudyDetail.astro';
+import { PREFIXED_LOCALES } from '@/i18n';
+import { caseStudySlugs } from '@/data/caseStudies';
+
+export function getStaticPaths() {
+  return PREFIXED_LOCALES.flatMap((locale) => caseStudySlugs.map((slug) => ({ params: { locale, slug } })));
+}
+
+const { slug } = Astro.params;
+---
+
+<CaseStudyDetail slug={slug!} />

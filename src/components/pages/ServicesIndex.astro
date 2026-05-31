@@ -1,0 +1,55 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeader from '@/components/sections/PageHeader.astro';
+import { asLocale, useTranslations, localizePath } from '@/i18n';
+import { services } from '@/data/services';
+import { breadcrumb, SITE } from '@/seo/schema';
+
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const abs = (p: string) => SITE + localizePath(locale, p);
+const crumbs = breadcrumb([
+  { name: 'Home', url: abs('/') },
+  { name: t('nav.services'), url: abs('/services') },
+]);
+const collection = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Services — Algorythmos',
+  url: abs('/services'),
+  hasPart: services.map((s) => ({ '@type': 'Service', name: s.name, url: abs(`/services/${s.slug}`) })),
+};
+---
+
+<BaseLayout
+  title="Services — AI consulting that ships | Algorythmos"
+  description="End-to-end AI capabilities delivered by senior engineers: agentic automation, document intelligence, SQL dashboards, MLOps, and AI-powered websites."
+  path="/services"
+  jsonLd={[collection, crumbs]}
+>
+  <PageHeader eyebrow="Services" title="End-to-end AI, delivered by senior engineers" lead={t('nav.servicesDesc')} />
+
+  <section class="container-page py-20">
+    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {services.map((s, i) => (
+        <a
+          href={localizePath(locale, `/services/${s.slug}`)}
+          data-reveal
+          style={`--reveal-delay: ${i * 70}ms`}
+          class="group ring-gradient relative flex flex-col rounded-2xl border border-line glass p-6 transition-[transform,box-shadow] duration-300 ease-smooth hover:-translate-y-1 hover:shadow-glow"
+        >
+          <span class="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-grad-cta text-white shadow-e1">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={s.icon} /></svg>
+          </span>
+          <h2 class="mt-5 text-h3 font-semibold text-ink">{s.name}</h2>
+          <p class="mt-1 text-sm font-medium text-brand">{s.tagline}</p>
+          <p class="mt-3 flex-1 text-sm leading-relaxed text-ink-muted">{s.summary}</p>
+          <span class="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-brand">
+            Learn more
+            <svg class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+          </span>
+        </a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
