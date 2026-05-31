@@ -4,7 +4,7 @@ import PageHeader from '@/components/sections/PageHeader.astro';
 import Button from '@/components/ui/Button.astro';
 import { asLocale, useTranslations, localizePath } from '@/i18n';
 import { getService } from '@/data/services';
-import { breadcrumb, SITE, ORG_ID } from '@/seo/schema';
+import { breadcrumb, SITE, ORG_ID, ogImageUrl } from '@/seo/schema';
 
 interface Props {
   slug: string;
@@ -17,6 +17,7 @@ const locale = asLocale(Astro.currentLocale);
 const t = useTranslations(locale);
 const path = `/services/${svc.slug}`;
 const abs = (p: string) => SITE + localizePath(locale, p);
+const ogImg = ogImageUrl(localizePath(locale, path));
 
 const serviceLd = {
   '@context': 'https://schema.org',
@@ -28,6 +29,7 @@ const serviceLd = {
     { '@type': 'Country', name: 'Australia' },
     { '@type': 'Country', name: 'France' },
   ],
+  image: ogImg,
   url: abs(path),
 };
 const crumbs = breadcrumb([
@@ -37,7 +39,7 @@ const crumbs = breadcrumb([
 ]);
 ---
 
-<BaseLayout title={`${svc.name} — Algorythmos`} description={svc.summary} path={path} jsonLd={[serviceLd, crumbs]}>
+<BaseLayout title={`${svc.name} — Algorythmos`} description={svc.summary} path={path} image={ogImg} jsonLd={[serviceLd, crumbs]}>
   <PageHeader eyebrow={t('nav.services')} title={svc.name} lead={svc.tagline} />
 
   <section class="container-page py-20">

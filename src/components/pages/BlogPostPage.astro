@@ -6,7 +6,7 @@ import { asLocale, useTranslations, localizePath } from '@/i18n';
 import { getPost } from '@/data/blog';
 import { getBlogCharts } from '@/data/blogCharts';
 import Chart from '@/components/islands/Chart';
-import { breadcrumb, SITE, OG_IMAGE, ORG_ID } from '@/seo/schema';
+import { breadcrumb, SITE, ORG_ID, ogImageUrl } from '@/seo/schema';
 
 interface Props {
   slug: string;
@@ -22,6 +22,7 @@ const locale = asLocale(Astro.currentLocale);
 const t = useTranslations(locale);
 const path = `/blog/${post.slug}`;
 const abs = (p: string) => SITE + localizePath(locale, p);
+const ogImg = ogImageUrl(localizePath(locale, path));
 
 const base = `blogDetail.posts.${post.slug}`;
 const title = t(`${base}.title`);
@@ -50,7 +51,7 @@ const articleLd = {
   headline: title,
   description,
   datePublished: post.date,
-  image: OG_IMAGE,
+  image: ogImg,
   author: { '@id': ORG_ID },
   publisher: { '@id': ORG_ID },
   mainEntityOfPage: { '@type': 'WebPage', '@id': abs(path) },
@@ -62,7 +63,7 @@ const crumbs = breadcrumb([
 ]);
 ---
 
-<BaseLayout title={`${title} — Algorythmos`} description={description} path={path} ogType="article" jsonLd={[articleLd, crumbs]}>
+<BaseLayout title={`${title} — Algorythmos`} description={description} path={path} ogType="article" image={ogImg} jsonLd={[articleLd, crumbs]}>
   <PageHeader eyebrow={t(`blog.posts.${post.postIndex}.date`)} title={title} lead={description} />
 
   <section class="container-page py-20">
