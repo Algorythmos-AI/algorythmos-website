@@ -1,0 +1,165 @@
+---
+/**
+ * Local landing page (Sydney / Paris) — keyword-targeted for local organic search.
+ * Single-locale (standalone: self-canonical, no cross-locale hreflang). Emits
+ * ProfessionalService (city geo/address) + FAQPage + BreadcrumbList schema.
+ */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeader from '@/components/sections/PageHeader.astro';
+import Button from '@/components/ui/Button.astro';
+import Visual from '@/components/ui/Visual.astro';
+import { localizePath, useTranslations } from '@/i18n';
+import { professionalService, breadcrumb, SITE, ogImageUrl, imageObject } from '@/seo/schema';
+import { cityVisuals } from '@/data/visuals';
+import { BOOKING_URL } from '@/lib/links';
+
+interface FAQ {
+  q: string;
+  a: string;
+}
+interface ServiceLink {
+  name: string;
+  desc: string;
+  slug: string;
+}
+interface Props {
+  region: 'AU' | 'FR';
+  /** un-prefixed route, e.g. '/ai-consultancy-sydney' */
+  path: string;
+  title: string;
+  description: string;
+  eyebrow: string;
+  h1: string;
+  lead: string;
+  ctaPrimary: string;
+  ctaContact: string;
+  introHeading: string;
+  introBody: string[];
+  servicesHeading: string;
+  services: ServiceLink[];
+  industriesHeading: string;
+  industriesLead: string;
+  industries: string[];
+  complianceHeading: string;
+  complianceBody: string[];
+  faqHeading: string;
+  faqs: FAQ[];
+  closingHeading: string;
+  closingBody: string;
+}
+
+const p = Astro.props as Props;
+const locale = p.region === 'AU' ? 'au-en' : 'fr-fr';
+const loc = (path: string) => localizePath(locale, path);
+const t = useTranslations(locale);
+const ogImg = ogImageUrl(localizePath(locale, p.path));
+const cityV = cityVisuals[p.region];
+const cityAlt = t(cityV.altKey);
+
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  '@id': `${SITE}${localizePath(locale, p.path)}#faq`,
+  mainEntity: p.faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+const crumbs = breadcrumb([
+  { name: 'Home', url: SITE + loc('/') },
+  { name: p.h1, url: SITE + loc(p.path) },
+]);
+---
+
+<BaseLayout
+  title={p.title}
+  description={p.description}
+  path={p.path}
+  image={ogImg}
+  standalone
+  jsonLd={[professionalService(p.region), faqLd, crumbs, imageObject({ path: cityV.file, alt: cityAlt, width: cityV.width, height: cityV.height, primary: true })]}
+>
+  <PageHeader eyebrow={p.eyebrow} title={p.h1} lead={p.lead} />
+
+  <section class="container-page pb-6">
+    <div class="flex flex-wrap gap-4">
+      <Button href={BOOKING_URL} target="_blank" rel="noopener" size="lg">{p.ctaPrimary}</Button>
+      <Button href={loc('/contact')} variant="secondary" size="lg">{p.ctaContact}</Button>
+    </div>
+  </section>
+
+  <section class="container-page pb-4">
+    <Visual src={cityV.file} alt={cityAlt} width={cityV.width} height={cityV.height} />
+  </section>
+
+  <section class="container-page py-16">
+    <div class="max-w-measure" data-reveal>
+      <h2 class="text-h2 font-bold tracking-tight text-ink">{p.introHeading}</h2>
+      {p.introBody.map((para) => <p class="mt-5 text-lead leading-relaxed text-ink-muted">{para}</p>)}
+    </div>
+  </section>
+
+  <section class="border-y border-line bg-surface-2/30">
+    <div class="container-page py-16">
+      <h2 data-reveal class="text-h2 font-bold tracking-tight text-ink">{p.servicesHeading}</h2>
+      <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {p.services.map((s, i) => (
+          <a
+            href={loc(`/services/${s.slug}`)}
+            data-reveal
+            style={`--reveal-delay:${i * 60}ms`}
+            class="group rounded-2xl border border-line glass p-6 transition hover:border-brand"
+          >
+            <h3 class="text-h3 font-semibold text-ink transition-colors group-hover:text-brand">{s.name}</h3>
+            <p class="mt-2 text-sm text-ink-muted">{s.desc}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="container-page py-16 text-center">
+    <h2 data-reveal class="text-h2 font-bold tracking-tight text-ink">{p.industriesHeading}</h2>
+    <p data-reveal style="--reveal-delay:60ms" class="mx-auto mt-3 max-w-2xl text-ink-muted">{p.industriesLead}</p>
+    <ul data-reveal style="--reveal-delay:120ms" class="mt-8 flex flex-wrap items-center justify-center gap-3">
+      {p.industries.map((s) => (
+        <li class="inline-flex items-center gap-2.5 rounded-full border border-line glass px-4 py-2 text-sm font-medium text-ink">
+          <span class="h-1.5 w-1.5 rounded-full bg-grad-cta" aria-hidden="true"></span>
+          {s}
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="border-y border-line bg-surface-2/30">
+    <div class="container-page py-16">
+      <div class="max-w-measure" data-reveal>
+        <h2 class="text-h2 font-bold tracking-tight text-ink">{p.complianceHeading}</h2>
+        {p.complianceBody.map((para) => <p class="mt-5 text-lead leading-relaxed text-ink-muted">{para}</p>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="container-page py-16">
+    <h2 data-reveal class="text-h2 font-bold tracking-tight text-ink">{p.faqHeading}</h2>
+    <div data-reveal class="mt-8 max-w-measure divide-y divide-line overflow-hidden rounded-2xl border border-line glass">
+      {p.faqs.map((f) => (
+        <details class="group">
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-4 p-6 text-lg font-semibold text-ink [&::-webkit-details-marker]:hidden">
+            <span>{f.q}</span>
+            <svg class="h-5 w-5 shrink-0 text-ink-muted transition-transform duration-200 group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+          </summary>
+          <p class="px-6 pb-6 text-ink-muted">{f.a}</p>
+        </details>
+      ))}
+    </div>
+  </section>
+
+  <section class="container-page pb-24">
+    <div data-reveal class="relative overflow-hidden rounded-[2rem] border border-line glass px-6 py-16 text-center shadow-e2 sm:px-12">
+      <h2 class="mx-auto max-w-3xl text-display font-extrabold tracking-tight text-ink">{p.closingHeading}</h2>
+      <p class="mx-auto mt-5 max-w-xl text-lead text-ink-muted">{p.closingBody}</p>
+      <div class="mt-10 flex flex-wrap justify-center gap-4">
+        <Button href={BOOKING_URL} target="_blank" rel="noopener" size="lg">{p.ctaPrimary}</Button>
+        <Button href={loc('/contact')} variant="secondary" size="lg">{p.ctaContact}</Button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

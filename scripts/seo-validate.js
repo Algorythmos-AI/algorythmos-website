@@ -1,22 +1,42 @@
 #!/usr/bin/env node
 
 /**
- * SEO Validation Script for Algorythmos
- * =====================================
- * Enterprise-grade validation for:
- * - Canonical URLs
- * - OpenGraph metadata
- * - Twitter cards
- * - JSON-LD structured data
- * - Brand consistency
- * - Domain correctness
+ * SEO Validation Script for Algorythmos (Astro 6 — static output)
+ * ===============================================================
+ * The site is now a static Astro build, so this validates the REAL HTML in
+ * dist/ (run `npm run build` first). For each representative page it asserts:
+ *   - exactly one <title>
+ *   - a <meta name="description">
+ *   - exactly one <link rel="canonical"> on https://algorythmos.com with the
+ *     correct per-locale prefix
+ *   - 4 hreflang alternates, including x-default
+ *   - og:title / og:description / og:url / og:image
+ *     (og:image = brand card /Algorythmos.png, or a per-page /og/*.png)
+ *   - twitter:card
+ *   - at least one application/ld+json block that JSON-parses
+ *
+ * It also asserts dist/robots.txt (referencing the sitemap), dist/sitemap-index.xml,
+ * and dist/llms.txt exist.
+ *
+ * Color output. Exits 1 on any failure.
+ *
+ * Run: npm run seo:check   (after `npm run build`)
  */
 
 import { readFileSync, existsSync } from 'fs';
-import { join } from 'path';
-import { getRegionSeoConfig as getSeoConfig } from '../src/app/seo/RegionSeoConfig.js';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
 
-// ANSI colors for terminal output
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const ROOT = join(__dirname, '..');
+const DIST = join(ROOT, 'dist');
+
+const EXPECTED_DOMAIN = 'https://algorythmos.com';
+const EXPECTED_OG_IMAGE = 'https://algorythmos.com/Algorythmos.png';
+
+// ANSI colors
 const colors = {
   reset: '\x1b[0m',
   red: '\x1b[31m',
@@ -24,6 +44,7 @@ const colors = {
   yellow: '\x1b[33m',
   blue: '\x1b[34m',
   cyan: '\x1b[36m',
+  bold: '\x1b[1m',
 };
 
 const log = {
@@ -31,420 +52,313 @@ const log = {
   error: (msg) => console.log(`${colors.red}❌ ${msg}${colors.reset}`),
   warn: (msg) => console.log(`${colors.yellow}⚠️  ${msg}${colors.reset}`),
   info: (msg) => console.log(`${colors.blue}ℹ️  ${msg}${colors.reset}`),
-  section: (msg) => console.log(`\n${colors.cyan}${'='.repeat(60)}\n${msg}\n${'='.repeat(60)}${colors.reset}`),
+  section: (msg) =>
+    console.log(`\n${colors.cyan}${'='.repeat(60)}\n${msg}\n${'='.repeat(60)}${colors.reset}`),
 };
-
-// ----------------- Region-aware configuration -----------------
-
-const ACTIVE_SEO = getSeoConfig();
-
-const EXPECTED_DOMAIN = ACTIVE_SEO.domain;
-const EXPECTED_TITLE = 'Algorythmos™ — AI Consultancy for SMEs | AI That Deliver';
-const EXPECTED_OG_IMAGE = 'https://algorythmos.com/Algorythmos.png';
-
-// sitemap file under /public
-const SITEMAP_FILE = 'sitemap.xml';
-
-// Brand keywords remain global
-const BRAND_KEYWORDS = [
-  'algorythmos',
-  'algorythmos ai',
-  'algorythmos france',
-  'algorythmos consulting',
-];
 
 let errors = 0;
 let warnings = 0;
 
-// Helper functions
-function readFile(path) {
-  try {
-    return readFileSync(path, 'utf-8');
-  } catch (err) {
-    log.error(`Failed to read ${path}: ${err.message}`);
-    errors++;
-    return null;
-  }
+// ---------------------------------------------------------------------------
+// Pages to validate. `path` is the canonical URL path (post-prefix); `file` is
+// the built HTML on disk. One blog slug is included as the dynamic-route smoke.
+// ---------------------------------------------------------------------------
+const PAGES = [
+  { label: 'Home (EN)', file: 'index.html', canonicalPath: '/' },
+  { label: 'AU (au-en)', file: join('au-en', 'index.html'), canonicalPath: '/au-en' },
+  { label: 'FR (fr-fr)', file: join('fr-fr', 'index.html'), canonicalPath: '/fr-fr' },
+  {
+    label: 'Service: mlops-cicd',
+    file: join('services', 'mlops-cicd', 'index.html'),
+    canonicalPath: '/services/mlops-cicd',
+  },
+  {
+    label: 'Blog post: agentic-ai',
+    file: join('blog', 'agentic-ai', 'index.html'),
+    canonicalPath: '/blog/agentic-ai',
+  },
+];
+
+// ---------------------------------------------------------------------------
+// Extraction helpers
+// ---------------------------------------------------------------------------
+function extractAll(regex, html) {
+  const out = [];
+  let m;
+  while ((m = regex.exec(html)) !== null) out.push(m);
+  return out;
 }
 
-function extractMetaTags(html, name, attribute = 'name') {
-  // Match meta tags with flexible whitespace and attribute order
-  const pattern = `<meta[^>]*${attribute}=["']${name}["'][^>]*>`;
-  const regex = new RegExp(pattern, 'gi');
-  const matches = [];
-  let match;
-
-  while ((match = regex.exec(html)) !== null) {
-    const tag = match[0];
-    // Extract content attribute
-    const contentMatch = tag.match(/content=["']([^"']*)["']/i);
-    if (contentMatch) {
-      matches.push({ name, content: contentMatch[1] });
-    }
-  }
-
-  return matches;
+function extractMetaContent(html, name, attribute = 'name') {
+  // Tolerant of attribute order: find the tag first, then pull `content`.
+  const tagRe = new RegExp(`<meta\\b[^>]*\\b${attribute}=["']${escapeRe(name)}["'][^>]*>`, 'gi');
+  return extractAll(tagRe, html)
+    .map((m) => {
+      const c = m[0].match(/\bcontent=["']([^"']*)["']/i);
+      return c ? c[1] : null;
+    })
+    .filter((v) => v !== null);
 }
 
-function extractCanonical(html) {
-  const match = html.match(/<link\s+rel="canonical"\s+href="([^"]*)"/i);
-  return match ? match[1] : null;
+function escapeRe(s) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-function extractStructuredData(html) {
-  const regex = /<script\s+type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi;
-  const matches = [];
-  let match;
-  while ((match = regex.exec(html)) !== null) {
-    try {
-      matches.push(JSON.parse(match[1].trim()));
-    } catch (err) {
-      log.error(`Invalid JSON-LD: ${err.message}`);
-      errors++;
-    }
-  }
-  return matches;
+function extractTitles(html) {
+  return extractAll(/<title[^>]*>([\s\S]*?)<\/title>/gi, html).map((m) => m[1].trim());
 }
 
-function checkDuplicates(items, label) {
-  if (items.length > 1) {
-    log.error(`Multiple ${label} found (expected 1, found ${items.length})`);
-    items.forEach((item, i) => console.log(`  ${i + 1}. ${item.name || item}: ${item.content || ''}`));
-    errors++;
-    return false;
-  } else if (items.length === 0) {
-    log.error(`No ${label} found`);
-    errors++;
-    return false;
-  }
-  return true;
+function extractCanonicals(html) {
+  // canonical link, attribute-order tolerant
+  return extractAll(/<link\b[^>]*rel=["']canonical["'][^>]*>/gi, html)
+    .map((m) => {
+      const h = m[0].match(/\bhref=["']([^"']*)["']/i);
+      return h ? h[1] : null;
+    })
+    .filter(Boolean);
 }
 
-function validateDomain(url, context) {
-  if (!url) {
-    log.error(`${context}: URL is missing`);
-    errors++;
-    return false;
-  }
-
-  // Check for wrong domains
-  const wrongDomains = ['algorythmos.ai', 'algorithmos', 'http://algorythmos.fr'];
-  for (const wrong of wrongDomains) {
-    if (url.includes(wrong)) {
-      log.error(`${context}: Wrong domain detected - "${wrong}"`);
-      errors++;
-      return false;
-    }
-  }
-
-  // Check for correct domain
-  if (!url.startsWith(EXPECTED_DOMAIN)) {
-    log.error(`${context}: Expected "${EXPECTED_DOMAIN}" but got "${url}"`);
-    errors++;
-    return false;
-  }
-
-  return true;
+function extractHreflangs(html) {
+  return extractAll(/<link\b[^>]*rel=["']alternate["'][^>]*>/gi, html)
+    .map((m) => {
+      const hl = m[0].match(/\bhreflang=["']([^"']*)["']/i);
+      return hl ? hl[1] : null;
+    })
+    .filter(Boolean);
 }
 
-// ============================================================================
-// VALIDATION FUNCTIONS
-// ============================================================================
-
-function validateHomepage() {
-  log.section('📄 Validating Homepage (index.html)');
-
-  // Check source index.html (not dist) since Helmet injects metadata at runtime
-  const html = readFile('index.html');
-  if (!html) return;
-
-  // 1. Check canonical URL
-  log.info('Checking canonical URL...');
-  const canonical = extractCanonical(html);
-  if (canonical) {
-    if (canonical === EXPECTED_DOMAIN) {
-      log.success(`Canonical URL: ${canonical}`);
-    } else {
-      validateDomain(canonical, 'Canonical URL');
-    }
-  } else {
-    log.error('No canonical URL found');
-    errors++;
-  }
-
-  // 2. Check page title
-  log.info('Checking page title...');
-  const titleMatch = html.match(/<title>([^<]*)<\/title>/i);
-  if (titleMatch) {
-    const title = titleMatch[1];
-    if (title === EXPECTED_TITLE) {
-      log.success(`Title: ${title}`);
-    } else {
-      log.warn(`Title differs from expected:\n  Expected: ${EXPECTED_TITLE}\n  Got: ${title}`);
-      warnings++;
-    }
-  } else {
-    log.error('No title tag found');
-    errors++;
-  }
-
-  // 3. Check meta description
-  log.info('Checking meta description...');
-  const descriptions = extractMetaTags(html, 'description');
-  if (checkDuplicates(descriptions, 'description tag')) {
-    if (descriptions[0].content.length >= 50) {
-      log.success(`Description: ${descriptions[0].content.substring(0, 100)}...`);
-    } else {
-      log.warn('Description is too short (< 50 chars)');
-      warnings++;
-    }
-  }
-
-  // 4. Check brand keywords
-  log.info('Checking brand-protective keywords...');
-  const keywordsMatch = html.match(/<meta\s+name="keywords"\s+content="([^"]*)"/i);
-  if (keywordsMatch) {
-    const keywords = keywordsMatch[1].toLowerCase();
-    let foundCount = 0;
-    for (const kw of BRAND_KEYWORDS) {
-      if (keywords.includes(kw)) {
-        foundCount++;
-      }
-    }
-    if (foundCount === BRAND_KEYWORDS.length) {
-      log.success(`All ${BRAND_KEYWORDS.length} brand keywords present`);
-    } else {
-      log.warn(`Only ${foundCount}/${BRAND_KEYWORDS.length} brand keywords found`);
-      warnings++;
-    }
-  } else {
-    log.warn('No keywords meta tag found');
-    warnings++;
-  }
+function extractJsonLd(html) {
+  const blocks = extractAll(
+    /<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi,
+    html
+  );
+  return blocks.map((m) => m[1].trim());
 }
 
-function validateOpenGraph() {
-  log.section('📱 Validating OpenGraph Metadata');
+// ---------------------------------------------------------------------------
+// Per-page validation
+// ---------------------------------------------------------------------------
+function validatePage(page) {
+  log.section(`📄 ${page.label}  (${page.file})`);
 
-  const html = readFile('index.html');
-  if (!html) return;
-
-  const requiredOgTags = [
-    'og:type',
-    'og:title',
-    'og:description',
-    'og:url',
-    'og:image',
-    'og:site_name',
-    'og:locale',
-  ];
-
-  for (const tag of requiredOgTags) {
-    const matches = extractMetaTags(html, tag, 'property');
-    if (matches.length === 1) {
-      const content = matches[0].content;
-      log.success(`${tag}: ${content.substring(0, 80)}${content.length > 80 ? '...' : ''}`);
-
-      // Validate specific tags
-      if (tag === 'og:url') {
-        validateDomain(content, `OpenGraph ${tag}`);
-      }
-      if (tag === 'og:image') {
-        if (content !== EXPECTED_OG_IMAGE) {
-          log.error(`Expected OG image "${EXPECTED_OG_IMAGE}" but got "${content}"`);
-          errors++;
-        }
-      }
-    } else if (matches.length === 0) {
-      log.error(`Missing required OG tag: ${tag}`);
-      errors++;
-    } else {
-      log.error(`Duplicate OG tag found: ${tag} (${matches.length} instances)`);
-      errors++;
-    }
-  }
-}
-
-function validateTwitterCards() {
-  log.section('🐦 Validating Twitter Card Metadata');
-
-  const html = readFile('index.html');
-  if (!html) return;
-
-  const requiredTwitterTags = [
-    'twitter:card',
-    'twitter:title',
-    'twitter:description',
-    'twitter:image',
-  ];
-
-  for (const tag of requiredTwitterTags) {
-    const matches = extractMetaTags(html, tag);
-    if (matches.length === 1) {
-      const content = matches[0].content;
-      log.success(`${tag}: ${content.substring(0, 80)}${content.length > 80 ? '...' : ''}`);
-
-      if (tag === 'twitter:image') {
-        if (content !== EXPECTED_OG_IMAGE) {
-          log.error(`Expected Twitter image "${EXPECTED_OG_IMAGE}" but got "${content}"`);
-          errors++;
-        }
-      }
-    } else if (matches.length === 0) {
-      log.error(`Missing required Twitter tag: ${tag}`);
-      errors++;
-    } else {
-      log.error(`Duplicate Twitter tag found: ${tag} (${matches.length} instances)`);
-      errors++;
-    }
-  }
-}
-
-function validateStructuredData() {
-  log.section('🔗 Validating JSON-LD Structured Data');
-
-  const html = readFile('index.html');
-  if (!html) return;
-
-  const jsonLdData = extractStructuredData(html);
-
-  if (jsonLdData.length === 0) {
-    log.error('No JSON-LD structured data found');
+  const abs = join(DIST, page.file);
+  if (!existsSync(abs)) {
+    log.error(`Built file missing: dist/${page.file} — did you run \`npm run build\`?`);
     errors++;
     return;
   }
+  const html = readFileSync(abs, 'utf-8');
 
-  log.success(`Found ${jsonLdData.length} JSON-LD block(s)`);
+  // 1. exactly one <title>
+  const titles = extractTitles(html);
+  if (titles.length === 1 && titles[0].length > 0) {
+    log.success(`Exactly one <title>: "${titles[0].slice(0, 70)}"`);
+  } else if (titles.length === 0) {
+    log.error('No <title> found');
+    errors++;
+  } else {
+    log.error(`Expected exactly one <title>, found ${titles.length}`);
+    errors++;
+  }
 
-  // Validate Organization schema
-  const orgSchema = jsonLdData.find(d => d['@type'] === 'Organization' || d['@type'] === 'Corporation');
-  if (orgSchema) {
-    log.success('Organization schema found');
-
-    const requiredFields = ['name', 'url', 'logo', 'description'];
-    for (const field of requiredFields) {
-      if (orgSchema[field]) {
-        log.success(`  ${field}: ${orgSchema[field]}`);
-      } else {
-        log.error(`  Missing required field: ${field}`);
-        errors++;
-      }
-    }
-
-    // Check URL domain
-    // Organization schema usually points to the global corporate entity (.com)
-    if (orgSchema.url) {
-      if (orgSchema.url === 'https://algorythmos.com') {
-        log.success(`  Organization schema URL: ${orgSchema.url} (Correctly Global)`);
-      } else {
-        log.error(`Organization schema URL: Expected "https://algorythmos.com" but got "${orgSchema.url}"`);
-        errors++;
-      }
-    }
-
-    // Check social media links
-    if (orgSchema.sameAs && Array.isArray(orgSchema.sameAs) && orgSchema.sameAs.length > 0) {
-      log.success(`  Social media links: ${orgSchema.sameAs.length}`);
-    } else {
-      log.warn('  No social media links (sameAs) found');
-      warnings++;
+  // 2. meta description present
+  const descs = extractMetaContent(html, 'description');
+  if (descs.length >= 1 && descs[0].length > 0) {
+    log.success(`<meta name="description"> present (${descs[0].length} chars)`);
+    if (descs.length > 1) {
+      log.error(`Multiple description tags found (${descs.length})`);
+      errors++;
     }
   } else {
-    log.warn('No Organization schema found in JSON-LD');
-    warnings++;
+    log.error('Missing <meta name="description">');
+    errors++;
   }
-}
 
-function validateStaticAssets() {
-  log.section('📦 Validating Static Assets');
-
-  const assets = [
-    { path: 'public/robots.txt', name: 'robots.txt' },
-    { path: join('public', SITEMAP_FILE), name: `Sitemap (${SITEMAP_FILE})` },
-    { path: 'public/Algorythmos.png', name: 'Algorythmos.png (OG image)' },
-  ];
-
-  for (const asset of assets) {
-    if (existsSync(asset.path)) {
-      log.success(`${asset.name} exists`);
+  // 3. exactly one canonical, correct domain + per-locale prefix
+  const canonicals = extractCanonicals(html);
+  if (canonicals.length !== 1) {
+    log.error(`Expected exactly one <link rel="canonical">, found ${canonicals.length}`);
+    errors++;
+  } else {
+    const canonical = canonicals[0];
+    const expected = `${EXPECTED_DOMAIN}${page.canonicalPath}`;
+    const expectedAlt = expected.endsWith('/') ? expected.slice(0, -1) : `${expected}/`;
+    if (!canonical.startsWith(EXPECTED_DOMAIN)) {
+      log.error(`Canonical not on ${EXPECTED_DOMAIN}: ${canonical}`);
+      errors++;
+    } else if (canonical === expected || canonical === expectedAlt) {
+      log.success(`Canonical: ${canonical}`);
     } else {
-      log.error(`${asset.name} is missing at ${asset.path}`);
+      log.error(`Canonical prefix mismatch — expected "${expected}", got "${canonical}"`);
       errors++;
     }
   }
-}
 
-function validateSitemap() {
-  log.section('🗺️ Validating Sitemap Content');
+  // 4. 4 hreflang alternates incl. x-default
+  const hreflangs = extractHreflangs(html);
+  const hasXDefault = hreflangs.includes('x-default');
+  if (hreflangs.length === 4 && hasXDefault) {
+    log.success(`4 hreflang alternates incl. x-default: [${hreflangs.join(', ')}]`);
+  } else {
+    log.error(
+      `Expected 4 hreflang alternates incl. x-default, got ${hreflangs.length}: [${hreflangs.join(', ')}]`
+    );
+    errors++;
+  }
 
-  const content = readFile(join('public', SITEMAP_FILE));
-  if (!content) return;
+  // 5. OpenGraph tags
+  const ogChecks = ['og:title', 'og:description', 'og:url', 'og:image'];
+  for (const tag of ogChecks) {
+    const vals = extractMetaContent(html, tag, 'property');
+    if (vals.length === 0) {
+      log.error(`Missing ${tag}`);
+      errors++;
+      continue;
+    }
+    const content = vals[0];
+    if (tag === 'og:url' && !content.startsWith(EXPECTED_DOMAIN)) {
+      log.error(`${tag} not on ${EXPECTED_DOMAIN}: ${content}`);
+      errors++;
+    } else if (
+      tag === 'og:image' &&
+      content !== EXPECTED_OG_IMAGE &&
+      !(content.startsWith(`${EXPECTED_DOMAIN}/og/`) && content.endsWith('.png'))
+    ) {
+      // Brand pages use the static card; content pages use per-page /og/*.png cards.
+      log.error(`${tag} must be the brand card or a per-page /og/*.png, got "${content}"`);
+      errors++;
+    } else {
+      log.success(`${tag}: ${content.slice(0, 70)}${content.length > 70 ? '…' : ''}`);
+    }
+  }
 
-  const urlMatches = content.match(/<loc>([^<]+)<\/loc>/g);
-  if (urlMatches) {
-    log.success(`Found ${urlMatches.length} URLs in ${SITEMAP_FILE}`);
+  // 6. twitter:card
+  const twCard = extractMetaContent(html, 'twitter:card');
+  if (twCard.length >= 1) {
+    log.success(`twitter:card: ${twCard[0]}`);
+  } else {
+    log.error('Missing twitter:card');
+    errors++;
+  }
 
-    let invalidUrls = 0;
-    for (const match of urlMatches) {
-      const url = match.replace(/<\/?loc>/g, '');
-      if (!url.startsWith(EXPECTED_DOMAIN)) {
-        log.error(`Invalid URL in ${SITEMAP_FILE}: ${url} (Expected ${EXPECTED_DOMAIN})`);
-        invalidUrls++;
+  // 7. at least one ld+json that parses
+  const ldBlocks = extractJsonLd(html);
+  if (ldBlocks.length === 0) {
+    log.error('No application/ld+json block found');
+    errors++;
+  } else {
+    let parsedOk = 0;
+    for (const block of ldBlocks) {
+      try {
+        JSON.parse(block);
+        parsedOk++;
+      } catch (err) {
+        log.error(`Invalid JSON-LD: ${err.message}`);
         errors++;
       }
     }
-
-    if (invalidUrls === 0) {
-      log.success(`${SITEMAP_FILE} URLs are valid`);
+    if (parsedOk > 0) {
+      log.success(`${parsedOk}/${ldBlocks.length} JSON-LD block(s) parse cleanly`);
     }
+  }
+
+  // 8. every content <img> has alt; decorative allowed iff alt="" AND aria-hidden="true"
+  const imgs = html.match(/<img\b[^>]*>/gi) || [];
+  let badImg = 0;
+  let contentImg = 0;
+  for (const tag of imgs) {
+    const altM = tag.match(/\balt\s*=\s*"([^"]*)"/i);
+    const hidden = /\baria-hidden\s*=\s*"true"/i.test(tag);
+    if (!altM) {
+      log.error(`<img> missing alt: ${tag.slice(0, 90)}`);
+      errors++;
+      badImg++;
+    } else if (altM[1].trim() === '' && !hidden) {
+      log.error(`<img> empty alt without aria-hidden: ${tag.slice(0, 90)}`);
+      errors++;
+      badImg++;
+    } else if (altM[1].trim() !== '') {
+      contentImg++;
+    }
+  }
+  if (imgs.length > 0 && badImg === 0) {
+    log.success(`${imgs.length} <img> OK (${contentImg} descriptive, ${imgs.length - contentImg} decorative)`);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Static-file assertions
+// ---------------------------------------------------------------------------
+function validateStaticFiles() {
+  log.section('📦 Static SEO files');
+
+  // robots.txt exists and references the sitemap
+  const robotsPath = join(DIST, 'robots.txt');
+  if (!existsSync(robotsPath)) {
+    log.error('dist/robots.txt is missing');
+    errors++;
   } else {
-    log.error(`No URLs found in ${SITEMAP_FILE}`);
+    const robots = readFileSync(robotsPath, 'utf-8');
+    log.success('dist/robots.txt exists');
+    if (/Sitemap:\s*\S+/i.test(robots)) {
+      log.success('robots.txt references a Sitemap');
+    } else {
+      log.error('robots.txt has no Sitemap directive');
+      errors++;
+    }
+  }
+
+  // sitemap-index.xml exists
+  if (existsSync(join(DIST, 'sitemap-index.xml'))) {
+    log.success('dist/sitemap-index.xml exists');
+  } else {
+    log.error('dist/sitemap-index.xml is missing');
+    errors++;
+  }
+
+  // llms.txt exists
+  if (existsSync(join(DIST, 'llms.txt'))) {
+    log.success('dist/llms.txt exists');
+  } else {
+    log.error('dist/llms.txt is missing');
     errors++;
   }
 }
 
-// ============================================================================
-// MAIN EXECUTION
-// ============================================================================
-
+// ---------------------------------------------------------------------------
+// Main
+// ---------------------------------------------------------------------------
 function main() {
   console.log(`
 ${colors.cyan}╔════════════════════════════════════════════════════════════╗
 ║                                                            ║
-║      🎯 ALGORYTHMOS SEO VALIDATION PIPELINE 🎯             ║
+║      🎯 ALGORYTHMOS SEO VALIDATION (dist/) 🎯              ║
 ║                                                            ║
-║      Enterprise-Grade Quality Check                        ║
+║      Validates the built static HTML output                ║
 ║                                                            ║
 ╚════════════════════════════════════════════════════════════╝${colors.reset}
   `);
 
-  // Run all validations
-  validateStaticAssets();
-  validateSitemap();
-  validateHomepage();
-  validateOpenGraph();
-  validateTwitterCards();
-  validateStructuredData();
+  if (!existsSync(DIST)) {
+    log.error('No dist/ directory found. Run `npm run build` first.');
+    process.exit(1);
+  }
 
-  // Final summary
+  for (const page of PAGES) validatePage(page);
+  validateStaticFiles();
+
   log.section('📊 VALIDATION SUMMARY');
-
   console.log(`
   Total Errors:   ${colors.red}${errors}${colors.reset}
   Total Warnings: ${colors.yellow}${warnings}${colors.reset}
   `);
 
-  if (errors === 0 && warnings === 0) {
-    log.success('🎉 ALL CHECKS PASSED! SEO is perfect.');
+  if (errors === 0) {
+    log.success('🎉 ALL SEO CHECKS PASSED on dist/.');
     process.exit(0);
-  } else if (errors === 0) {
-    log.warn(`⚠️  PASSED with ${warnings} warning(s). Consider addressing them.`);
-    process.exit(0);
-  } else {
-    log.error(`❌ FAILED with ${errors} error(s) and ${warnings} warning(s).`);
-    process.exit(1);
   }
+  log.error(`❌ FAILED with ${errors} error(s).`);
+  process.exit(1);
 }
 
-// Run the validation
 main();

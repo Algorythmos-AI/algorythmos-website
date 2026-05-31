@@ -1,0 +1,240 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeader from '@/components/sections/PageHeader.astro';
+import Button from '@/components/ui/Button.astro';
+import Aurora from '@/components/ui/Aurora.astro';
+import { asLocale, useTranslations, localizePath } from '@/i18n';
+import { breadcrumb, SITE } from '@/seo/schema';
+
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const path = '/pricing';
+const abs = (p: string) => SITE + localizePath(locale, p);
+
+const crumbs = breadcrumb([
+  { name: 'Home', url: abs('/') },
+  { name: t('nav.pricing'), url: abs(path) },
+]);
+
+// Feature lists are flat numbered keys (e.g. pricing.tiers.pilot.features.0..N) — collect until missing.
+const collect = (prefix: string) => {
+  const out: string[] = [];
+  for (let i = 0; i < 12; i++) {
+    const v = t(`${prefix}.${i}`);
+    if (v === `${prefix}.${i}`) break; // missing key returns the key itself
+    out.push(v);
+  }
+  return out;
+};
+
+const tiers = (['pilot', 'operations', 'custom'] as const).map((key) => ({
+  key,
+  name: t(`pricing.tiers.${key}.name`),
+  price: t(`pricing.tiers.${key}.price`),
+  period: t(`pricing.tiers.${key}.period`),
+  highlight: t(`pricing.tiers.${key}.highlight`),
+  badge: t(`pricing.tiers.${key}.badge`) === `pricing.tiers.${key}.badge` ? null : t(`pricing.tiers.${key}.badge`),
+  cta: t(`pricing.tiers.${key}.cta`),
+  features: collect(`pricing.tiers.${key}.features`),
+  featured: key === 'operations',
+}));
+
+const compare = (['diy', 'agency', 'algorythmos'] as const).map((key) => ({
+  key,
+  label: t(`pricing.tooltip.${key}.label`),
+  detail: t(`pricing.tooltip.${key}.detail`),
+  cost: key === 'algorythmos' ? t('pricing.hero.glance.algorythmos.price') : t(`pricing.tooltip.${key}.cost`),
+  best: key === 'algorythmos',
+}));
+
+const badges = [
+  t('pricing.hero.badges.sla'),
+  t('pricing.hero.badges.audit'),
+  t('pricing.hero.badges.soc2'),
+  t('pricing.hero.badges.api'),
+];
+
+const addons = [t('pricing.notes.addonSso'), t('pricing.notes.addonVpc'), t('pricing.notes.addonTam')];
+
+const faqItems: { question: string; answer: string }[] = [];
+for (let i = 0; i < 8; i++) {
+  const q = t(`pricing.faq.${i}.question`);
+  if (q === `pricing.faq.${i}.question`) break;
+  faqItems.push({ question: q, answer: t(`pricing.faq.${i}.answer`) });
+}
+
+const faqLd = faqItems.length
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqItems.map((f) => ({
+        '@type': 'Question',
+        name: f.question,
+        acceptedAnswer: { '@type': 'Answer', text: f.answer },
+      })),
+    }
+  : null;
+
+const jsonLd = faqLd ? [crumbs, faqLd] : [crumbs];
+---
+
+<BaseLayout title={t('pricing.meta.title')} description={t('pricing.meta.description')} path={path} jsonLd={jsonLd}>
+  <PageHeader eyebrow={t('nav.pricing')} title={t('pricing.hero.title')} lead={t('pricing.hero.subtitle')} />
+
+  {/* Trust badges */}
+  <section class="container-page pt-8">
+    <div class="flex flex-wrap gap-3" data-reveal>
+      {badges.map((b) => (
+        <span class="inline-flex items-center gap-2 rounded-full border border-line bg-surface-2 px-4 py-1.5 text-sm font-medium text-ink-muted">
+          <span class="h-1.5 w-1.5 rounded-full bg-accent"></span>
+          {b}
+        </span>
+      ))}
+    </div>
+  </section>
+
+  {/* Tiers */}
+  <section class="container-page py-20">
+    <div class="grid gap-5 lg:grid-cols-3 lg:items-start">
+      {tiers.map((tier, i) => (
+        <div
+          data-reveal
+          style={`--reveal-delay: ${i * 80}ms`}
+          class:list={[
+            'relative flex flex-col rounded-2xl border p-8 transition-[transform,box-shadow] duration-300 ease-smooth hover:-translate-y-1 hover:shadow-glow',
+            tier.featured ? 'border-line-strong glass shadow-glow lg:-mt-4 lg:pb-12' : 'ring-gradient border-line glass shadow-e1',
+          ]}
+        >
+          {tier.badge && (
+            <span class="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-grad-cta px-4 py-1 text-xs font-bold uppercase tracking-wide text-white shadow-e1">
+              {tier.badge}
+            </span>
+          )}
+          <h2 class="text-h3 font-semibold text-ink">{tier.name}</h2>
+          <p class="mt-1 text-sm font-medium text-brand">{tier.highlight}</p>
+          <div class="mt-6 flex items-baseline gap-1">
+            <span class:list={['font-extrabold tracking-tight text-ink', tier.featured ? 'text-display' : 'text-h1']}>{tier.price}</span>
+            <span class="text-lead font-medium text-ink-subtle">{tier.period}</span>
+          </div>
+          <ul class="mt-7 flex-1 space-y-3 border-t border-line pt-7">
+            {tier.features.map((f) => (
+              <li class="flex items-start gap-3 text-sm text-ink-muted">
+                <svg class="mt-0.5 h-5 w-5 shrink-0 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
+                <span>{f}</span>
+              </li>
+            ))}
+          </ul>
+          <Button
+            href={localizePath(locale, '/contact')}
+            size="lg"
+            variant={tier.featured ? 'primary' : 'secondary'}
+            class="mt-8 w-full"
+          >
+            {tier.cta}
+          </Button>
+        </div>
+      ))}
+    </div>
+    <p class="mt-8 max-w-3xl text-sm text-ink-subtle" data-reveal>{t('pricing.notes.vatExcluded')}</p>
+  </section>
+
+  {/* DIY vs Agency vs Algorythmos comparison */}
+  <section class="relative overflow-hidden border-y border-line bg-surface-2/40">
+    <div class="container-page py-24">
+      <h2 data-reveal class="max-w-2xl text-h2 font-bold tracking-tight text-ink">{t('pricing.tooltip.title')}</h2>
+      <div class="mt-12 grid gap-5 md:grid-cols-3 md:items-stretch">
+        {compare.map((c, i) => (
+          <div
+            data-reveal
+            style={`--reveal-delay: ${i * 80}ms`}
+            class:list={[
+              'flex flex-col rounded-2xl border p-7 shadow-e1',
+              c.best ? 'border-line-strong glass ring-gradient' : 'border-line bg-surface',
+            ]}
+          >
+            <h3 class:list={['text-h3 font-semibold', c.best ? 'text-gradient-brand' : 'text-ink']}>{c.label}</h3>
+            <p class="mt-3 flex-1 text-sm leading-relaxed text-ink-muted">{c.detail}</p>
+            <p class:list={['mt-6 text-h3 font-bold tracking-tight', c.best ? 'text-brand' : 'text-ink']}>{c.cost}</p>
+          </div>
+        ))}
+      </div>
+      <p class="mt-8 text-sm italic text-ink-subtle" data-reveal>{t('pricing.tooltip.footnote')}</p>
+    </div>
+  </section>
+
+  {/* Definitions & add-ons */}
+  <section class="container-page py-24">
+    <div class="grid gap-12 lg:grid-cols-2">
+      <div data-reveal>
+        <h2 class="text-h3 font-semibold text-ink">{t('pricing.notes.definitionsLabel')}</h2>
+        <ul class="mt-5 space-y-3">
+          <li class="flex items-start gap-3 text-ink-muted">
+            <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent"></span>
+            {t('pricing.notes.itemDef')}
+          </li>
+          <li class="flex items-start gap-3 text-ink-muted">
+            <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent"></span>
+            {t('pricing.notes.runDef')}
+          </li>
+        </ul>
+        <p class="mt-8 text-sm text-ink-subtle">
+          <span class="font-semibold text-ink">{t('pricing.notes.billingLabel')}</span>
+          {' '}{t('pricing.notes.billingDetail')}
+        </p>
+      </div>
+
+      <div data-reveal style="--reveal-delay: 80ms" class="h-fit rounded-2xl border border-line glass p-8 shadow-e1">
+        <h2 class="text-h3 font-semibold text-ink">{t('pricing.notes.addonsLabel')}</h2>
+        <ul class="mt-5 space-y-3">
+          {addons.map((a) => {
+            const [label, price] = a.split(':');
+            return (
+              <li class="flex items-center justify-between gap-4 border-b border-line pb-3 last:border-0 last:pb-0">
+                <span class="text-ink-muted">{label}</span>
+                <span class="font-semibold text-ink">{price ? price.trim() : ''}</span>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  {/* FAQ */}
+  {faqItems.length > 0 && (
+    <section class="relative overflow-hidden border-y border-line bg-surface-2/40">
+      <div class="container-page py-24">
+        <h2 data-reveal class="max-w-2xl text-h2 font-bold tracking-tight text-ink">
+          Frequently asked <span class="text-gradient-brand">questions</span>
+        </h2>
+        <div class="mt-12 grid gap-4 lg:grid-cols-2">
+          {faqItems.map((f, i) => (
+            <details
+              data-reveal
+              style={`--reveal-delay: ${i * 60}ms`}
+              class="group rounded-2xl border border-line glass p-6 shadow-e1 open:shadow-glow"
+            >
+              <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-h3 font-semibold text-ink marker:hidden [&::-webkit-details-marker]:hidden">
+                {f.question}
+                <svg class="h-5 w-5 shrink-0 text-brand transition-transform duration-200 group-open:rotate-45" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+              </summary>
+              <p class="mt-4 text-ink-muted">{f.answer}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  {/* CTA */}
+  <section class="container-page py-28">
+    <div data-reveal class="relative overflow-hidden rounded-[2rem] border border-line glass px-6 py-20 text-center shadow-e2 sm:px-12">
+      <Aurora class="opacity-70" />
+      <h2 class="mx-auto max-w-3xl text-display font-extrabold tracking-tight text-ink">{t('pricing.stickyCta.text')}</h2>
+      <div class="mt-10 flex flex-wrap justify-center gap-4">
+        <Button href={localizePath(locale, '/contact')} size="lg">{t('hero.cta.primary')}</Button>
+        <Button href={localizePath(locale, '/services')} size="lg" variant="secondary">{t('nav.services')}</Button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

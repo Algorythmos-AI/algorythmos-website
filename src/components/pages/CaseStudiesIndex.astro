@@ -1,0 +1,89 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeader from '@/components/sections/PageHeader.astro';
+import { asLocale, useTranslations, localizePath } from '@/i18n';
+import { caseStudies, getCaseStudy } from '@/data/caseStudies';
+import { breadcrumb, SITE } from '@/seo/schema';
+
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const abs = (p: string) => SITE + localizePath(locale, p);
+
+/** Resolve a card's translatable field from its i18n index, or fall back to inline EN. */
+function field(slug: string, key: 'title' | 'challenge' | 'solution' | 'result'): string {
+  const cs = getCaseStudy(slug);
+  if (cs?.i18nIndex !== undefined) return t(`caseStudies.items.${cs.i18nIndex}.${key}`);
+  return cs?.inline?.[key === 'result' ? 'meta' : key] ?? '';
+}
+
+const cards = caseStudies.map((c) => ({
+  slug: c.slug,
+  title: field(c.slug, 'title'),
+  challenge: field(c.slug, 'challenge'),
+  solution: field(c.slug, 'solution'),
+  result: field(c.slug, 'result'),
+}));
+
+const collection = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: t('caseStudies.meta.title'),
+  description: t('caseStudies.meta.description'),
+  url: abs('/case-studies'),
+  mainEntity: {
+    '@type': 'ItemList',
+    itemListElement: cards.map((c, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: c.title,
+      url: abs(`/case-studies/${c.slug}`),
+    })),
+  },
+};
+const crumbs = breadcrumb([
+  { name: 'Home', url: abs('/') },
+  { name: t('nav.caseStudies'), url: abs('/case-studies') },
+]);
+---
+
+<BaseLayout
+  title={t('caseStudies.meta.title')}
+  description={t('caseStudies.meta.description')}
+  path="/case-studies"
+  jsonLd={[collection, crumbs]}
+>
+  <PageHeader eyebrow={t('nav.caseStudies')} title={t('caseStudies.hero.title')} lead={t('caseStudies.hero.subtitle')} />
+
+  <section class="container-page py-20">
+    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {cards.map((c, i) => (
+        <a
+          href={localizePath(locale, `/case-studies/${c.slug}`)}
+          data-reveal
+          style={`--reveal-delay: ${i * 70}ms`}
+          class="group ring-gradient relative flex flex-col rounded-2xl border border-line glass p-6 transition-[transform,box-shadow] duration-300 ease-smooth hover:-translate-y-1 hover:shadow-glow"
+        >
+          <h2 class="text-h3 font-semibold text-ink">{c.title}</h2>
+          <dl class="mt-4 flex-1 space-y-3 text-sm leading-relaxed text-ink-muted">
+            <div>
+              <dt class="font-semibold text-brand">{t('caseStudies.labels.challenge')}</dt>
+              <dd class="mt-0.5">{c.challenge}</dd>
+            </div>
+            <div>
+              <dt class="font-semibold text-brand">{t('caseStudies.labels.solution')}</dt>
+              <dd class="mt-0.5">{c.solution}</dd>
+            </div>
+            <div>
+              <dt class="font-semibold text-brand">{t('caseStudies.labels.result')}</dt>
+              <dd class="mt-0.5">{c.result}</dd>
+            </div>
+          </dl>
+          <span class="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-brand">
+            {t('caseStudyDetail.cta.button')}
+            <svg class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+          </span>
+        </a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

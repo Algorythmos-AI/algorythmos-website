@@ -1,0 +1,67 @@
+---
+/**
+ * GDPR cookie/consent notice + consent-gated, cookieless Vercel analytics.
+ * Vanilla (no React). Functional cookies (theme/locale) are essential and not gated;
+ * analytics loads only after explicit Accept. View-Transition safe.
+ */
+---
+
+<div
+  id="consent"
+  hidden
+  role="region"
+  aria-label="Privacy and cookies"
+  class="fixed inset-x-0 bottom-0 z-[var(--z-toast)] border-t border-line glass"
+>
+  <div class="container-page flex flex-col gap-4 py-4 sm:flex-row sm:items-center sm:justify-between">
+    <p class="text-sm text-ink-muted">
+      We use privacy-friendly, cookieless analytics to improve this site. Read our{' '}
+      <a href="/privacy" class="font-medium text-brand underline underline-offset-2">Privacy Policy</a>.
+    </p>
+    <div class="flex shrink-0 gap-3">
+      <button id="consent-decline" type="button" class="rounded-lg border border-line-strong px-4 py-2 text-sm font-semibold text-ink transition-colors hover:border-brand">
+        Decline
+      </button>
+      <button id="consent-accept" type="button" class="rounded-lg bg-grad-cta px-4 py-2 text-sm font-semibold text-white shadow-e1">
+        Accept
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function getCookie(name: string): string | null {
+    const m = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]+)'));
+    return m ? m[1] : null;
+  }
+  async function loadAnalytics() {
+    if ((window as any).__algAnalytics) return;
+    (window as any).__algAnalytics = true;
+    try {
+      const [a, s] = await Promise.all([import('@vercel/analytics'), import('@vercel/speed-insights')]);
+      a.inject();
+      s.injectSpeedInsights();
+    } catch {}
+  }
+  function setupConsent() {
+    const el = document.getElementById('consent');
+    if (!el) return;
+    const consent = getCookie('consent');
+    if (consent === 'granted') {
+      loadAnalytics();
+      return;
+    }
+    if (consent === 'denied') return;
+    el.hidden = false;
+    const set = (v: string) => {
+      document.cookie = `consent=${v};path=/;max-age=15552000;samesite=lax`;
+      el.hidden = true;
+    };
+    el.querySelector('#consent-accept')?.addEventListener('click', () => {
+      set('granted');
+      loadAnalytics();
+    });
+    el.querySelector('#consent-decline')?.addEventListener('click', () => set('denied'));
+  }
+  document.addEventListener('astro:page-load', setupConsent);
+</script>

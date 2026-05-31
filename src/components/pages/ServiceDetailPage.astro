@@ -1,0 +1,141 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeader from '@/components/sections/PageHeader.astro';
+import Button from '@/components/ui/Button.astro';
+import { asLocale, useTranslations, localizePath } from '@/i18n';
+import { getService } from '@/data/services';
+import { breadcrumb, SITE, ORG_ID, ogImageUrl, imageObject } from '@/seo/schema';
+import { BOOKING_URL } from '@/lib/links';
+import Visual from '@/components/ui/Visual.astro';
+import { serviceVisuals } from '@/data/visuals';
+
+interface Props {
+  slug: string;
+}
+const { slug } = Astro.props;
+const svc = getService(slug);
+if (!svc) throw new Error(`Unknown service slug: ${slug}`);
+
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const path = `/services/${svc.slug}`;
+const abs = (p: string) => SITE + localizePath(locale, p);
+const ogImg = ogImageUrl(localizePath(locale, path));
+const svcVisual = serviceVisuals[svc.slug];
+const svcVisualAlt = svcVisual ? t(svcVisual.altKey) : '';
+
+const serviceLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: svc.name,
+  description: svc.summary,
+  provider: { '@id': ORG_ID },
+  areaServed: [
+    { '@type': 'Country', name: 'Australia' },
+    { '@type': 'Country', name: 'France' },
+  ],
+  image: svcVisual
+    ? [ogImg, imageObject({ path: svcVisual.file, alt: svcVisualAlt, width: svcVisual.width, height: svcVisual.height, primary: true })]
+    : ogImg,
+  url: abs(path),
+};
+const crumbs = breadcrumb([
+  { name: 'Home', url: abs('/') },
+  { name: t('nav.services'), url: abs('/services') },
+  { name: svc.name, url: abs(path) },
+]);
+
+/**
+ * FAQs — rendered visibly AND emitted as FAQPage schema (Google requires the
+ * structured data to match on-page content). Counts vary per service; we read
+ * sequential keys until one is missing (t() returns the key string on a miss).
+ */
+const FAQ_NS: Record<string, string> = {
+  'agentic-automation': 'serviceAgentic',
+  'document-intelligence': 'serviceDocument',
+  'mlops-cicd': 'serviceMlops',
+  'sql-dashboards': 'serviceSqlDashboards',
+};
+const faqNs = FAQ_NS[svc.slug];
+const faqs: { q: string; a: string }[] = [];
+if (faqNs) {
+  for (let i = 0; i < 12; i++) {
+    const q = t(`${faqNs}.faqs.${i}.question`);
+    const a = t(`${faqNs}.faqs.${i}.answer`);
+    if (q === `${faqNs}.faqs.${i}.question` || a === `${faqNs}.faqs.${i}.answer`) break;
+    faqs.push({ q, a });
+  }
+}
+const faqLd = faqs.length
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      '@id': `${SITE}${localizePath(locale, path)}#faq`,
+      mainEntity: faqs.map((f) => ({
+        '@type': 'Question',
+        name: f.q,
+        acceptedAnswer: { '@type': 'Answer', text: f.a },
+      })),
+    }
+  : null;
+---
+
+<BaseLayout title={`${svc.name} — Algorythmos`} description={svc.summary} path={path} image={ogImg} jsonLd={[serviceLd, crumbs, ...(faqLd ? [faqLd] : [])]}>
+  <PageHeader eyebrow={t('nav.services')} title={svc.name} lead={svc.tagline} />
+
+  {svcVisual && (
+    <section class="container-page pt-12">
+      <Visual src={svcVisual.file} alt={svcVisualAlt} width={svcVisual.width} height={svcVisual.height} />
+    </section>
+  )}
+
+  <section class="container-page py-20">
+    <div class="grid gap-12 lg:grid-cols-[1.5fr_1fr]">
+      <div data-reveal>
+        <p class="text-lead text-ink-muted">{svc.summary}</p>
+
+        <h2 class="mt-12 text-h3 font-semibold text-ink">What's included</h2>
+        <ul class="mt-5 space-y-3">
+          {svc.capabilities.map((c) => (
+            <li class="flex items-start gap-3">
+              <svg class="mt-0.5 h-5 w-5 shrink-0 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
+              <span class="text-ink-muted">{c}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <aside data-reveal style="--reveal-delay: 80ms" class="h-fit rounded-2xl border border-line glass p-6">
+        <h2 class="text-h3 font-semibold text-ink">Outcomes</h2>
+        <ul class="mt-4 space-y-3">
+          {svc.outcomes.map((o) => (
+            <li class="flex items-start gap-3 text-sm text-ink-muted">
+              <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent"></span>
+              {o}
+            </li>
+          ))}
+        </ul>
+        <Button href={BOOKING_URL} target="_blank" rel="noopener" size="lg" class="mt-8 w-full">{t('hero.cta.primary')}</Button>
+      </aside>
+    </div>
+  </section>
+
+  {faqs.length > 0 && (
+    <section class="container-page pb-24">
+      <h2 data-reveal class="text-h2 font-bold tracking-tight text-ink">
+        Frequently asked <span class="text-gradient-brand">questions</span>
+      </h2>
+      <div data-reveal class="mt-8 max-w-measure divide-y divide-line overflow-hidden rounded-2xl border border-line glass">
+        {faqs.map((f) => (
+          <details class="group">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-4 p-6 text-lg font-semibold text-ink [&::-webkit-details-marker]:hidden">
+              <span>{f.q}</span>
+              <svg class="h-5 w-5 shrink-0 text-ink-muted transition-transform duration-200 group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+            </summary>
+            <p class="px-6 pb-6 text-ink-muted">{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+  )}
+</BaseLayout>

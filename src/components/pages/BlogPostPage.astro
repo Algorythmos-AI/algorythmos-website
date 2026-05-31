@@ -1,0 +1,122 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeader from '@/components/sections/PageHeader.astro';
+import Button from '@/components/ui/Button.astro';
+import { asLocale, useTranslations, localizePath } from '@/i18n';
+import { getPost } from '@/data/blog';
+import { getBlogCharts } from '@/data/blogCharts';
+import Chart from '@/components/islands/Chart';
+import { breadcrumb, SITE, ORG_ID, ogImageUrl } from '@/seo/schema';
+import { BOOKING_URL } from '@/lib/links';
+
+interface Props {
+  slug: string;
+}
+const { slug } = Astro.props;
+const post = getPost(slug);
+if (!post) throw new Error(`Unknown blog slug: ${slug}`);
+
+/** Real charts harvested from the legacy layouts, keyed by slug. */
+const charts = getBlogCharts(post.slug);
+
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const path = `/blog/${post.slug}`;
+const abs = (p: string) => SITE + localizePath(locale, p);
+const ogImg = ogImageUrl(localizePath(locale, path));
+
+const base = `blogDetail.posts.${post.slug}`;
+const title = t(`${base}.title`);
+const description = t(`${base}.meta`);
+
+/** Resolve a prose section's heading + body from either key shape. */
+function resolveProse(sectionBase: string, paragraphs?: number[], list?: number[], listKey = 'list') {
+  const k = (suffix: string) => `${base}.${sectionBase}.${suffix}`;
+  // Uniform posts use `.heading`; the bespoke pulse layout uses `.title`.
+  const headingKey = [`${k('heading')}`, `${k('title')}`].find((key) => t(key) !== key);
+  const heading = headingKey ? t(headingKey) : '';
+  // Body paragraphs: explicit `.paragraphs.N` indices, else the bespoke `.subtitle`/`.desc` keys.
+  const paras = (paragraphs ?? []).map((n) => t(k(`paragraphs.${n}`)));
+  if (paras.length === 0) {
+    for (const key of [k('subtitle'), k('desc')]) {
+      if (t(key) !== key) paras.push(t(key));
+    }
+  }
+  const items = (list ?? []).map((n) => t(k(`${listKey}.${n}`)));
+  return { heading, paras, items };
+}
+
+const articleLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: title,
+  description,
+  datePublished: post.date,
+  image: ogImg,
+  author: { '@id': ORG_ID },
+  publisher: { '@id': ORG_ID },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': abs(path) },
+};
+const crumbs = breadcrumb([
+  { name: 'Home', url: abs('/') },
+  { name: t('blog.hero.title'), url: abs('/blog') },
+  { name: title, url: abs(path) },
+]);
+---
+
+<BaseLayout title={`${title} — Algorythmos`} description={description} path={path} ogType="article" image={ogImg} jsonLd={[articleLd, crumbs]}>
+  <PageHeader eyebrow={t(`blog.posts.${post.postIndex}.date`)} title={title} lead={description} />
+
+  <section class="container-page py-20">
+    <article class="max-w-measure">
+      {post.body.map((block, i) => {
+        // Chart placeholder blocks render once, after the prose (below) — skip here to avoid duplication.
+        if (block.kind === 'chart') return null;
+        const { heading, paras, items } = resolveProse(block.base, block.paragraphs, block.list, block.listKey);
+        return (
+          <div data-reveal style={`--reveal-delay: ${i * 60}ms`} class="mt-12 first:mt-0">
+            {heading && <h2 class="text-h2 font-semibold tracking-tight text-ink">{heading}</h2>}
+            {paras.map((p) => (
+              <p class="mt-5 text-lead leading-relaxed text-ink-muted">{p}</p>
+            ))}
+            {items.length > 0 && (
+              <ul class="mt-5 space-y-3">
+                {items.map((item) => (
+                  <li class="flex items-start gap-3">
+                    <svg class="mt-1.5 h-5 w-5 shrink-0 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
+                    <span class="text-ink-muted">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        );
+      })}
+
+      {charts.length > 0 && (
+        <div data-reveal class="mt-12 space-y-8">
+          {charts.map((c) => (
+            <figure class="rounded-2xl border border-line glass p-5">
+              <figcaption>
+                <h3 class="text-base font-semibold text-ink">{c.title}</h3>
+                {c.caption && <p class="mt-1 text-sm text-ink-muted">{c.caption}</p>}
+              </figcaption>
+              <div class="mt-4">
+                <Chart client:only="react" type={c.type} data={c.data} title={c.title} height={340} />
+              </div>
+            </figure>
+          ))}
+        </div>
+      )}
+
+      <div data-reveal class="mt-16 rounded-2xl border border-line glass p-8">
+        <h2 class="text-h3 font-semibold text-ink">{t('blog.hero.title')}</h2>
+        <p class="mt-3 text-ink-muted">{t('blog.hero.subtitle')}</p>
+        <div class="mt-6 flex flex-wrap gap-3">
+          <Button href={BOOKING_URL} target="_blank" rel="noopener" size="lg">{t('hero.cta.primary')}</Button>
+          <Button href={localizePath(locale, '/blog')} variant="secondary" size="lg">{t('blog.hero.title')}</Button>
+        </div>
+      </div>
+    </article>
+  </section>
+</BaseLayout>

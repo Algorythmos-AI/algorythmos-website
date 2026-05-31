@@ -1,0 +1,51 @@
+---
+import { asLocale, useTranslations, localizePath } from '@/i18n';
+import Button from '@/components/ui/Button.astro';
+import Aurora from '@/components/ui/Aurora.astro';
+import Visual from '@/components/ui/Visual.astro';
+import { heroVisual } from '@/data/visuals';
+import { BOOKING_URL } from '@/lib/links';
+
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+---
+
+<section class="relative overflow-hidden">
+  <Aurora />
+  <div class="container-page pb-24 pt-24 sm:pt-32">
+    <p data-reveal class="inline-flex items-center gap-2 rounded-full glass px-3.5 py-1.5 text-xs font-medium text-ink-muted">
+      <span class="h-1.5 w-1.5 rounded-full bg-accent"></span>
+      AI Consultancy · Sydney · Paris
+    </p>
+
+    <h1
+      data-reveal
+      style="--reveal-delay: 60ms"
+      class="mt-6 max-w-5xl text-mega font-extrabold tracking-tight text-ink"
+    >
+      <span class="text-gradient-brand">{t('hero.title')}</span>
+    </h1>
+
+    <p data-reveal style="--reveal-delay: 120ms" class="mt-6 max-w-2xl text-lead text-ink-muted">
+      {t('hero.subtitle')}
+    </p>
+
+    <div data-reveal style="--reveal-delay: 180ms" class="mt-10 flex flex-wrap items-center gap-4">
+      <Button href={BOOKING_URL} target="_blank" rel="noopener" size="lg">{t('hero.cta.primary')}</Button>
+      <Button href={localizePath(locale, '/pricing')} size="lg" variant="secondary">{t('hero.cta.secondary')}</Button>
+    </div>
+
+    <p data-reveal style="--reveal-delay: 240ms" class="mt-10 text-sm text-ink-subtle">
+      Senior engineers · EU GDPR &amp; Australian Privacy aligned · Outcome-based delivery
+    </p>
+
+    <Visual
+      src={heroVisual.file}
+      alt={t(heroVisual.altKey)}
+      width={heroVisual.width}
+      height={heroVisual.height}
+      priority
+      figureClass="mt-14 sm:mt-16"
+    />
+  </div>
+</section>

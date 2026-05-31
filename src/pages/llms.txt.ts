@@ -1,0 +1,62 @@
+import type { APIRoute } from 'astro';
+import { services } from '@/data/services';
+import { caseStudies } from '@/data/caseStudies';
+import { blog } from '@/data/blog';
+import { useTranslations } from '@/i18n';
+
+export const prerender = true;
+
+const SITE = 'https://algorythmos.com';
+
+export const GET: APIRoute = () => {
+  const t = useTranslations('en');
+  const L: string[] = [];
+  L.push('# Algorythmos', '');
+  L.push(
+    '> Boutique AI consultancy delivering agentic automation, document intelligence, SQL dashboards, and MLOps engineering for SMEs in Sydney (Australia) and Paris (France). Bilingual EN/FR. Single canonical domain: https://algorythmos.com.',
+    '',
+    `> Full page-by-page content for ingestion: ${SITE}/llms-full.txt`,
+    '',
+  );
+  L.push('## Overview');
+  L.push(`- [Home](${SITE}/): What Algorythmos does and who it serves.`);
+  L.push(`- [Services](${SITE}/services): Full catalogue of AI consulting offerings.`);
+  L.push(`- [Pricing](${SITE}/pricing): Engagement models and transparent pricing.`);
+  L.push(`- [About](${SITE}/about): Company background and approach.`);
+  L.push(`- [Contact](${SITE}/contact): How to start an engagement.`);
+  L.push('');
+  L.push('## Services');
+  for (const s of services) L.push(`- [${s.name}](${SITE}/services/${s.slug}): ${s.tagline}`);
+  L.push('');
+  L.push('## Regions');
+  L.push(`- [Australia — Sydney](${SITE}/au-en): AI consultancy for Australian SMEs and enterprises.`);
+  L.push(`- [France — Paris](${SITE}/fr-fr): Cabinet de conseil en IA, conforme RGPD et EU AI Act.`);
+  L.push(`- [AI Consultancy in Sydney](${SITE}/au-en/ai-consultancy-sydney): Local landing page for businesses in Sydney, NSW & Australia.`);
+  L.push(`- [Conseil en IA à Paris](${SITE}/fr-fr/conseil-en-ia-paris): Page locale pour les PME et ETI à Paris et en Île-de-France.`);
+  L.push('');
+  L.push('## Blog');
+  L.push(`- [Blog index](${SITE}/blog)`);
+  for (const p of blog) L.push(`- [${t(`blog.posts.${p.postIndex}.title`)}](${SITE}/blog/${p.slug})`);
+  L.push('');
+  L.push('## Case Studies');
+  L.push(`- [Case Studies](${SITE}/case-studies)`);
+  for (const c of caseStudies) L.push(`- [${t(`caseStudies.items.${c.i18nIndex}.title`)}](${SITE}/case-studies/${c.slug})`);
+  L.push('');
+  L.push('## Company');
+  L.push(`- [Careers](${SITE}/careers)`);
+  L.push(`- [Privacy Policy](${SITE}/privacy)`);
+  L.push(`- [Terms of Service](${SITE}/terms)`);
+  L.push('');
+  L.push('## Key visuals');
+  L.push('> Branded product-UI illustrations (not photographs). Theme-neutral SVG.');
+  L.push(`- [AI console — home hero](${SITE}/assets/visuals/home-hero-ai-console.svg): agentic automation workflow with a live analytics dashboard.`);
+  L.push(`- [Agentic automation](${SITE}/assets/visuals/service-agentic-automation.svg): agent run with tool calls, guardrails and a human approval gate.`);
+  L.push(`- [Document intelligence](${SITE}/assets/visuals/service-document-intelligence.svg): invoice extracted into structured fields with confidence scores.`);
+  L.push(`- [SQL dashboards](${SITE}/assets/visuals/service-sql-dashboards.svg): governed KPIs and revenue charts on a semantic layer.`);
+  L.push(`- [MLOps & CI/CD](${SITE}/assets/visuals/service-mlops-cicd.svg): train→deploy pipeline with drift detection and rollback.`);
+  L.push(`- [AI-ready websites](${SITE}/assets/visuals/service-ai-websites.svg): Lighthouse 100s, Core Web Vitals and AI-crawl readiness.`);
+  L.push(`- [Sydney](${SITE}/assets/visuals/city-sydney.svg): Sydney presence — AI consultancy for Australia.`);
+  L.push(`- [Paris](${SITE}/assets/visuals/city-paris.svg): Paris presence — conseil en IA for France.`);
+  L.push('');
+  return new Response(L.join('\n'), { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
+};

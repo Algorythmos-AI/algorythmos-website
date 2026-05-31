@@ -1,0 +1,341 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeader from '@/components/sections/PageHeader.astro';
+import Button from '@/components/ui/Button.astro';
+import { asLocale, useTranslations, localizePath } from '@/i18n';
+import { breadcrumb, SITE, ORG_ID, imageObject } from '@/seo/schema';
+import { BOOKING_URL } from '@/lib/links';
+import Visual from '@/components/ui/Visual.astro';
+import { cityVisuals } from '@/data/visuals';
+
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const path = '/contact';
+const abs = (p: string) => SITE + localizePath(locale, p);
+
+/* No real contact email key exists yet; use the canonical org address. */
+const EMAIL = 'info@algorythmos.com.au';
+
+const cityAU = cityVisuals.AU;
+const cityFR = cityVisuals.FR;
+const cityAUAlt = t(cityAU.altKey);
+const cityFRAlt = t(cityFR.altKey);
+
+const crumbs = breadcrumb([
+  { name: t('nav.home'), url: abs('/') },
+  { name: t('nav.contact'), url: abs(path) },
+]);
+
+/* ContactPage node referencing the single Organization identity graph. */
+const contactLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ContactPage',
+  name: t('contactPage.meta.title'),
+  description: t('contactPage.meta.description'),
+  url: abs(path),
+  image: [
+    imageObject({ path: cityAU.file, alt: cityAUAlt, width: cityAU.width, height: cityAU.height }),
+    imageObject({ path: cityFR.file, alt: cityFRAlt, width: cityFR.width, height: cityFR.height }),
+  ],
+  isPartOf: { '@id': ORG_ID },
+  mainEntity: {
+    '@id': ORG_ID,
+    contactPoint: {
+      '@type': 'ContactPoint',
+      contactType: 'customer service',
+      email: EMAIL,
+      url: abs(path),
+      areaServed: ['AU', 'FR'],
+      availableLanguage: ['en', 'fr'],
+    },
+  },
+};
+
+const offices = [
+  {
+    title: t('contactPage.globalMap.locations.france.title'),
+    role: t('contactPage.globalMap.france.role'),
+    description: t('contactPage.globalMap.locations.france.description'),
+  },
+  {
+    title: t('contactPage.globalMap.locations.australia.title'),
+    role: t('contactPage.globalMap.australia.role'),
+    description: t('contactPage.globalMap.locations.australia.description'),
+  },
+];
+---
+
+<BaseLayout
+  title={t('contactPage.meta.title')}
+  description={t('contactPage.meta.description')}
+  path={path}
+  ogType="website"
+  jsonLd={[contactLd, crumbs]}
+>
+  <PageHeader eyebrow={t('contactPage.globalMap.badge')} title={t('contactPage.hero.title')} lead={t('contactPage.hero.subtitle')} />
+
+  <section class="container-page py-20">
+    <div class="grid gap-12 lg:grid-cols-[1.4fr_1fr]">
+      {/* ── Contact form ─────────────────────────────────────────── */}
+      <div data-reveal>
+        <h2 class="text-h2 font-bold tracking-tight text-ink">{t('contact.title')}</h2>
+        <p class="mt-3 max-w-measure text-lead text-ink-muted">{t('contact.subtitle')}</p>
+
+        <div class="mt-6">
+          <Button href={BOOKING_URL} target="_blank" rel="noopener" variant="secondary">{t('hero.cta.primary')}</Button>
+        </div>
+
+        {/* TODO P7: wire to Astro Action — server submission lands in a later phase. */}
+        <form
+          id="contact-form"
+          action="/api/contact"
+          method="POST"
+          novalidate
+          data-msg-name-min={t('contactPage.validation.nameMin')}
+          data-msg-email-invalid={t('contactPage.validation.emailInvalid')}
+          data-msg-message-min={t('contactPage.validation.messageMin')}
+          class="mt-10 rounded-2xl border border-line glass p-6 sm:p-8"
+        >
+          <div class="grid gap-5 sm:grid-cols-2">
+            {/* Name */}
+            <div class="sm:col-span-1">
+              <label for="cf-name" class="block text-sm font-semibold text-ink">
+                {t('contactPage.form.nameLabel')} <span class="text-danger" aria-hidden="true">*</span>
+              </label>
+              <input
+                type="text"
+                id="cf-name"
+                name="name"
+                required
+                minlength="2"
+                autocomplete="name"
+                aria-required="true"
+                aria-describedby="cf-name-error"
+                class="mt-2 block w-full rounded-lg border border-line bg-surface-2/50 px-4 py-3 text-ink placeholder:text-ink-subtle transition-[border-color,box-shadow] duration-200 ease-smooth focus-visible:border-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring aria-[invalid=true]:border-danger"
+              />
+              <p id="cf-name-error" class="mt-1.5 hidden text-sm text-danger" role="alert"></p>
+            </div>
+
+            {/* Email */}
+            <div class="sm:col-span-1">
+              <label for="cf-email" class="block text-sm font-semibold text-ink">
+                {t('contactPage.form.emailLabel')} <span class="text-danger" aria-hidden="true">*</span>
+              </label>
+              <input
+                type="email"
+                id="cf-email"
+                name="email"
+                required
+                autocomplete="email"
+                aria-required="true"
+                aria-describedby="cf-email-error"
+                class="mt-2 block w-full rounded-lg border border-line bg-surface-2/50 px-4 py-3 text-ink placeholder:text-ink-subtle transition-[border-color,box-shadow] duration-200 ease-smooth focus-visible:border-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring aria-[invalid=true]:border-danger"
+              />
+              <p id="cf-email-error" class="mt-1.5 hidden text-sm text-danger" role="alert"></p>
+            </div>
+
+            {/* Company (optional) */}
+            <div class="sm:col-span-2">
+              <label for="cf-company" class="block text-sm font-semibold text-ink">
+                Company <span class="font-normal text-ink-subtle">(optional)</span>
+              </label>
+              <input
+                type="text"
+                id="cf-company"
+                name="company"
+                autocomplete="organization"
+                class="mt-2 block w-full rounded-lg border border-line bg-surface-2/50 px-4 py-3 text-ink placeholder:text-ink-subtle transition-[border-color,box-shadow] duration-200 ease-smooth focus-visible:border-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              />
+            </div>
+
+            {/* Message */}
+            <div class="sm:col-span-2">
+              <label for="cf-message" class="block text-sm font-semibold text-ink">
+                {t('contactPage.form.messageLabel')} <span class="text-danger" aria-hidden="true">*</span>
+              </label>
+              <textarea
+                id="cf-message"
+                name="message"
+                required
+                minlength="10"
+                rows="5"
+                aria-required="true"
+                aria-describedby="cf-message-error"
+                class="mt-2 block w-full resize-y rounded-lg border border-line bg-surface-2/50 px-4 py-3 text-ink placeholder:text-ink-subtle transition-[border-color,box-shadow] duration-200 ease-smooth focus-visible:border-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring aria-[invalid=true]:border-danger"
+              ></textarea>
+              <p id="cf-message-error" class="mt-1.5 hidden text-sm text-danger" role="alert"></p>
+            </div>
+          </div>
+
+          <div class="mt-7 flex flex-wrap items-center gap-4">
+            <Button type="submit" size="lg" id="cf-submit">{t('contactPage.form.submitButton')}</Button>
+            <p id="cf-form-error" class="hidden w-full text-sm text-danger" role="alert"></p>
+            {/* Accessible success message — announced to assistive tech on submit. */}
+            <p
+              id="cf-success"
+              role="status"
+              aria-live="polite"
+              class="hidden items-center gap-2 text-sm font-semibold text-success"
+            >
+              <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
+              <span>{t('contactPage.snackbar.success')}</span>
+            </p>
+          </div>
+        </form>
+      </div>
+
+      {/* ── Contact details + offices ────────────────────────────── */}
+      <aside data-reveal style="--reveal-delay: 80ms" class="space-y-6">
+        <div class="rounded-2xl border border-line glass p-6">
+          <h2 class="text-h3 font-semibold text-ink">{t('nav.contactUs')}</h2>
+          <p class="mt-3 text-sm text-ink-muted">{t('contactPage.globalMap.subheading')}</p>
+          <dl class="mt-5 space-y-4 text-sm">
+            <div>
+              <dt class="font-semibold text-ink">Email</dt>
+              <dd class="mt-1">
+                <a href={`mailto:${EMAIL}`} class="text-brand underline-offset-4 hover:underline focus-visible:underline">{EMAIL}</a>
+              </dd>
+            </div>
+            <div>
+              <dt class="font-semibold text-ink">Locations</dt>
+              <dd class="mt-1 text-ink-muted">Sydney · Paris</dd>
+            </div>
+          </dl>
+        </div>
+
+        <div class="rounded-2xl border border-line glass p-6">
+          <p class="text-sm font-semibold uppercase tracking-widest text-accent">{t('contactPage.globalMap.badge')}</p>
+          <h2 class="mt-2 text-h3 font-semibold text-ink">{t('contactPage.globalMap.heading')}</h2>
+          <ul class="mt-5 space-y-5">
+            {offices.map((o) => (
+              <li class="border-l-2 border-line-strong pl-4">
+                <p class="font-semibold text-ink">{o.title}</p>
+                <p class="mt-0.5 text-xs font-medium text-brand">{o.role}</p>
+                <p class="mt-1.5 text-sm leading-relaxed text-ink-muted">{o.description}</p>
+              </li>
+            ))}
+          </ul>
+          <div class="mt-6 space-y-4">
+            <Visual src={cityAU.file} alt={cityAUAlt} width={cityAU.width} height={cityAU.height} frame={false} class="rounded-xl border border-line" figureClass="overflow-hidden rounded-xl" />
+            <Visual src={cityFR.file} alt={cityFRAlt} width={cityFR.width} height={cityFR.height} frame={false} class="rounded-xl border border-line" figureClass="overflow-hidden rounded-xl" />
+          </div>
+          {/* Organization-ref note: this page maps to the canonical Organization ContactPoint. */}
+          <p class="mt-5 border-t border-line pt-4 text-xs text-ink-subtle">
+            {t('contactPage.globalMap.legend.coverage')}
+          </p>
+        </div>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  function setupContactForm() {
+    const form = document.getElementById('contact-form') as HTMLFormElement | null;
+    if (!form || form.dataset.bound === 'true') return;
+    form.dataset.bound = 'true';
+
+    const success = document.getElementById('cf-success');
+    const fields = {
+      name: form.querySelector('#cf-name') as HTMLInputElement,
+      email: form.querySelector('#cf-email') as HTMLInputElement,
+      message: form.querySelector('#cf-message') as HTMLTextAreaElement,
+    };
+
+    // Validation messages sourced from i18n keys (build-time injected).
+    const messages = {
+      nameMin: form.dataset.msgNameMin || 'Name must be at least 2 characters',
+      emailInvalid: form.dataset.msgEmailInvalid || 'Invalid email address',
+      messageMin: form.dataset.msgMessageMin || 'Message must be at least 10 characters',
+    };
+
+    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    function setError(input: HTMLInputElement | HTMLTextAreaElement, message: string) {
+      const errorEl = document.getElementById(`${input.id}-error`);
+      if (message) {
+        input.setAttribute('aria-invalid', 'true');
+        if (errorEl) {
+          errorEl.textContent = message;
+          errorEl.classList.remove('hidden');
+        }
+      } else {
+        input.removeAttribute('aria-invalid');
+        if (errorEl) {
+          errorEl.textContent = '';
+          errorEl.classList.add('hidden');
+        }
+      }
+    }
+
+    function validateName() {
+      const ok = fields.name.value.trim().length >= 2;
+      setError(fields.name, ok ? '' : messages.nameMin);
+      return ok;
+    }
+    function validateEmail() {
+      const ok = emailRe.test(fields.email.value.trim());
+      setError(fields.email, ok ? '' : messages.emailInvalid);
+      return ok;
+    }
+    function validateMessage() {
+      const ok = fields.message.value.trim().length >= 10;
+      setError(fields.message, ok ? '' : messages.messageMin);
+      return ok;
+    }
+
+    // Re-validate a field once it has been touched (on blur + input).
+    fields.name.addEventListener('blur', validateName);
+    fields.name.addEventListener('input', () => fields.name.getAttribute('aria-invalid') && validateName());
+    fields.email.addEventListener('blur', validateEmail);
+    fields.email.addEventListener('input', () => fields.email.getAttribute('aria-invalid') && validateEmail());
+    fields.message.addEventListener('blur', validateMessage);
+    fields.message.addEventListener('input', () => fields.message.getAttribute('aria-invalid') && validateMessage());
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      success?.classList.add('hidden');
+      success?.classList.remove('inline-flex');
+
+      const results = [validateName(), validateEmail(), validateMessage()];
+      const firstInvalid = [fields.name, fields.email, fields.message].find((f) => f.getAttribute('aria-invalid') === 'true');
+
+      if (results.some((r) => !r)) {
+        firstInvalid?.focus();
+        return;
+      }
+
+      const submitBtn = form.querySelector('button[type="submit"]') as HTMLButtonElement | null;
+      const payload = {
+        name: fields.name.value.trim(),
+        email: fields.email.value.trim(),
+        message: fields.message.value.trim(),
+        company: (form.querySelector('#cf-company') as HTMLInputElement | null)?.value.trim() || '',
+      };
+      if (submitBtn) submitBtn.disabled = true;
+      fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+        .then((r) => {
+          if (!r.ok) throw new Error('send failed');
+          form.reset();
+          success?.classList.remove('hidden');
+          success?.classList.add('inline-flex');
+        })
+        .catch(() => {
+          const errEl = document.getElementById('cf-form-error');
+          if (errEl) {
+            errEl.textContent = 'Something went wrong — please email info@algorythmos.com.au directly.';
+            errEl.classList.remove('hidden');
+          }
+        })
+        .finally(() => {
+          if (submitBtn) submitBtn.disabled = false;
+        });
+    });
+  }
+
+  document.addEventListener('astro:page-load', setupContactForm);
+</script>

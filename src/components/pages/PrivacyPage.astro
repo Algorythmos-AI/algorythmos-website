@@ -1,0 +1,81 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeader from '@/components/sections/PageHeader.astro';
+import Button from '@/components/ui/Button.astro';
+import { asLocale, useTranslations, localizePath } from '@/i18n';
+import { breadcrumb, SITE } from '@/seo/schema';
+
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const path = '/privacy';
+const abs = (p: string) => SITE + localizePath(locale, p);
+
+/* No real contact email key exists yet; use the canonical org address. */
+const EMAIL = 'info@algorythmos.com.au';
+
+const crumbs = breadcrumb([
+  { name: t('nav.home'), url: abs('/') },
+  { name: t('nav.privacy'), url: abs(path) },
+]);
+
+/** Collect indexed list items (`<base>.items.0`, `.1`, …) for a section. */
+function listItems(base: string): string[] {
+  const out: string[] = [];
+  for (let i = 0; i < 12; i++) {
+    const key = `${base}.items.${i}`;
+    const val = t(key);
+    if (val === key) break;
+    out.push(val);
+  }
+  return out;
+}
+
+const sectionKeys = ['intro', 'googleAuth', 'dataCollected', 'dataUsage', 'thirdParties', 'contact'] as const;
+const sections = sectionKeys.map((s) => {
+  const base = `privacy.sections.${s}`;
+  return {
+    id: s,
+    title: t(`${base}.title`),
+    content: t(`${base}.content`).replace('{email}', EMAIL),
+    items: listItems(base),
+  };
+});
+---
+
+<BaseLayout title={t('privacy.meta.title')} description={t('privacy.meta.description')} path={path} jsonLd={[crumbs]}>
+  <PageHeader eyebrow={t('privacy.hero.badge')} title={t('privacy.hero.title')} lead={t('privacy.hero.subtitle')} />
+
+  <section class="container-page py-20">
+    <div class="mx-auto max-w-measure">
+      <p class="text-sm text-ink-subtle">
+        {t('privacy.hero.lastUpdated')}: <time>{t('privacy.hero.lastUpdatedDate')}</time>
+      </p>
+
+      <div class="mt-10 space-y-12">
+        {sections.map((sec, i) => (
+          <article data-reveal style={`--reveal-delay: ${i * 40}ms`}>
+            <h2 class="text-h3 font-semibold text-ink">{sec.title}</h2>
+            <p class="mt-3 leading-relaxed text-ink-muted">{sec.content}</p>
+            {sec.items.length > 0 && (
+              <ul class="mt-4 space-y-2.5">
+                {sec.items.map((item) => (
+                  <li class="flex items-start gap-3 text-ink-muted">
+                    <span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" aria-hidden="true"></span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </article>
+        ))}
+      </div>
+
+      {/* Contact CTA */}
+      <div data-reveal class="mt-16 rounded-2xl border border-line glass p-8 text-center">
+        <h2 class="text-h3 font-semibold text-ink">{t('privacy.cta.title')}</h2>
+        <p class="mx-auto mt-2 max-w-xl text-ink-muted">{t('privacy.cta.subtitle')}</p>
+        <Button href={localizePath(locale, '/contact')} size="lg" class="mt-6">{t('nav.contact')}</Button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

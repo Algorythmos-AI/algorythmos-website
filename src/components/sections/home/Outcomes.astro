@@ -1,0 +1,30 @@
+---
+// Qualitative differentiators — no fabricated metrics (claims sign-off pending, P6).
+const points = [
+  { title: 'Senior engineers only', desc: 'You work directly with the people who build your systems — no hand-offs to juniors.' },
+  { title: 'Compliance-first', desc: 'GDPR (EU) and Australian Privacy Principles considered from day one, not bolted on.' },
+  { title: 'Outcome-based delivery', desc: 'Scoped to measurable business results, with working software shipped in weeks, not quarters.' },
+  { title: 'Bilingual, two regions', desc: 'Delivery and support in English and French, across Sydney (APAC) and Paris (EU).' },
+];
+---
+
+<section class="relative overflow-hidden border-y border-line bg-surface-2/40">
+  <div class="container-page py-24">
+    <h2 data-reveal class="max-w-2xl text-h2 font-bold tracking-tight text-ink">
+      Why teams choose <span class="text-gradient-brand">Algorythmos</span>
+    </h2>
+    <div class="mt-14 grid gap-x-10 gap-y-12 sm:grid-cols-2">
+      {points.map((p, i) => (
+        <div data-reveal style={`--reveal-delay: ${i * 80}ms`} class="flex gap-4">
+          <span class="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-grad-cta text-sm font-bold text-white shadow-e1">
+            {String(i + 1).padStart(2, '0')}
+          </span>
+          <div>
+            <h3 class="text-h3 font-semibold text-ink">{p.title}</h3>
+            <p class="mt-2 text-ink-muted">{p.desc}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
