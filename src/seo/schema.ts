@@ -34,7 +34,12 @@ export const orgGraph = {
         { '@type': 'Country', name: 'France' },
       ],
       contactPoint: { '@type': 'ContactPoint', contactType: 'customer service', url: `${SITE}/contact` },
-      sameAs: ['https://www.linkedin.com/company/algorythmos', 'https://x.com/algorythmos'],
+      sameAs: [
+        'https://www.linkedin.com/company/algorythmos',
+        'https://www.youtube.com/@AlgorythmosAI',
+        'https://medium.com/@algorythmos',
+        'https://x.com/algorythmos',
+      ],
     },
     {
       '@type': 'WebSite',
