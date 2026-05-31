@@ -68,26 +68,8 @@ const crumbs = breadcrumb([
   <section class="container-page py-20">
     <article class="max-w-measure">
       {post.body.map((block, i) => {
-        if (block.kind === 'chart') {
-          // The legacy chart placeholder slot: render every real chart harvested
-          // for this slug here. If the slug has no charts, render nothing.
-          if (charts.length === 0) return null;
-          return (
-            <div data-reveal style={`--reveal-delay: ${i * 60}ms`} class="my-12 space-y-8">
-              {charts.map((c) => (
-                <figure class="rounded-2xl border border-line glass p-5">
-                  <figcaption>
-                    <h3 class="text-base font-semibold text-ink">{c.title}</h3>
-                    {c.caption && <p class="mt-1 text-sm text-ink-muted">{c.caption}</p>}
-                  </figcaption>
-                  <div class="mt-4">
-                    <Chart client:only="react" type={c.type} data={c.data} title={c.title} height={340} />
-                  </div>
-                </figure>
-              ))}
-            </div>
-          );
-        }
+        // Chart placeholder blocks render once, after the prose (below) — skip here to avoid duplication.
+        if (block.kind === 'chart') return null;
         const { heading, paras, items } = resolveProse(block.base, block.paragraphs, block.list, block.listKey);
         return (
           <div data-reveal style={`--reveal-delay: ${i * 60}ms`} class="mt-12 first:mt-0">
@@ -108,6 +90,22 @@ const crumbs = breadcrumb([
           </div>
         );
       })}
+
+      {charts.length > 0 && (
+        <div data-reveal class="mt-12 space-y-8">
+          {charts.map((c) => (
+            <figure class="rounded-2xl border border-line glass p-5">
+              <figcaption>
+                <h3 class="text-base font-semibold text-ink">{c.title}</h3>
+                {c.caption && <p class="mt-1 text-sm text-ink-muted">{c.caption}</p>}
+              </figcaption>
+              <div class="mt-4">
+                <Chart client:only="react" type={c.type} data={c.data} title={c.title} height={340} />
+              </div>
+            </figure>
+          ))}
+        </div>
+      )}
 
       <div data-reveal class="mt-16 rounded-2xl border border-line glass p-8">
         <h2 class="text-h3 font-semibold text-ink">{t('blog.hero.title')}</h2>
