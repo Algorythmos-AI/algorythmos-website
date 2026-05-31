@@ -1,9 +1,0 @@
-# Redirects for Cloudflare Pages (if used)
-# Format: /source /destination status
-
-# Force HTTPS
-http://* https://:splat 301
-
-# Regional Redirects (These usually need to be done at DNS/Edge level, but here for reference)
-# https://algorythmos.fr/* https://algorythmos.com/fr/:splat 301
-# https://algorythmos.com.au/* https://algorythmos.com/au/:splat 301
