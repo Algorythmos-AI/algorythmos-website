@@ -29,7 +29,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
 
       - name: Install dependencies
@@ -45,11 +45,9 @@ jobs:
       - name: Health check (hardcoded strings, alt text, image weight)
         run: npm run health:check
 
-      # Security audit — production deps only.
-      # NOTE: the @astrojs/vercel dependency pulls a path-to-regexp advisory that
-      # only affects the build-time adapter (not the shipped static site). It is a
-      # known, tracked issue, so this step is informational and must NOT fail CI.
-      - name: Security audit (prod deps, non-blocking on tracked advisory)
+      # Security audit — production deps only. The build is adapter-free (static site +
+      # /api serverless), so prod deps are currently clean; kept non-blocking as a safety net.
+      - name: Security audit (prod deps, non-blocking)
         run: npm audit --omit=dev --audit-level=high || true
 
       # --- Build, then validate the built output ---

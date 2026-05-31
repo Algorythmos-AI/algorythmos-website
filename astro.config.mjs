@@ -6,6 +6,7 @@ import llmsFull from './scripts/llms-full-integration.mjs';
 
 // Page-path → on-page content visuals, for <image:image> sitemap entries.
 const VIS = 'https://algorythmos.com/assets/visuals';
+/** @type {Record<string, string>} */
 const SERVICE_VISUAL = {
   'agentic-automation': 'service-agentic-automation.svg',
   'document-intelligence': 'service-document-intelligence.svg',
@@ -13,8 +14,13 @@ const SERVICE_VISUAL = {
   'mlops-cicd': 'service-mlops-cicd.svg',
   'ai-websites': 'service-ai-websites.svg',
 };
+/**
+ * @param {string} pathname
+ * @returns {{ url: string, caption: string }[]}
+ */
 function pageImages(pathname) {
   const p = pathname.replace(/\/$/, '');
+  /** @type {{ url: string, caption: string }[]} */
   const imgs = [];
   if (p === '' || p === '/au-en' || p === '/fr-fr') {
     imgs.push({ url: `${VIS}/home-hero-ai-console.svg`, caption: 'Algorythmos AI console — agentic automation and a live analytics dashboard' });
@@ -53,7 +59,9 @@ export default defineConfig({
       serialize(item) {
         try {
           const imgs = pageImages(new URL(item.url).pathname);
-          if (imgs.length) item.img = imgs;
+          // `img` is forwarded to the underlying sitemap serializer at runtime (produces
+          // <image:image>); it isn't in @astrojs/sitemap's SitemapItem type, so cast.
+          if (imgs.length) /** @type {any} */ (item).img = imgs;
         } catch {
           /* leave item unchanged */
         }
