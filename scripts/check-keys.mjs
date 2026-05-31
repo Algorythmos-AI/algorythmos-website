@@ -12,6 +12,7 @@ const NS = [
   'caseStudyDetail', 'caseStudies', 'blogDetail', 'blog', 'about', 'pricing',
   'contactPage', 'contact', 'careers', 'privacy', 'terms', 'services',
   'hero', 'nav', 'footer', 'region', 'notFoundPage', 'seo',
+  'home', 'industries', 'regionAu', 'regionFr',
 ];
 const RE = new RegExp(`>\\s*(?:${NS.join('|')})\\.[a-zA-Z0-9._-]+\\s*<`, 'g');
 

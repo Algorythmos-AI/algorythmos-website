@@ -1,0 +1,29 @@
+---
+/**
+ * Honest social proof — sectors Algorythmos actually serves (no client names).
+ * Grounded in the case studies + stated industry focus; labels are i18n (EN/FR).
+ */
+import { asLocale, useTranslations } from '@/i18n';
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const sectors = ['healthcare', 'finance', 'manufacturing', 'retail', 'logistics', 'mining'] as const;
+---
+
+<section class="border-y border-line bg-surface-2/30">
+  <div class="container-page py-16 text-center">
+    <p data-reveal class="text-xs font-semibold uppercase tracking-[0.2em] text-ink-subtle">
+      {t('home.industries.title')}
+    </p>
+    <p data-reveal style="--reveal-delay: 60ms" class="mx-auto mt-3 max-w-2xl text-ink-muted">
+      {t('home.industries.lead')}
+    </p>
+    <ul data-reveal style="--reveal-delay: 120ms" class="mt-8 flex flex-wrap items-center justify-center gap-3">
+      {sectors.map((s) => (
+        <li class="inline-flex items-center gap-2.5 rounded-full border border-line glass px-4 py-2 text-sm font-medium text-ink">
+          <span class="h-1.5 w-1.5 rounded-full bg-grad-cta" aria-hidden="true"></span>
+          {t(`industries.${s}`)}
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
