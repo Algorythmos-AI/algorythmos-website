@@ -2,6 +2,8 @@
 import { asLocale, useTranslations, localizePath } from '@/i18n';
 import Button from '@/components/ui/Button.astro';
 import Aurora from '@/components/ui/Aurora.astro';
+import Visual from '@/components/ui/Visual.astro';
+import { heroVisual } from '@/data/visuals';
 import { BOOKING_URL } from '@/lib/links';
 
 const locale = asLocale(Astro.currentLocale);
@@ -36,5 +38,14 @@ const t = useTranslations(locale);
     <p data-reveal style="--reveal-delay: 240ms" class="mt-10 text-sm text-ink-subtle">
       Senior engineers · EU GDPR &amp; Australian Privacy aligned · Outcome-based delivery
     </p>
+
+    <Visual
+      src={heroVisual.file}
+      alt={t(heroVisual.altKey)}
+      width={heroVisual.width}
+      height={heroVisual.height}
+      priority
+      figureClass="mt-14 sm:mt-16"
+    />
   </div>
 </section>

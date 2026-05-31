@@ -4,8 +4,10 @@ import PageHeader from '@/components/sections/PageHeader.astro';
 import Button from '@/components/ui/Button.astro';
 import { asLocale, useTranslations, localizePath } from '@/i18n';
 import { getService } from '@/data/services';
-import { breadcrumb, SITE, ORG_ID, ogImageUrl } from '@/seo/schema';
+import { breadcrumb, SITE, ORG_ID, ogImageUrl, imageObject } from '@/seo/schema';
 import { BOOKING_URL } from '@/lib/links';
+import Visual from '@/components/ui/Visual.astro';
+import { serviceVisuals } from '@/data/visuals';
 
 interface Props {
   slug: string;
@@ -19,6 +21,8 @@ const t = useTranslations(locale);
 const path = `/services/${svc.slug}`;
 const abs = (p: string) => SITE + localizePath(locale, p);
 const ogImg = ogImageUrl(localizePath(locale, path));
+const svcVisual = serviceVisuals[svc.slug];
+const svcVisualAlt = svcVisual ? t(svcVisual.altKey) : '';
 
 const serviceLd = {
   '@context': 'https://schema.org',
@@ -30,7 +34,9 @@ const serviceLd = {
     { '@type': 'Country', name: 'Australia' },
     { '@type': 'Country', name: 'France' },
   ],
-  image: ogImg,
+  image: svcVisual
+    ? [ogImg, imageObject({ path: svcVisual.file, alt: svcVisualAlt, width: svcVisual.width, height: svcVisual.height, primary: true })]
+    : ogImg,
   url: abs(path),
 };
 const crumbs = breadcrumb([
@@ -76,6 +82,12 @@ const faqLd = faqs.length
 
 <BaseLayout title={`${svc.name} — Algorythmos`} description={svc.summary} path={path} image={ogImg} jsonLd={[serviceLd, crumbs, ...(faqLd ? [faqLd] : [])]}>
   <PageHeader eyebrow={t('nav.services')} title={svc.name} lead={svc.tagline} />
+
+  {svcVisual && (
+    <section class="container-page pt-12">
+      <Visual src={svcVisual.file} alt={svcVisualAlt} width={svcVisual.width} height={svcVisual.height} />
+    </section>
+  )}
 
   <section class="container-page py-20">
     <div class="grid gap-12 lg:grid-cols-[1.5fr_1fr]">

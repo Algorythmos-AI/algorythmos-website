@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 540" width="1120" height="540" role="img" aria-label="Paris skyline motif">
+  <defs>
+    <linearGradient id="par-stroke" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#6366f1"/><stop offset="1" stop-color="#a78bfa"/></linearGradient>
+    <radialGradient id="par-glow" cx="50%" cy="74%" r="58%"><stop offset="0" stop-color="#7c5cf0" stop-opacity="0.22"/><stop offset="1" stop-color="#7c5cf0" stop-opacity="0"/></radialGradient>
+    <style>text{font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;}.h{fill:#f3f3f8;}.m{fill:#9a9cb4;}</style>
+  </defs>
+  <rect width="1120" height="540" fill="#0c0c13"/>
+  <rect width="1120" height="540" fill="url(#par-glow)"/>
+
+  <!-- Haussmann rooflines (subtle) -->
+  <g fill="#ffffff" fill-opacity="0.05">
+    <path d="M120 430 v-70 l16 -22 h44 l16 22 v70 Z"/>
+    <path d="M200 430 v-86 l16 -22 h52 l16 22 v86 Z"/>
+    <path d="M860 430 v-80 l16 -22 h48 l16 22 v80 Z"/>
+    <path d="M948 430 v-64 l14 -20 h40 l14 20 v64 Z"/>
+    <path d="M1016 430 v-92 l14 -20 h36 l14 20 v92 Z"/>
+  </g>
+  <g fill="none" stroke="#ffffff" stroke-opacity="0.08">
+    <rect x="284" y="356" width="80" height="74"/><rect x="372" y="338" width="64" height="92"/><rect x="700" y="346" width="72" height="84"/><rect x="784" y="362" width="60" height="68"/>
+  </g>
+
+  <!-- ground line + Seine -->
+  <line x1="60" y1="430" x2="1060" y2="430" stroke="#ffffff" stroke-opacity="0.12"/>
+  <path d="M60 452 Q 320 442 580 452 T 1060 450" fill="none" stroke="#a78bfa" stroke-opacity="0.3" stroke-width="1.5"/>
+
+  <!-- Eiffel Tower -->
+  <g stroke="url(#par-stroke)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- outer edges (curved in) -->
+    <path d="M508 430 C 540 356 552 248 557 150" stroke-width="2.6"/>
+    <path d="M612 430 C 580 356 568 248 563 150" stroke-width="2.6"/>
+    <!-- base arch -->
+    <path d="M512 372 Q 560 404 608 372" stroke-width="2"/>
+    <!-- platforms -->
+    <line x1="528" y1="338" x2="592" y2="338" stroke-width="2"/>
+    <line x1="544" y1="246" x2="576" y2="246" stroke-width="2"/>
+    <line x1="555" y1="170" x2="565" y2="170" stroke-width="2"/>
+    <!-- antenna -->
+    <line x1="560" y1="150" x2="560" y2="116" stroke-width="2"/>
+    <!-- lattice braces -->
+    <g stroke-width="1" stroke-opacity="0.5">
+      <line x1="528" y1="338" x2="560" y2="372"/><line x1="592" y1="338" x2="560" y2="372"/>
+      <line x1="544" y1="246" x2="572" y2="290"/><line x1="576" y1="246" x2="548" y2="290"/>
+      <line x1="546" y1="290" x2="574" y2="290"/>
+      <line x1="555" y1="170" x2="567" y2="208"/><line x1="565" y1="170" x2="553" y2="208"/>
+      <line x1="551" y1="208" x2="569" y2="208"/>
+    </g>
+  </g>
+  <circle cx="560" cy="114" r="3" fill="#22d3ee"/>
+
+  <!-- location pin + label -->
+  <g>
+    <path d="M120 120 a18 18 0 1 0 0.01 0 M120 120 c -9 14 -9 22 0 34 c 9 -12 9 -20 0 -34 Z" fill="none" stroke="#a78bfa" stroke-width="2"/>
+    <circle cx="120" cy="116" r="6" fill="#a78bfa"/>
+    <text x="160" y="112" font-size="24" font-weight="700" class="h">Paris</text>
+    <text x="160" y="136" font-size="13" class="m">Île-de-France · France · EU</text>
+  </g>
+
+  <!-- sector chips -->
+  <g>
+    <rect x="852" y="92" width="92" height="26" rx="13" fill="#15151f" stroke="#ffffff" stroke-opacity="0.08"/><text x="898" y="109" font-size="11" text-anchor="middle" class="m">Industrie</text>
+    <rect x="952" y="92" width="58" height="26" rx="13" fill="#15151f" stroke="#ffffff" stroke-opacity="0.08"/><text x="981" y="109" font-size="11" text-anchor="middle" class="m">RGPD</text>
+    <rect x="892" y="126" width="118" height="26" rx="13" fill="#15151f" stroke="#ffffff" stroke-opacity="0.08"/><text x="951" y="143" font-size="11" text-anchor="middle" class="m">E-commerce</text>
+  </g>
+</svg>

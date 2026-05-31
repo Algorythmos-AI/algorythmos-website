@@ -1,0 +1,45 @@
+---
+/**
+ * Visual — the single integration point for branded product-mockup imagery.
+ *
+ * Renders a real, indexable <img> (alt required) inside an optional glass "device"
+ * frame so a theme-neutral dark SVG reads as an intentional screen on BOTH light and
+ * dark pages. Explicit width/height → CLS≈0. `priority` sets the LCP hero to
+ * eager + fetchpriority=high (use on ONE image per page max). data-reveal animates it
+ * in consistently with the rest of the site.
+ */
+interface Props {
+  src: string;
+  /** REQUIRED, non-empty — describes the visual for a11y + image SEO. */
+  alt: string;
+  width: number;
+  height: number;
+  caption?: string;
+  /** LCP hero only: eager-load + fetchpriority=high. */
+  priority?: boolean;
+  /** Wrap in the glass device frame (default true). */
+  frame?: boolean;
+  class?: string;
+  figureClass?: string;
+}
+
+const { src, alt, width, height, caption, priority = false, frame = true, class: klass = '', figureClass = '' } = Astro.props;
+if (!alt || !alt.trim()) throw new Error(`<Visual> requires non-empty alt for: ${src}`);
+
+const loading = priority ? 'eager' : 'lazy';
+const fetchpriority = priority ? 'high' : undefined;
+const imgClass = ['block h-auto w-full', frame && 'rounded-xl', klass];
+---
+
+<figure data-reveal class:list={['m-0', figureClass]}>
+  {
+    frame ? (
+      <div class="ring-gradient relative rounded-2xl border border-line glass p-2 shadow-e2 sm:p-2.5">
+        <img src={src} alt={alt} width={width} height={height} loading={loading} decoding="async" fetchpriority={fetchpriority} class:list={imgClass} />
+      </div>
+    ) : (
+      <img src={src} alt={alt} width={width} height={height} loading={loading} decoding="async" fetchpriority={fetchpriority} class:list={imgClass} />
+    )
+  }
+  {caption && <figcaption class="mt-3 text-center text-sm text-ink-subtle">{caption}</figcaption>}
+</figure>

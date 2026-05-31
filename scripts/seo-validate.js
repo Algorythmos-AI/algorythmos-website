@@ -261,6 +261,29 @@ function validatePage(page) {
       log.success(`${parsedOk}/${ldBlocks.length} JSON-LD block(s) parse cleanly`);
     }
   }
+
+  // 8. every content <img> has alt; decorative allowed iff alt="" AND aria-hidden="true"
+  const imgs = html.match(/<img\b[^>]*>/gi) || [];
+  let badImg = 0;
+  let contentImg = 0;
+  for (const tag of imgs) {
+    const altM = tag.match(/\balt\s*=\s*"([^"]*)"/i);
+    const hidden = /\baria-hidden\s*=\s*"true"/i.test(tag);
+    if (!altM) {
+      log.error(`<img> missing alt: ${tag.slice(0, 90)}`);
+      errors++;
+      badImg++;
+    } else if (altM[1].trim() === '' && !hidden) {
+      log.error(`<img> empty alt without aria-hidden: ${tag.slice(0, 90)}`);
+      errors++;
+      badImg++;
+    } else if (altM[1].trim() !== '') {
+      contentImg++;
+    }
+  }
+  if (imgs.length > 0 && badImg === 0) {
+    log.success(`${imgs.length} <img> OK (${contentImg} descriptive, ${imgs.length - contentImg} decorative)`);
+  }
 }
 
 // ---------------------------------------------------------------------------
