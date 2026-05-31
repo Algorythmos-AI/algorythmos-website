@@ -37,9 +37,43 @@ const crumbs = breadcrumb([
   { name: t('nav.services'), url: abs('/services') },
   { name: svc.name, url: abs(path) },
 ]);
+
+/**
+ * FAQs — rendered visibly AND emitted as FAQPage schema (Google requires the
+ * structured data to match on-page content). Counts vary per service; we read
+ * sequential keys until one is missing (t() returns the key string on a miss).
+ */
+const FAQ_NS: Record<string, string> = {
+  'agentic-automation': 'serviceAgentic',
+  'document-intelligence': 'serviceDocument',
+  'mlops-cicd': 'serviceMlops',
+  'sql-dashboards': 'serviceSqlDashboards',
+};
+const faqNs = FAQ_NS[svc.slug];
+const faqs: { q: string; a: string }[] = [];
+if (faqNs) {
+  for (let i = 0; i < 12; i++) {
+    const q = t(`${faqNs}.faqs.${i}.question`);
+    const a = t(`${faqNs}.faqs.${i}.answer`);
+    if (q === `${faqNs}.faqs.${i}.question` || a === `${faqNs}.faqs.${i}.answer`) break;
+    faqs.push({ q, a });
+  }
+}
+const faqLd = faqs.length
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      '@id': `${SITE}${localizePath(locale, path)}#faq`,
+      mainEntity: faqs.map((f) => ({
+        '@type': 'Question',
+        name: f.q,
+        acceptedAnswer: { '@type': 'Answer', text: f.a },
+      })),
+    }
+  : null;
 ---
 
-<BaseLayout title={`${svc.name} — Algorythmos`} description={svc.summary} path={path} image={ogImg} jsonLd={[serviceLd, crumbs]}>
+<BaseLayout title={`${svc.name} — Algorythmos`} description={svc.summary} path={path} image={ogImg} jsonLd={[serviceLd, crumbs, ...(faqLd ? [faqLd] : [])]}>
   <PageHeader eyebrow={t('nav.services')} title={svc.name} lead={svc.tagline} />
 
   <section class="container-page py-20">
@@ -72,4 +106,23 @@ const crumbs = breadcrumb([
       </aside>
     </div>
   </section>
+
+  {faqs.length > 0 && (
+    <section class="container-page pb-24">
+      <h2 data-reveal class="text-h2 font-bold tracking-tight text-ink">
+        Frequently asked <span class="text-gradient-brand">questions</span>
+      </h2>
+      <div data-reveal class="mt-8 max-w-measure divide-y divide-line overflow-hidden rounded-2xl border border-line glass">
+        {faqs.map((f) => (
+          <details class="group">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-4 p-6 text-lg font-semibold text-ink [&::-webkit-details-marker]:hidden">
+              <span>{f.q}</span>
+              <svg class="h-5 w-5 shrink-0 text-ink-muted transition-transform duration-200 group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+            </summary>
+            <p class="px-6 pb-6 text-ink-muted">{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+  )}
 </BaseLayout>
