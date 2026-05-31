@@ -11,7 +11,7 @@
  *     correct per-locale prefix
  *   - 4 hreflang alternates, including x-default
  *   - og:title / og:description / og:url / og:image
- *     (og:image === https://algorythmos.com/Algorythmos.png)
+ *     (og:image = brand card /Algorythmos.png, or a per-page /og/*.png)
  *   - twitter:card
  *   - at least one application/ld+json block that JSON-parses
  *
@@ -219,8 +219,13 @@ function validatePage(page) {
     if (tag === 'og:url' && !content.startsWith(EXPECTED_DOMAIN)) {
       log.error(`${tag} not on ${EXPECTED_DOMAIN}: ${content}`);
       errors++;
-    } else if (tag === 'og:image' && content !== EXPECTED_OG_IMAGE) {
-      log.error(`${tag} expected "${EXPECTED_OG_IMAGE}", got "${content}"`);
+    } else if (
+      tag === 'og:image' &&
+      content !== EXPECTED_OG_IMAGE &&
+      !(content.startsWith(`${EXPECTED_DOMAIN}/og/`) && content.endsWith('.png'))
+    ) {
+      // Brand pages use the static card; content pages use per-page /og/*.png cards.
+      log.error(`${tag} must be the brand card or a per-page /og/*.png, got "${content}"`);
       errors++;
     } else {
       log.success(`${tag}: ${content.slice(0, 70)}${content.length > 70 ? '…' : ''}`);
