@@ -15,6 +15,8 @@ export const GET: APIRoute = () => {
   L.push(
     '> Boutique AI consultancy delivering agentic automation, document intelligence, SQL dashboards, and MLOps engineering for SMEs in Sydney (Australia) and Paris (France). Bilingual EN/FR. Single canonical domain: https://algorythmos.com.',
     '',
+    `> Full page-by-page content for ingestion: ${SITE}/llms-full.txt`,
+    '',
   );
   L.push('## Overview');
   L.push(`- [Home](${SITE}/): What Algorythmos does and who it serves.`);

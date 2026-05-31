@@ -6,12 +6,12 @@ const SITE = 'https://algorythmos.com';
 const DISALLOW = ['/admin/', '/api/', '/private/', '/internal/'];
 const AI_BOTS = [
   'GPTBot', 'OAI-SearchBot', 'ChatGPT-User',
-  'ClaudeBot', 'anthropic-ai', 'Claude-Web',
+  'ClaudeBot', 'anthropic-ai', 'Claude-Web', 'Claude-User', 'Claude-SearchBot',
   'PerplexityBot', 'Perplexity-User',
-  'CCBot', 'Google-Extended', 'Bytespider',
+  'CCBot', 'Google-Extended', 'GoogleOther', 'Bytespider',
   'Applebot', 'Applebot-Extended', 'cohere-ai',
-  'Amazonbot', 'Meta-ExternalAgent', 'FacebookBot',
-  'Diffbot', 'YouBot', 'Timpibot', 'omgili', 'ImagesiftBot',
+  'Amazonbot', 'Meta-ExternalAgent', 'Meta-ExternalFetcher', 'FacebookBot',
+  'DuckAssistBot', 'PetalBot', 'Diffbot', 'YouBot', 'Timpibot', 'omgili', 'ImagesiftBot',
 ];
 
 export const GET: APIRoute = () => {
@@ -22,6 +22,7 @@ export const GET: APIRoute = () => {
     ...AI_BOTS.flatMap(block),
     `Sitemap: ${SITE}/sitemap-index.xml`,
     `# AI agent guide: ${SITE}/llms.txt`,
+    `# Full content for LLMs: ${SITE}/llms-full.txt`,
     `Host: ${SITE}`,
     '',
   ];

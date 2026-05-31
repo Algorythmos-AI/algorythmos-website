@@ -2,6 +2,7 @@
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
+import llmsFull from './scripts/llms-full-integration.mjs';
 
 // Astro 6 — static-first world-class rebuild.
 // Pure static output (no adapter): forms use a Vercel serverless function at /api/contact,
@@ -23,5 +24,6 @@ export default defineConfig({
         locales: { en: 'en', 'au-en': 'en-AU', 'fr-fr': 'fr-FR' },
       },
     }),
+    llmsFull(),
   ],
 });
