@@ -6,7 +6,7 @@ import Chart from '@/components/islands/Chart';
 import { asLocale, useTranslations, localizePath } from '@/i18n';
 import { getCaseStudy } from '@/data/caseStudies';
 import { caseStudyCharts } from '@/data/caseStudyCharts';
-import { breadcrumb, SITE, ORG_ID } from '@/seo/schema';
+import { breadcrumb, SITE, ORG_ID, ogImageUrl } from '@/seo/schema';
 
 interface Props {
   slug: string;
@@ -19,6 +19,7 @@ const locale = asLocale(Astro.currentLocale);
 const t = useTranslations(locale);
 const path = `/case-studies/${cs.slug}`;
 const abs = (p: string) => SITE + localizePath(locale, p);
+const ogImg = ogImageUrl(localizePath(locale, path));
 
 /**
  * Normalise both content shapes into one view model:
@@ -58,6 +59,7 @@ const articleLd = {
   author: { '@id': ORG_ID },
   publisher: { '@id': ORG_ID },
   inLanguage: locale === 'fr-fr' ? 'fr' : 'en',
+  image: ogImg,
   url: abs(path),
 };
 const crumbs = breadcrumb([
@@ -70,7 +72,7 @@ const crumbs = breadcrumb([
 const charts = caseStudyCharts[slug] ?? [];
 ---
 
-<BaseLayout title={`${study.title} — Algorythmos`} description={study.meta} path={path} ogType="article" jsonLd={[articleLd, crumbs]}>
+<BaseLayout title={`${study.title} — Algorythmos`} description={study.meta} path={path} ogType="article" image={ogImg} jsonLd={[articleLd, crumbs]}>
   <PageHeader eyebrow={t('nav.caseStudies')} title={study.title} lead={study.meta} />
 
   <section class="container-page py-20">

@@ -4,6 +4,17 @@ export const OG_IMAGE = `${SITE}/Algorythmos.png`;
 export const ORG_ID = `${SITE}/#organization`;
 export const WEBSITE_ID = `${SITE}/#website`;
 
+/**
+ * Per-page Open Graph cards (generated at build by `src/pages/og/[...route].ts`).
+ * Pass an already region-localized path (e.g. '/fr-fr/blog/x'); the key/URL must
+ * match a `pages` entry in the OG route, so both sides call these helpers.
+ */
+export const ogKey = (localizedPath: string): string => {
+  const p = localizedPath.replace(/^\/+/, '').replace(/\/+$/, '');
+  return p === '' ? 'index' : p;
+};
+export const ogImageUrl = (localizedPath: string): string => `${SITE}/og/${ogKey(localizedPath)}.png`;
+
 export const orgGraph = {
   '@context': 'https://schema.org',
   '@graph': [
