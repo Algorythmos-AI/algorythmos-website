@@ -47,5 +47,16 @@ export const GET: APIRoute = () => {
   L.push(`- [Privacy Policy](${SITE}/privacy)`);
   L.push(`- [Terms of Service](${SITE}/terms)`);
   L.push('');
+  L.push('## Key visuals');
+  L.push('> Branded product-UI illustrations (not photographs). Theme-neutral SVG.');
+  L.push(`- [AI console — home hero](${SITE}/assets/visuals/home-hero-ai-console.svg): agentic automation workflow with a live analytics dashboard.`);
+  L.push(`- [Agentic automation](${SITE}/assets/visuals/service-agentic-automation.svg): agent run with tool calls, guardrails and a human approval gate.`);
+  L.push(`- [Document intelligence](${SITE}/assets/visuals/service-document-intelligence.svg): invoice extracted into structured fields with confidence scores.`);
+  L.push(`- [SQL dashboards](${SITE}/assets/visuals/service-sql-dashboards.svg): governed KPIs and revenue charts on a semantic layer.`);
+  L.push(`- [MLOps & CI/CD](${SITE}/assets/visuals/service-mlops-cicd.svg): train→deploy pipeline with drift detection and rollback.`);
+  L.push(`- [AI-ready websites](${SITE}/assets/visuals/service-ai-websites.svg): Lighthouse 100s, Core Web Vitals and AI-crawl readiness.`);
+  L.push(`- [Sydney](${SITE}/assets/visuals/city-sydney.svg): Sydney presence — AI consultancy for Australia.`);
+  L.push(`- [Paris](${SITE}/assets/visuals/city-paris.svg): Paris presence — conseil en IA for France.`);
+  L.push('');
   return new Response(L.join('\n'), { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
 };

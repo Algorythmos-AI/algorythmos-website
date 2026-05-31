@@ -7,8 +7,10 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHeader from '@/components/sections/PageHeader.astro';
 import Button from '@/components/ui/Button.astro';
-import { localizePath } from '@/i18n';
-import { professionalService, breadcrumb, SITE, ogImageUrl } from '@/seo/schema';
+import Visual from '@/components/ui/Visual.astro';
+import { localizePath, useTranslations } from '@/i18n';
+import { professionalService, breadcrumb, SITE, ogImageUrl, imageObject } from '@/seo/schema';
+import { cityVisuals } from '@/data/visuals';
 import { BOOKING_URL } from '@/lib/links';
 
 interface FAQ {
@@ -49,7 +51,10 @@ interface Props {
 const p = Astro.props as Props;
 const locale = p.region === 'AU' ? 'au-en' : 'fr-fr';
 const loc = (path: string) => localizePath(locale, path);
+const t = useTranslations(locale);
 const ogImg = ogImageUrl(localizePath(locale, p.path));
+const cityV = cityVisuals[p.region];
+const cityAlt = t(cityV.altKey);
 
 const faqLd = {
   '@context': 'https://schema.org',
@@ -69,7 +74,7 @@ const crumbs = breadcrumb([
   path={p.path}
   image={ogImg}
   standalone
-  jsonLd={[professionalService(p.region), faqLd, crumbs]}
+  jsonLd={[professionalService(p.region), faqLd, crumbs, imageObject({ path: cityV.file, alt: cityAlt, width: cityV.width, height: cityV.height, primary: true })]}
 >
   <PageHeader eyebrow={p.eyebrow} title={p.h1} lead={p.lead} />
 
@@ -78,6 +83,10 @@ const crumbs = breadcrumb([
       <Button href={BOOKING_URL} target="_blank" rel="noopener" size="lg">{p.ctaPrimary}</Button>
       <Button href={loc('/contact')} variant="secondary" size="lg">{p.ctaContact}</Button>
     </div>
+  </section>
+
+  <section class="container-page pb-4">
+    <Visual src={cityV.file} alt={cityAlt} width={cityV.width} height={cityV.height} />
   </section>
 
   <section class="container-page py-16">

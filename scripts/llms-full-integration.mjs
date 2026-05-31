@@ -40,6 +40,8 @@ function mainText(html) {
   const m = html.match(/<main[^>]*>([\s\S]*?)<\/main>/i);
   let s = m ? m[1] : html;
   s = s.replace(/<(script|style|svg|noscript|template)[^>]*>[\s\S]*?<\/\1>/gi, '');
+  // Preserve content-image descriptions so AI ingestion "sees" the visuals (decorative alt="" is skipped).
+  s = s.replace(/<img\b[^>]*\balt="([^"]+)"[^>]*>/gi, ' [Image: $1] ');
   s = s.replace(/<[^>]+>/g, ' ');
   return decode(s).replace(/\s+/g, ' ').trim();
 }

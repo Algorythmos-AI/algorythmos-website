@@ -15,6 +15,35 @@ export const ogKey = (localizedPath: string): string => {
 };
 export const ogImageUrl = (localizedPath: string): string => `${SITE}/og/${ogKey(localizedPath)}.png`;
 
+/**
+ * ImageObject for an on-page content visual (the branded product mockups).
+ * `path` is the visual's absolute-from-root path (e.g. '/assets/visuals/x.svg').
+ * Feeds the per-page Service/Article/ProfessionalService `image` arrays so the
+ * visual is described for image search + AI. Dimensions mirror the on-page <img>
+ * (one source of truth → no mismatch). `primary` marks the page's hero visual.
+ */
+export interface ImageObjectInput {
+  path: string;
+  alt: string;
+  width: number;
+  height: number;
+  primary?: boolean;
+}
+export function imageObject({ path, alt, width, height, primary }: ImageObjectInput) {
+  const url = `${SITE}${path}`;
+  return {
+    '@type': 'ImageObject',
+    '@id': `${url}#image`,
+    url,
+    contentUrl: url,
+    width,
+    height,
+    caption: alt,
+    creator: { '@id': ORG_ID },
+    ...(primary ? { representativeOfPage: true } : {}),
+  };
+}
+
 export const orgGraph = {
   '@context': 'https://schema.org',
   '@graph': [

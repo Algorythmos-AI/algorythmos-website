@@ -3,8 +3,10 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHeader from '@/components/sections/PageHeader.astro';
 import Button from '@/components/ui/Button.astro';
 import { asLocale, useTranslations, localizePath } from '@/i18n';
-import { breadcrumb, SITE, ORG_ID } from '@/seo/schema';
+import { breadcrumb, SITE, ORG_ID, imageObject } from '@/seo/schema';
 import { BOOKING_URL } from '@/lib/links';
+import Visual from '@/components/ui/Visual.astro';
+import { cityVisuals } from '@/data/visuals';
 
 const locale = asLocale(Astro.currentLocale);
 const t = useTranslations(locale);
@@ -13,6 +15,11 @@ const abs = (p: string) => SITE + localizePath(locale, p);
 
 /* No real contact email key exists yet; use the canonical org address. */
 const EMAIL = 'info@algorythmos.com.au';
+
+const cityAU = cityVisuals.AU;
+const cityFR = cityVisuals.FR;
+const cityAUAlt = t(cityAU.altKey);
+const cityFRAlt = t(cityFR.altKey);
 
 const crumbs = breadcrumb([
   { name: t('nav.home'), url: abs('/') },
@@ -26,6 +33,10 @@ const contactLd = {
   name: t('contactPage.meta.title'),
   description: t('contactPage.meta.description'),
   url: abs(path),
+  image: [
+    imageObject({ path: cityAU.file, alt: cityAUAlt, width: cityAU.width, height: cityAU.height }),
+    imageObject({ path: cityFR.file, alt: cityFRAlt, width: cityFR.width, height: cityFR.height }),
+  ],
   isPartOf: { '@id': ORG_ID },
   mainEntity: {
     '@id': ORG_ID,
@@ -204,6 +215,10 @@ const offices = [
               </li>
             ))}
           </ul>
+          <div class="mt-6 space-y-4">
+            <Visual src={cityAU.file} alt={cityAUAlt} width={cityAU.width} height={cityAU.height} frame={false} class="rounded-xl border border-line" figureClass="overflow-hidden rounded-xl" />
+            <Visual src={cityFR.file} alt={cityFRAlt} width={cityFR.width} height={cityFR.height} frame={false} class="rounded-xl border border-line" figureClass="overflow-hidden rounded-xl" />
+          </div>
           {/* Organization-ref note: this page maps to the canonical Organization ContactPoint. */}
           <p class="mt-5 border-t border-line pt-4 text-xs text-ink-subtle">
             {t('contactPage.globalMap.legend.coverage')}
