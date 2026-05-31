@@ -25,28 +25,29 @@ const abs = (p: string) => SITE + localizePath(locale, p);
  *  - i18n-backed (4 studies) → caseStudyDetail.studies.<slug>.*
  *  - inline EN (2 studies)   → data module
  */
-const study =
-  cs.i18nIndex !== undefined
-    ? {
-        title: t(`caseStudyDetail.studies.${slug}.title`),
-        meta: t(`caseStudyDetail.studies.${slug}.meta`),
-        challenge: t(`caseStudyDetail.studies.${slug}.challenge`),
-        solution: t(`caseStudyDetail.studies.${slug}.solution`),
-        results: [
-          t(`caseStudyDetail.studies.${slug}.results.0`),
-          t(`caseStudyDetail.studies.${slug}.results.1`),
-          t(`caseStudyDetail.studies.${slug}.results.2`),
-        ],
-        cta: t(`caseStudyDetail.studies.${slug}.cta`),
-      }
-    : {
-        title: cs.inline!.title,
-        meta: cs.inline!.meta,
-        challenge: cs.inline!.challenge,
-        solution: cs.inline!.solution,
-        results: cs.inline!.result,
-        cta: cs.inline!.cta,
-      };
+// Prefer authored inline content (the 2 originally-hardcoded studies have BOTH an
+// i18nIndex for their card AND inline detail); fall back to i18n detail keys (4 studies).
+const study = cs.inline
+  ? {
+      title: cs.inline.title,
+      meta: cs.inline.meta,
+      challenge: cs.inline.challenge,
+      solution: cs.inline.solution,
+      results: cs.inline.result,
+      cta: cs.inline.cta,
+    }
+  : {
+      title: t(`caseStudyDetail.studies.${slug}.title`),
+      meta: t(`caseStudyDetail.studies.${slug}.meta`),
+      challenge: t(`caseStudyDetail.studies.${slug}.challenge`),
+      solution: t(`caseStudyDetail.studies.${slug}.solution`),
+      results: [
+        t(`caseStudyDetail.studies.${slug}.results.0`),
+        t(`caseStudyDetail.studies.${slug}.results.1`),
+        t(`caseStudyDetail.studies.${slug}.results.2`),
+      ],
+      cta: t(`caseStudyDetail.studies.${slug}.cta`),
+    };
 
 const articleLd = {
   '@context': 'https://schema.org',
