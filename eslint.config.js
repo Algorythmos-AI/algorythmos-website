@@ -5,9 +5,9 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 
 export default [
   { ignores: ['dist'] },
-  // Node.js scripts - use Node environment
+  // Node.js scripts + serverless API routes - use Node environment
   {
-    files: ['scripts/**/*.js'],
+    files: ['scripts/**/*.js', 'api/**/*.js'],
     languageOptions: {
       ecmaVersion: 2020,
       globals: {
@@ -26,7 +26,7 @@ export default [
   // Browser/React files
   {
     files: ['**/*.{js,jsx}'],
-    ignores: ['scripts/**/*.js'],
+    ignores: ['scripts/**/*.js', 'api/**/*.js'],
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
