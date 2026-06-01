@@ -23,33 +23,52 @@ const abs = (p: string) => SITE + localizePath(locale, p);
 const ogImg = ogImageUrl(localizePath(locale, path));
 
 /**
- * Normalise both content shapes into one view model:
- *  - i18n-backed (4 studies) → caseStudyDetail.studies.<slug>.*
- *  - inline EN (2 studies)   → data module
+ * Normalise both content shapes into one richer view model:
+ *  - inline EN (2 research studies) → authored arrays in the data module
+ *  - i18n-backed (4 studies)        → flat dot keys (approach.0-3, results.0-4)
+ * Both expose: challenge, approach[], solution, results[], plus the context
+ * band (industry/region/focus) and SEO keywords[].
  */
-// Prefer authored inline content (the 2 originally-hardcoded studies have BOTH an
-// i18nIndex for their card AND inline detail); fall back to i18n detail keys (4 studies).
+const idx = (key: string, n: number): string[] =>
+  Array.from({ length: n }, (_, i) => t(`caseStudyDetail.studies.${slug}.${key}.${i}`));
+
 const study = cs.inline
   ? {
       title: cs.inline.title,
       meta: cs.inline.meta,
+      industry: cs.inline.industry,
+      region: cs.inline.region,
+      focus: cs.inline.focus,
       challenge: cs.inline.challenge,
+      approach: cs.inline.approach,
       solution: cs.inline.solution,
       results: cs.inline.result,
       cta: cs.inline.cta,
+      keywords: cs.inline.keywords,
     }
   : {
       title: t(`caseStudyDetail.studies.${slug}.title`),
       meta: t(`caseStudyDetail.studies.${slug}.meta`),
+      industry: t(`caseStudyDetail.studies.${slug}.industry`),
+      region: t(`caseStudyDetail.studies.${slug}.region`),
+      focus: t(`caseStudyDetail.studies.${slug}.focus`),
       challenge: t(`caseStudyDetail.studies.${slug}.challenge`),
+      approach: idx('approach', 4),
       solution: t(`caseStudyDetail.studies.${slug}.solution`),
-      results: [
-        t(`caseStudyDetail.studies.${slug}.results.0`),
-        t(`caseStudyDetail.studies.${slug}.results.1`),
-        t(`caseStudyDetail.studies.${slug}.results.2`),
-      ],
+      results: idx('results', 5),
       cta: t(`caseStudyDetail.studies.${slug}.cta`),
+      keywords: t(`caseStudyDetail.studies.${slug}.keywords`)
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean),
     };
+
+/** At-a-glance context chips (label + value). */
+const facts = [
+  { label: t('caseStudyDetail.labels.industry'), value: study.industry },
+  { label: t('caseStudyDetail.labels.region'), value: study.region },
+  { label: t('caseStudyDetail.labels.focus'), value: study.focus },
+].filter((f) => f.value && f.value.length > 0);
 
 const articleLd = {
   '@context': 'https://schema.org',
@@ -57,6 +76,8 @@ const articleLd = {
   headline: study.title,
   description: study.meta,
   about: study.challenge,
+  ...(study.industry ? { articleSection: study.industry } : {}),
+  ...(study.keywords && study.keywords.length ? { keywords: study.keywords.join(', ') } : {}),
   author: { '@id': ORG_ID },
   publisher: { '@id': ORG_ID },
   inLanguage: locale === 'fr-fr' ? 'fr' : 'en',
@@ -76,7 +97,20 @@ const charts = caseStudyCharts[slug] ?? [];
 <BaseLayout title={`${study.title} — Algorythmos`} description={study.meta} path={path} ogType="article" image={ogImg} jsonLd={[articleLd, crumbs]}>
   <PageHeader eyebrow={t('nav.caseStudies')} title={study.title} lead={study.meta} />
 
-  <section class="container-page py-20">
+  {facts.length > 0 && (
+    <section class="container-page">
+      <dl data-reveal class="flex flex-wrap gap-3">
+        {facts.map((f) => (
+          <div class="rounded-xl border border-line glass px-4 py-2.5">
+            <dt class="text-[11px] font-semibold uppercase tracking-wider text-ink-subtle">{f.label}</dt>
+            <dd class="mt-0.5 text-sm font-medium text-ink">{f.value}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+  )}
+
+  <section class="container-page py-16">
     <div class="grid gap-12 lg:grid-cols-[1.5fr_1fr]">
       <div data-reveal>
         <h2 class="text-h3 font-semibold text-ink">{t('caseStudyDetail.sections.challenge')}</h2>
@@ -84,9 +118,23 @@ const charts = caseStudyCharts[slug] ?? [];
 
         <h2 class="mt-12 text-h3 font-semibold text-ink">{t('caseStudyDetail.sections.solution')}</h2>
         <p class="mt-4 text-lead text-ink-muted">{study.solution}</p>
+
+        {study.approach.length > 0 && study.approach[0] && (
+          <>
+            <h2 class="mt-12 text-h3 font-semibold text-ink">{t('caseStudyDetail.sections.approach')}</h2>
+            <ol class="mt-6 space-y-5">
+              {study.approach.map((step, i) => (
+                <li class="flex gap-4">
+                  <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-brand/40 text-sm font-semibold text-brand">{i + 1}</span>
+                  <p class="pt-1 text-ink-muted">{step}</p>
+                </li>
+              ))}
+            </ol>
+          </>
+        )}
       </div>
 
-      <aside data-reveal style="--reveal-delay: 80ms" class="h-fit rounded-2xl border border-line glass p-6">
+      <aside data-reveal style="--reveal-delay: 80ms" class="h-fit rounded-2xl border border-line glass p-6 lg:sticky lg:top-24">
         <h2 class="text-h3 font-semibold text-ink">{t('caseStudyDetail.sections.results')}</h2>
         <ul class="mt-4 space-y-3">
           {study.results.map((r) => (
