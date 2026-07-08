@@ -66,6 +66,14 @@ jobs:
       - name: Unit tests (vitest)
         run: npm test -- --run
 
+      # --- E2E against the built output (chromium; preview server auto-started
+      #     by playwright.config webServer) ---
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: E2E tests (Playwright, chromium)
+        run: npx playwright test --project=chromium
+
       # --- Summary ---
       - name: CI summary
         if: always()
