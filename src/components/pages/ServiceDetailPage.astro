@@ -50,13 +50,25 @@ const crumbs = breadcrumb([
  * structured data to match on-page content). Counts vary per service; we read
  * sequential keys until one is missing (t() returns the key string on a miss).
  */
-const FAQ_NS: Record<string, string> = {
+const SERVICE_NS: Record<string, string> = {
   'agentic-automation': 'serviceAgentic',
   'document-intelligence': 'serviceDocument',
   'mlops-cicd': 'serviceMlops',
   'sql-dashboards': 'serviceSqlDashboards',
+  'ai-websites': 'serviceAiWebsites',
 };
-const faqNs = FAQ_NS[svc.slug];
+const ns = SERVICE_NS[svc.slug];
+// Localized meta/header copy where the dictionary has it; catalogue EN as fallback
+// (t() returns the key string on a miss).
+const tOr = (key: string, fallback: string) => {
+  const v = t(key);
+  return v === key ? fallback : v;
+};
+const metaTitle = ns ? tOr(`${ns}.meta.title`, `${svc.name} — Algorythmos`) : `${svc.name} — Algorythmos`;
+const metaDescription = ns ? tOr(`${ns}.meta.description`, svc.summary) : svc.summary;
+const heroLead = ns ? tOr(`${ns}.hero.subtitle`, svc.tagline) : svc.tagline;
+const faqsTitle = ns ? tOr(`${ns}.faqs.title`, 'Frequently asked questions') : 'Frequently asked questions';
+const faqNs = ns;
 const faqs: { q: string; a: string }[] = [];
 if (faqNs) {
   for (let i = 0; i < 12; i++) {
@@ -80,8 +92,8 @@ const faqLd = faqs.length
   : null;
 ---
 
-<BaseLayout title={`${svc.name} — Algorythmos`} description={svc.summary} path={path} image={ogImg} jsonLd={[serviceLd, crumbs, ...(faqLd ? [faqLd] : [])]}>
-  <PageHeader eyebrow={t('nav.services')} title={svc.name} lead={svc.tagline} />
+<BaseLayout title={metaTitle} description={metaDescription} path={path} image={ogImg} jsonLd={[serviceLd, crumbs, ...(faqLd ? [faqLd] : [])]}>
+  <PageHeader eyebrow={t('nav.services')} title={svc.name} lead={heroLead} />
 
   {svcVisual && (
     <section class="container-page pt-12">
@@ -94,7 +106,7 @@ const faqLd = faqs.length
       <div data-reveal>
         <p class="text-lead text-ink-muted">{svc.summary}</p>
 
-        <h2 class="mt-12 text-h3 font-semibold text-ink">What's included</h2>
+        <h2 class="mt-12 text-h3 font-semibold text-ink">{tOr('services.detail.included', "What's included")}</h2>
         <ul class="mt-5 space-y-3">
           {svc.capabilities.map((c) => (
             <li class="flex items-start gap-3">
@@ -106,7 +118,7 @@ const faqLd = faqs.length
       </div>
 
       <aside data-reveal style="--reveal-delay: 80ms" class="h-fit rounded-2xl border border-line glass p-6">
-        <h2 class="text-h3 font-semibold text-ink">Outcomes</h2>
+        <h2 class="text-h3 font-semibold text-ink">{tOr('services.detail.outcomes', 'Outcomes')}</h2>
         <ul class="mt-4 space-y-3">
           {svc.outcomes.map((o) => (
             <li class="flex items-start gap-3 text-sm text-ink-muted">
@@ -123,7 +135,7 @@ const faqLd = faqs.length
   {faqs.length > 0 && (
     <section class="container-page pb-24">
       <h2 data-reveal class="text-h2 font-bold tracking-tight text-ink">
-        Frequently asked <span class="text-gradient-brand">questions</span>
+        <span class="text-gradient-brand">{faqsTitle}</span>
       </h2>
       <div data-reveal class="mt-8 max-w-measure divide-y divide-line overflow-hidden rounded-2xl border border-line glass">
         {faqs.map((f) => (

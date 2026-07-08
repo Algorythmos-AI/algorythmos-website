@@ -14,6 +14,8 @@ export interface PartnerLogo {
   src: string;
   /** Optional outbound link (opens in a new tab). */
   href?: string;
+  /** Intrinsic display width in px at 28px height (CLS-safe); defaults to 96. */
+  width?: number;
 }
 
 export interface Testimonial {

@@ -92,6 +92,19 @@ const crumbs = breadcrumb([
 
 /** Charts exist only for the two data-heavy inline studies; undefined → [] otherwise. */
 const charts = caseStudyCharts[slug] ?? [];
+
+/**
+ * Headline stat band — values restate figures already published in this study's
+ * results (no invented numbers). Keys are optional per study; t() returns the
+ * key string on a miss, which ends the loop.
+ */
+const stats: { value: string; label: string }[] = [];
+for (let i = 0; i < 4; i++) {
+  const v = t(`caseStudyDetail.studies.${slug}.stats.${i}.value`);
+  const l = t(`caseStudyDetail.studies.${slug}.stats.${i}.label`);
+  if (v === `caseStudyDetail.studies.${slug}.stats.${i}.value` || l === `caseStudyDetail.studies.${slug}.stats.${i}.label`) break;
+  stats.push({ value: v, label: l });
+}
 ---
 
 <BaseLayout title={`${study.title} — Algorythmos`} description={study.meta} path={path} ogType="article" image={ogImg} jsonLd={[articleLd, crumbs]}>
@@ -107,6 +120,22 @@ const charts = caseStudyCharts[slug] ?? [];
           </div>
         ))}
       </dl>
+    </section>
+  )}
+
+  {stats.length > 0 && (
+    <section class="container-page pt-10">
+      <div data-reveal class="grid gap-4 sm:grid-cols-3">
+        {stats.map((s, i) => (
+          <div
+            class="rounded-2xl border border-line glass p-6 text-center"
+            style={`--reveal-delay: ${i * 70}ms`}
+          >
+            <div class="text-gradient-brand text-4xl font-bold tracking-tight">{s.value}</div>
+            <div class="mt-2 text-sm text-ink-muted">{s.label}</div>
+          </div>
+        ))}
+      </div>
     </section>
   )}
 

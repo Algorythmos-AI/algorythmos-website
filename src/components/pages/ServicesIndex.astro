@@ -22,12 +22,12 @@ const collection = {
 ---
 
 <BaseLayout
-  title="Services — AI consulting that ships | Algorythmos"
-  description="End-to-end AI capabilities delivered by senior engineers: agentic automation, document intelligence, SQL dashboards, MLOps, and AI-powered websites."
+  title={t('services.meta.title')}
+  description={t('services.meta.description')}
   path="/services"
   jsonLd={[collection, crumbs]}
 >
-  <PageHeader eyebrow="Services" title="End-to-end AI, delivered by senior engineers" lead={t('nav.servicesDesc')} />
+  <PageHeader eyebrow={t('nav.services')} title={t('services.hero.title')} lead={t('services.hero.subtitle')} />
 
   <section class="container-page py-20">
     <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -45,7 +45,7 @@ const collection = {
           <p class="mt-1 text-sm font-medium text-brand">{s.tagline}</p>
           <p class="mt-3 flex-1 text-sm leading-relaxed text-ink-muted">{s.summary}</p>
           <span class="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-brand">
-            Learn more
+            {t('ui.serviceCard.learnMore')}
             <svg class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
           </span>
         </a>
