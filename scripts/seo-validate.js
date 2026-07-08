@@ -471,6 +471,14 @@ function validateAllPages() {
       errors++;
     }
 
+    // every <img> declares intrinsic dimensions (CLS guard)
+    for (const tag of html.match(/<img\b[^>]*>/gi) || []) {
+      if (!/\bwidth\s*=/.test(tag) || !/\bheight\s*=/.test(tag)) {
+        log.error(`${where}: <img> missing width/height (CLS): ${tag.slice(0, 90)}`);
+        errors++;
+      }
+    }
+
     // hreflang: 4 incl x-default + self, or none (standalone single-locale pages)
     const hreflangs = extractHreflangs(html);
     if (hreflangs.length > 0) {

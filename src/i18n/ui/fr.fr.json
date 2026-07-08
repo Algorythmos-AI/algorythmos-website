@@ -1964,5 +1964,7 @@
   "blogDetail.posts.pulse-clinical-ai.cta.title": "Brisez le piège de la capacité.",
   "blogDetail.posts.pulse-clinical-ai.cta.subtitle": "La technologie n'est plus l'obstacle ; c'est le flux de travail. Associez-vous à Algorythmos pour récupérer votre bande passante clinique.",
   "blogDetail.posts.pulse-clinical-ai.cta.button": "Lancez votre transformation",
-  "blogDetail.posts.pulse-clinical-ai.footer": "Données synthétisées à partir des rapports AIHW, AMA et Grattan."
+  "blogDetail.posts.pulse-clinical-ai.footer": "Données synthétisées à partir des rapports AIHW, AMA et Grattan.",
+  "socialProof.trustedBy": "Ils nous font confiance",
+  "socialProof.testimonialsTitle": "Ce que disent nos clients"
 }
