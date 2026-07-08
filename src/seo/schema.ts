@@ -5,6 +5,17 @@ export const SITE = 'https://algorythmos.com';
 export const OG_IMAGE = `${SITE}/Algorythmos.png`;
 export const ORG_ID = `${SITE}/#organization`;
 export const WEBSITE_ID = `${SITE}/#website`;
+export const FOUNDER_ID = `${SITE}/#founder`;
+
+/** Founder Person node (E-E-A-T) — real, on-site facts only. */
+export const founderPerson = {
+  '@type': 'Person',
+  '@id': FOUNDER_ID,
+  name: 'Sam Kalaliya',
+  jobTitle: 'Founder & Chief Executive Officer',
+  worksFor: { '@id': ORG_ID },
+  knowsAbout: ['Artificial Intelligence', 'Machine Learning', 'MLOps', 'Data Engineering', 'Agentic Automation'],
+};
 
 /**
  * Per-page Open Graph cards (generated at build by `src/pages/og/[...route].ts`).
@@ -74,7 +85,9 @@ export const orgGraph = {
         ...(BUSINESS.phone ? { telephone: BUSINESS.phone } : {}),
       },
       sameAs: [...BUSINESS.sameAs],
+      founder: { '@id': FOUNDER_ID },
     },
+    founderPerson,
     {
       '@type': 'WebSite',
       '@id': WEBSITE_ID,

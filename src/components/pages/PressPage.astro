@@ -1,0 +1,77 @@
+---
+/**
+ * Press & media kit — the standard asset journalists/podcasts need: boilerplate,
+ * founder bio, downloadable logos, and a direct media contact. Localized across
+ * all three locales; Person + Organization references keep the E-E-A-T graph
+ * connected (founder node already ships in orgGraph on every page).
+ */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeader from '@/components/sections/PageHeader.astro';
+import { asLocale, useTranslations, localizePath } from '@/i18n';
+import { breadcrumb, SITE, FOUNDER_ID } from '@/seo/schema';
+import { BUSINESS } from '@/data/business';
+
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const path = '/press';
+const abs = (p: string) => SITE + localizePath(locale, p);
+
+const pageLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: t('press.meta.title'),
+  description: t('press.meta.description'),
+  url: abs(path),
+  about: { '@id': FOUNDER_ID },
+};
+const crumbs = breadcrumb([
+  { name: t('nav.home'), url: abs('/') },
+  { name: t('nav.press'), url: abs(path) },
+]);
+
+const assets = [
+  { label: t('press.assets.logoCard'), href: '/Algorythmos.png' },
+  { label: t('press.assets.logoMark'), href: '/logo-mark.png' },
+];
+---
+
+<BaseLayout title={t('press.meta.title')} description={t('press.meta.description')} path={path} jsonLd={[pageLd, crumbs]}>
+  <PageHeader eyebrow={t('press.hero.eyebrow')} title={t('press.hero.title')} lead={t('press.hero.lead')} />
+
+  <section class="container-page py-16">
+    <div class="grid gap-12 lg:grid-cols-[1.5fr_1fr]">
+      <div data-reveal>
+        <h2 class="text-h3 font-semibold text-ink">{t('press.boilerplate.heading')}</h2>
+        <p class="mt-4 text-lead text-ink-muted">{t('press.boilerplate.short')}</p>
+        <p class="mt-4 leading-relaxed text-ink-muted">{t('press.boilerplate.long')}</p>
+
+        <h2 class="mt-12 text-h3 font-semibold text-ink">{t('press.founder.heading')}</h2>
+        <p class="mt-4 font-semibold text-ink">{t('press.founder.name')} — {t('team.sam-kalaliya.role')}</p>
+        <p class="mt-2 leading-relaxed text-ink-muted">{t('press.founder.bio')}</p>
+      </div>
+
+      <aside data-reveal style="--reveal-delay: 80ms" class="h-fit space-y-8">
+        <div class="rounded-2xl border border-line glass p-6">
+          <h2 class="text-h3 font-semibold text-ink">{t('press.assets.heading')}</h2>
+          <p class="mt-2 text-sm text-ink-subtle">{t('press.assets.lead')}</p>
+          <ul class="mt-4 space-y-3">
+            {assets.map((a) => (
+              <li>
+                <a href={a.href} download class="inline-flex items-center gap-2 text-sm font-semibold text-brand underline-offset-4 hover:underline">
+                  <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 21h16" /></svg>
+                  {a.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div class="rounded-2xl border border-line glass p-6">
+          <h2 class="text-h3 font-semibold text-ink">{t('press.contact.heading')}</h2>
+          <p class="mt-2 text-sm text-ink-subtle">{t('press.contact.lead')}</p>
+          <a href={`mailto:${BUSINESS.pressEmail}`} class="mt-4 inline-block font-semibold text-brand underline-offset-4 hover:underline">{BUSINESS.pressEmail}</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
