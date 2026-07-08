@@ -287,6 +287,96 @@ function validatePage(page) {
 }
 
 // ---------------------------------------------------------------------------
+// Structured-data / NAP consistency — regional pages must carry a connected
+// graph: exactly one Organization node, a ProfessionalService whose email
+// matches the single source of truth (src/data/business.ts), city-level
+// areaServed, and a parentOrganization link back to #organization.
+// ---------------------------------------------------------------------------
+function businessEmail() {
+  const src = readFileSync(join(ROOT, 'src', 'data', 'business.ts'), 'utf-8');
+  const m = src.match(/^\s*email:\s*'([^']+)'/m);
+  return m ? m[1] : null;
+}
+
+function collectLdNodes(html) {
+  const nodes = [];
+  for (const block of extractJsonLd(html)) {
+    try {
+      const parsed = JSON.parse(block);
+      const list = parsed['@graph'] ?? [parsed];
+      for (const n of Array.isArray(list) ? list : [list]) nodes.push(n);
+    } catch {
+      /* reported by the per-page validator */
+    }
+  }
+  return nodes;
+}
+
+function validateStructuredData() {
+  log.section('🏢 Structured data / NAP consistency');
+  const email = businessEmail();
+  if (!email) {
+    log.error('Could not read canonical email from src/data/business.ts');
+    errors++;
+    return;
+  }
+
+  const REGIONAL = [
+    { file: join('au-en', 'index.html'), city: 'Sydney' },
+    { file: join('fr-fr', 'index.html'), city: 'Paris' },
+    { file: join('au-en', 'ai-consultancy-sydney', 'index.html'), city: 'Sydney' },
+    { file: join('fr-fr', 'conseil-en-ia-paris', 'index.html'), city: 'Paris' },
+  ];
+
+  for (const { file, city } of REGIONAL) {
+    const abs = join(DIST, file);
+    if (!existsSync(abs)) {
+      log.error(`Missing regional page: dist/${file}`);
+      errors++;
+      continue;
+    }
+    const nodes = collectLdNodes(readFileSync(abs, 'utf-8'));
+    const orgs = nodes.filter((n) => n['@type'] === 'Organization');
+    const services = nodes.filter((n) => n['@type'] === 'ProfessionalService');
+    let ok = true;
+
+    if (orgs.length !== 1) {
+      log.error(`dist/${file}: expected exactly one Organization node, found ${orgs.length}`);
+      errors++;
+      ok = false;
+    } else if (orgs[0].email !== email) {
+      log.error(`dist/${file}: Organization email "${orgs[0].email}" ≠ business.ts "${email}"`);
+      errors++;
+      ok = false;
+    }
+
+    if (services.length !== 1) {
+      log.error(`dist/${file}: expected exactly one ProfessionalService node, found ${services.length}`);
+      errors++;
+      ok = false;
+    } else {
+      const svc = services[0];
+      if (svc.email !== email) {
+        log.error(`dist/${file}: ProfessionalService email "${svc.email}" ≠ business.ts "${email}"`);
+        errors++;
+        ok = false;
+      }
+      if (svc.address?.addressLocality !== city) {
+        log.error(`dist/${file}: ProfessionalService addressLocality "${svc.address?.addressLocality}" ≠ "${city}"`);
+        errors++;
+        ok = false;
+      }
+      if (!svc.parentOrganization?.['@id']?.includes('#organization')) {
+        log.error(`dist/${file}: ProfessionalService not linked to #organization`);
+        errors++;
+        ok = false;
+      }
+    }
+    if (ok) log.success(`dist/${file}: Organization + ProfessionalService (${city}) consistent with business.ts`);
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Full-site sweep — every built HTML page gets the core invariants:
 //   - exactly one non-empty <title> / meta description / canonical on the domain
 //   - unique title + canonical across the whole site (duplicate = locale merge bug)
@@ -485,6 +575,7 @@ ${colors.cyan}╔═════════════════════
 
   for (const page of PAGES) validatePage(page);
   validateAllPages();
+  validateStructuredData();
   validateStaticFiles();
 
   log.section('📊 VALIDATION SUMMARY');

@@ -49,6 +49,7 @@
   "contact.form.email": "Adresse Email",
   "contact.form.message": "Message",
   "contact.form.submit": "Envoyer le Message",
+  "contact.form.error": "Une erreur s'est produite — veuillez nous écrire directement à {email}.",
   "footer.tagline": "L'IA Qui Délivre",
   "footer.description": "Cabinet de conseil en IA spécialisé dans l'automatisation agentique, l'intelligence documentaire et le MLOps pour les PME en France.",
   "footer.services": "Services",

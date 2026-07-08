@@ -13,8 +13,8 @@ const t = useTranslations(locale);
 const path = '/contact';
 const abs = (p: string) => SITE + localizePath(locale, p);
 
-/* No real contact email key exists yet; use the canonical org address. */
-const EMAIL = 'info@algorythmos.com.au';
+import { BUSINESS } from '@/data/business';
+const EMAIL = BUSINESS.email;
 
 const cityAU = cityVisuals.AU;
 const cityFR = cityVisuals.FR;
@@ -169,7 +169,7 @@ const offices = [
 
           <div class="mt-7 flex flex-wrap items-center gap-4">
             <Button type="submit" size="lg" id="cf-submit">{t('contactPage.form.submitButton')}</Button>
-            <p id="cf-form-error" class="hidden w-full text-sm text-danger" role="alert"></p>
+            <p id="cf-form-error" class="hidden w-full text-sm text-danger" role="alert" data-message={t('contact.form.error', { email: EMAIL })}></p>
             {/* Accessible success message — announced to assistive tech on submit. */}
             <p
               id="cf-success"
@@ -327,7 +327,7 @@ const offices = [
         .catch(() => {
           const errEl = document.getElementById('cf-form-error');
           if (errEl) {
-            errEl.textContent = 'Something went wrong — please email info@algorythmos.com.au directly.';
+            errEl.textContent = errEl.dataset.message || 'Something went wrong — please email us directly.';
             errEl.classList.remove('hidden');
           }
         })

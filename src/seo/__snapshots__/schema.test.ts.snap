@@ -1,0 +1,109 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`professionalService > matches the snapshot graph for both regions 1`] = `
+{
+  "@context": "https://schema.org",
+  "@id": "https://algorythmos.com/au-en#service",
+  "@type": "ProfessionalService",
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "AU",
+    "addressLocality": "Sydney",
+    "addressRegion": "NSW",
+  },
+  "areaServed": [
+    {
+      "@type": "City",
+      "name": "Sydney",
+    },
+    {
+      "@type": "AdministrativeArea",
+      "name": "NSW",
+    },
+    {
+      "@type": "Country",
+      "name": "Australia",
+    },
+  ],
+  "description": "AI consultancy for Australian SMEs — agentic automation, document intelligence, SQL dashboards, and MLOps, delivered from Sydney.",
+  "email": "info@algorythmos.com.au",
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": -33.8688,
+    "longitude": 151.2093,
+  },
+  "image": "https://algorythmos.com/Algorythmos.png",
+  "knowsLanguage": [
+    "en-AU",
+    "fr-FR",
+    "en",
+  ],
+  "name": "Algorythmos Australia",
+  "parentOrganization": {
+    "@id": "https://algorythmos.com/#organization",
+  },
+  "priceRange": "$$",
+  "serviceType": [
+    "AI Consulting",
+    "Agentic Automation",
+    "Document Intelligence",
+    "SQL Dashboards",
+    "MLOps",
+  ],
+  "url": "https://algorythmos.com/au-en",
+}
+`;
+
+exports[`professionalService > matches the snapshot graph for both regions 2`] = `
+{
+  "@context": "https://schema.org",
+  "@id": "https://algorythmos.com/fr-fr#service",
+  "@type": "ProfessionalService",
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "FR",
+    "addressLocality": "Paris",
+    "addressRegion": "Île-de-France",
+  },
+  "areaServed": [
+    {
+      "@type": "City",
+      "name": "Paris",
+    },
+    {
+      "@type": "AdministrativeArea",
+      "name": "Île-de-France",
+    },
+    {
+      "@type": "Country",
+      "name": "France",
+    },
+  ],
+  "description": "Cabinet de conseil en IA pour PME et ETI — automatisation agentique, intelligence documentaire, tableaux de bord SQL et MLOps, basé à Paris.",
+  "email": "info@algorythmos.com.au",
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 48.8566,
+    "longitude": 2.3522,
+  },
+  "image": "https://algorythmos.com/Algorythmos.png",
+  "knowsLanguage": [
+    "en-AU",
+    "fr-FR",
+    "en",
+  ],
+  "name": "Algorythmos France",
+  "parentOrganization": {
+    "@id": "https://algorythmos.com/#organization",
+  },
+  "priceRange": "€€",
+  "serviceType": [
+    "AI Consulting",
+    "Agentic Automation",
+    "Document Intelligence",
+    "SQL Dashboards",
+    "MLOps",
+  ],
+  "url": "https://algorythmos.com/fr-fr",
+}
+`;

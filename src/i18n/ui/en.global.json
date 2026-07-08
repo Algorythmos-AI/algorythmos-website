@@ -48,6 +48,7 @@
   "contact.form.email": "Email Address",
   "contact.form.message": "Message",
   "contact.form.submit": "Send Message",
+  "contact.form.error": "Something went wrong — please email {email} directly.",
   "footer.tagline": "AI That Delivers",
   "footer.description": "Boutique AI consultancy delivering agentic automation, document intelligence, and MLOps for SMEs across Europe and Australia.",
   "footer.services": "Services",
