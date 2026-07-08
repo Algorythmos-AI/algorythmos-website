@@ -306,11 +306,17 @@ const offices = [
       }
 
       const submitBtn = form.querySelector('button[type="submit"]') as HTMLButtonElement | null;
+      let utm = '';
+      try {
+        utm = sessionStorage.getItem('alg-utm') || '';
+      } catch {}
       const payload = {
         name: fields.name.value.trim(),
         email: fields.email.value.trim(),
         message: fields.message.value.trim(),
         company: (form.querySelector('#cf-company') as HTMLInputElement | null)?.value.trim() || '',
+        locale: document.documentElement.lang || '',
+        utm,
       };
       if (submitBtn) submitBtn.disabled = true;
       fetch('/api/contact', {
@@ -323,6 +329,13 @@ const offices = [
           form.reset();
           success?.classList.remove('hidden');
           success?.classList.add('inline-flex');
+          // Conversion event — only when the visitor accepted analytics (same
+          // consent gate that loads Vercel Analytics; cookieless either way).
+          if (/(?:^|; )consent=granted/.test(document.cookie)) {
+            import('@vercel/analytics')
+              .then((a) => a.track('contact_submit', { locale: document.documentElement.lang || '', utm_source: (utm.match(/utm_source=([^&]*)/) || [])[1] || '' }))
+              .catch(() => {});
+          }
         })
         .catch(() => {
           const errEl = document.getElementById('cf-form-error');
