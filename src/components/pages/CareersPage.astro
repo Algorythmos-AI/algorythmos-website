@@ -4,6 +4,7 @@ import PageHeader from '@/components/sections/PageHeader.astro';
 import Button from '@/components/ui/Button.astro';
 import Aurora from '@/components/ui/Aurora.astro';
 import { asLocale, useTranslations, localizePath } from '@/i18n';
+import { BUSINESS } from '@/data/business';
 import { breadcrumb, SITE } from '@/seo/schema';
 
 const locale = asLocale(Astro.currentLocale);
@@ -117,7 +118,7 @@ const locations = (['london', 'paris', 'sydney', 'remote'] as const).map((k) => 
         </div>
         <p class="mt-6 text-sm text-ink-subtle">
           {t('careers.roles.noRoles.emailFallback')}{' '}
-          <a href="mailto:careers@algorythmos.com" class="font-semibold text-brand underline-offset-4 hover:underline">careers@algorythmos.com</a>
+          <a href={`mailto:${BUSINESS.careersEmail}`} class="font-semibold text-brand underline-offset-4 hover:underline">{BUSINESS.careersEmail}</a>
         </p>
       </div>
     </div>

@@ -24,6 +24,7 @@ export const GET: APIRoute = () => {
   L.push(`- [Pricing](${SITE}/pricing): Engagement models and transparent pricing.`);
   L.push(`- [About](${SITE}/about): Company background and approach.`);
   L.push(`- [Contact](${SITE}/contact): How to start an engagement.`);
+  L.push(`- [Press & media kit](${SITE}/press): Boilerplate, founder bio, logos, and media contact.`);
   L.push('');
   L.push('## Services');
   for (const s of services) L.push(`- [${s.name}](${SITE}/services/${s.slug}): ${s.tagline}`);

@@ -1,8 +1,21 @@
 /** Reconciled structured data — ONE identity graph, all URLs on bare .com. */
+import { BUSINESS } from '@/data/business';
+
 export const SITE = 'https://algorythmos.com';
 export const OG_IMAGE = `${SITE}/Algorythmos.png`;
 export const ORG_ID = `${SITE}/#organization`;
 export const WEBSITE_ID = `${SITE}/#website`;
+export const FOUNDER_ID = `${SITE}/#founder`;
+
+/** Founder Person node (E-E-A-T) — real, on-site facts only. */
+export const founderPerson = {
+  '@type': 'Person',
+  '@id': FOUNDER_ID,
+  name: 'Sam Kalaliya',
+  jobTitle: 'Founder & Chief Executive Officer',
+  worksFor: { '@id': ORG_ID },
+  knowsAbout: ['Artificial Intelligence', 'Machine Learning', 'MLOps', 'Data Engineering', 'Agentic Automation'],
+};
 
 /**
  * Per-page Open Graph cards (generated at build by `src/pages/og/[...route].ts`).
@@ -62,14 +75,19 @@ export const orgGraph = {
         { '@type': 'Country', name: 'Australia' },
         { '@type': 'Country', name: 'France' },
       ],
-      contactPoint: { '@type': 'ContactPoint', contactType: 'customer service', url: `${SITE}/contact` },
-      sameAs: [
-        'https://www.linkedin.com/company/algorythmos',
-        'https://www.youtube.com/@AlgorythmosAI',
-        'https://medium.com/@algorythmos',
-        'https://x.com/algorythmos',
-      ],
+      email: BUSINESS.email,
+      contactPoint: {
+        '@type': 'ContactPoint',
+        contactType: 'customer service',
+        email: BUSINESS.email,
+        url: `${SITE}/contact`,
+        availableLanguage: ['English', 'French'],
+        ...(BUSINESS.phone ? { telephone: BUSINESS.phone } : {}),
+      },
+      sameAs: [...BUSINESS.sameAs],
+      founder: { '@id': FOUNDER_ID },
     },
+    founderPerson,
     {
       '@type': 'WebSite',
       '@id': WEBSITE_ID,
@@ -81,12 +99,9 @@ export const orgGraph = {
   ],
 };
 
-/** City-level ProfessionalService (no invented street/phone). */
+/** Service-area ProfessionalService — city-level, real NAP from BUSINESS only. */
 export function professionalService(region: 'AU' | 'FR') {
-  const map = {
-    AU: { name: 'Algorythmos Australia', path: '/au-en', city: 'Sydney', adminArea: 'NSW', country: 'AU', lat: -33.8688, lng: 151.2093 },
-    FR: { name: 'Algorythmos France', path: '/fr-fr', city: 'Paris', adminArea: 'Île-de-France', country: 'FR', lat: 48.87, lng: 2.22 },
-  }[region];
+  const map = BUSINESS.regions[region];
   const description =
     region === 'AU'
       ? 'AI consultancy for Australian SMEs — agentic automation, document intelligence, SQL dashboards, and MLOps, delivered from Sydney.'
@@ -100,12 +115,18 @@ export function professionalService(region: 'AU' | 'FR') {
     image: OG_IMAGE,
     description,
     parentOrganization: { '@id': ORG_ID },
+    email: BUSINESS.email,
+    ...(BUSINESS.phone ? { telephone: BUSINESS.phone } : {}),
     address: { '@type': 'PostalAddress', addressLocality: map.city, addressRegion: map.adminArea, addressCountry: map.country },
     geo: { '@type': 'GeoCoordinates', latitude: map.lat, longitude: map.lng },
-    areaServed: [{ '@type': 'City', name: map.city }, { '@type': 'Country', name: map.country === 'AU' ? 'Australia' : 'France' }],
+    areaServed: [
+      { '@type': 'City', name: map.city },
+      { '@type': 'AdministrativeArea', name: map.adminArea },
+      { '@type': 'Country', name: map.countryName },
+    ],
     serviceType: ['AI Consulting', 'Agentic Automation', 'Document Intelligence', 'SQL Dashboards', 'MLOps'],
-    knowsLanguage: ['en', 'fr'],
-    priceRange: region === 'AU' ? '$$' : '€€',
+    knowsLanguage: ['en-AU', 'fr-FR', 'en'],
+    priceRange: map.priceRange,
   };
 }
 

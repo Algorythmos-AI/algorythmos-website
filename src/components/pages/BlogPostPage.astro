@@ -6,7 +6,7 @@ import { asLocale, useTranslations, localizePath } from '@/i18n';
 import { getPost } from '@/data/blog';
 import { getBlogCharts } from '@/data/blogCharts';
 import Chart from '@/components/islands/Chart';
-import { breadcrumb, SITE, ORG_ID, ogImageUrl } from '@/seo/schema';
+import { breadcrumb, SITE, ORG_ID, FOUNDER_ID, ogImageUrl } from '@/seo/schema';
 import { BOOKING_URL } from '@/lib/links';
 
 interface Props {
@@ -48,13 +48,15 @@ function resolveProse(sectionBase: string, paragraphs?: number[], list?: number[
 
 const articleLd = {
   '@context': 'https://schema.org',
-  '@type': 'Article',
+  '@type': 'BlogPosting',
   headline: title,
   description,
   datePublished: post.date,
+  dateModified: post.date,
   image: ogImg,
-  author: { '@id': ORG_ID },
+  author: { '@id': FOUNDER_ID },
   publisher: { '@id': ORG_ID },
+  inLanguage: locale === 'fr-fr' ? 'fr' : 'en',
   mainEntityOfPage: { '@type': 'WebPage', '@id': abs(path) },
 };
 const crumbs = breadcrumb([

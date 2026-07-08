@@ -1,5 +1,6 @@
 ---
 import '@fontsource-variable/inter';
+import interLatinWoff2 from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
 import '@/styles/global.css';
 import { ClientRouter } from 'astro:transitions';
 import { asLocale, REGIONS } from '@/i18n';
@@ -45,6 +46,9 @@ const lang = REGIONS[locale].lang;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {/* Primary text face — preloaded so the first paint doesn't wait on CSS discovery (LCP) */}
+    <link rel="preload" href={interLatinWoff2} as="font" type="font/woff2" crossorigin />
+
     {/* No-flash theme init — before paint */}
     <script is:inline>
       (function () {
@@ -66,6 +70,26 @@ const lang = REGIONS[locale].lang;
           if (location.pathname !== '/') return;
           var m = document.cookie.match(/(?:^|; )locale=(au-en|fr-fr)/);
           if (m) location.replace('/' + m[1]);
+        } catch (e) {}
+      })();
+    </script>
+    <script is:inline>
+      /* First-touch campaign attribution — session-scoped, first-party, no identifiers.
+         Read back by the contact form so enquiries carry their source. */
+      (function () {
+        try {
+          if (sessionStorage.getItem('alg-utm')) return;
+          var q = new URLSearchParams(location.search);
+          var parts = [];
+          ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach(function (k) {
+            var v = q.get(k);
+            if (v) parts.push(k + '=' + v.slice(0, 60));
+          });
+          if (!parts.length && document.referrer) {
+            var ref = new URL(document.referrer);
+            if (ref.host !== location.host) parts.push('referrer=' + ref.host);
+          }
+          if (parts.length) sessionStorage.setItem('alg-utm', parts.join('&').slice(0, 300));
         } catch (e) {}
       })();
     </script>

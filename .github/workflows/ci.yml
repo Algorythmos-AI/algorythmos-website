@@ -36,6 +36,9 @@ jobs:
         run: npm ci
 
       # --- Hard gates that don't need a build ---
+      - name: Lint (eslint)
+        run: npm run lint
+
       - name: Type-check (astro check)
         run: npm run check
 
@@ -62,6 +65,14 @@ jobs:
 
       - name: Unit tests (vitest)
         run: npm test -- --run
+
+      # --- E2E against the built output (chromium; preview server auto-started
+      #     by playwright.config webServer) ---
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: E2E tests (Playwright, chromium)
+        run: npx playwright test --project=chromium
 
       # --- Summary ---
       - name: CI summary

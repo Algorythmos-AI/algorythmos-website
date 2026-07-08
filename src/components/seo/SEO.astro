@@ -1,5 +1,7 @@
 ---
 import { asLocale, REGIONS, LOCALES, localizePath } from '@/i18n';
+import { hasOgCard } from '@/seo/ogPages';
+import { ogImageUrl } from '@/seo/schema';
 
 interface Props {
   title: string;
@@ -20,7 +22,9 @@ const site = (Astro.site?.toString() ?? 'https://algorythmos.com').replace(/\/$/
 const abs = (loc: typeof locale, p: string) => site + localizePath(loc, p);
 
 const canonical = abs(locale, path);
-const ogImage = image ?? `${site}/Algorythmos.png`;
+// Prefer the page's generated per-locale OG card; brand card as last resort.
+const localizedPath = localizePath(locale, path);
+const ogImage = image ?? (hasOgCard(localizedPath) ? ogImageUrl(localizedPath) : `${site}/Algorythmos.png`);
 const isPreview = import.meta.env.VERCEL_ENV && import.meta.env.VERCEL_ENV !== 'production';
 const robots = noindex || isPreview ? 'noindex, nofollow' : 'index, follow, max-image-preview:large';
 ---

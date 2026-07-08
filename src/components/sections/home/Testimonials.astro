@@ -1,19 +1,21 @@
 ---
 /** Client testimonials. Renders nothing until `testimonials` is populated. */
 import { testimonials } from '@/data/socialProof';
+import { asLocale, useTranslations } from '@/i18n';
+const t = useTranslations(asLocale(Astro.currentLocale));
 ---
 
 {testimonials.length > 0 && (
   <section class="container-page py-24">
     <h2 data-reveal class="max-w-2xl text-h2 font-bold tracking-tight text-ink">
-      What clients <span class="text-gradient-brand">say</span>
+      <span class="text-gradient-brand">{t('socialProof.testimonialsTitle')}</span>
     </h2>
     <div class={`mt-14 grid gap-8 ${testimonials.length > 1 ? 'md:grid-cols-2' : 'max-w-2xl'}`}>
       {testimonials.map((tt, i) => (
         <figure data-reveal style={`--reveal-delay: ${i * 80}ms`} class="rounded-2xl border border-line glass p-8">
           <blockquote class="text-lead text-ink">“{tt.quote}”</blockquote>
           <figcaption class="mt-6 flex items-center gap-4">
-            {tt.avatar && <img src={tt.avatar} alt={tt.author} loading="lazy" decoding="async" class="h-11 w-11 rounded-full object-cover" />}
+            {tt.avatar && <img src={tt.avatar} alt={tt.author} width="44" height="44" loading="lazy" decoding="async" class="h-11 w-11 rounded-full object-cover" />}
             <div>
               <div class="font-semibold text-ink">{tt.author}</div>
               <div class="text-sm text-ink-muted">{tt.role}{tt.company ? `, ${tt.company}` : ''}</div>
