@@ -21,6 +21,14 @@ interface OGPage {
 
 const pages: Record<string, OGPage> = {};
 
+const SERVICE_NS: Record<string, string> = {
+  'agentic-automation': 'serviceAgentic',
+  'document-intelligence': 'serviceDocument',
+  'mlops-cicd': 'serviceMlops',
+  'sql-dashboards': 'serviceSqlDashboards',
+  'ai-websites': 'serviceAiWebsites',
+};
+
 for (const loc of LOCALES) {
   const t = useTranslations(loc);
 
@@ -38,11 +46,15 @@ for (const loc of LOCALES) {
     };
   }
 
-  // Service catalogue copy is authored EN-only, so the card is the same per locale.
+  // Service cards use the localized meta copy (falls back to catalogue EN when
+  // a dictionary key is missing — t() returns the key string on a miss).
   for (const s of services) {
+    const ns = SERVICE_NS[s.slug];
+    const metaTitle = ns ? t(`${ns}.meta.title`) : '';
+    const heroSubtitle = ns ? t(`${ns}.hero.subtitle`) : '';
     pages[ogKey(localizePath(loc, `/services/${s.slug}`))] = {
-      title: s.name,
-      description: s.tagline,
+      title: metaTitle && metaTitle !== `${ns}.meta.title` ? metaTitle : s.name,
+      description: heroSubtitle && heroSubtitle !== `${ns}.hero.subtitle` ? heroSubtitle : s.tagline,
     };
   }
 }
