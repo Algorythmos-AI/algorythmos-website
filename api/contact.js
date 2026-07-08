@@ -27,6 +27,9 @@ export default async function handler(req, res) {
     const email = String(body.email || '').trim();
     const message = String(body.message || '').trim();
     const company = String(body.company || '').trim();
+    // Attribution context (optional, first-party only) — capped so it can't bloat the email.
+    const locale = String(body.locale || '').trim().slice(0, 10);
+    const utm = String(body.utm || '').trim().slice(0, 300);
 
     if (name.length < 2 || !EMAIL_RE.test(email) || message.length < 10) {
       return res.status(400).json({ ok: false, error: 'Invalid input' });
@@ -59,11 +62,13 @@ export default async function handler(req, res) {
       to: CONTACT_TO || ZOHO_SMTP_USER,
       replyTo: `"${name}" <${email}>`,
       subject: `New enquiry — ${name}${company ? ` (${company})` : ''}`,
-      text: `Name: ${name}\nEmail: ${email}\nCompany: ${company || '—'}\n\n${message}`,
+      text: `Name: ${name}\nEmail: ${email}\nCompany: ${company || '—'}\nLocale: ${locale || '—'}\nSource: ${utm || '—'}\n\n${message}`,
       html: `<table style="font-family:system-ui,sans-serif;font-size:15px;line-height:1.6">
         <tr><td><strong>Name</strong></td><td>${esc(name)}</td></tr>
         <tr><td><strong>Email</strong></td><td><a href="mailto:${esc(email)}">${esc(email)}</a></td></tr>
         <tr><td><strong>Company</strong></td><td>${esc(company) || '—'}</td></tr>
+        <tr><td><strong>Locale</strong></td><td>${esc(locale) || '—'}</td></tr>
+        <tr><td><strong>Source</strong></td><td>${esc(utm) || '—'}</td></tr>
       </table><hr><p style="white-space:pre-wrap;font-family:system-ui,sans-serif;font-size:15px;line-height:1.6">${esc(message)}</p>`,
     });
 
