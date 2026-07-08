@@ -1990,5 +1990,7 @@
   "caseStudyDetail.studies.retail-sql.stats.1.value": "Une",
   "caseStudyDetail.studies.retail-sql.stats.1.label": "Vue unique et fiable de la demande, toutes régions",
   "caseStudyDetail.studies.retail-sql.stats.2.value": "Direct",
-  "caseStudyDetail.studies.retail-sql.stats.2.label": "KPI par magasin disponibles en temps réel"
+  "caseStudyDetail.studies.retail-sql.stats.2.label": "KPI par magasin disponibles en temps réel",
+  "footer.localSydney": "AI Consultancy Sydney",
+  "footer.localParis": "Conseil en IA à Paris"
 }
