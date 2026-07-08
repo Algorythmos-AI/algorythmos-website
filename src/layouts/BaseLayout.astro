@@ -1,5 +1,6 @@
 ---
 import '@fontsource-variable/inter';
+import interLatinWoff2 from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
 import '@/styles/global.css';
 import { ClientRouter } from 'astro:transitions';
 import { asLocale, REGIONS } from '@/i18n';
@@ -45,6 +46,9 @@ const lang = REGIONS[locale].lang;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {/* Primary text face — preloaded so the first paint doesn't wait on CSS discovery (LCP) */}
+    <link rel="preload" href={interLatinWoff2} as="font" type="font/woff2" crossorigin />
+
     {/* No-flash theme init — before paint */}
     <script is:inline>
       (function () {
