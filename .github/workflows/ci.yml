@@ -36,6 +36,9 @@ jobs:
         run: npm ci
 
       # --- Hard gates that don't need a build ---
+      - name: Lint (eslint)
+        run: npm run lint
+
       - name: Type-check (astro check)
         run: npm run check
 
