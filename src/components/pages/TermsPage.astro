@@ -10,8 +10,8 @@ const t = useTranslations(locale);
 const path = '/terms';
 const abs = (p: string) => SITE + localizePath(locale, p);
 
-/* No real contact email key exists yet; use the canonical org address. */
-const EMAIL = 'info@algorythmos.com.au';
+import { BUSINESS } from '@/data/business';
+const EMAIL = BUSINESS.email;
 
 const crumbs = breadcrumb([
   { name: t('nav.home'), url: abs('/') },
