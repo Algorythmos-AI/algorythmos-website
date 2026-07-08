@@ -1,77 +1,16 @@
 /**
- * Build-time Open Graph cards (1200×630) for content pages.
- *
- * One image per (locale, content item) at `/og/<localized-path>.png`, so the
- * key matches `ogImageUrl()` referenced by each page's <head>. Covers blog
- * posts, case studies, and services across all locales; brand pages keep the
- * static `/Algorythmos.png` card. Self-hosted Inter, theme-neutral dark brand
- * treatment. astro-og-canvas caches across builds (./node_modules/.astro-og-canvas).
+ * Build-time Open Graph cards (1200×630) — one PNG per entry in the shared
+ * `ogPages` map (src/seo/ogPages.ts). SEO.astro reads the same map to decide
+ * which pages point at a card, so the two sides can never drift. Self-hosted
+ * Inter, theme-neutral dark brand treatment. astro-og-canvas caches across
+ * builds (./node_modules/.astro-og-canvas).
  */
 import { OGImageRoute } from 'astro-og-canvas';
-import { LOCALES, useTranslations, localizePath } from '@/i18n';
-import { blog } from '@/data/blog';
-import { caseStudies } from '@/data/caseStudies';
-import { services } from '@/data/services';
-import { ogKey } from '@/seo/schema';
-
-interface OGPage {
-  title: string;
-  description: string;
-}
-
-const pages: Record<string, OGPage> = {};
-
-const SERVICE_NS: Record<string, string> = {
-  'agentic-automation': 'serviceAgentic',
-  'document-intelligence': 'serviceDocument',
-  'mlops-cicd': 'serviceMlops',
-  'sql-dashboards': 'serviceSqlDashboards',
-  'ai-websites': 'serviceAiWebsites',
-};
-
-for (const loc of LOCALES) {
-  const t = useTranslations(loc);
-
-  for (const post of blog) {
-    pages[ogKey(localizePath(loc, `/blog/${post.slug}`))] = {
-      title: t(`blogDetail.posts.${post.slug}.title`),
-      description: t(`blogDetail.posts.${post.slug}.meta`),
-    };
-  }
-
-  for (const cs of caseStudies) {
-    pages[ogKey(localizePath(loc, `/case-studies/${cs.slug}`))] = {
-      title: cs.inline ? cs.inline.title : t(`caseStudyDetail.studies.${cs.slug}.title`),
-      description: cs.inline ? cs.inline.meta : t(`caseStudyDetail.studies.${cs.slug}.meta`),
-    };
-  }
-
-  // Service cards use the localized meta copy (falls back to catalogue EN when
-  // a dictionary key is missing — t() returns the key string on a miss).
-  for (const s of services) {
-    const ns = SERVICE_NS[s.slug];
-    const metaTitle = ns ? t(`${ns}.meta.title`) : '';
-    const heroSubtitle = ns ? t(`${ns}.hero.subtitle`) : '';
-    pages[ogKey(localizePath(loc, `/services/${s.slug}`))] = {
-      title: metaTitle && metaTitle !== `${ns}.meta.title` ? metaTitle : s.name,
-      description: heroSubtitle && heroSubtitle !== `${ns}.hero.subtitle` ? heroSubtitle : s.tagline,
-    };
-  }
-}
-
-// Single-locale local landing pages (one card each, matching their standalone routes).
-pages[ogKey(localizePath('au-en', '/ai-consultancy-sydney'))] = {
-  title: 'AI Consultancy in Sydney',
-  description: 'Production-grade AI for Sydney businesses — senior engineers, outcomes in weeks.',
-};
-pages[ogKey(localizePath('fr-fr', '/conseil-en-ia-paris'))] = {
-  title: 'Conseil en IA à Paris',
-  description: 'Une IA concrète et prête pour la production, pour les PME et ETI parisiennes.',
-};
+import { ogPages, type OGPage } from '@/seo/ogPages';
 
 export const { getStaticPaths, GET } = await OGImageRoute({
   param: 'route',
-  pages,
+  pages: ogPages,
   getImageOptions: (_path, page: OGPage) => ({
     title: page.title,
     description: page.description,
