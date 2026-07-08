@@ -23,8 +23,8 @@
  * Run: npm run seo:check   (after `npm run build`)
  */
 
-import { readFileSync, existsSync } from 'fs';
-import { join, dirname } from 'path';
+import { readFileSync, existsSync, readdirSync, statSync } from 'fs';
+import { join, dirname, relative, sep } from 'path';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -287,6 +287,145 @@ function validatePage(page) {
 }
 
 // ---------------------------------------------------------------------------
+// Full-site sweep — every built HTML page gets the core invariants:
+//   - exactly one non-empty <title> / meta description / canonical on the domain
+//   - unique title + canonical across the whole site (duplicate = locale merge bug)
+//   - og:image points at a file that actually exists in dist/
+//   - og:locale matches the URL locale prefix
+//   - hreflang: exactly 4 incl. x-default and self, OR none (standalone pages)
+//   - every sitemap URL is its own canonical (no canonicalized-away URLs listed)
+// ---------------------------------------------------------------------------
+const OG_LOCALE_BY_PREFIX = { 'au-en': 'en_AU', 'fr-fr': 'fr_FR' };
+
+function* walkHtml(dir) {
+  for (const entry of readdirSync(dir)) {
+    const p = join(dir, entry);
+    if (statSync(p).isDirectory()) yield* walkHtml(p);
+    else if (entry.endsWith('.html')) yield p;
+  }
+}
+
+function validateAllPages() {
+  log.section('🌐 Full-site sweep (every built page)');
+
+  const seenTitles = new Map();
+  const seenCanonicals = new Map();
+  const canonicalByPage = new Map(); // url path -> canonical
+  let pageCount = 0;
+  let sweepErrors = errors;
+
+  for (const abs of walkHtml(DIST)) {
+    const rel = relative(DIST, abs).split(sep).join('/');
+    if (rel === '404.html') continue; // error page: not indexable content
+    pageCount++;
+    const html = readFileSync(abs, 'utf-8');
+    const where = `dist/${rel}`;
+
+    // title / description
+    const titles = extractTitles(html);
+    if (titles.length !== 1 || !titles[0]) {
+      log.error(`${where}: expected exactly one non-empty <title>, found ${titles.length}`);
+      errors++;
+    } else {
+      // Uniqueness is scoped per locale tree: hreflang alternates legitimately
+      // share a title across en/au-en (same language). Two pages in the SAME
+      // locale with one title = a real duplicate-content bug.
+      const localeKey = OG_LOCALE_BY_PREFIX[rel.split('/')[0]] ?? 'en';
+      const titleKey = `${localeKey}::${titles[0]}`;
+      const prev = seenTitles.get(titleKey);
+      if (prev) {
+        log.error(`${where}: duplicate <title> also used by ${prev}: "${titles[0].slice(0, 60)}"`);
+        errors++;
+      }
+      seenTitles.set(titleKey, where);
+    }
+    const descs = extractMetaContent(html, 'description');
+    if (descs.length !== 1 || !descs[0]) {
+      log.error(`${where}: expected exactly one non-empty meta description, found ${descs.length}`);
+      errors++;
+    }
+
+    // canonical
+    const canonicals = extractCanonicals(html);
+    if (canonicals.length !== 1 || !canonicals[0].startsWith(EXPECTED_DOMAIN)) {
+      log.error(`${where}: expected one canonical on ${EXPECTED_DOMAIN}, got [${canonicals.join(', ')}]`);
+      errors++;
+    } else {
+      const canonical = canonicals[0];
+      const prev = seenCanonicals.get(canonical);
+      if (prev) {
+        log.error(`${where}: duplicate canonical also used by ${prev}: ${canonical}`);
+        errors++;
+      }
+      seenCanonicals.set(canonical, where);
+      const urlPath = '/' + rel.replace(/index\.html$/, '').replace(/\.html$/, '').replace(/\/$/, '');
+      canonicalByPage.set(urlPath === '/' ? '/' : urlPath.replace(/\/$/, ''), canonical);
+    }
+
+    // og:image must resolve to a real file in dist
+    const ogImages = extractMetaContent(html, 'og:image', 'property');
+    if (ogImages.length >= 1 && ogImages[0].startsWith(EXPECTED_DOMAIN)) {
+      const imgRel = decodeURIComponent(ogImages[0].slice(EXPECTED_DOMAIN.length));
+      if (!existsSync(join(DIST, imgRel))) {
+        log.error(`${where}: og:image file missing in dist: ${imgRel}`);
+        errors++;
+      }
+    }
+
+    // og:locale must match the URL locale prefix
+    const prefix = rel.split('/')[0];
+    const expectedOgLocale = OG_LOCALE_BY_PREFIX[prefix];
+    const ogLocales = extractMetaContent(html, 'og:locale', 'property');
+    if (expectedOgLocale && ogLocales[0] !== expectedOgLocale) {
+      log.error(`${where}: og:locale "${ogLocales[0]}" ≠ expected "${expectedOgLocale}"`);
+      errors++;
+    }
+
+    // hreflang: 4 incl x-default + self, or none (standalone single-locale pages)
+    const hreflangs = extractHreflangs(html);
+    if (hreflangs.length > 0) {
+      if (hreflangs.length !== 4 || !hreflangs.includes('x-default')) {
+        log.error(`${where}: hreflang set must be 4 incl. x-default or empty, got [${hreflangs.join(', ')}]`);
+        errors++;
+      } else if (expectedOgLocale) {
+        const selfHreflang = expectedOgLocale.replace('_', '-');
+        if (!hreflangs.includes(selfHreflang)) {
+          log.error(`${where}: hreflang set missing self (${selfHreflang}): [${hreflangs.join(', ')}]`);
+          errors++;
+        }
+      }
+    }
+  }
+
+  // sitemap URLs must be self-canonical pages
+  let sitemapUrls = 0;
+  for (const entry of readdirSync(DIST)) {
+    if (!/^sitemap.*\.xml$/.test(entry) || entry === 'sitemap-index.xml') continue;
+    const xml = readFileSync(join(DIST, entry), 'utf-8');
+    for (const m of xml.matchAll(/<loc>([^<]+)<\/loc>/g)) {
+      const url = m[1];
+      if (!url.startsWith(EXPECTED_DOMAIN)) continue;
+      sitemapUrls++;
+      const urlPath = url.slice(EXPECTED_DOMAIN.length).replace(/\/$/, '') || '/';
+      const canonical = canonicalByPage.get(urlPath);
+      if (!canonical) {
+        log.error(`sitemap ${entry}: URL has no built page: ${url}`);
+        errors++;
+      } else if (canonical.replace(/\/$/, '') !== url.replace(/\/$/, '')) {
+        log.error(`sitemap ${entry}: URL ${url} canonicalizes elsewhere (${canonical})`);
+        errors++;
+      }
+    }
+  }
+
+  if (errors === sweepErrors) {
+    log.success(`${pageCount} pages swept, ${sitemapUrls} sitemap URLs verified self-canonical — all invariants hold`);
+  } else {
+    log.error(`Full-site sweep found ${errors - sweepErrors} issue(s) across ${pageCount} pages`);
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Static-file assertions
 // ---------------------------------------------------------------------------
 function validateStaticFiles() {
@@ -345,6 +484,7 @@ ${colors.cyan}╔═════════════════════
   }
 
   for (const page of PAGES) validatePage(page);
+  validateAllPages();
   validateStaticFiles();
 
   log.section('📊 VALIDATION SUMMARY');
