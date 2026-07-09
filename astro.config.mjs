@@ -39,7 +39,7 @@ function pageImages(pathname) {
     imgs.push({ url: `${VIS}/city-paris.svg`, caption: 'Conseil en IA à Paris, France' });
     imgs.push({ url: `${PHOTOS}/paris-scene-1600.webp`, caption: 'La tour Eiffel au-dessus de la Seine, Paris' });
   }
-  if (p.endsWith('/about')) imgs.push({ url: `${PHOTOS}/whiteboard-session-1600.webp`, caption: 'Algorythmos engineers pair-programming' });
+  if (p.endsWith('/about')) imgs.push({ url: `${PHOTOS}/team-sunlit-1600.webp`, caption: 'The Algorythmos team collaborating in a sunlit studio' });
   if (p.endsWith('/contact')) {
     imgs.push({ url: `${VIS}/city-sydney.svg`, caption: 'Sydney, Australia' }, { url: `${VIS}/city-paris.svg`, caption: 'Paris, France' });
   }
