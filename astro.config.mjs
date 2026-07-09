@@ -6,6 +6,7 @@ import llmsFull from './scripts/llms-full-integration.mjs';
 
 // Page-path → on-page content visuals, for <image:image> sitemap entries.
 const VIS = 'https://algorythmos.com/assets/visuals';
+const PHOTOS = 'https://algorythmos.com/assets/photos';
 /** @type {Record<string, string>} */
 const SERVICE_VISUAL = {
   'agentic-automation': 'service-agentic-automation.svg',
@@ -24,13 +25,21 @@ function pageImages(pathname) {
   const imgs = [];
   if (p === '' || p === '/au-en' || p === '/fr-fr') {
     imgs.push({ url: `${VIS}/home-hero-ai-console.svg`, caption: 'Algorythmos AI console — agentic automation and a live analytics dashboard' });
+    imgs.push({ url: `${PHOTOS}/team-collaboration-1600.webp`, caption: 'Algorythmos engineers collaborating during an AI delivery sprint' });
   }
   const svc = p.match(/\/services\/([a-z-]+)$/);
   if (svc && SERVICE_VISUAL[svc[1]]) {
     imgs.push({ url: `${VIS}/${SERVICE_VISUAL[svc[1]]}`, caption: `Algorythmos ${svc[1].replace(/-/g, ' ')} product interface` });
   }
-  if (p.endsWith('/ai-consultancy-sydney')) imgs.push({ url: `${VIS}/city-sydney.svg`, caption: 'AI consultancy in Sydney, Australia' });
-  if (p.endsWith('/conseil-en-ia-paris')) imgs.push({ url: `${VIS}/city-paris.svg`, caption: 'Conseil en IA à Paris, France' });
+  if (p.endsWith('/ai-consultancy-sydney')) {
+    imgs.push({ url: `${VIS}/city-sydney.svg`, caption: 'AI consultancy in Sydney, Australia' });
+    imgs.push({ url: `${PHOTOS}/sydney-scene-1600.webp`, caption: 'Sydney Circular Quay — Opera House, ferries and CBD skyline' });
+  }
+  if (p.endsWith('/conseil-en-ia-paris')) {
+    imgs.push({ url: `${VIS}/city-paris.svg`, caption: 'Conseil en IA à Paris, France' });
+    imgs.push({ url: `${PHOTOS}/paris-scene-1600.webp`, caption: 'La tour Eiffel au-dessus de la Seine, Paris' });
+  }
+  if (p.endsWith('/about')) imgs.push({ url: `${PHOTOS}/whiteboard-session-1600.webp`, caption: 'Algorythmos engineers pair-programming' });
   if (p.endsWith('/contact')) {
     imgs.push({ url: `${VIS}/city-sydney.svg`, caption: 'Sydney, Australia' }, { url: `${VIS}/city-paris.svg`, caption: 'Paris, France' });
   }

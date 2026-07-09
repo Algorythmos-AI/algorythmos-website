@@ -3,7 +3,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import HomePage from '@/components/pages/HomePage.astro';
 import { useTranslations } from '@/i18n';
 import { imageObject } from '@/seo/schema';
-import { heroVisual } from '@/data/visuals';
+import { heroVisual, photos, photoFile } from '@/data/visuals';
 
 const t = useTranslations('en');
 const heroImg = imageObject({
@@ -13,13 +13,19 @@ const heroImg = imageObject({
   height: heroVisual.height,
   primary: true,
 });
+const bandImg = imageObject({
+  path: photoFile(photos.teamCollaboration, 1600),
+  alt: t(photos.teamCollaboration.altKey),
+  width: photos.teamCollaboration.width,
+  height: photos.teamCollaboration.height,
+});
 ---
 
 <BaseLayout
   title="Algorythmos — AI consultancy for SMEs in Sydney & Paris"
   description="Boutique AI consultancy delivering agentic automation, document intelligence, SQL dashboards, and MLOps for SMEs across Australia and France."
   path="/"
-  jsonLd={[heroImg]}
+  jsonLd={[heroImg, bandImg]}
 >
   <HomePage />
 </BaseLayout>

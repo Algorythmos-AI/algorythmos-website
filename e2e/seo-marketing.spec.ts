@@ -97,3 +97,31 @@ test.describe('trust & PR surfaces', () => {
     await expect(page.getByText('Déploiements plus rapides grâce au CI/CD automatisé', { exact: true })).toBeVisible();
   });
 });
+
+test.describe('photography', () => {
+  const photoPages = [
+    { path: '/', base: 'team-collaboration' },
+    { path: '/about', base: 'whiteboard-session' },
+    { path: '/careers', base: 'modern-office' },
+    { path: '/au-en/ai-consultancy-sydney', base: 'sydney-scene' },
+    { path: '/fr-fr/conseil-en-ia-paris', base: 'paris-scene' },
+  ];
+
+  for (const { path, base } of photoPages) {
+    test(`photo on ${path} decodes with alt text and no layout overflow`, async ({ page }) => {
+      await page.goto(path);
+      const img = page.locator(`img[src*="${base}"]`);
+      await img.scrollIntoViewIfNeeded();
+      await expect(img).toBeVisible();
+      // Image must actually decode (not a broken src) and carry a real alt.
+      await expect.poll(() => img.evaluate((el) => (el as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
+      expect((await img.getAttribute('alt'))?.length).toBeGreaterThan(10);
+      expect(await img.getAttribute('srcset')).toContain('1600w');
+
+      // Mobile: no horizontal overflow introduced by the photo layout.
+      await page.setViewportSize({ width: 375, height: 812 });
+      const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+      expect(overflow).toBeLessThanOrEqual(0);
+    });
+  }
+});

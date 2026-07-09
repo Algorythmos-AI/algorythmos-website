@@ -3,7 +3,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import HomePage from '@/components/pages/HomePage.astro';
 import { PREFIXED_LOCALES, asLocale, localeToRegion, useTranslations } from '@/i18n';
 import { professionalService, imageObject } from '@/seo/schema';
-import { heroVisual } from '@/data/visuals';
+import { heroVisual, photos, photoFile } from '@/data/visuals';
 
 export function getStaticPaths() {
   return PREFIXED_LOCALES.map((locale) => ({ params: { locale } }));
@@ -18,8 +18,14 @@ const titles: Record<'AU' | 'FR', string> = {
   FR: 'Algorythmos France — Cabinet de conseil en IA pour PME & ETI',
 };
 const heroImg = imageObject({ path: heroVisual.file, alt: t(heroVisual.altKey), width: heroVisual.width, height: heroVisual.height, primary: true });
+const bandImg = imageObject({
+  path: photoFile(photos.teamCollaboration, 1600),
+  alt: t(photos.teamCollaboration.altKey),
+  width: photos.teamCollaboration.width,
+  height: photos.teamCollaboration.height,
+});
 ---
 
-<BaseLayout title={titles[region]} description={t('hero.subtitle')} path="/" jsonLd={[professionalService(region), heroImg]}>
+<BaseLayout title={titles[region]} description={t('hero.subtitle')} path="/" jsonLd={[professionalService(region), heroImg, bandImg]}>
   <HomePage />
 </BaseLayout>

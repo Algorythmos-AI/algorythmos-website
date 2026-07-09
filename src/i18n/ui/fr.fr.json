@@ -2010,5 +2010,13 @@
   "press.assets.logoMark": "Logo (PNG)",
   "press.contact.heading": "Contact média",
   "press.contact.lead": "Pour interviews, commentaires et interventions, écrivez-nous — réponse sous un jour ouvré.",
-  "nav.press": "Presse"
+  "nav.press": "Presse",
+  "visuals.photos.team.alt": "Équipe d'ingénieurs collaborant sur leurs ordinateurs portables autour d'une table pendant un sprint de livraison IA",
+  "visuals.photos.whiteboard.alt": "Deux ingénieurs en pair programming, relisant du code ensemble sur un ordinateur portable et un écran",
+  "visuals.photos.office.alt": "Couloir de bureau moderne aux parois vitrées avec un éclairage chaleureux",
+  "visuals.photos.sydney.alt": "Circular Quay à Sydney avec l'Opéra, les ferries et la skyline du CBD",
+  "visuals.photos.paris.alt": "La tour Eiffel au-dessus de la Seine au crépuscule, à Paris",
+  "home.photoBand.heading": "Des ingénieurs seniors, au cœur de votre problème",
+  "home.photoBand.body": "Pas de délégation à des juniors, pas de boîtes noires. Vous travaillez directement avec celles et ceux qui conçoivent, construisent et livrent vos systèmes d'IA — du premier atelier jusqu'à la production.",
+  "home.photoBand.cta": "Découvrir Algorythmos"
 }

@@ -8,9 +8,10 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHeader from '@/components/sections/PageHeader.astro';
 import Button from '@/components/ui/Button.astro';
 import Visual from '@/components/ui/Visual.astro';
+import Photo from '@/components/ui/Photo.astro';
 import { localizePath, useTranslations } from '@/i18n';
 import { professionalService, breadcrumb, SITE, ogImageUrl, imageObject } from '@/seo/schema';
-import { cityVisuals } from '@/data/visuals';
+import { cityVisuals, photos, photoFile, type PhotoAsset } from '@/data/visuals';
 import { BOOKING_URL } from '@/lib/links';
 
 interface FAQ {
@@ -52,6 +53,8 @@ interface Props {
 
 const p = Astro.props as Props;
 const locale = p.region === 'AU' ? 'au-en' : 'fr-fr';
+/** City photograph paired with the region — rendered after the intro copy. */
+const cityPhoto: PhotoAsset = p.region === 'AU' ? photos.sydneyScene : photos.parisScene;
 const loc = (path: string) => localizePath(locale, path);
 const t = useTranslations(locale);
 const ogImg = ogImageUrl(localizePath(locale, p.path));
@@ -76,7 +79,13 @@ const crumbs = breadcrumb([
   path={p.path}
   image={ogImg}
   standalone
-  jsonLd={[professionalService(p.region), faqLd, crumbs, imageObject({ path: cityV.file, alt: cityAlt, width: cityV.width, height: cityV.height, primary: true })]}
+  jsonLd={[
+    professionalService(p.region),
+    faqLd,
+    crumbs,
+    imageObject({ path: cityV.file, alt: cityAlt, width: cityV.width, height: cityV.height, primary: true }),
+    imageObject({ path: photoFile(cityPhoto, 1600), alt: t(cityPhoto.altKey), width: cityPhoto.width, height: cityPhoto.height }),
+  ]}
 >
   <PageHeader eyebrow={p.eyebrow} title={p.h1} lead={p.lead} />
 
@@ -92,9 +101,14 @@ const crumbs = breadcrumb([
   </section>
 
   <section class="container-page py-16">
-    <div class="max-w-measure" data-reveal>
-      <h2 class="text-h2 font-bold tracking-tight text-ink">{p.introHeading}</h2>
-      {p.introBody.map((para) => <p class="mt-5 text-lead leading-relaxed text-ink-muted">{para}</p>)}
+    <div class="grid items-center gap-10 lg:grid-cols-[1.2fr_1fr]">
+      <div class="max-w-measure" data-reveal>
+        <h2 class="text-h2 font-bold tracking-tight text-ink">{p.introHeading}</h2>
+        {p.introBody.map((para) => <p class="mt-5 text-lead leading-relaxed text-ink-muted">{para}</p>)}
+      </div>
+      <div data-reveal style="--reveal-delay: 80ms">
+        <Photo photo={cityPhoto} alt={t(cityPhoto.altKey)} sizes="(min-width: 1024px) 40vw, 100vw" />
+      </div>
     </div>
   </section>
 
