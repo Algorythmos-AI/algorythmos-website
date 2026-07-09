@@ -21,6 +21,18 @@
       "permanent": true
     },
     {
+      "source": "/",
+      "has": [{ "type": "host", "value": "(www\\.)?algorythmos\\.com\\.au" }],
+      "destination": "https://algorythmos.com/au-en",
+      "permanent": true
+    },
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "(www\\.)?algorythmos\\.fr" }],
+      "destination": "https://algorythmos.com/fr-fr",
+      "permanent": true
+    },
+    {
       "source": "/:path*",
       "has": [{ "type": "host", "value": "(www\\.)?algorythmos\\.com\\.au" }],
       "destination": "https://algorythmos.com/au-en/:path*",
