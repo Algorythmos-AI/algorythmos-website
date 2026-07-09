@@ -3,8 +3,10 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHeader from '@/components/sections/PageHeader.astro';
 import Button from '@/components/ui/Button.astro';
 import Aurora from '@/components/ui/Aurora.astro';
+import Photo from '@/components/ui/Photo.astro';
 import { asLocale, useTranslations, localizePath } from '@/i18n';
-import { breadcrumb, SITE } from '@/seo/schema';
+import { breadcrumb, SITE, imageObject } from '@/seo/schema';
+import { photos, photoFile } from '@/data/visuals';
 
 const locale = asLocale(Astro.currentLocale);
 const t = useTranslations(locale);
@@ -15,6 +17,12 @@ const crumbs = breadcrumb([
   { name: 'Home', url: abs('/') },
   { name: t('nav.about'), url: abs(path) },
 ]);
+const photoLd = imageObject({
+  path: photoFile(photos.whiteboardSession, 1600),
+  alt: t(photos.whiteboardSession.altKey),
+  width: photos.whiteboardSession.width,
+  height: photos.whiteboardSession.height,
+});
 
 const values = [0, 1, 2, 3].map((i) => ({
   title: t(`about.values.${i}.title`),
@@ -33,12 +41,18 @@ const stats = [
 ];
 ---
 
-<BaseLayout title={t('about.meta.title')} description={t('about.meta.description')} path={path} jsonLd={[crumbs]}>
+<BaseLayout title={t('about.meta.title')} description={t('about.meta.description')} path={path} jsonLd={[crumbs, photoLd]}>
   <PageHeader eyebrow={t('about.hero.badge')} title={`${t('about.hero.title1')} ${t('about.hero.title2')}`} />
 
   {/* Hero subtitle carries inline <highlight> markup → render rich */}
   <section class="container-page pt-8">
     <p data-reveal class="rich-copy max-w-3xl text-lead text-ink-muted" set:html={t('about.hero.subtitle')}></p>
+  </section>
+
+  <section class="container-page pt-12">
+    <div data-reveal>
+      <Photo photo={photos.whiteboardSession} alt={t(photos.whiteboardSession.altKey)} sizes="(min-width: 1024px) 60rem, 100vw" figureClass="max-w-4xl" />
+    </div>
   </section>
 
   {/* Etymology — what "Algorythmos" means */}

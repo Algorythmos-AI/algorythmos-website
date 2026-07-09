@@ -3,7 +3,9 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHeader from '@/components/sections/PageHeader.astro';
 import Button from '@/components/ui/Button.astro';
 import Aurora from '@/components/ui/Aurora.astro';
+import Photo from '@/components/ui/Photo.astro';
 import { asLocale, useTranslations, localizePath } from '@/i18n';
+import { photos } from '@/data/visuals';
 import { BUSINESS } from '@/data/business';
 import { breadcrumb, SITE } from '@/seo/schema';
 
@@ -46,6 +48,12 @@ const locations = (['london', 'paris', 'sydney', 'remote'] as const).map((k) => 
   jsonLd={[crumbs]}
 >
   <PageHeader eyebrow={t('careers.hero.eyebrow')} title={t('careers.hero.title')} lead={t('careers.hero.description')} />
+
+  <section class="container-page pt-12">
+    <div data-reveal>
+      <Photo photo={photos.modernOffice} alt={t(photos.modernOffice.altKey)} sizes="(min-width: 1024px) 60rem, 100vw" figureClass="max-w-4xl" />
+    </div>
+  </section>
 
   {/* How we work — values */}
   <section class="container-page py-24">

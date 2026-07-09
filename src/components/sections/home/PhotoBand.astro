@@ -1,0 +1,27 @@
+---
+/** Human-touch band — photo + trust copy linking to /about. Lazy, below the fold. */
+import Photo from '@/components/ui/Photo.astro';
+import { photos } from '@/data/visuals';
+import { asLocale, useTranslations, localizePath } from '@/i18n';
+
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+---
+
+<section class="border-y border-line bg-surface-2/30">
+  <div class="container-page grid items-center gap-10 py-20 lg:grid-cols-2">
+    <div data-reveal>
+      <h2 class="text-h2 font-bold tracking-tight text-ink">
+        <span class="text-gradient-brand">{t('home.photoBand.heading')}</span>
+      </h2>
+      <p class="mt-5 max-w-measure text-lead leading-relaxed text-ink-muted">{t('home.photoBand.body')}</p>
+      <a href={localizePath(locale, '/about')} class="mt-7 inline-flex items-center gap-1.5 text-sm font-semibold text-brand underline-offset-4 hover:underline">
+        {t('home.photoBand.cta')}
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+      </a>
+    </div>
+    <div data-reveal style="--reveal-delay: 80ms">
+      <Photo photo={photos.teamCollaboration} alt={t(photos.teamCollaboration.altKey)} />
+    </div>
+  </div>
+</section>
