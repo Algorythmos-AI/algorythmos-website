@@ -18,10 +18,10 @@ const crumbs = breadcrumb([
   { name: t('nav.about'), url: abs(path) },
 ]);
 const photoLd = imageObject({
-  path: photoFile(photos.whiteboardSession, 1600),
-  alt: t(photos.whiteboardSession.altKey),
-  width: photos.whiteboardSession.width,
-  height: photos.whiteboardSession.height,
+  path: photoFile(photos.teamSunlit, 1600),
+  alt: t(photos.teamSunlit.altKey),
+  width: photos.teamSunlit.width,
+  height: photos.teamSunlit.height,
 });
 
 const values = [0, 1, 2, 3].map((i) => ({
@@ -51,7 +51,7 @@ const stats = [
 
   <section class="container-page pt-12">
     <div data-reveal>
-      <Photo photo={photos.whiteboardSession} alt={t(photos.whiteboardSession.altKey)} sizes="(min-width: 1024px) 60rem, 100vw" figureClass="max-w-4xl" />
+      <Photo photo={photos.teamSunlit} alt={t(photos.teamSunlit.altKey)} sizes="(min-width: 1024px) 60rem, 100vw" figureClass="max-w-4xl" />
     </div>
   </section>
 

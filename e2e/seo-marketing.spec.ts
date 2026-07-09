@@ -101,7 +101,7 @@ test.describe('trust & PR surfaces', () => {
 test.describe('photography', () => {
   const photoPages = [
     { path: '/', base: 'team-collaboration' },
-    { path: '/about', base: 'whiteboard-session' },
+    { path: '/about', base: 'team-sunlit' },
     { path: '/careers', base: 'modern-office' },
     { path: '/au-en/ai-consultancy-sydney', base: 'sydney-scene' },
     { path: '/fr-fr/conseil-en-ia-paris', base: 'paris-scene' },

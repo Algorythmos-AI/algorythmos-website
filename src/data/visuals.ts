@@ -55,7 +55,7 @@ export const PHOTO_WIDTHS = [800, 1200, 1600] as const;
 
 export const photos = {
   teamCollaboration: { base: 'team-collaboration', width: 1600, height: 1067, altKey: 'visuals.photos.team.alt' },
-  whiteboardSession: { base: 'whiteboard-session', width: 1600, height: 1067, altKey: 'visuals.photos.whiteboard.alt' },
+  teamSunlit: { base: 'team-sunlit', width: 1600, height: 1067, altKey: 'visuals.photos.teamSunlit.alt' },
   modernOffice: { base: 'modern-office', width: 1600, height: 1067, altKey: 'visuals.photos.office.alt' },
   sydneyScene: { base: 'sydney-scene', width: 1600, height: 1067, altKey: 'visuals.photos.sydney.alt' },
   parisScene: { base: 'paris-scene', width: 1600, height: 1067, altKey: 'visuals.photos.paris.alt' },

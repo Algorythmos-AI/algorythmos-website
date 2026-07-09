@@ -2012,11 +2012,11 @@
   "press.contact.lead": "For interviews, comments and speaking requests, email us — we respond within one business day.",
   "nav.press": "Press",
   "visuals.photos.team.alt": "Engineering team collaborating on laptops around a shared table during an AI delivery sprint",
-  "visuals.photos.whiteboard.alt": "Two engineers pair-programming, reviewing code together on a laptop and monitor",
   "visuals.photos.office.alt": "Modern glass-walled consultancy office corridor with warm lighting",
   "visuals.photos.sydney.alt": "Sydney Circular Quay with the Opera House, ferries and the CBD skyline",
   "visuals.photos.paris.alt": "The Eiffel Tower over the Seine at dusk in Paris",
   "home.photoBand.heading": "Senior engineers, hands on your problem",
   "home.photoBand.body": "No hand-offs to juniors, no black boxes. You work directly with the people who design, build and ship your AI systems — from the first workshop to production.",
-  "home.photoBand.cta": "Meet Algorythmos"
+  "home.photoBand.cta": "Meet Algorythmos",
+  "visuals.photos.teamSunlit.alt": "Two colleagues reviewing work together on a tablet in a bright, sunlit studio"
 }
