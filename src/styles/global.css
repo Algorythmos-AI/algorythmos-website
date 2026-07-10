@@ -86,37 +86,75 @@
     opacity: 1;
   }
 
-  /* Desktop nav link — gradient underline grows from the left on hover/focus */
-  .nav-link {
-    position: relative;
+  /* Spotlight nav — attention follows the cursor: siblings ease back */
+  .nav-spotlight .nav-link {
+    transition: opacity var(--dur) var(--ease-smooth), color var(--dur) var(--ease-smooth);
   }
-  .nav-link::after {
-    content: '';
+  @media (hover: hover) {
+    .nav-spotlight:hover .nav-link:not(:hover) {
+      opacity: 0.55;
+    }
+  }
+  .nav-spotlight:focus-within .nav-link:not(:focus-visible) {
+    opacity: 0.55;
+  }
+
+  /* Magic line — one shared gradient indicator that glides between links (JS-positioned) */
+  .magic-line {
     position: absolute;
-    inset-inline: 0.75rem;
-    bottom: 3px;
+    bottom: 2px;
+    left: 0;
     height: 2px;
+    width: 0;
     border-radius: 1px;
     background: var(--grad-brand);
     opacity: 0;
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform var(--dur-slow) var(--ease-quint), opacity var(--dur) var(--ease-smooth);
     pointer-events: none;
+    transition:
+      transform 300ms var(--ease-quint),
+      width 300ms var(--ease-quint),
+      opacity 200ms var(--ease-smooth);
+    will-change: transform, width;
+  }
+
+  /* CTA arrow — slides in on hover/focus without shifting layout */
+  .cta-arrow .cta-arrow-glyph {
+    display: inline-block;
+    margin-left: 0;
+    max-width: 0;
+    opacity: 0;
+    transform: translateX(-4px);
+    transition:
+      max-width var(--dur-slow) var(--ease-quint),
+      opacity var(--dur) var(--ease-smooth),
+      transform var(--dur-slow) var(--ease-quint),
+      margin-left var(--dur-slow) var(--ease-quint);
   }
   @media (hover: hover) {
-    .nav-link:hover::after {
+    .cta-arrow:hover .cta-arrow-glyph {
+      margin-left: 0.4rem;
+      max-width: 1.2em;
       opacity: 1;
-      transform: scaleX(1);
+      transform: none;
     }
   }
-  .nav-link:focus-visible::after {
+  .cta-arrow:focus-visible .cta-arrow-glyph {
+    margin-left: 0.4rem;
+    max-width: 1.2em;
     opacity: 1;
-    transform: scaleX(1);
+    transform: none;
   }
-  .nav-link[aria-current='page']::after {
-    opacity: 0.45;
-    transform: scaleX(1);
+
+  /* Announcement bar dismissal — fade + collapse, instant under reduced motion */
+  .announce {
+    overflow: hidden;
+    max-height: 6rem;
+    transition: max-height 350ms var(--ease-smooth), opacity 250ms var(--ease-smooth);
+  }
+  .announce.is-dismissed {
+    max-height: 0;
+    opacity: 0;
+    border-bottom-width: 0;
   }
 }
 
@@ -159,6 +197,16 @@
   .hero [data-reveal] {
     --reveal-duration: var(--dur-hero);
     --reveal-ease: var(--ease-expo);
+  }
+
+  /* Full-viewport hero opening: first screen = header (4rem) + hero copy.
+     When the announcement bar is visible, subtract its height too so the
+     scroll cue lands exactly at the fold (graceful overflow without :has). */
+  .hero-viewport {
+    min-height: calc(100svh - 4rem);
+  }
+  body:has(#announce:not([hidden])) .hero-viewport {
+    min-height: calc(100svh - 4rem - 2.8rem);
   }
 }
 
