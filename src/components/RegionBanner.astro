@@ -31,7 +31,8 @@
   }
   function setupRegionBanner() {
     const el = document.getElementById('region-banner');
-    if (!el) return;
+    if (!el || el.dataset.regionInit) return;
+    el.dataset.regionInit = '1';
     if (getCookie('locale') || getCookie('region-dismiss')) return;
     if (/^\/(au-en|fr-fr)(\/|$)/.test(location.pathname)) return; // already regional
     const lang = (navigator.language || '').toLowerCase();
@@ -56,4 +57,6 @@
     el.hidden = false;
   }
   document.addEventListener('astro:page-load', setupRegionBanner);
+  /* Initialize immediately if astro:page-load already fired before this module ran */
+  if (document.readyState !== 'loading') setupRegionBanner();
 </script>
