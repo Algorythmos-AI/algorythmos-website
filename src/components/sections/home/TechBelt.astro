@@ -8,15 +8,10 @@
  * prefers-reduced-motion. Duplicate copy is aria-hidden.
  */
 import { asLocale, useTranslations } from '@/i18n';
+import { techStack } from '@/data/techStack';
 
 const locale = asLocale(Astro.currentLocale);
 const t = useTranslations(locale);
-
-const stack = [
-  'OpenAI', 'Anthropic Claude', 'LangChain', 'PyTorch', 'TensorFlow',
-  'BigQuery', 'Snowflake', 'PostgreSQL', 'dbt', 'Airflow',
-  'Kubernetes', 'Docker', 'AWS', 'Google Cloud', 'Azure', 'Vercel',
-];
 ---
 
 <section class="border-b border-line/60 bg-surface-1/30 py-14">
@@ -27,18 +22,18 @@ const stack = [
 
   <div data-reveal style="--reveal-delay: 100ms" class="tech-belt mt-8" aria-label={t('stack.title')}>
     <ul class="tech-track">
-      {stack.map((name) => (
+      {techStack.map((tech) => (
         <li class="tech-chip">
-          <span class="tech-dot" aria-hidden="true"></span>
-          {name}
+          <svg class="tech-logo" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d={tech.d} /></svg>
+          {tech.name}
         </li>
       ))}
     </ul>
     <ul class="tech-track" aria-hidden="true">
-      {stack.map((name) => (
+      {techStack.map((tech) => (
         <li class="tech-chip">
-          <span class="tech-dot" aria-hidden="true"></span>
-          {name}
+          <svg class="tech-logo" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d={tech.d} /></svg>
+          {tech.name}
         </li>
       ))}
     </ul>
@@ -81,11 +76,11 @@ const stack = [
     color: rgb(var(--text));
     border-color: rgb(var(--brand) / 0.6);
   }
-  .tech-dot {
-    height: 5px;
-    width: 5px;
-    border-radius: 9999px;
-    background: var(--grad-brand);
+  .tech-logo {
+    height: 1.1rem;
+    width: 1.1rem;
+    flex-shrink: 0;
+    opacity: 0.85;
   }
 
   @media (prefers-reduced-motion: no-preference) {
