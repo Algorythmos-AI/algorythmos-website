@@ -2068,5 +2068,7 @@
   "security.items.1.title": "Australian Privacy Principles",
   "security.items.1.desc": "Les projets australiens respectent le Privacy Act et les APP, avec la résidence des données garantie de bout en bout.",
   "security.items.2.title": "Vos données restent chez vous",
-  "security.items.2.desc": "Nous construisons dans votre cloud et votre entrepôt de données — documents et modèles ne quittent jamais votre infrastructure."
+  "security.items.2.desc": "Nous construisons dans votre cloud et votre entrepôt de données — documents et modèles ne quittent jamais votre infrastructure.",
+  "stack.tag": "Construit sur des technologies éprouvées",
+  "stack.title": "Conçu sur une stack ouverte et éprouvée"
 }
