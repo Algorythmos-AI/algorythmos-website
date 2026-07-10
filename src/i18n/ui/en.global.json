@@ -2059,5 +2059,14 @@
   "blueprint.s3.caps.1.title": "Drift monitoring",
   "blueprint.s3.caps.1.desc": "Data and model drift caught before your users notice.",
   "blueprint.s3.caps.2.title": "Automated retraining",
-  "blueprint.s3.caps.2.desc": "Pipelines that retrain, evaluate, and promote models on schedule."
+  "blueprint.s3.caps.2.desc": "Pipelines that retrain, evaluate, and promote models on schedule.",
+  "security.tag": "Trust & compliance",
+  "security.heading.highlight": "Enterprise-grade",
+  "security.heading.rest": "rigour for your data.",
+  "security.items.0.title": "GDPR & EU AI Act by design",
+  "security.items.0.desc": "European engagements are built to GDPR and the EU AI Act from day one — not retrofitted at the end.",
+  "security.items.1.title": "Australian Privacy Principles",
+  "security.items.1.desc": "Australian work aligns with the Privacy Act and the APPs, with data residency respected throughout.",
+  "security.items.2.title": "Your data stays home",
+  "security.items.2.desc": "We build inside your cloud and your warehouse — documents and models never leave your infrastructure."
 }

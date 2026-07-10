@@ -2059,5 +2059,14 @@
   "blueprint.s3.caps.1.title": "Supervision de la dérive",
   "blueprint.s3.caps.1.desc": "Dérive des données et des modèles détectée avant que vos utilisateurs ne la remarquent.",
   "blueprint.s3.caps.2.title": "Réentraînement automatisé",
-  "blueprint.s3.caps.2.desc": "Des pipelines qui réentraînent, évaluent et promeuvent les modèles selon un calendrier."
+  "blueprint.s3.caps.2.desc": "Des pipelines qui réentraînent, évaluent et promeuvent les modèles selon un calendrier.",
+  "security.tag": "Confiance & conformité",
+  "security.heading.highlight": "Une rigueur d'entreprise",
+  "security.heading.rest": "pour vos données.",
+  "security.items.0.title": "RGPD & AI Act dès la conception",
+  "security.items.0.desc": "Les missions européennes sont conçues selon le RGPD et l'AI Act dès le premier jour — jamais mis en conformité après coup.",
+  "security.items.1.title": "Australian Privacy Principles",
+  "security.items.1.desc": "Les projets australiens respectent le Privacy Act et les APP, avec la résidence des données garantie de bout en bout.",
+  "security.items.2.title": "Vos données restent chez vous",
+  "security.items.2.desc": "Nous construisons dans votre cloud et votre entrepôt de données — documents et modèles ne quittent jamais votre infrastructure."
 }
