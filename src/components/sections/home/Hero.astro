@@ -2,6 +2,7 @@
 import { asLocale, useTranslations, localizePath } from '@/i18n';
 import Button from '@/components/ui/Button.astro';
 import Aurora from '@/components/ui/Aurora.astro';
+import HeroCore from '@/components/ui/HeroCore.astro';
 import NeuralField from '@/components/ui/NeuralField.astro';
 import Visual from '@/components/ui/Visual.astro';
 import { heroVisual } from '@/data/visuals';
@@ -15,7 +16,8 @@ const t = useTranslations(locale);
   <Aurora />
   <NeuralField />
   {/* Full-viewport opening: nav + hero copy own the first screen (100svh minus the 4rem header) */}
-  <div class="hero-viewport container-page relative flex flex-col justify-center pb-20 pt-10">
+  <div class="hero-viewport container-page relative flex flex-col justify-center pb-20 pt-10 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,0.8fr)] lg:items-center lg:gap-12">
+    <div>
     <p data-reveal class="inline-flex max-w-max items-center gap-2 rounded-full glass px-3.5 py-1.5 text-xs font-medium text-ink-muted">
       <span class="h-1.5 w-1.5 rounded-full bg-accent"></span>
       AI Consultancy · Sydney · Paris
@@ -41,6 +43,12 @@ const t = useTranslations(locale);
     <p data-reveal="fade" style="--reveal-delay: 340ms" class="mt-10 text-sm text-ink-subtle">
       Senior engineers · EU GDPR &amp; Australian Privacy aligned · Outcome-based delivery
     </p>
+    </div>
+
+    {/* 3D neural core — desktop only; mobile keeps the clean stacked hero */}
+    <div data-reveal style="--reveal-delay: 420ms" class="hidden lg:block">
+      <HeroCore />
+    </div>
 
     {/* Scroll cue — decorative, sits at the bottom edge of the first viewport */}
     <div
