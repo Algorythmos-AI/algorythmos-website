@@ -1,0 +1,60 @@
+---
+/**
+ * SecurityBlueprint — extend.ai-style "Enterprise-grade security" plate in the
+ * dark-blueprint language: highlighted headline, isometric vault figure, and
+ * three trust items grounded in claims we actually make elsewhere on the site
+ * (GDPR / EU AI Act, Australian Privacy Principles, data residency).
+ */
+import { asLocale, useTranslations } from '@/i18n';
+import BlueprintFigure from '@/components/ui/BlueprintFigure.astro';
+import BlueprintArt from '@/components/ui/BlueprintArt.astro';
+
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const badges = ['GDPR', 'EU AI Act', 'APP'];
+---
+
+<section class="border-y border-line/60 bg-surface-1/40">
+  <div class="container-page py-24">
+    <div data-reveal class="mx-auto max-w-3xl text-center">
+      <p class="font-mono text-xs uppercase tracking-[0.18em] text-accent">[ {t('security.tag')} ]</p>
+      <h2 class="mt-3 text-h2 font-bold tracking-tight text-ink">
+        <mark class="rounded-md bg-brand/20 box-decoration-clone px-1.5 text-ink">{t('security.heading.highlight')}</mark>
+        {t('security.heading.rest')}
+      </h2>
+    </div>
+
+    <div class="mt-14 grid items-stretch gap-8 lg:grid-cols-2">
+      <div data-reveal style="--reveal-delay: 100ms">
+        <BlueprintFigure fig="05" class="h-full min-h-[340px]">
+          <BlueprintArt kind="vault" />
+          <div class="pointer-events-none absolute inset-x-0 bottom-5 flex justify-center gap-3" aria-hidden="true">
+            {badges.map((b) => (
+              <span class="rounded-full border border-line bg-surface-2/80 px-3.5 py-1.5 font-mono text-[11px] font-semibold tracking-[0.08em] text-ink-muted">
+                {b}
+              </span>
+            ))}
+          </div>
+        </BlueprintFigure>
+      </div>
+
+      <div data-reveal style="--reveal-delay: 180ms" class="flex flex-col justify-center divide-y divide-line/60">
+        {[0, 1, 2].map((i) => (
+          <div class="flex gap-4 py-6">
+            <span class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-line bg-surface-2/60 text-brand">
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                {i === 0 && <path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z" />}
+                {i === 1 && <path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7zM9 12l2 2 4-4" />}
+                {i === 2 && <><ellipse cx="12" cy="6" rx="7" ry="3" /><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6" /></>}
+              </svg>
+            </span>
+            <div>
+              <h3 class="text-base font-semibold text-ink">{t(`security.items.${i}.title`)}</h3>
+              <p class="mt-1.5 text-sm leading-relaxed text-ink-muted">{t(`security.items.${i}.desc`)}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
