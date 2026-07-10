@@ -1,0 +1,88 @@
+---
+/**
+ * AnnouncementBar — slim "NEW …" strip below the sticky header (extend.ai-style).
+ *
+ * Zero-CLS by construction: rendered visible in the HTML, and a synchronous
+ * inline script right after it re-hides it BEFORE first paint when the
+ * campaign's dismiss cookie is present. Never toggled after paint.
+ * Dismiss = cookie (180 days) + fade/collapse. Scrolls away (not sticky).
+ */
+import { asLocale, useTranslations, localizePath } from '@/i18n';
+import { announcement } from '@/data/announcement';
+
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const href = localizePath(locale, announcement.href);
+---
+
+{
+  announcement.enabled && (
+    <>
+      <div
+        id="announce"
+        data-announce-id={announcement.id}
+        role="region"
+        aria-label={t('announce.regionLabel')}
+        class="announce border-b border-line bg-surface-2/70"
+      >
+        <div class="container-page flex min-h-11 items-center justify-center gap-3 py-2 text-sm">
+          <span class="shrink-0 text-[11px] font-bold uppercase tracking-[0.12em] text-accent" aria-hidden="true">
+            {t('announce.tag')}
+          </span>
+          <a href={href} class="group/announce min-w-0 truncate font-medium text-ink-muted transition-colors hover:text-ink">
+            {t('announce.text')}
+            <span class="ml-1.5 whitespace-nowrap font-semibold text-ink underline-offset-4 group-hover/announce:underline">
+              {t('announce.cta')}
+              <span aria-hidden="true" class="inline-block transition-transform group-hover/announce:-translate-y-px group-hover/announce:translate-x-px">
+                ↗
+              </span>
+            </span>
+          </a>
+          <button
+            id="announce-dismiss"
+            type="button"
+            aria-label={t('announce.dismiss')}
+            class="-mr-2 ml-auto flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-ink-subtle transition-colors hover:bg-surface-3 hover:text-ink"
+          >
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      {/* Synchronous, pre-paint: hide the bar for visitors who dismissed this campaign. Zero CLS either way. */}
+      <script is:inline>
+        (function () {
+          try {
+            var el = document.getElementById('announce');
+            if (!el) return;
+            var id = el.getAttribute('data-announce-id') || '';
+            if (document.cookie.indexOf('announce-dismiss=' + id) !== -1) el.hidden = true;
+          } catch (e) {}
+        })();
+      </script>
+    </>
+  )
+}
+
+<script>
+  function setupAnnounce() {
+    const el = document.getElementById('announce');
+    if (!el || el.dataset.announceInit) return;
+    el.dataset.announceInit = '1';
+    const id = el.getAttribute('data-announce-id') || '';
+    document.getElementById('announce-dismiss')?.addEventListener('click', () => {
+      document.cookie = `announce-dismiss=${id};path=/;max-age=15552000;samesite=lax`;
+      el.classList.add('is-dismissed');
+      /* Remove from layout after the collapse transition (or instantly under reduced motion) */
+      const done = () => {
+        el.hidden = true;
+      };
+      el.addEventListener('transitionend', done, { once: true });
+      window.setTimeout(done, 450);
+    });
+  }
+  document.addEventListener('astro:page-load', setupAnnounce);
+  /* Initialize immediately if astro:page-load already fired before this module ran */
+  if (document.readyState !== 'loading') setupAnnounce();
+</script>

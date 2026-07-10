@@ -5,6 +5,7 @@ import '@/styles/global.css';
 import { ClientRouter } from 'astro:transitions';
 import { asLocale, REGIONS } from '@/i18n';
 import Header from '@/components/layout/Header.astro';
+import AnnouncementBar from '@/components/layout/AnnouncementBar.astro';
 import Footer from '@/components/layout/Footer.astro';
 import SEO from '@/components/seo/SEO.astro';
 import JsonLd from '@/components/seo/JsonLd.astro';
@@ -121,6 +122,7 @@ const lang = REGIONS[locale].lang;
       Skip to content
     </a>
     <Header />
+    <AnnouncementBar />
     <main id="main"><slot /></main>
     <Footer />
     <RegionBanner />

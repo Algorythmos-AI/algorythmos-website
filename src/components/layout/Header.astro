@@ -33,12 +33,12 @@ const contact = localizePath(locale, '/contact');
       <span>Algoryth<span class="text-gradient-brand">mos</span></span>
     </a>
 
-    <nav class="hidden items-center gap-1 md:flex" aria-label="Primary">
+    <nav class="nav-spotlight relative hidden items-center gap-1 md:flex" aria-label="Primary" data-magic-nav>
       {nav.map((item) => (
         <a
           href={localizePath(locale, item.path)}
           class:list={[
-            'nav-link rounded-md px-3 py-2 text-sm font-medium transition-colors hover:text-ink',
+            'nav-link rounded-md px-3 py-2 text-[13px] font-semibold uppercase tracking-[0.08em] transition-colors hover:text-ink',
             isActive(item.path) ? 'text-ink' : 'text-ink-muted',
           ]}
           aria-current={isActive(item.path) ? 'page' : undefined}
@@ -46,11 +46,16 @@ const contact = localizePath(locale, '/contact');
           {t(item.key)}
         </a>
       ))}
+      {/* Magic line — single sliding gradient indicator shared by all links */}
+      <span class="magic-line" aria-hidden="true"></span>
     </nav>
 
     <div class="flex items-center gap-2">
       <ThemeToggle />
-      <Button href={contact} size="md" class="hidden transition-transform hover:-translate-y-px sm:inline-flex">{t('nav.contactUs')}</Button>
+      <Button href={contact} size="md" class="cta-arrow hidden transition-transform hover:-translate-y-px sm:inline-flex">
+        {t('nav.contactUs')}
+        <span class="cta-arrow-glyph" aria-hidden="true">→</span>
+      </Button>
 
       {/* Mobile disclosure menu — no JS required */}
       <details class="md:hidden [&_svg.close]:hidden [&[open]_svg.open]:hidden [&[open]_svg.close]:block">
@@ -105,4 +110,63 @@ const contact = localizePath(locale, '/contact');
   document.addEventListener('astro:page-load', setupHeaderScroll);
   /* Initialize immediately if astro:page-load already fired before this module ran */
   if (document.readyState !== 'loading') setupHeaderScroll();
+
+  /* Magic line — one gradient indicator that glides between nav links on
+     hover/focus and rests on the current page's link. Measures only on
+     interaction/resize/font-load; torn down on view-transition swaps. */
+  function setupMagicLine() {
+    const nav = document.querySelector('[data-magic-nav]');
+    if (!(nav instanceof HTMLElement) || nav.dataset.magicInit) return;
+    nav.dataset.magicInit = '1';
+    const line = nav.querySelector('.magic-line');
+    if (!(line instanceof HTMLElement)) return;
+
+    const links = Array.from(nav.querySelectorAll('a'));
+    const active = nav.querySelector('a[aria-current="page"]');
+
+    const moveTo = (el: Element | null, rest: boolean) => {
+      /* Nav is display:none below md — offsetWidth 0; skip until it's laid out */
+      if (!(el instanceof HTMLElement) || !el.offsetWidth) {
+        line.style.opacity = '0';
+        return;
+      }
+      line.style.transform = `translateX(${el.offsetLeft}px)`;
+      line.style.width = `${el.offsetWidth - 16}px`; /* inset by the link's px-3 padding-ish */
+      line.style.marginLeft = '8px';
+      line.style.opacity = rest ? '0.45' : '1';
+    };
+    const settle = () => moveTo(active, true);
+
+    links.forEach((a) => {
+      a.addEventListener('mouseenter', () => moveTo(a, false));
+      a.addEventListener('focusin', () => moveTo(a, false));
+    });
+    nav.addEventListener('mouseleave', settle);
+    nav.addEventListener('focusout', (e) => {
+      if (!nav.contains(e.relatedTarget as Node | null)) settle();
+    });
+
+    /* Rest on the active link once metrics are final (variable font swap shifts widths) */
+    let settleTimer = 0;
+    const scheduleSettle = () => {
+      window.clearTimeout(settleTimer);
+      settleTimer = window.setTimeout(settle, 80);
+    };
+    if (document.fonts?.ready) document.fonts.ready.then(scheduleSettle);
+    scheduleSettle();
+
+    const ro = new ResizeObserver(scheduleSettle);
+    ro.observe(nav);
+
+    document.addEventListener(
+      'astro:before-swap',
+      () => {
+        ro.disconnect();
+        window.clearTimeout(settleTimer);
+      },
+      { once: true },
+    );
+  }
+  document.addEventListener('astro:page-load', setupMagicLine);
+  if (document.readyState !== 'loading') setupMagicLine();
 </script>
