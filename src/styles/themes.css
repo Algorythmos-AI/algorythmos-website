@@ -46,7 +46,7 @@
   --glass-border: rgb(255 255 255 / 0.10);
   --aurora-1: rgb(167 139 250 / 0.30);
   --aurora-2: rgb(34 211 238 / 0.20);
-  --aurora-3: rgb(236 72 153 / 0.12);
+  --aurora-3: rgb(236 72 153 / 0.09);
 }
 
 :root[data-theme='light'] {

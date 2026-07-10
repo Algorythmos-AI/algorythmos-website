@@ -1,0 +1,204 @@
+---
+/**
+ * NeuralField — decorative neural-network particle canvas (vanilla, no libraries).
+ *
+ * Drifting nodes joined by proximity-faded lines, drawn in the theme's brand
+ * color at low opacity. Purely ambient: aria-hidden, pointer-events none.
+ *
+ * Robustness guarantees:
+ * - Skips entirely under prefers-reduced-motion, on viewports < 768px, and on
+ *   low-memory devices (navigator.deviceMemory <= 4).
+ * - rAF loop pauses when the canvas is off-screen (IntersectionObserver) or the
+ *   tab is hidden; everything is torn down on astro:before-swap (no leaks).
+ * - DPR-aware backing store capped at 2×; frame-delta physics (rate-independent).
+ * - Recolors live on theme toggle and after view-transition swaps.
+ */
+interface Props {
+  class?: string;
+}
+const { class: klass = '' } = Astro.props;
+---
+
+<canvas
+  data-neural-field
+  class:list={['neural-field pointer-events-none absolute inset-0 z-[-5] h-full w-full', klass]}
+  aria-hidden="true"></canvas>
+
+<script>
+  interface Node {
+    x: number;
+    y: number;
+    vx: number;
+    vy: number;
+    r: number;
+  }
+
+  function initNeuralField() {
+    const canvas = document.querySelector('[data-neural-field]');
+    if (!(canvas instanceof HTMLCanvasElement)) return;
+    if (canvas.dataset.neuralInit) return; // idempotent across page-load + readyState paths
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    /* Skip small viewports (battery) — but only when the viewport is actually measurable,
+       so a transient 0-width layout (background tab, pre-layout eval) doesn't disable us. */
+    const vw = Math.max(window.innerWidth, document.documentElement.clientWidth);
+    if (vw > 0 && vw < 768) return;
+    const deviceMemory = (navigator as Navigator & { deviceMemory?: number }).deviceMemory;
+    if (deviceMemory !== undefined && deviceMemory <= 4) return;
+    canvas.dataset.neuralInit = '1';
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const LINK_DIST = 130;
+    let raf = 0;
+    let running = false;
+    let onScreen = true;
+    let w = 0;
+    let h = 0;
+    let nodes: Node[] = [];
+    let color = { r: 167, g: 139, b: 250 };
+    let last = performance.now();
+
+    const readColor = () => {
+      const v = getComputedStyle(document.documentElement).getPropertyValue('--brand').trim();
+      const parts = v.split(/[\s,]+/).map(Number);
+      if (parts.length >= 3 && parts.every((n) => Number.isFinite(n))) {
+        color = { r: parts[0], g: parts[1], b: parts[2] };
+      }
+    };
+
+    const seed = () => {
+      const count = Math.round(Math.min(50, Math.max(28, (w * h) / 26000)));
+      nodes = Array.from({ length: count }, () => ({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 16,
+        vy: (Math.random() - 0.5) * 16,
+        r: 1 + Math.random() * 1.6,
+      }));
+    };
+
+    const size = () => {
+      const rect = canvas.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const prevW = w;
+      const prevH = h;
+      w = rect.width;
+      h = rect.height;
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      if (!nodes.length) seed();
+      else if (prevW && prevH) {
+        for (const n of nodes) {
+          n.x *= w / prevW;
+          n.y *= h / prevH;
+        }
+      }
+    };
+
+    const frame = (now: number) => {
+      raf = requestAnimationFrame(frame);
+      const dt = Math.min((now - last) / 1000, 0.05);
+      last = now;
+      ctx.clearRect(0, 0, w, h);
+
+      for (const n of nodes) {
+        n.x += n.vx * dt;
+        n.y += n.vy * dt;
+        if (n.x <= 0 || n.x >= w) n.vx *= -1;
+        if (n.y <= 0 || n.y >= h) n.vy *= -1;
+        n.x = Math.max(0, Math.min(w, n.x));
+        n.y = Math.max(0, Math.min(h, n.y));
+      }
+
+      ctx.lineWidth = 1;
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const a = nodes[i];
+          const b = nodes[j];
+          const dx = a.x - b.x;
+          const dy = a.y - b.y;
+          const d2 = dx * dx + dy * dy;
+          if (d2 < LINK_DIST * LINK_DIST) {
+            const alpha = 0.15 * (1 - Math.sqrt(d2) / LINK_DIST);
+            ctx.strokeStyle = `rgba(${color.r},${color.g},${color.b},${alpha})`;
+            ctx.beginPath();
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      ctx.fillStyle = `rgba(${color.r},${color.g},${color.b},0.45)`;
+      for (const n of nodes) {
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    };
+
+    const start = () => {
+      if (running || !onScreen || document.hidden) return;
+      running = true;
+      last = performance.now();
+      raf = requestAnimationFrame(frame);
+    };
+    const stop = () => {
+      running = false;
+      cancelAnimationFrame(raf);
+    };
+
+    readColor();
+    size();
+
+    const io = new IntersectionObserver((entries) => {
+      onScreen = entries[0]?.isIntersecting ?? true;
+      if (onScreen) start();
+      else stop();
+    });
+    io.observe(canvas);
+
+    const onVisibility = () => {
+      if (document.hidden) stop();
+      else start();
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+
+    let resizeTimer = 0;
+    const ro = new ResizeObserver(() => {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(size, 150);
+    });
+    ro.observe(canvas.parentElement ?? canvas);
+
+    const mo = new MutationObserver(readColor);
+    mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+    /* Fade in after the entrance choreography — never competes with LCP */
+    const fadeTimer = window.setTimeout(() => canvas.classList.add('is-on'), 600);
+
+    start();
+
+    document.addEventListener(
+      'astro:before-swap',
+      () => {
+        stop();
+        io.disconnect();
+        ro.disconnect();
+        mo.disconnect();
+        document.removeEventListener('visibilitychange', onVisibility);
+        window.clearTimeout(resizeTimer);
+        window.clearTimeout(fadeTimer);
+      },
+      { once: true },
+    );
+  }
+
+  document.addEventListener('astro:page-load', initNeuralField);
+  /* Belt-and-braces: if this module evaluates after astro:page-load already fired
+     (script-order race on initial load), initialize immediately. */
+  if (document.readyState !== 'loading') initNeuralField();
+</script>

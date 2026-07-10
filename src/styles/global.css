@@ -85,21 +85,80 @@
   .ring-gradient:hover::before {
     opacity: 1;
   }
+
+  /* Desktop nav link — gradient underline grows from the left on hover/focus */
+  .nav-link {
+    position: relative;
+  }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0.75rem;
+    bottom: 3px;
+    height: 2px;
+    border-radius: 1px;
+    background: var(--grad-brand);
+    opacity: 0;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--dur-slow) var(--ease-quint), opacity var(--dur) var(--ease-smooth);
+    pointer-events: none;
+  }
+  @media (hover: hover) {
+    .nav-link:hover::after {
+      opacity: 1;
+      transform: scaleX(1);
+    }
+  }
+  .nav-link:focus-visible::after {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+  .nav-link[aria-current='page']::after {
+    opacity: 0.45;
+    transform: scaleX(1);
+  }
 }
 
 @layer utilities {
-  /* Scroll-reveal — hidden→shown; under reduced-motion content is always visible */
+  /* Scroll-reveal — hidden→shown; under reduced-motion content is always visible.
+     Scoped to html.js (set before paint in BaseLayout) so content is never hidden without JS. */
   @media (prefers-reduced-motion: no-preference) {
-    [data-reveal] {
+    html.js [data-reveal] {
       opacity: 0;
       transform: translateY(22px);
-      transition: opacity 0.7s var(--ease-quint), transform 0.7s var(--ease-quint);
+      transition:
+        opacity var(--reveal-duration, 0.7s) var(--reveal-ease, var(--ease-quint)),
+        transform var(--reveal-duration, 0.7s) var(--reveal-ease, var(--ease-quint)),
+        filter var(--reveal-duration, 0.7s) var(--reveal-ease, var(--ease-quint));
       transition-delay: var(--reveal-delay, 0ms);
     }
-    [data-reveal].is-visible {
-      opacity: 1;
+    /* Premium blur-in — reserved for the hero headline (filter is pricey at large areas) */
+    html.js [data-reveal='blur'] {
+      transform: translateY(14px);
+      filter: blur(10px);
+      will-change: transform, filter;
+    }
+    html.js [data-reveal='fade'] {
       transform: none;
     }
+    /* LCP-safe variant — opacity stays 1 so Chrome still counts the element for LCP */
+    html.js [data-reveal='lcp'] {
+      opacity: 1;
+      transform: translateY(18px) scale(0.985);
+    }
+    html.js [data-reveal].is-visible {
+      opacity: 1;
+      transform: none;
+      filter: none;
+      will-change: auto;
+    }
+  }
+
+  /* Hero gets a slower, more luxurious reveal without touching the rest of the site */
+  .hero [data-reveal] {
+    --reveal-duration: var(--dur-hero);
+    --reveal-ease: var(--ease-expo);
   }
 }
 
@@ -112,6 +171,52 @@
     animation: aurora-drift var(--aurora-dur, 38s) ease-in-out infinite;
     will-change: transform;
   }
+
+  /* One-off diagonal sheen across the hero visual frame, then a long dead-zone */
+  .shimmer-frame {
+    overflow: hidden;
+  }
+  .shimmer-frame::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(
+      115deg,
+      transparent 42%,
+      rgb(var(--brand) / 0.10) 48%,
+      rgb(255 255 255 / 0.12) 50%,
+      rgb(var(--brand) / 0.10) 52%,
+      transparent 58%
+    );
+    background-size: 300% 100%;
+    background-position: 120% 0;
+    animation: shimmer-sweep 12s var(--ease-smooth) 1.4s infinite;
+    pointer-events: none;
+  }
+
+  /* Neural-network canvas fades in after the entrance choreography */
+  .neural-field {
+    opacity: 0;
+    transition: opacity 1.2s var(--ease-smooth);
+  }
+  .neural-field.is-on {
+    opacity: 1;
+  }
+
+  /* Mobile menu — panel slide-in + staggered links */
+  details[open] .menu-panel {
+    animation: menu-in 0.35s var(--ease-quint) both;
+  }
+  details[open] .menu-panel nav > * {
+    animation: menu-item-in 0.45s var(--ease-quint) both;
+  }
+  details[open] .menu-panel nav > :nth-child(1) { animation-delay: 40ms; }
+  details[open] .menu-panel nav > :nth-child(2) { animation-delay: 80ms; }
+  details[open] .menu-panel nav > :nth-child(3) { animation-delay: 120ms; }
+  details[open] .menu-panel nav > :nth-child(4) { animation-delay: 160ms; }
+  details[open] .menu-panel nav > :nth-child(5) { animation-delay: 200ms; }
+  details[open] .menu-panel nav > :nth-child(6) { animation-delay: 240ms; }
 }
 @keyframes gradient-pan {
   to {
@@ -121,11 +226,46 @@
 @keyframes aurora-drift {
   0% {
     transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+    opacity: 1;
   }
   50% {
     transform: translate3d(2%, -1.5%, 0) rotate(4deg) scale(1.04);
+    opacity: 0.92;
   }
   100% {
     transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+}
+/* Sweep once (~1.7s of travel), then rest for the remainder of the 12s cycle */
+@keyframes shimmer-sweep {
+  0% {
+    background-position: 120% 0;
+  }
+  14% {
+    background-position: -80% 0;
+  }
+  100% {
+    background-position: -80% 0;
+  }
+}
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes menu-item-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }

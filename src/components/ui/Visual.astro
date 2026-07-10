@@ -19,11 +19,30 @@ interface Props {
   priority?: boolean;
   /** Wrap in the glass device frame (default true). */
   frame?: boolean;
+  /** Reveal variant: 'lcp' keeps opacity at 1 (use with `priority` so LCP isn't reassigned). */
+  reveal?: 'lcp' | 'blur' | 'fade';
+  /** Stagger delay, e.g. '300ms'. */
+  revealDelay?: string;
+  /** Periodic diagonal sheen across the glass frame (decorative, reduced-motion safe). */
+  shimmer?: boolean;
   class?: string;
   figureClass?: string;
 }
 
-const { src, alt, width, height, caption, priority = false, frame = true, class: klass = '', figureClass = '' } = Astro.props;
+const {
+  src,
+  alt,
+  width,
+  height,
+  caption,
+  priority = false,
+  frame = true,
+  reveal,
+  revealDelay,
+  shimmer = false,
+  class: klass = '',
+  figureClass = '',
+} = Astro.props;
 if (!alt || !alt.trim()) throw new Error(`<Visual> requires non-empty alt for: ${src}`);
 
 const loading = priority ? 'eager' : 'lazy';
@@ -31,10 +50,14 @@ const fetchpriority = priority ? 'high' : undefined;
 const imgClass = ['block h-auto w-full', frame && 'rounded-xl', klass];
 ---
 
-<figure data-reveal class:list={['m-0', figureClass]}>
+<figure
+  data-reveal={reveal ?? true}
+  style={revealDelay ? `--reveal-delay: ${revealDelay}` : undefined}
+  class:list={['m-0', figureClass]}
+>
   {
     frame ? (
-      <div class="ring-gradient relative rounded-2xl border border-line glass p-2 shadow-e2 sm:p-2.5">
+      <div class:list={['ring-gradient relative rounded-2xl border border-line glass p-2 shadow-e2 sm:p-2.5', shimmer && 'shimmer-frame']}>
         <img src={src} alt={alt} width={width} height={height} loading={loading} decoding="async" fetchpriority={fetchpriority} class:list={imgClass} />
       </div>
     ) : (
