@@ -351,4 +351,6 @@ const offices = [
   }
 
   document.addEventListener('astro:page-load', setupContactForm);
+  /* Initialize immediately if astro:page-load already fired before this module ran */
+  if (document.readyState !== 'loading') setupContactForm();
 </script>

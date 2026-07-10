@@ -45,7 +45,8 @@
   }
   function setupConsent() {
     const el = document.getElementById('consent');
-    if (!el) return;
+    if (!el || el.dataset.consentInit) return;
+    el.dataset.consentInit = '1';
     const consent = getCookie('consent');
     if (consent === 'granted') {
       loadAnalytics();
@@ -64,4 +65,6 @@
     el.querySelector('#consent-decline')?.addEventListener('click', () => set('denied'));
   }
   document.addEventListener('astro:page-load', setupConsent);
+  /* Initialize immediately if astro:page-load already fired before this module ran */
+  if (document.readyState !== 'loading') setupConsent();
 </script>

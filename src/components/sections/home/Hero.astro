@@ -14,8 +14,9 @@ const t = useTranslations(locale);
 <section class="hero relative overflow-hidden">
   <Aurora />
   <NeuralField />
-  <div class="container-page pb-24 pt-24 sm:pt-32">
-    <p data-reveal class="inline-flex items-center gap-2 rounded-full glass px-3.5 py-1.5 text-xs font-medium text-ink-muted">
+  {/* Full-viewport opening: nav + hero copy own the first screen (100svh minus the 4rem header) */}
+  <div class="container-page relative flex min-h-[calc(100svh-4rem)] flex-col justify-center pb-20 pt-10">
+    <p data-reveal class="inline-flex max-w-max items-center gap-2 rounded-full glass px-3.5 py-1.5 text-xs font-medium text-ink-muted">
       <span class="h-1.5 w-1.5 rounded-full bg-accent"></span>
       AI Consultancy · Sydney · Paris
     </p>
@@ -41,6 +42,25 @@ const t = useTranslations(locale);
       Senior engineers · EU GDPR &amp; Australian Privacy aligned · Outcome-based delivery
     </p>
 
+    {/* Scroll cue — decorative, sits at the bottom edge of the first viewport */}
+    <div
+      data-reveal="fade"
+      style="--reveal-delay: 700ms"
+      class="pointer-events-none absolute bottom-5 left-1/2 -translate-x-1/2"
+      aria-hidden="true"
+    >
+      <svg
+        class="h-6 w-6 animate-bounce text-ink-subtle"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg>
+    </div>
+  </div>
+
+  <div class="container-page pb-24">
     <Visual
       src={heroVisual.file}
       alt={t(heroVisual.altKey)}
@@ -48,9 +68,7 @@ const t = useTranslations(locale);
       height={heroVisual.height}
       priority
       reveal="lcp"
-      revealDelay="300ms"
       shimmer
-      figureClass="mt-14 sm:mt-16"
     />
   </div>
 </section>
