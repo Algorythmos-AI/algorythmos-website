@@ -1,0 +1,215 @@
+---
+/**
+ * HeroCore — pure-CSS 3D "neural core": a slowly rotating glass cube with a
+ * glowing nucleus and orbiting satellite cubes, in brand gradients.
+ *
+ * Decorative (aria-hidden, pointer-events-none). No JS, no libraries.
+ * Compositor-only animation (transform/opacity on two wrappers); static glow
+ * layers live OUTSIDE the preserve-3d subtree (WebKit flattens 3D under
+ * filter/overflow). Under reduced motion the core holds its angled pose.
+ */
+---
+
+<div class="hero-core pointer-events-none relative mx-auto w-full max-w-[480px]" aria-hidden="true">
+  <div class="core-halo"></div>
+  <div class="core-persp">
+    <div class="core-nucleus"></div>
+    <div class="core-float">
+      <div class="core-scene">
+        <div class="cube cube-main">
+          <div class="face f-front"></div>
+          <div class="face f-back"></div>
+          <div class="face f-right"></div>
+          <div class="face f-left"></div>
+          <div class="face f-top"></div>
+          <div class="face f-bottom"></div>
+        </div>
+        <div class="orbit orbit-a">
+          <div class="beam"></div>
+          <div class="sat-pos sat-pos-a">
+            <div class="cube cube-sat" style="--s: 44px">
+              <div class="face f-front"></div>
+              <div class="face f-back"></div>
+              <div class="face f-right"></div>
+              <div class="face f-left"></div>
+              <div class="face f-top"></div>
+              <div class="face f-bottom"></div>
+            </div>
+          </div>
+        </div>
+        <div class="orbit orbit-b">
+          <div class="sat-pos sat-pos-b">
+            <div class="cube cube-sat" style="--s: 28px">
+              <div class="face f-front"></div>
+              <div class="face f-back"></div>
+              <div class="face f-right"></div>
+              <div class="face f-left"></div>
+              <div class="face f-top"></div>
+              <div class="face f-bottom"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="core-ground"></div>
+</div>
+
+<style>
+  .hero-core {
+    aspect-ratio: 1;
+  }
+
+  /* ── Static glow layers (outside the 3D subtree) ── */
+  .core-halo {
+    position: absolute;
+    inset: -12%;
+    background: radial-gradient(circle at 50% 46%, rgb(var(--brand) / 0.22), rgb(var(--accent) / 0.07) 45%, transparent 68%);
+  }
+  .core-ground {
+    position: absolute;
+    bottom: 4%;
+    left: 50%;
+    height: 10%;
+    width: 62%;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, rgb(var(--brand) / 0.28), transparent 70%);
+  }
+  .core-nucleus {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    height: 34%;
+    width: 34%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 42% 40%, rgb(var(--accent) / 0.9), rgb(var(--accent) / 0.25) 34%, transparent 60%),
+      radial-gradient(circle at 55% 55%, rgb(var(--brand) / 0.75), transparent 65%);
+  }
+
+  /* ── 3D stage ── */
+  .core-persp {
+    position: absolute;
+    inset: 0;
+    perspective: 1200px;
+  }
+  .core-float,
+  .core-scene {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+  }
+  .core-float {
+    will-change: transform;
+  }
+  .core-scene {
+    transform: rotateX(-18deg) rotateY(24deg);
+    will-change: transform;
+  }
+
+  /* ── Cubes ── */
+  .cube {
+    --s: 180px;
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    height: var(--s);
+    width: var(--s);
+    transform-style: preserve-3d;
+  }
+  .face {
+    position: absolute;
+    inset: 0;
+    border: 1px solid rgb(var(--brand) / 0.5);
+    background: linear-gradient(135deg, rgb(var(--brand) / 0.16), rgb(var(--accent) / 0.06) 60%, rgb(var(--brand) / 0.10));
+    box-shadow: inset 0 0 26px rgb(var(--brand) / 0.14);
+  }
+  .f-front  { transform: rotateY(0deg)   translateZ(calc(var(--s) / 2)); }
+  .f-back   { transform: rotateY(180deg) translateZ(calc(var(--s) / 2)); }
+  .f-right  { transform: rotateY(90deg)  translateZ(calc(var(--s) / 2)); }
+  .f-left   { transform: rotateY(-90deg) translateZ(calc(var(--s) / 2)); }
+  .f-top    { transform: rotateX(90deg)  translateZ(calc(var(--s) / 2)); }
+  .f-bottom { transform: rotateX(-90deg) translateZ(calc(var(--s) / 2)); }
+  .f-top {
+    background: linear-gradient(135deg, rgb(var(--accent) / 0.28), rgb(var(--brand) / 0.12));
+    border-color: rgb(var(--accent) / 0.55);
+  }
+  .cube-sat .face {
+    border-color: rgb(var(--accent) / 0.6);
+    background: linear-gradient(135deg, rgb(var(--accent) / 0.22), rgb(var(--brand) / 0.10));
+    box-shadow: inset 0 0 10px rgb(var(--accent) / 0.18);
+  }
+
+  /* ── Orbits & satellites ── */
+  .orbit {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+  }
+  .sat-pos {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+  }
+  .sat-pos-a { transform: translateX(46%) translateY(-8%); }
+  .sat-pos-b { transform: translateX(-40%) translateY(14%); }
+  .beam {
+    position: absolute;
+    left: 50%;
+    top: 46%;
+    height: 1.5px;
+    width: 44%;
+    transform-origin: left center;
+    background: linear-gradient(90deg, rgb(var(--brand) / 0.7), rgb(var(--accent) / 0.15));
+  }
+
+  /* Light theme: soften glows, strengthen edges for contrast on pale bg */
+  :global([data-theme='light']) .core-halo {
+    background: radial-gradient(circle at 50% 46%, rgb(var(--brand) / 0.14), rgb(var(--accent) / 0.05) 45%, transparent 68%);
+  }
+  :global([data-theme='light']) .face {
+    border-color: rgb(var(--brand) / 0.45);
+    background: linear-gradient(135deg, rgb(var(--brand) / 0.12), rgb(var(--accent) / 0.05) 60%, rgb(var(--brand) / 0.08));
+  }
+
+  /* ── Motion (reduced-motion users get the static angled pose) ── */
+  @media (prefers-reduced-motion: no-preference) {
+    .core-float {
+      animation: core-float 7s ease-in-out infinite;
+    }
+    .core-scene {
+      animation: core-rotate 28s linear infinite;
+    }
+    .core-nucleus {
+      animation: core-pulse 4.5s ease-in-out infinite;
+    }
+    .orbit-a {
+      animation: orbit-spin 18s linear infinite;
+    }
+    .orbit-b {
+      animation: orbit-spin-rev 24s linear infinite;
+    }
+  }
+  @keyframes core-rotate {
+    from { transform: rotateX(-18deg) rotateY(24deg); }
+    to { transform: rotateX(-18deg) rotateY(384deg); }
+  }
+  @keyframes core-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+  @keyframes core-pulse {
+    0%, 100% { opacity: 0.75; transform: translate(-50%, -50%) scale(0.96); }
+    50% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+  }
+  @keyframes orbit-spin {
+    from { transform: rotateY(0deg); }
+    to { transform: rotateY(360deg); }
+  }
+  @keyframes orbit-spin-rev {
+    from { transform: rotateY(360deg); }
+    to { transform: rotateY(0deg); }
+  }
+</style>
