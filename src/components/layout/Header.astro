@@ -23,10 +23,13 @@ const home = localizePath(locale, '/');
 const contact = localizePath(locale, '/contact');
 ---
 
-<header class="sticky top-0 z-[var(--z-nav)] border-b border-line/80 bg-bg/80 backdrop-blur-xl">
-  <div class="container-page flex h-16 items-center justify-between gap-6">
-    <a href={home} class="flex items-center gap-2.5 text-lg font-bold tracking-tight text-ink" aria-label="Algorythmos home">
-      <img src="/logo-mark.png" alt="" aria-hidden="true" width="218" height="258" class="h-8 w-auto" />
+<header
+  data-header
+  class="group sticky top-0 z-[var(--z-nav)] border-b border-line/80 bg-bg/80 backdrop-blur-xl transition-[background-color,border-color,box-shadow] duration-300 ease-smooth data-[scrolled]:border-line data-[scrolled]:bg-bg/95 data-[scrolled]:shadow-e2"
+>
+  <div class="container-page flex h-16 items-center justify-between gap-6 transition-[height] duration-300 ease-smooth group-data-[scrolled]:h-14">
+    <a href={home} class="group/logo flex items-center gap-2.5 text-lg font-bold tracking-tight text-ink" aria-label="Algorythmos home">
+      <img src="/logo-mark.png" alt="" aria-hidden="true" width="218" height="258" class="h-8 w-auto transition-transform duration-300 ease-bounce-soft group-hover/logo:scale-105" />
       <span>Algoryth<span class="text-gradient-brand">mos</span></span>
     </a>
 
@@ -35,7 +38,7 @@ const contact = localizePath(locale, '/contact');
         <a
           href={localizePath(locale, item.path)}
           class:list={[
-            'rounded-md px-3 py-2 text-sm font-medium transition-colors hover:text-ink',
+            'nav-link rounded-md px-3 py-2 text-sm font-medium transition-colors hover:text-ink',
             isActive(item.path) ? 'text-ink' : 'text-ink-muted',
           ]}
           aria-current={isActive(item.path) ? 'page' : undefined}
@@ -47,7 +50,7 @@ const contact = localizePath(locale, '/contact');
 
     <div class="flex items-center gap-2">
       <ThemeToggle />
-      <Button href={contact} size="md" class="hidden sm:inline-flex">{t('nav.contactUs')}</Button>
+      <Button href={contact} size="md" class="hidden transition-transform hover:-translate-y-px sm:inline-flex">{t('nav.contactUs')}</Button>
 
       {/* Mobile disclosure menu — no JS required */}
       <details class="md:hidden [&_svg.close]:hidden [&[open]_svg.open]:hidden [&[open]_svg.close]:block">
@@ -58,7 +61,7 @@ const contact = localizePath(locale, '/contact');
           <svg class="open h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
           <svg class="close h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
         </summary>
-        <div class="absolute inset-x-0 top-16 border-b border-line bg-bg/95 backdrop-blur-xl">
+        <div class="menu-panel absolute inset-x-0 top-16 border-b border-line bg-bg/95 backdrop-blur-xl group-data-[scrolled]:top-14">
           <nav class="container-page flex flex-col gap-1 py-4" aria-label="Mobile">
             {nav.map((item) => (
               <a href={localizePath(locale, item.path)} class="rounded-md px-3 py-3 text-base font-medium text-ink-muted hover:bg-surface-2 hover:text-ink" aria-current={isActive(item.path) ? 'page' : undefined}>{t(item.key)}</a>
@@ -70,3 +73,36 @@ const contact = localizePath(locale, '/contact');
     </div>
   </div>
 </header>
+
+<script>
+  /* Scroll-aware condensing with hysteresis (add >12px, remove <4px) to avoid threshold jitter.
+     rAF-throttled passive listener; re-bound per navigation, torn down on view-transition swap. */
+  function setupHeaderScroll() {
+    const header = document.querySelector('[data-header]');
+    if (!header || (header as HTMLElement).dataset.scrollInit) return;
+    (header as HTMLElement).dataset.scrollInit = '1';
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const y = window.scrollY;
+      if (y > 12) header.setAttribute('data-scrolled', '');
+      else if (y < 4) header.removeAttribute('data-scrolled');
+    };
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    document.addEventListener(
+      'astro:before-swap',
+      () => window.removeEventListener('scroll', onScroll),
+      { once: true },
+    );
+    update();
+  }
+  document.addEventListener('astro:page-load', setupHeaderScroll);
+  /* Initialize immediately if astro:page-load already fired before this module ran */
+  if (document.readyState !== 'loading') setupHeaderScroll();
+</script>

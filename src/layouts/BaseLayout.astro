@@ -52,6 +52,8 @@ const lang = REGIONS[locale].lang;
     {/* No-flash theme init — before paint */}
     <script is:inline>
       (function () {
+        /* JS-available marker — reveal styles only hide content under html.js */
+        document.documentElement.classList.add('js');
         try {
           var t = localStorage.getItem('theme');
           if (t !== 'light' && t !== 'dark') {
@@ -151,8 +153,16 @@ const lang = REGIONS[locale].lang;
           { rootMargin: '0px 0px -10% 0px', threshold: 0.05 },
         );
         els.forEach((e) => io.observe(e));
+        /* Failsafe: never leave content hidden if IO misfires (zoom, exotic viewports) */
+        window.setTimeout(() => {
+          document
+            .querySelectorAll('[data-reveal]:not(.is-visible)')
+            .forEach((e) => e.classList.add('is-visible'));
+        }, 2500);
       }
       document.addEventListener('astro:page-load', setupReveal);
+      /* Initialize immediately if astro:page-load already fired before this module ran */
+      if (document.readyState !== 'loading') setupReveal();
     </script>
   </body>
 </html>
