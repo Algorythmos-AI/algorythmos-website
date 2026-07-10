@@ -2068,5 +2068,7 @@
   "security.items.1.title": "Australian Privacy Principles",
   "security.items.1.desc": "Australian work aligns with the Privacy Act and the APPs, with data residency respected throughout.",
   "security.items.2.title": "Your data stays home",
-  "security.items.2.desc": "We build inside your cloud and your warehouse — documents and models never leave your infrastructure."
+  "security.items.2.desc": "We build inside your cloud and your warehouse — documents and models never leave your infrastructure.",
+  "stack.tag": "Built with proven technology",
+  "stack.title": "Engineered on an open, battle-tested stack"
 }

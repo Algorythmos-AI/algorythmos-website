@@ -1,0 +1,120 @@
+---
+/**
+ * TechBelt — infinite scrolling belt of the technologies we build with
+ * (simplyai-style rotating strip, honest "stack" framing — no partner claims).
+ *
+ * Pure CSS marquee: the track holds the list twice and translates -50%;
+ * edges fade via mask; pauses on hover; wraps into a static grid under
+ * prefers-reduced-motion. Duplicate copy is aria-hidden.
+ */
+import { asLocale, useTranslations } from '@/i18n';
+
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+
+const stack = [
+  'OpenAI', 'Anthropic Claude', 'LangChain', 'PyTorch', 'TensorFlow',
+  'BigQuery', 'Snowflake', 'PostgreSQL', 'dbt', 'Airflow',
+  'Kubernetes', 'Docker', 'AWS', 'Google Cloud', 'Azure', 'Vercel',
+];
+---
+
+<section class="border-b border-line/60 bg-surface-1/30 py-14">
+  <p data-reveal class="text-center font-mono text-xs uppercase tracking-[0.2em] text-ink-subtle">
+    [ {t('stack.tag')} ]
+  </p>
+  <h2 class="sr-only">{t('stack.title')}</h2>
+
+  <div data-reveal style="--reveal-delay: 100ms" class="tech-belt mt-8" aria-label={t('stack.title')}>
+    <ul class="tech-track">
+      {stack.map((name) => (
+        <li class="tech-chip">
+          <span class="tech-dot" aria-hidden="true"></span>
+          {name}
+        </li>
+      ))}
+    </ul>
+    <ul class="tech-track" aria-hidden="true">
+      {stack.map((name) => (
+        <li class="tech-chip">
+          <span class="tech-dot" aria-hidden="true"></span>
+          {name}
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .tech-belt {
+    display: flex;
+    overflow: hidden;
+    user-select: none;
+    mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent);
+  }
+  .tech-track {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 1rem;
+    min-width: max-content;
+    padding-inline-end: 1rem;
+  }
+  .tech-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    white-space: nowrap;
+    border: 1px solid rgb(var(--border) / 0.9);
+    border-radius: 9999px;
+    padding: 0.55rem 1.1rem;
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: rgb(var(--text-muted));
+    background: rgb(var(--surface-2) / 0.5);
+    transition: color var(--dur) var(--ease-smooth), border-color var(--dur) var(--ease-smooth);
+  }
+  .tech-chip:hover {
+    color: rgb(var(--text));
+    border-color: rgb(var(--brand) / 0.6);
+  }
+  .tech-dot {
+    height: 5px;
+    width: 5px;
+    border-radius: 9999px;
+    background: var(--grad-brand);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .tech-track {
+      animation: belt-scroll 42s linear infinite;
+      will-change: transform;
+    }
+    .tech-belt:hover .tech-track {
+      animation-play-state: paused;
+    }
+  }
+  /* Reduced motion: static wrapped grid instead of a moving belt */
+  @media (prefers-reduced-motion: reduce) {
+    .tech-belt {
+      mask-image: none;
+      -webkit-mask-image: none;
+      justify-content: center;
+    }
+    .tech-track {
+      flex-wrap: wrap;
+      justify-content: center;
+      min-width: 0;
+    }
+    .tech-track[aria-hidden='true'] {
+      display: none;
+    }
+  }
+  @keyframes belt-scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(calc(-100% - 1rem)); }
+  }
+</style>
