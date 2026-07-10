@@ -1,0 +1,94 @@
+---
+/**
+ * ResultsCounters — big animated stat tiles (simplyai's "Adoption & Scale"
+ * idea) sourced ONLY from published case-study results, with a link to them.
+ *
+ * Honesty guard: numbers here must match figures already published on
+ * /case-studies — no aggregate marketing claims (claims sign-off pending).
+ *
+ * Count-up: final values are server-rendered (no-JS/SEO safe); a small script
+ * animates from 0 on first scroll into view, skipped under reduced motion.
+ */
+import { asLocale, useTranslations, localizePath } from '@/i18n';
+
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+
+/* Values mirror caseStudies.items results (0: compliance, 2: MLOps, 1: manufacturing, 3: retail) */
+const stats = [
+  { value: 99, suffix: '%', key: 0 },
+  { value: 60, suffix: '%', key: 1 },
+  { value: 50, suffix: '%', key: 2 },
+  { value: 15, suffix: '%', key: 3 },
+];
+---
+
+<section class="border-y border-line/60 bg-surface-1/40">
+  <div class="container-page py-24">
+    <div data-reveal class="flex flex-wrap items-end justify-between gap-6">
+      <div class="max-w-2xl">
+        <p class="font-mono text-xs uppercase tracking-[0.18em] text-accent">[ {t('results.tag')} ]</p>
+        <h2 class="mt-3 text-h2 font-bold tracking-tight text-ink">{t('results.heading')}</h2>
+      </div>
+      <a href={localizePath(locale, '/case-studies')} class="inline-flex items-center gap-1.5 text-sm font-semibold text-brand hover:underline">
+        {t('results.cta')}
+        <span aria-hidden="true">→</span>
+      </a>
+    </div>
+
+    <div class="mt-14 grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
+      {stats.map((s, i) => (
+        <div data-reveal style={`--reveal-delay: ${i * 90}ms`}>
+          <p class="text-display font-extrabold tracking-tight">
+            <span class="text-gradient-brand tabular-nums" data-count-to={s.value}>{s.value}</span><span class="text-gradient-brand">{s.suffix}</span>
+          </p>
+          <p class="mt-3 max-w-[26ch] text-sm leading-relaxed text-ink-muted">{t(`results.items.${s.key}.label`)}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  /* Count-up on first view. Final values are in the HTML; we only animate
+     from 0 when motion is allowed, so no-JS and reduced-motion stay correct. */
+  function setupCounters() {
+    const els = Array.from(document.querySelectorAll<HTMLElement>('[data-count-to]'));
+    if (!els.length || els[0].dataset.countInit) return;
+    els.forEach((el) => (el.dataset.countInit = '1'));
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const animate = (el: HTMLElement) => {
+      const target = Number(el.dataset.countTo || '0');
+      if (!Number.isFinite(target)) return;
+      const dur = 1400;
+      let start = 0;
+      const step = (now: number) => {
+        if (!start) start = now;
+        const p = Math.min((now - start) / dur, 1);
+        const eased = 1 - Math.pow(1 - p, 4);
+        el.textContent = String(Math.round(target * eased));
+        if (p < 1) requestAnimationFrame(step);
+      };
+      el.textContent = '0';
+      requestAnimationFrame(step);
+    };
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            animate(e.target as HTMLElement);
+            io.unobserve(e.target);
+          }
+        }
+      },
+      { threshold: 0.4 },
+    );
+    els.forEach((el) => io.observe(el));
+    document.addEventListener('astro:before-swap', () => io.disconnect(), { once: true });
+  }
+  document.addEventListener('astro:page-load', setupCounters);
+  /* Initialize immediately if astro:page-load already fired before this module ran */
+  if (document.readyState !== 'loading') setupCounters();
+</script>

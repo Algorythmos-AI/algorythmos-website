@@ -1,0 +1,73 @@
+---
+/**
+ * ValueJourney — four-phase engagement stepper (simplyai's "value lifecycle"
+ * idea, in our blueprint language). [01] Discover → [02] Build → [03] Ship →
+ * [04] Operate, joined by a gradient progress line that draws in on reveal.
+ * Static content, CSS-only animation, all copy from i18n.
+ */
+import { asLocale, useTranslations } from '@/i18n';
+
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const steps = [0, 1, 2, 3];
+---
+
+<section class="container-page py-24">
+  <div data-reveal class="max-w-2xl">
+    <p class="font-mono text-xs uppercase tracking-[0.18em] text-accent">[ {t('journey.tag')} ]</p>
+    <h2 class="mt-3 text-h2 font-bold tracking-tight text-ink">{t('journey.heading')}</h2>
+    <p class="mt-3 text-ink-muted">{t('journey.sub')}</p>
+  </div>
+
+  <div class="relative mt-16">
+    {/* Progress line — draws left→right when the section reveals */}
+    <div class="journey-line absolute left-0 right-0 top-5 hidden h-px lg:block" aria-hidden="true"></div>
+
+    <ol class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
+      {steps.map((i) => (
+        <li data-reveal style={`--reveal-delay: ${150 + i * 140}ms`} class="relative">
+          <div class="flex items-center gap-3">
+            <span class="journey-node flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-line bg-bg font-mono text-xs font-bold text-accent">
+              0{i + 1}
+            </span>
+            <h3 class="text-h3 font-semibold text-ink">{t(`journey.steps.${i}.title`)}</h3>
+          </div>
+          <p class="mt-4 text-sm leading-relaxed text-ink-muted">{t(`journey.steps.${i}.desc`)}</p>
+          <ul class="mt-4 space-y-2 border-t border-line/60 pt-4">
+            {[0, 1, 2].map((j) => (
+              <li class="flex items-start gap-2.5 text-sm text-ink-muted">
+                <svg class="mt-0.5 h-4 w-4 shrink-0 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
+                {t(`journey.steps.${i}.items.${j}`)}
+              </li>
+            ))}
+          </ul>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .journey-line {
+    background: var(--grad-brand);
+    opacity: 0.35;
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+  .journey-node {
+    position: relative;
+    z-index: 1;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    /* Draw the line once the section's reveals fire (sibling reveal gains .is-visible) */
+    section:has([data-reveal].is-visible) .journey-line {
+      transform: scaleX(1);
+      transition: transform 1.4s var(--ease-quint) 0.3s;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .journey-line {
+      transform: scaleX(1);
+    }
+  }
+</style>
