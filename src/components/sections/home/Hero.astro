@@ -36,8 +36,8 @@ const t = useTranslations(locale);
     </p>
 
     <div data-reveal style="--reveal-delay: 260ms" class="mt-10 flex flex-wrap items-center gap-4">
-      <Button href={BOOKING_URL} target="_blank" rel="noopener" size="lg">{t('hero.cta.primary')}</Button>
-      <Button href={localizePath(locale, '/pricing')} size="lg" variant="secondary">{t('hero.cta.secondary')}</Button>
+      <Button href={BOOKING_URL} target="_blank" rel="noopener" size="lg" class="w-full sm:w-auto">{t('hero.cta.primary')}</Button>
+      <Button href={localizePath(locale, '/pricing')} size="lg" variant="secondary" class="w-full sm:w-auto">{t('hero.cta.secondary')}</Button>
     </div>
 
     <p data-reveal="fade" style="--reveal-delay: 340ms" class="mt-10 text-sm text-ink-subtle">
@@ -45,8 +45,8 @@ const t = useTranslations(locale);
     </p>
     </div>
 
-    {/* Neural orb — desktop only; mobile keeps the clean stacked hero */}
-    <div data-reveal style="--reveal-delay: 420ms" class="hidden lg:block">
+    {/* Neural orb — right column on desktop, compact centerpiece below the copy on mobile */}
+    <div data-reveal style="--reveal-delay: 420ms" class="mx-auto mt-12 w-full max-w-[300px] md:max-w-[380px] lg:mt-0 lg:max-w-none">
       <NeuralOrb />
     </div>
 

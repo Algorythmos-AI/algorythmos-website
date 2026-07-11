@@ -29,7 +29,7 @@ const href = localizePath(locale, announcement.href);
           <span class="shrink-0 text-[11px] font-bold uppercase tracking-[0.12em] text-accent" aria-hidden="true">
             {t('announce.tag')}
           </span>
-          <a href={href} class="group/announce min-w-0 truncate font-medium text-ink-muted transition-colors hover:text-ink">
+          <a href={href} class="group/announce min-w-0 font-medium text-ink-muted transition-colors hover:text-ink max-sm:line-clamp-2 sm:truncate">
             {t('announce.text')}
             <span class="ml-1.5 whitespace-nowrap font-semibold text-ink underline-offset-4 group-hover/announce:underline">
               {t('announce.cta')}
