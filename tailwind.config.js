@@ -45,7 +45,7 @@ export default {
         neon: { violet: '#8B5CF6', cyan: '#06B6D4', pink: '#EC4899', blue: '#3B82F6' },
       },
       fontFamily: {
-        sans: ['InterVariable', 'Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+        sans: ['Inter Variable', 'Inter Fallback', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
         mono: ['ui-monospace', 'SF Mono', 'Menlo', 'monospace'],
       },
       // Fluid display scale (adds text-display/h1/h2/h3/lead; numeric scale untouched)

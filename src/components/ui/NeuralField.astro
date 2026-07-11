@@ -197,8 +197,18 @@ const { class: klass = '' } = Astro.props;
     );
   }
 
-  document.addEventListener('astro:page-load', initNeuralField);
+  /* Defer init to idle time so first paint/input never competes with the
+     canvas (the rAF loop + O(n²) link pass are pure decoration). */
+  function scheduleNeuralField() {
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(() => initNeuralField(), { timeout: 1500 });
+    } else {
+      setTimeout(initNeuralField, 200);
+    }
+  }
+
+  document.addEventListener('astro:page-load', scheduleNeuralField);
   /* Belt-and-braces: if this module evaluates after astro:page-load already fired
      (script-order race on initial load), initialize immediately. */
-  if (document.readyState !== 'loading') initNeuralField();
+  if (document.readyState !== 'loading') scheduleNeuralField();
 </script>

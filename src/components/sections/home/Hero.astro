@@ -24,14 +24,14 @@ const t = useTranslations(locale);
     </p>
 
     <h1
-      data-reveal="blur"
+      data-reveal="lcp"
       style="--reveal-delay: 90ms"
       class="mt-6 max-w-5xl text-mega font-extrabold tracking-tight text-ink"
     >
       <span class="text-gradient-brand">{t('hero.title')}</span>
     </h1>
 
-    <p data-reveal style="--reveal-delay: 180ms" class="mt-6 max-w-2xl text-lead text-ink-muted">
+    <p data-reveal="lcp" style="--reveal-delay: 180ms" class="mt-6 max-w-2xl text-lead text-ink-muted">
       {t('hero.subtitle')}
     </p>
 
@@ -74,7 +74,6 @@ const t = useTranslations(locale);
       alt={t(heroVisual.altKey)}
       width={heroVisual.width}
       height={heroVisual.height}
-      priority
       reveal="lcp"
       shimmer
     />

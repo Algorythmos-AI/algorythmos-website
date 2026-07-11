@@ -30,8 +30,10 @@ function readTheme() {
 }
 
 /**
- * Theme-aware chart island. Hydrate with `client:only="react"` (canvas + getComputedStyle
- * are client-only). The wrapping element reserves height to avoid layout shift.
+ * Theme-aware chart island. Hydrate with `client:visible` — SSR emits the empty
+ * <figure> shell (all canvas/getComputedStyle work is gated behind `ready`),
+ * and the chart.js bundle only loads when scrolled into view.
+ * The wrapping element reserves height to avoid layout shift.
  */
 export default function Chart({ type, data, options = {}, title, height = 320 }: Props) {
   const [tick, setTick] = useState(0);

@@ -624,8 +624,18 @@ const { class: klass = '' } = Astro.props;
     );
   }
 
-  document.addEventListener('astro:page-load', initNeuralOrb);
+  /* Defer init to idle time so first paint/input never competes with the
+     canvas (geometry build is O(n²) and the rAF loop is pure decoration). */
+  function scheduleNeuralOrb() {
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(() => initNeuralOrb(), { timeout: 1500 });
+    } else {
+      setTimeout(initNeuralOrb, 200);
+    }
+  }
+
+  document.addEventListener('astro:page-load', scheduleNeuralOrb);
   /* Belt-and-braces: if this module evaluates after astro:page-load already
      fired (script-order race on initial load), initialize immediately. */
-  if (document.readyState !== 'loading') initNeuralOrb();
+  if (document.readyState !== 'loading') scheduleNeuralOrb();
 </script>
