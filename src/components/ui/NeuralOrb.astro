@@ -1,0 +1,631 @@
+---
+/**
+ * NeuralOrb — canvas "AI core": a living neural orb (vanilla, no libraries).
+ *
+ * 320 particles on a fibonacci sphere assemble on first view, then rotate
+ * slowly with an organic wobble. Neural signal pulses hop across a precomputed
+ * connection mesh, a tilted data ring counter-orbits the sphere, a central
+ * energy core breathes between the hemispheres, and the whole scene gently
+ * follows the cursor. Decorative: aria-hidden, pointer-events none.
+ *
+ * Robustness guarantees (NeuralField conventions):
+ * - prefers-reduced-motion / low-memory devices get a single static frame of
+ *   the fully-formed orb (no rAF loop) rather than nothing.
+ * - rAF pauses off-screen (IntersectionObserver) and on hidden tabs; full
+ *   teardown on astro:before-swap (no leaks).
+ * - DPR-aware backing store capped at 2×; frame-delta motion (rate-independent).
+ * - Recolors + rebuilds glow sprites live on theme toggle.
+ * - Zero per-frame O(n²): connection pairs are precomputed once (rigid sphere),
+ *   particles render via pre-baked gradient sprites (no shadowBlur).
+ */
+interface Props {
+  class?: string;
+}
+const { class: klass = '' } = Astro.props;
+---
+
+<div
+  class:list={['neural-orb pointer-events-none relative mx-auto w-full max-w-[480px]', klass]}
+  aria-hidden="true"
+>
+  <div class="orb-halo"></div>
+  <canvas data-neural-orb class="absolute inset-0 h-full w-full"></canvas>
+  <div class="orb-ground"></div>
+</div>
+
+<style>
+  .neural-orb {
+    aspect-ratio: 1;
+  }
+
+  /* ── Static atmosphere layers (outside the canvas) ── */
+  .orb-halo {
+    position: absolute;
+    inset: -12%;
+    background: radial-gradient(circle at 50% 46%, rgb(var(--brand) / 0.22), rgb(var(--accent) / 0.07) 45%, transparent 68%);
+  }
+  .orb-ground {
+    position: absolute;
+    bottom: 4%;
+    left: 50%;
+    height: 10%;
+    width: 62%;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, rgb(var(--brand) / 0.28), transparent 70%);
+  }
+
+  /* Light theme: soften the glow on pale backgrounds */
+  :global([data-theme='light']) .orb-halo {
+    background: radial-gradient(circle at 50% 46%, rgb(var(--brand) / 0.13), rgb(var(--accent) / 0.04) 45%, transparent 68%);
+  }
+  :global([data-theme='light']) .orb-ground {
+    background: radial-gradient(ellipse at center, rgb(var(--brand) / 0.18), transparent 70%);
+  }
+</style>
+
+<script>
+  interface Vec3 {
+    x: number;
+    y: number;
+    z: number;
+  }
+  interface Particle extends Vec3 {
+    /* entrance scatter origin + stagger delay */
+    sx: number;
+    sy: number;
+    sz: number;
+    delay: number;
+    /* twinkle */
+    twSpeed: number;
+    twPhase: number;
+  }
+  interface Projected {
+    px: number;
+    py: number;
+    depth: number; // 0 far … 1 near
+  }
+  interface Pair {
+    a: number;
+    b: number;
+    baseAlpha: number;
+  }
+  interface Signal {
+    a: number;
+    b: number;
+    t: number;
+    speed: number;
+    hops: number;
+  }
+  interface RGB {
+    r: number;
+    g: number;
+    b: number;
+  }
+
+  function initNeuralOrb() {
+    const canvas = document.querySelector('[data-neural-orb]');
+    if (!(canvas instanceof HTMLCanvasElement)) return;
+    if (canvas.dataset.orbInit) return; // idempotent across page-load + readyState paths
+    canvas.dataset.orbInit = '1';
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    /* ── Tuning ── */
+    const N = 320; // sphere particles
+    const RING_N = 44; // data-ring particles
+    const LINK = 0.42; // chord threshold (unit sphere)
+    const MAX_PAIRS = 700;
+    const SIGNALS = 8;
+    const SPRITE_STEPS = 8; // brand→accent blend sprites
+    const CAM = 3.2;
+    const YAW_SPEED = 0.15; // rad/s (~42s per turn)
+    const RING_SPEED = -0.22; // rad/s, counter vs yaw
+    const RING_R = 1.35;
+    const RING_TILT = 1.19; // ~68°
+    const FORM_DUR = 1.6; // s, entrance convergence
+    const FORM_STAGGER = 0.6; // s, per-particle delay spread
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const deviceMemory = (navigator as Navigator & { deviceMemory?: number }).deviceMemory;
+    const staticMode = reduceMotion || (deviceMemory !== undefined && deviceMemory <= 4);
+    const canHover = window.matchMedia('(hover: hover)').matches;
+
+    /* Skip the entrance if it already played this session (view transitions,
+       back-nav) — repeat visitors go straight to the formed orb. */
+    let formed = staticMode;
+    try {
+      if (sessionStorage.getItem('neural-orb-formed')) formed = true;
+    } catch {
+      /* storage unavailable (private mode) — just replay the entrance */
+    }
+
+    let raf = 0;
+    let running = false;
+    let onScreen = true;
+    let w = 0;
+    let h = 0;
+    let brand: RGB = { r: 167, g: 139, b: 250 };
+    let accent: RGB = { r: 34, g: 211, b: 238 };
+    let isLight = false;
+    let sprites: HTMLCanvasElement[] = [];
+    let signalSprite: HTMLCanvasElement | null = null;
+    let last = performance.now();
+    let elapsed = 0; // scene clock (s), only advances while running
+    let yaw = 0.6;
+    let pTargetX = 0;
+    let pTargetY = 0;
+    let pX = 0;
+    let pY = 0;
+
+    /* ── Geometry (built once) ── */
+    const particles: Particle[] = [];
+    const GA = Math.PI * (3 - Math.sqrt(5));
+    for (let i = 0; i < N; i++) {
+      const y = 1 - (2 * (i + 0.5)) / N;
+      const r = Math.sqrt(1 - y * y);
+      const x = r * Math.cos(i * GA);
+      const z = r * Math.sin(i * GA);
+      /* deterministic-ish scatter: push outward along a jittered direction */
+      const jitter = Math.sin(i * 12.9898) * 43758.5453;
+      const rand = jitter - Math.floor(jitter);
+      const spread = 1.8 + rand * 1.4;
+      particles.push({
+        x,
+        y,
+        z,
+        sx: x * spread + Math.sin(i * 7.13) * 0.5,
+        sy: y * spread + Math.cos(i * 3.71) * 0.5,
+        sz: z * spread + Math.sin(i * 5.27) * 0.5,
+        delay: rand * FORM_STAGGER,
+        twSpeed: 1.5 + rand * 2.5,
+        twPhase: rand * Math.PI * 2,
+      });
+    }
+
+    /* Connection pairs — O(n²) once at init; the sphere is rigid so 3D
+       pairwise distances never change. Zero distance checks per frame. */
+    const pairs: Pair[] = [];
+    for (let i = 0; i < N; i++) {
+      for (let j = i + 1; j < N; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dz = particles[i].z - particles[j].z;
+        const d = Math.sqrt(dx * dx + dy * dy + dz * dz);
+        if (d < LINK) pairs.push({ a: i, b: j, baseAlpha: 1 - d / LINK });
+      }
+    }
+    pairs.sort((p, q) => q.baseAlpha - p.baseAlpha);
+    pairs.length = Math.min(pairs.length, MAX_PAIRS);
+
+    /* Adjacency for signal hops */
+    const neighbors: number[][] = Array.from({ length: N }, () => []);
+    for (const p of pairs) {
+      neighbors[p.a].push(p.b);
+      neighbors[p.b].push(p.a);
+    }
+
+    const ringBase: number[] = Array.from({ length: RING_N }, (_, i) => (i / RING_N) * Math.PI * 2);
+
+    const proj: Projected[] = Array.from({ length: N + RING_N }, () => ({ px: 0, py: 0, depth: 0 }));
+    const flare = new Float32Array(N);
+
+    const signals: Signal[] = [];
+    const spawnSignal = (s?: Signal): Signal => {
+      let a = Math.floor(Math.random() * N);
+      while (!neighbors[a].length) a = Math.floor(Math.random() * N);
+      const b = neighbors[a][Math.floor(Math.random() * neighbors[a].length)];
+      const next = s ?? { a, b, t: 0, speed: 1, hops: 0 };
+      next.a = a;
+      next.b = b;
+      next.t = -Math.random() * 1.5; // negative t = idle pause before firing
+      next.speed = 1 / (0.3 + Math.random() * 0.2);
+      next.hops = 2 + Math.floor(Math.random() * 3);
+      return next;
+    };
+    for (let i = 0; i < SIGNALS; i++) signals.push(spawnSignal());
+
+    /* ── Colors & glow sprites ── */
+    const parseToken = (name: string, fallback: RGB): RGB => {
+      const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+      const parts = v.split(/[\s,]+/).map(Number);
+      if (parts.length >= 3 && parts.every((n) => Number.isFinite(n))) {
+        return { r: parts[0], g: parts[1], b: parts[2] };
+      }
+      return fallback;
+    };
+
+    const makeSprite = (c: RGB, coreBoost: number): HTMLCanvasElement => {
+      const s = document.createElement('canvas');
+      const size = 64;
+      s.width = size;
+      s.height = size;
+      const sctx = s.getContext('2d');
+      if (!sctx) return s;
+      const half = size / 2;
+      const g = sctx.createRadialGradient(half, half, 0, half, half, half);
+      const cr = Math.round(c.r + (255 - c.r) * coreBoost);
+      const cg = Math.round(c.g + (255 - c.g) * coreBoost);
+      const cb = Math.round(c.b + (255 - c.b) * coreBoost);
+      g.addColorStop(0, `rgba(${cr},${cg},${cb},1)`);
+      g.addColorStop(0.25, `rgba(${c.r},${c.g},${c.b},0.55)`);
+      g.addColorStop(1, `rgba(${c.r},${c.g},${c.b},0)`);
+      sctx.fillStyle = g;
+      sctx.fillRect(0, 0, size, size);
+      return s;
+    };
+
+    const readColors = () => {
+      brand = parseToken('--brand', brand);
+      accent = parseToken('--accent', accent);
+      isLight = document.documentElement.getAttribute('data-theme') === 'light';
+      /* depth-blend sprites: far = pure brand … near = 70% toward accent */
+      sprites = Array.from({ length: SPRITE_STEPS }, (_, i) => {
+        const t = (i / (SPRITE_STEPS - 1)) * 0.7;
+        return makeSprite(
+          {
+            r: Math.round(brand.r + (accent.r - brand.r) * t),
+            g: Math.round(brand.g + (accent.g - brand.g) * t),
+            b: Math.round(brand.b + (accent.b - brand.b) * t),
+          },
+          0.5,
+        );
+      });
+      signalSprite = makeSprite(accent, 0.8);
+    };
+
+    /* ── Projection ── */
+    const rotateProject = (
+      x: number,
+      y: number,
+      z: number,
+      sy: number,
+      cy: number,
+      sx: number,
+      cx: number,
+      R: number,
+      cxPix: number,
+      cyPix: number,
+      out: Projected,
+    ) => {
+      const x1 = x * cy + z * sy;
+      const z1 = -x * sy + z * cy;
+      const y1 = y * cx - z1 * sx;
+      const z2 = y * sx + z1 * cx;
+      const scale = CAM / (CAM - z2);
+      out.px = cxPix + x1 * scale * R;
+      out.py = cyPix - y1 * scale * R;
+      out.depth = (z2 / RING_R + 1) / 2; // normalized over the widest orbit
+    };
+
+    const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+
+    /* ── Frame ── */
+    const renderFrame = (formProgress: number) => {
+      const R = Math.min(w, h) * 0.36;
+      const cxPix = w / 2;
+      const cyPix = h / 2;
+      const tilt = -0.35 + 0.06 * Math.sin(elapsed / 1.43) + pY; // slow organic wobble
+      const vYaw = yaw + pX;
+      const sy = Math.sin(vYaw);
+      const cy = Math.cos(vYaw);
+      const sx = Math.sin(tilt);
+      const cx = Math.cos(tilt);
+      const glow = isLight ? 0.7 : 1;
+
+      ctx.clearRect(0, 0, w, h);
+
+      /* project sphere particles (with entrance interpolation) */
+      for (let i = 0; i < N; i++) {
+        const p = particles[i];
+        let x = p.x;
+        let y = p.y;
+        let z = p.z;
+        if (formProgress < 1) {
+          const t = easeOutCubic(Math.min(1, Math.max(0, (formProgress * (FORM_DUR + FORM_STAGGER) - p.delay) / FORM_DUR)));
+          x = p.sx + (p.x - p.sx) * t;
+          y = p.sy + (p.y - p.sy) * t;
+          z = p.sz + (p.z - p.sz) * t;
+        }
+        rotateProject(x, y, z, sy, cy, sx, cx, R, cxPix, cyPix, proj[i]);
+      }
+      /* project ring particles (own counter-rotation, tilted plane) */
+      const ringAngle = elapsed * RING_SPEED;
+      const rs = Math.sin(RING_TILT);
+      const rc = Math.cos(RING_TILT);
+      for (let i = 0; i < RING_N; i++) {
+        const a = ringBase[i] + ringAngle;
+        const lx = Math.cos(a) * RING_R;
+        const lz = Math.sin(a) * RING_R;
+        rotateProject(lx, -lz * rs, lz * rc, sy, cy, sx, cx, R, cxPix, cyPix, proj[N + i]);
+      }
+
+      /* mesh lines, alpha-bucketed batched strokes, split back/front */
+      const meshAlpha = formProgress >= 1 ? 1 : Math.max(0, (formProgress - 0.6) / 0.4);
+      if (meshAlpha > 0) {
+        const BUCKETS = 6;
+        const maxLine = 0.28 * glow;
+        for (let half = 0; half < 2; half++) {
+          const paths: Path2D[] = Array.from({ length: BUCKETS }, () => new Path2D());
+          const used = new Array(BUCKETS).fill(false);
+          for (const pr of pairs) {
+            const pa = proj[pr.a];
+            const pb = proj[pr.b];
+            const avgDepth = (pa.depth + pb.depth) / 2;
+            if (half === 0 ? avgDepth >= 0.5 : avgDepth < 0.5) continue;
+            const alpha = pr.baseAlpha * (0.05 + (maxLine - 0.05) * avgDepth) * meshAlpha;
+            const bi = Math.min(BUCKETS - 1, Math.floor((alpha / maxLine) * BUCKETS));
+            paths[bi].moveTo(pa.px, pa.py);
+            paths[bi].lineTo(pb.px, pb.py);
+            used[bi] = true;
+          }
+          ctx.lineWidth = 1;
+          for (let bi = 0; bi < BUCKETS; bi++) {
+            if (!used[bi]) continue;
+            const a = ((bi + 0.5) / BUCKETS) * maxLine;
+            ctx.strokeStyle = `rgba(${brand.r},${brand.g},${brand.b},${a})`;
+            ctx.stroke(paths[bi]);
+          }
+          if (half === 0) {
+            drawParticles(false, formProgress);
+            drawCore(R, cxPix, cyPix, formProgress, glow);
+          } else {
+            drawParticles(true, formProgress);
+          }
+        }
+      } else {
+        /* early entrance: no mesh yet, still layer back → core → front */
+        drawParticles(false, formProgress);
+        drawCore(R, cxPix, cyPix, formProgress, glow);
+        drawParticles(true, formProgress);
+      }
+
+      /* neural signal pulses ride on top, once formed */
+      if (formProgress >= 1 && !staticMode && signalSprite) {
+        for (const s of signals) {
+          if (s.t < 0) continue;
+          const pa = proj[s.a];
+          const pb = proj[s.b];
+          for (let ghost = 0; ghost < 3; ghost++) {
+            const gt = s.t - ghost * 0.08;
+            if (gt < 0 || gt > 1) continue;
+            const px = pa.px + (pb.px - pa.px) * gt;
+            const py = pa.py + (pb.py - pa.py) * gt;
+            const depth = pa.depth + (pb.depth - pa.depth) * gt;
+            const sz = (3.5 + depth * 3) * (1 - ghost * 0.3);
+            ctx.globalAlpha = (0.9 - ghost * 0.3) * (0.4 + depth * 0.6) * glow;
+            ctx.drawImage(signalSprite, px - sz, py - sz, sz * 2, sz * 2);
+          }
+        }
+        ctx.globalAlpha = 1;
+      }
+    };
+
+    const drawCore = (R: number, cxPix: number, cyPix: number, formProgress: number, glow: number) => {
+      const pulse = 1 + 0.05 * Math.sin((elapsed * Math.PI * 2) / 4.5);
+      const pulseAlpha = 0.875 + 0.125 * Math.sin((elapsed * Math.PI * 2) / 4.5);
+      const coreR = R * 0.3 * pulse;
+      const coreAlpha = 0.55 * pulseAlpha * formProgress * glow;
+      if (coreR <= 0 || coreAlpha <= 0) return;
+      const g = ctx.createRadialGradient(cxPix, cyPix, 0, cxPix, cyPix, coreR * 2.2);
+      g.addColorStop(0, `rgba(${accent.r},${accent.g},${accent.b},${coreAlpha})`);
+      g.addColorStop(0.45, `rgba(${brand.r},${brand.g},${brand.b},${0.25 * pulseAlpha * formProgress * glow})`);
+      g.addColorStop(1, `rgba(${brand.r},${brand.g},${brand.b},0)`);
+      ctx.fillStyle = g;
+      ctx.fillRect(cxPix - coreR * 2.2, cyPix - coreR * 2.2, coreR * 4.4, coreR * 4.4);
+    };
+
+    const drawParticles = (front: boolean, formProgress: number) => {
+      if (!sprites.length) return;
+      /* sphere particles */
+      for (let i = 0; i < N; i++) {
+        const p = proj[i];
+        if (front ? p.depth < 0.5 : p.depth >= 0.5) continue;
+        const twinkle = staticMode ? 1 : 1 + 0.2 * Math.sin(elapsed * particles[i].twSpeed + particles[i].twPhase);
+        const fl = flare[i];
+        const radius = (0.9 + 1.7 * p.depth) * (1 + fl * 1.2);
+        const size = radius * 3.2;
+        const idx = Math.min(SPRITE_STEPS - 1, Math.floor(p.depth * SPRITE_STEPS));
+        ctx.globalAlpha = Math.min(1, (0.15 + 0.75 * p.depth) * twinkle * (0.3 + 0.7 * formProgress) + fl * 0.5);
+        ctx.drawImage(sprites[idx], p.px - size, p.py - size, size * 2, size * 2);
+      }
+      /* ring particles */
+      const ringAlpha = formProgress >= 1 ? 1 : Math.max(0, (formProgress - 0.7) / 0.3);
+      if (ringAlpha > 0) {
+        const idx = SPRITE_STEPS - 1;
+        for (let i = N; i < N + RING_N; i++) {
+          const p = proj[i];
+          if (front ? p.depth < 0.5 : p.depth >= 0.5) continue;
+          const size = (0.6 + 1.0 * p.depth) * 3.2;
+          ctx.globalAlpha = (0.1 + 0.5 * p.depth) * ringAlpha;
+          ctx.drawImage(sprites[idx], p.px - size, p.py - size, size * 2, size * 2);
+        }
+      }
+      ctx.globalAlpha = 1;
+    };
+
+    /* ── Animation loop ── */
+    let formClock = formed ? FORM_DUR + FORM_STAGGER : 0;
+
+    const frame = (now: number) => {
+      raf = requestAnimationFrame(frame);
+      const dt = Math.min((now - last) / 1000, 0.05);
+      last = now;
+      elapsed += dt;
+      yaw += YAW_SPEED * dt;
+
+      /* cursor parallax eases toward the pointer */
+      const k = Math.min(1, 3 * dt);
+      pX += (pTargetX - pX) * k;
+      pY += (pTargetY - pY) * k;
+
+      let formProgress = 1;
+      if (formClock < FORM_DUR + FORM_STAGGER) {
+        formClock += dt;
+        formProgress = Math.min(1, formClock / (FORM_DUR + FORM_STAGGER));
+        if (formProgress >= 1) {
+          try {
+            sessionStorage.setItem('neural-orb-formed', '1');
+          } catch {
+            /* storage unavailable — entrance may replay on next visit */
+          }
+        }
+      }
+
+      /* signals + flares */
+      if (formProgress >= 1) {
+        for (const s of signals) {
+          s.t += s.speed * dt;
+          if (s.t >= 1) {
+            flare[s.b] = 1;
+            s.hops -= 1;
+            if (s.hops > 0 && neighbors[s.b].length) {
+              const options = neighbors[s.b];
+              let next = options[Math.floor(Math.random() * options.length)];
+              if (next === s.a && options.length > 1) {
+                next = options[(options.indexOf(next) + 1) % options.length];
+              }
+              s.a = s.b;
+              s.b = next;
+              s.t = 0;
+              s.speed = 1 / (0.3 + Math.random() * 0.2);
+            } else {
+              spawnSignal(s);
+            }
+          }
+        }
+        for (let i = 0; i < N; i++) {
+          if (flare[i] > 0) flare[i] = Math.max(0, flare[i] - dt * 4);
+        }
+      }
+
+      renderFrame(formProgress);
+    };
+
+    const drawStatic = () => {
+      if (!w || !h) return;
+      renderFrame(1);
+    };
+
+    const size = () => {
+      const rect = canvas.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = rect.width;
+      h = rect.height;
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      /* Repaint when no rAF loop will do it: static mode, or the loop is
+         paused (hidden tab / off-screen) with the orb already formed. Never
+         pre-paints a fresh entrance — that only starts inside the loop. */
+      if (staticMode || (!running && formClock >= FORM_DUR + FORM_STAGGER)) drawStatic();
+    };
+
+    const start = () => {
+      if (staticMode || running || !onScreen || document.hidden) return;
+      if (!w || !h) size(); // loaded hidden: observers were silent, measure now
+      running = true;
+      last = performance.now();
+      raf = requestAnimationFrame(frame);
+    };
+    const stop = () => {
+      running = false;
+      cancelAnimationFrame(raf);
+    };
+
+    readColors();
+    size();
+
+    /* Loaded in a hidden tab: rAF won't fire until the tab is shown, so paint
+       one formed frame now (no blank canvas) and skip the unseen entrance. */
+    if (document.hidden && !staticMode) {
+      formClock = FORM_DUR + FORM_STAGGER;
+      drawStatic();
+    }
+    /* Hidden documents fire neither ResizeObserver nor IntersectionObserver,
+       so if layout wasn't ready yet, poll until the canvas is measurable —
+       size() then paints the pending static/formed frame itself. */
+    let retryTimer = 0;
+    let retriesLeft = 12;
+    const retrySize = () => {
+      if (w && h) return;
+      size();
+      if ((!w || !h) && retriesLeft-- > 0) retryTimer = window.setTimeout(retrySize, 300);
+    };
+    if ((staticMode || document.hidden) && (!w || !h)) retryTimer = window.setTimeout(retrySize, 300);
+
+    const io = new IntersectionObserver((entries) => {
+      onScreen = entries[0]?.isIntersecting ?? true;
+      if (onScreen) start();
+      else stop();
+    });
+    io.observe(canvas);
+
+    const onVisibility = () => {
+      if (document.hidden) {
+        stop();
+        /* Hidden mid-entrance: nobody is watching — complete the formation and
+           paint the formed orb so the canvas is never blank when shown again. */
+        if (!staticMode && formClock < FORM_DUR + FORM_STAGGER) {
+          formClock = FORM_DUR + FORM_STAGGER;
+          drawStatic();
+        }
+      } else {
+        start();
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+
+    let resizeTimer = 0;
+    const ro = new ResizeObserver(() => {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(size, 150);
+    });
+    ro.observe(canvas.parentElement ?? canvas);
+
+    const mo = new MutationObserver(() => {
+      readColors();
+      /* Repaint if no rAF loop will pick up the new colors */
+      if (staticMode || (!running && formClock >= FORM_DUR + FORM_STAGGER)) drawStatic();
+    });
+    mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+    const onPointerMove = (e: PointerEvent) => {
+      pTargetX = (e.clientX / window.innerWidth - 0.5) * 0.24; // ±0.12 rad
+      pTargetY = (e.clientY / window.innerHeight - 0.5) * 0.24;
+    };
+    const onPointerLeave = () => {
+      pTargetX = 0;
+      pTargetY = 0;
+    };
+    if (!staticMode && canHover) {
+      window.addEventListener('pointermove', onPointerMove, { passive: true });
+      document.documentElement.addEventListener('pointerleave', onPointerLeave);
+    }
+
+    start();
+
+    document.addEventListener(
+      'astro:before-swap',
+      () => {
+        stop();
+        io.disconnect();
+        ro.disconnect();
+        mo.disconnect();
+        document.removeEventListener('visibilitychange', onVisibility);
+        window.removeEventListener('pointermove', onPointerMove);
+        document.documentElement.removeEventListener('pointerleave', onPointerLeave);
+        window.clearTimeout(resizeTimer);
+        window.clearTimeout(retryTimer);
+      },
+      { once: true },
+    );
+  }
+
+  document.addEventListener('astro:page-load', initNeuralOrb);
+  /* Belt-and-braces: if this module evaluates after astro:page-load already
+     fired (script-order race on initial load), initialize immediately. */
+  if (document.readyState !== 'loading') initNeuralOrb();
+</script>
