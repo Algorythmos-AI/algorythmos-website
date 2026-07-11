@@ -14,14 +14,16 @@ import Cta from '@/components/sections/home/Cta.astro';
 ---
 
 <Hero />
-<ServiceBlueprint />
-<TechBelt />
-<Industries />
-<Services />
-<ValueJourney />
-<Outcomes />
-<ResultsCounters />
-<PhotoBand />
-<SecurityBlueprint />
-<Testimonials />
-<Cta />
+{/* Below-fold sections render lazily (content-visibility) so the first
+    viewport wins layout/paint; each wrapper reserves an approximate height. */}
+<div class="cv-auto"><ServiceBlueprint /></div>
+<div class="cv-auto"><TechBelt /></div>
+<div class="cv-auto"><Industries /></div>
+<div class="cv-auto"><Services /></div>
+<div class="cv-auto"><ValueJourney /></div>
+<div class="cv-auto"><Outcomes /></div>
+<div class="cv-auto"><ResultsCounters /></div>
+<div class="cv-auto"><PhotoBand /></div>
+<div class="cv-auto"><SecurityBlueprint /></div>
+<div class="cv-auto"><Testimonials /></div>
+<div class="cv-auto"><Cta /></div>

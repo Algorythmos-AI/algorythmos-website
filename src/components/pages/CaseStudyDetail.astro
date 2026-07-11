@@ -189,7 +189,7 @@ for (let i = 0; i < 4; i++) {
               {c.caption && <p class="mt-1 text-sm text-ink-muted">{c.caption}</p>}
             </figcaption>
             <div class="mt-4">
-              <Chart client:only="react" type={c.type} data={c.data} title={c.title} height={340} />
+              <Chart client:visible type={c.type} data={c.data} title={c.title} height={340} />
             </div>
           </figure>
         ))}

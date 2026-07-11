@@ -158,6 +158,17 @@
   }
 }
 
+/* Metric-compatible fallback while Inter loads (font-display: swap) — Arial
+   adjusted to Inter's metrics so the swap causes no layout shift. */
+@font-face {
+  font-family: 'Inter Fallback';
+  src: local('Arial');
+  size-adjust: 107.4%;
+  ascent-override: 90.2%;
+  descent-override: 22.48%;
+  line-gap-override: 0%;
+}
+
 @layer utilities {
   /* Scroll-reveal — hidden→shown; under reduced-motion content is always visible.
      Scoped to html.js (set before paint in BaseLayout) so content is never hidden without JS. */
@@ -170,12 +181,6 @@
         transform var(--reveal-duration, 0.7s) var(--reveal-ease, var(--ease-quint)),
         filter var(--reveal-duration, 0.7s) var(--reveal-ease, var(--ease-quint));
       transition-delay: var(--reveal-delay, 0ms);
-    }
-    /* Premium blur-in — reserved for the hero headline (filter is pricey at large areas) */
-    html.js [data-reveal='blur'] {
-      transform: translateY(14px);
-      filter: blur(10px);
-      will-change: transform, filter;
     }
     html.js [data-reveal='fade'] {
       transform: none;
@@ -191,6 +196,13 @@
       filter: none;
       will-change: auto;
     }
+  }
+
+  /* Below-fold section wrapper: skip layout/paint until near the viewport.
+     `auto 800px` keeps the real size once rendered (stable scrollbar). */
+  .cv-auto {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 800px;
   }
 
   /* Hero gets a slower, more luxurious reveal without touching the rest of the site */
