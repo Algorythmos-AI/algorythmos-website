@@ -2,7 +2,7 @@
 import { asLocale, useTranslations, localizePath } from '@/i18n';
 import Button from '@/components/ui/Button.astro';
 import Aurora from '@/components/ui/Aurora.astro';
-import HeroCore from '@/components/ui/HeroCore.astro';
+import NeuralOrb from '@/components/ui/NeuralOrb.astro';
 import NeuralField from '@/components/ui/NeuralField.astro';
 import Visual from '@/components/ui/Visual.astro';
 import { heroVisual } from '@/data/visuals';
@@ -45,9 +45,9 @@ const t = useTranslations(locale);
     </p>
     </div>
 
-    {/* 3D neural core — desktop only; mobile keeps the clean stacked hero */}
+    {/* Neural orb — desktop only; mobile keeps the clean stacked hero */}
     <div data-reveal style="--reveal-delay: 420ms" class="hidden lg:block">
-      <HeroCore />
+      <NeuralOrb />
     </div>
 
     {/* Scroll cue — decorative, sits at the bottom edge of the first viewport */}
