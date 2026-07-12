@@ -3,6 +3,11 @@ import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import llmsFull from './scripts/llms-full-integration.mjs';
+import { blog } from './src/data/blog.ts';
+
+// slug → last-meaningful date (updatedAt ?? published) for sitemap <lastmod>.
+/** @type {Record<string, string>} */
+const BLOG_LASTMOD = Object.fromEntries(blog.map((p) => [p.slug, p.updatedAt ?? p.date]));
 
 // Page-path → on-page content visuals, for <image:image> sitemap entries.
 const VIS = 'https://algorythmos.com/assets/visuals';
@@ -67,10 +72,17 @@ export default defineConfig({
       },
       serialize(item) {
         try {
-          const imgs = pageImages(new URL(item.url).pathname);
+          const pathname = new URL(item.url).pathname;
+          const imgs = pageImages(pathname);
           // `img` is forwarded to the underlying sitemap serializer at runtime (produces
           // <image:image>); it isn't in @astrojs/sitemap's SitemapItem type, so cast.
           if (imgs.length) /** @type {any} */ (item).img = imgs;
+          // Freshness signal on blog posts only (churny build-date lastmod elsewhere
+          // just trains crawlers to ignore it).
+          const blogMatch = pathname.match(/\/blog\/([a-z0-9-]+)\/?$/);
+          if (blogMatch && BLOG_LASTMOD[blogMatch[1]]) {
+            item.lastmod = new Date(BLOG_LASTMOD[blogMatch[1]]).toISOString();
+          }
         } catch {
           /* leave item unchanged */
         }
