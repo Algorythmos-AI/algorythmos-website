@@ -298,6 +298,14 @@ function businessEmail() {
   return m ? m[1] : null;
 }
 
+/** Ordered profile URLs from the `profiles: [...]` block in business.ts. */
+function businessProfiles() {
+  const src = readFileSync(join(ROOT, 'src', 'data', 'business.ts'), 'utf-8');
+  const block = src.match(/profiles:\s*\[([\s\S]*?)\]/);
+  if (!block) return [];
+  return [...block[1].matchAll(/url:\s*'([^']+)'/g)].map((m) => m[1]);
+}
+
 function collectLdNodes(html) {
   const nodes = [];
   for (const block of extractJsonLd(html)) {
@@ -563,6 +571,119 @@ function validateStaticFiles() {
 }
 
 // ---------------------------------------------------------------------------
+// SEO feature guardrails — regression tests for the hardening work:
+//   - FAQPage on every service page (5 × 3 locales) + both local landings
+//   - Organization sameAs === business.ts profiles, each surfaced as a footer href
+//   - per-locale RSS feeds exist, well-formed, ≥1 item
+//   - every /blog/<slug> sitemap URL carries a parseable <lastmod>
+// ---------------------------------------------------------------------------
+function validateSeoFeatures() {
+  log.section('🧩 SEO feature guardrails');
+  const before = errors;
+
+  // 1. FAQPage coverage
+  const SERVICE_SLUGS = ['agentic-automation', 'document-intelligence', 'sql-dashboards', 'mlops-cicd', 'ai-websites'];
+  const PREFIXES = ['', 'au-en', 'fr-fr'];
+  const faqPages = [];
+  for (const slug of SERVICE_SLUGS) {
+    for (const pre of PREFIXES) faqPages.push(join(...[pre, 'services', slug, 'index.html'].filter(Boolean)));
+  }
+  faqPages.push(join('au-en', 'ai-consultancy-sydney', 'index.html'));
+  faqPages.push(join('fr-fr', 'conseil-en-ia-paris', 'index.html'));
+
+  let faqOk = 0;
+  for (const rel of faqPages) {
+    const abs = join(DIST, rel);
+    if (!existsSync(abs)) {
+      log.error(`FAQPage check: missing page dist/${rel}`);
+      errors++;
+      continue;
+    }
+    const faq = collectLdNodes(readFileSync(abs, 'utf-8')).find((n) => n['@type'] === 'FAQPage');
+    if (!faq || !Array.isArray(faq.mainEntity) || faq.mainEntity.length === 0) {
+      log.error(`dist/${rel}: expected a FAQPage node with ≥1 question`);
+      errors++;
+    } else {
+      faqOk++;
+    }
+  }
+  if (faqOk === faqPages.length) log.success(`FAQPage present on all ${faqOk} service + landing pages`);
+
+  // 2. sameAs ⇄ business.ts profiles, and footer reciprocity
+  const profiles = businessProfiles();
+  const homeAbs = join(DIST, 'index.html');
+  if (profiles.length && existsSync(homeAbs)) {
+    const homeHtml = readFileSync(homeAbs, 'utf-8');
+    const org = collectLdNodes(homeHtml).find((n) => n['@type'] === 'Organization');
+    const sameAs = Array.isArray(org?.sameAs) ? org.sameAs : [];
+    const missingInSchema = profiles.filter((u) => !sameAs.includes(u));
+    const extraInSchema = sameAs.filter((u) => !profiles.includes(u));
+    if (missingInSchema.length || extraInSchema.length) {
+      log.error(`Organization sameAs ≠ business.ts profiles (missing: ${missingInSchema.join(', ') || 'none'}; extra: ${extraInSchema.join(', ') || 'none'})`);
+      errors++;
+    } else {
+      log.success(`Organization sameAs mirrors all ${profiles.length} business.ts profiles`);
+    }
+    const notLinked = profiles.filter((u) => !homeHtml.includes(`href="${u}"`));
+    if (notLinked.length) {
+      log.error(`Profiles in sameAs but not linked in the footer: ${notLinked.join(', ')}`);
+      errors++;
+    } else {
+      log.success('Every profile is reciprocally linked in the footer');
+    }
+  } else {
+    log.error('Could not read profiles from business.ts or dist/index.html');
+    errors++;
+  }
+
+  // 3. RSS feeds
+  const feeds = ['rss.xml', join('fr-fr', 'rss.xml')];
+  for (const rel of feeds) {
+    const abs = join(DIST, rel);
+    if (!existsSync(abs)) {
+      log.error(`Missing RSS feed: dist/${rel}`);
+      errors++;
+      continue;
+    }
+    const xml = readFileSync(abs, 'utf-8');
+    const open = (xml.match(/<item>/g) || []).length;
+    const close = (xml.match(/<\/item>/g) || []).length;
+    if (!xml.includes('<rss') || open === 0 || open !== close) {
+      log.error(`dist/${rel}: malformed RSS (has <rss>: ${xml.includes('<rss')}, <item> open/close: ${open}/${close})`);
+      errors++;
+    } else {
+      log.success(`dist/${rel}: valid RSS with ${open} item(s)`);
+    }
+  }
+
+  // 4. Blog sitemap URLs carry a parseable lastmod
+  let blogUrls = 0;
+  let blogMissingLastmod = 0;
+  for (const entry of readdirSync(DIST)) {
+    if (!/^sitemap.*\.xml$/.test(entry) || entry === 'sitemap-index.xml') continue;
+    const xml = readFileSync(join(DIST, entry), 'utf-8');
+    for (const block of xml.matchAll(/<url>([\s\S]*?)<\/url>/g)) {
+      const body = block[1];
+      if (!/<loc>[^<]*\/blog\/[a-z0-9-]+<\/loc>/.test(body)) continue;
+      blogUrls++;
+      const lm = body.match(/<lastmod>([^<]+)<\/lastmod>/);
+      if (!lm || Number.isNaN(Date.parse(lm[1]))) blogMissingLastmod++;
+    }
+  }
+  if (blogUrls === 0) {
+    log.error('No /blog/<slug> URLs found in the sitemap');
+    errors++;
+  } else if (blogMissingLastmod > 0) {
+    log.error(`${blogMissingLastmod}/${blogUrls} blog sitemap URLs lack a parseable <lastmod>`);
+    errors++;
+  } else {
+    log.success(`All ${blogUrls} blog sitemap URLs carry a valid <lastmod>`);
+  }
+
+  if (errors === before) log.success('All SEO feature guardrails hold');
+}
+
+// ---------------------------------------------------------------------------
 // Main
 // ---------------------------------------------------------------------------
 function main() {
@@ -585,6 +706,7 @@ ${colors.cyan}╔═════════════════════
   validateAllPages();
   validateStructuredData();
   validateStaticFiles();
+  validateSeoFeatures();
 
   log.section('📊 VALIDATION SUMMARY');
   console.log(`
