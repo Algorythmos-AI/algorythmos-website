@@ -248,60 +248,8 @@ const dynamicStrings = {
 </ConsoleShell>
 
 <style>
-  /* ── Interior design system: 4px grid; sizes 11/12/13/15/22; radii 6/10/14 ─ */
-  .hc {
-    --c-canvas: #0c0c13;
-    --c-panel: #0f0f17;
-    --c-chrome: #14141e;
-    --c-card: #16161f;
-    --c-node: #1d1d2b;
-    --c-line: rgb(255 255 255 / 0.07);
-    --c-line-soft: rgb(255 255 255 / 0.05);
-    --c-ink: #f3f3f8;
-    --c-muted: #9a9cb4;
-    --c-subtle: #6c6e86;
-    --c-brand: rgb(var(--brand));
-    --c-accent: rgb(var(--accent));
-    --c-success: rgb(var(--success));
-    --c-warning: rgb(var(--warning));
-    width: 1280px;
-    height: 800px;
-    display: flex;
-    flex-direction: column;
-    background: var(--c-canvas);
-    color: var(--c-ink);
-    font-size: 13px;
-    line-height: 1.35;
-    color-scheme: dark;
-  }
-
-  /* Chrome bar */
-  .hc-chrome {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    height: 52px;
-    padding: 0 20px;
-    background: var(--c-chrome);
-    border-bottom: 1px solid var(--c-line);
-    flex: none;
-  }
-  .hc-tdot { width: 11px; height: 11px; border-radius: 50%; background: rgb(255 255 255 / 0.18); }
-  .hc-urlpill {
-    position: absolute;
-    left: 452px;
-    display: inline-flex;
-    align-items: center;
-    gap: 9px;
-    width: 376px;
-    height: 26px;
-    padding: 0 15px;
-    border-radius: 13px;
-    background: #222232;
-    font-size: 12.5px;
-    color: var(--c-muted);
-  }
+  /* Shared interior system lives in src/styles/console.css; below is hero-only. */
+  .hc { width: 1280px; height: 800px; }
 
   .hc-body { display: flex; flex: 1; min-height: 0; }
 
@@ -354,23 +302,6 @@ const dynamicStrings = {
   .hc-title { font-size: 22px; font-weight: 600; }
   .hc-subtitle { margin-top: 6px; font-size: 13px; color: var(--c-muted); }
   .hc-header-actions { display: flex; align-items: center; gap: 12px; }
-  .hc-livepill {
-    display: inline-flex; align-items: center; gap: 8px;
-    height: 30px; padding: 0 16px; border-radius: 15px;
-    background: rgb(52 211 153 / 0.12); font-size: 12.5px; color: var(--c-success);
-  }
-  .hc-livedot { position: relative; width: 8px; height: 8px; border-radius: 50%; background: var(--c-success); }
-  .hc-cta {
-    display: inline-flex; align-items: center;
-    height: 30px; padding: 0 20px; border-radius: 9px;
-    background: linear-gradient(135deg, #8b5cf6, #6366f1);
-    font-size: 13px; font-weight: 600; color: #fff;
-  }
-
-  /* Cards */
-  .hc-card { background: var(--c-card); border: 1px solid var(--c-line); border-radius: 14px; }
-  .hc-card-title { font-size: 14px; font-weight: 600; }
-  .hc-card-sub { margin-top: 4px; font-size: 11.5px; color: var(--c-subtle); }
 
   /* KPI row */
   .hc-kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
@@ -401,10 +332,7 @@ const dynamicStrings = {
     border-bottom: 1px solid var(--c-line-soft);
   }
   .hc-run:last-child { border-bottom: none; }
-  .hc-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 4px; flex: none; }
-  .hc-dot--success { background: var(--c-success); }
-  .hc-dot--accent { background: var(--c-accent); }
-  .hc-dot--warning { background: var(--c-warning); }
+  .hc-run .hc-dot { margin-top: 4px; }
   .hc-run-main { flex: 1; min-width: 0; }
   .hc-run-name { display: block; font-size: 12.5px; color: var(--c-ink); }
   .hc-run-sub { display: block; margin-top: 2px; font-size: 10.5px; color: var(--c-subtle); }
@@ -476,65 +404,15 @@ const dynamicStrings = {
   .hc-step-5 { --progress: 1; }
   .hc-step-4 .hc-humanbadge { background: rgb(34 211 238 / 0.28); box-shadow: 0 0 0 1px rgb(34 211 238 / 0.4); }
 
-  /* ── Motion (JS-armed; default/reduced-motion state = fully drawn & static) ── */
+  /* ── Hero-only motion (shared arming/pulse rules live in console.css) ── */
   @media (prefers-reduced-motion: no-preference) {
-    /* pulses — the only continuous motion */
-    :global(.hc-live) .hc-livedot::after,
-    :global(.hc-live) .hc-endpoint {
-      animation: hc-pulse 2.6s var(--ease-smooth, ease-in-out) infinite;
-    }
-    :global(.hc-live) .hc-livedot::after {
-      content: ''; position: absolute; inset: -4px; border-radius: 50%;
-      border: 1px solid var(--c-success);
-    }
     :global(.hc-live) .hc-step-3 .hc-step[data-step='3'] .hc-stepnode,
     :global(.hc-live) .hc-step-2 .hc-step[data-step='2'] .hc-stepnode,
     :global(.hc-live) .hc-step-4 .hc-step[data-step='4'] .hc-stepnode {
       animation: hc-node-pulse 2.6s var(--ease-smooth, ease-in-out) infinite;
     }
-
-    /* chart draw-on: armed = undrawn; .hc-live triggers the transition */
-    :global(.hc-armed) .hc-draw { stroke-dasharray: 1; stroke-dashoffset: 1; }
-    :global(.hc-armed) .hc-fill,
-    :global(.hc-armed) .hc-endpoint { opacity: 0; }
-    :global(.hc-armed.hc-live) .hc-draw {
-      stroke-dashoffset: 0;
-      transition: stroke-dashoffset 1.6s var(--ease-quint, cubic-bezier(0.22, 1, 0.36, 1)) 0.2s;
-    }
-    :global(.hc-armed.hc-live) .hc-fill {
-      opacity: 1;
-      transition: opacity 0.9s ease 1.1s;
-    }
-    :global(.hc-armed.hc-live) .hc-endpoint {
-      opacity: 1;
-      transition: opacity 0.4s ease 1.7s;
-    }
-
-    /* stepper fill moves between states */
     .hc-track-fill { transition: transform 0.45s var(--ease-quint, ease-out); }
-
-    /* run list choreography */
     .hc-run { transition: transform 0.45s var(--ease-quint, ease-out), opacity 0.45s ease; }
-    :global(.hc-enter) { transform: translateY(-10px); opacity: 0; }
-    :global(.hc-exit) { transform: translateY(10px); opacity: 0; }
-    :global(.hc-flash) { animation: hc-row-flash 1.1s ease-out 1; }
-
-    /* loop reset cross-fade */
-    :global([data-hc-stage]) { transition: opacity 0.3s ease; }
-    :global(.hc-fading) { opacity: 0; }
-  }
-
-  @keyframes hc-pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.45; transform: scale(1.35); }
-  }
-  @keyframes hc-node-pulse {
-    0%, 100% { box-shadow: 0 0 0 0 rgb(34 211 238 / 0.35); }
-    50% { box-shadow: 0 0 0 7px rgb(34 211 238 / 0); }
-  }
-  @keyframes hc-row-flash {
-    0% { background: rgb(34 211 238 / 0.14); }
-    100% { background: transparent; }
   }
 </style>
 

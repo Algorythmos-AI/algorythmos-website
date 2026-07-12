@@ -11,8 +11,23 @@ import BlueprintFigure from '@/components/ui/BlueprintFigure.astro';
 import BlueprintArt from '@/components/ui/BlueprintArt.astro';
 import Breadcrumbs from '@/components/ui/Breadcrumbs.astro';
 import RelatedLinks from '@/components/ui/RelatedLinks.astro';
+import AgenticConsole from '@/components/ui/consoles/AgenticConsole.astro';
+import DocumentConsole from '@/components/ui/consoles/DocumentConsole.astro';
+import SqlConsole from '@/components/ui/consoles/SqlConsole.astro';
+import MlopsConsole from '@/components/ui/consoles/MlopsConsole.astro';
+import AiWebsitesConsole from '@/components/ui/consoles/AiWebsitesConsole.astro';
 import { serviceVisuals } from '@/data/visuals';
 import { serviceRelated } from '@/data/related';
+
+/** Living console per service — visually replaces the static SVG (which stays
+ *  on disk for the image sitemap / ImageObject / crawler fallback). */
+const CONSOLES = {
+  'agentic-automation': AgenticConsole,
+  'document-intelligence': DocumentConsole,
+  'sql-dashboards': SqlConsole,
+  'mlops-cicd': MlopsConsole,
+  'ai-websites': AiWebsitesConsole,
+} as const;
 
 interface Props {
   slug: string;
@@ -112,7 +127,10 @@ const faqLd = faqs.length
 
   {svcVisual && (
     <section class="container-page pt-12">
-      <Visual src={svcVisual.file} alt={svcVisualAlt} width={svcVisual.width} height={svcVisual.height} />
+      {(() => {
+        const Console = CONSOLES[svc.slug as keyof typeof CONSOLES];
+        return Console ? <Console /> : <Visual src={svcVisual.file} alt={svcVisualAlt} width={svcVisual.width} height={svcVisual.height} />;
+      })()}
     </section>
   )}
 
