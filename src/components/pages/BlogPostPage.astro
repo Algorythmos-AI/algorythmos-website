@@ -8,6 +8,9 @@ import { getBlogCharts } from '@/data/blogCharts';
 import Chart from '@/components/islands/Chart';
 import { breadcrumb, SITE, ORG_ID, FOUNDER_ID, ogImageUrl } from '@/seo/schema';
 import { bookingUrl } from '@/lib/links';
+import Breadcrumbs from '@/components/ui/Breadcrumbs.astro';
+import RelatedLinks from '@/components/ui/RelatedLinks.astro';
+import { blogRelated } from '@/data/related';
 
 interface Props {
   slug: string;
@@ -59,14 +62,16 @@ const articleLd = {
   inLanguage: locale === 'fr-fr' ? 'fr' : 'en',
   mainEntityOfPage: { '@type': 'WebPage', '@id': abs(path) },
 };
-const crumbs = breadcrumb([
-  { name: 'Home', url: abs('/') },
+const crumbItems = [
+  { name: t('nav.home'), url: abs('/') },
   { name: t('blog.hero.title'), url: abs('/blog') },
   { name: title, url: abs(path) },
-]);
+];
+const crumbs = breadcrumb(crumbItems);
 ---
 
 <BaseLayout title={`${title} — Algorythmos`} description={description} path={path} ogType="article" image={ogImg} jsonLd={[articleLd, crumbs]}>
+  <Breadcrumbs items={crumbItems} />
   <PageHeader eyebrow={t(`blog.posts.${post.postIndex}.date`)} title={title} lead={description} />
 
   <section class="container-page py-20">
@@ -130,4 +135,6 @@ const crumbs = breadcrumb([
       </div>
     </article>
   </section>
+
+  <RelatedLinks items={blogRelated[post.slug] ?? []} />
 </BaseLayout>

@@ -1,9 +1,14 @@
 ---
 import { asLocale, useTranslations, localizePath } from '@/i18n';
+import { BUSINESS } from '@/data/business';
+import LocaleSwitcher from '@/components/layout/LocaleSwitcher.astro';
 
 const locale = asLocale(Astro.currentLocale);
 const t = useTranslations(locale);
 const year = new Date().getFullYear();
+
+const rssHref = locale === 'fr-fr' ? '/fr-fr/rss.xml' : '/rss.xml';
+const profile = (label: string) => BUSINESS.profiles.find((p) => p.label === label)?.url ?? '#';
 
 const cols = [
   {
@@ -12,7 +17,9 @@ const cols = [
       { label: t('nav.services'), path: '/services' },
       { label: 'Agentic Automation', path: '/services/agentic-automation' },
       { label: 'Document Intelligence', path: '/services/document-intelligence' },
+      { label: 'SQL Dashboards', path: '/services/sql-dashboards' },
       { label: 'MLOps & CI/CD', path: '/services/mlops-cicd' },
+      { label: 'AI-Powered Websites', path: '/services/ai-websites' },
     ],
   },
   {
@@ -20,35 +27,41 @@ const cols = [
     links: [
       { label: t('nav.about'), path: '/about' },
       { label: t('nav.caseStudies'), path: '/case-studies' },
-      { label: t('nav.blog'), path: '/blog' },
       { label: t('nav.careers'), path: '/careers' },
       { label: t('nav.press'), path: '/press' },
-    ],
-  },
-  {
-    title: t('footer.legal'),
-    links: [
-      { label: t('nav.privacy'), path: '/privacy' },
-      { label: t('nav.terms'), path: '/terms' },
       { label: t('nav.contact'), path: '/contact' },
     ],
   },
 ];
+
+// External resources (open in a new tab).
+const resources = [
+  { label: t('nav.blog'), href: localizePath(locale, '/blog'), external: false },
+  { label: t('footer.rss'), href: rssHref, external: false },
+  { label: 'Docs', href: profile('Docs'), external: true },
+  { label: 'App', href: profile('App'), external: true },
+];
+
+// Social profiles surfaced for entity reciprocity (schema sameAs ⇄ visible links).
+const social = ['LinkedIn', 'X', 'YouTube', 'Medium'].map((label) => ({ label, url: profile(label) }));
+
+const legal = [
+  { label: t('nav.privacy'), path: '/privacy' },
+  { label: t('nav.terms'), path: '/terms' },
+];
 ---
 
 <footer class="mt-24 border-t border-line bg-surface-2/40">
-  <div class="container-page grid gap-12 py-16 md:grid-cols-[1.4fr_repeat(3,1fr)]">
-    <div>
+  <div class="container-page grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-[1.4fr_repeat(4,1fr)]">
+    <div class="md:col-span-2 lg:col-span-1">
       <a href={localizePath(locale, '/')} class="flex items-center gap-2.5 text-lg font-bold tracking-tight text-ink" aria-label="Algorythmos home">
         <img src="/logo-mark.png" alt="" aria-hidden="true" width="218" height="258" class="h-8 w-auto" />
         <span>Algoryth<span class="text-gradient-brand">mos</span></span>
       </a>
       <p class="mt-4 max-w-xs text-sm leading-relaxed text-ink-muted">{t('footer.description')}</p>
-      <p class="mt-4 text-sm font-medium text-ink-subtle">
-        <a href="/au-en/ai-consultancy-sydney" class="transition-colors hover:text-ink">{t('footer.localSydney')}</a>
-        ·
-        <a href="/fr-fr/conseil-en-ia-paris" class="transition-colors hover:text-ink">{t('footer.localParis')}</a>
-      </p>
+      <div class="mt-6">
+        <LocaleSwitcher />
+      </div>
     </div>
 
     {cols.map((col) => (
@@ -63,14 +76,47 @@ const cols = [
         </ul>
       </div>
     ))}
+
+    <div>
+      <h2 class="text-sm font-semibold text-ink">{t('footer.resources')}</h2>
+      <ul class="mt-4 space-y-3">
+        {resources.map((r) => (
+          <li>
+            <a
+              href={r.href}
+              {...(r.external ? { target: '_blank', rel: 'noopener' } : {})}
+              class="text-sm text-ink-muted transition-colors hover:text-ink"
+            >{r.label}</a>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-semibold text-ink">{t('footer.local')}</h2>
+      <ul class="mt-4 space-y-3">
+        <li>
+          <a href={localizePath('au-en', '/ai-consultancy-sydney')} class="text-sm text-ink-muted transition-colors hover:text-ink">{t('footer.localSydney')}</a>
+        </li>
+        <li>
+          <a href={localizePath('fr-fr', '/conseil-en-ia-paris')} class="text-sm text-ink-muted transition-colors hover:text-ink">{t('footer.localParis')}</a>
+        </li>
+        {legal.map((l) => (
+          <li>
+            <a href={localizePath(locale, l.path)} class="text-sm text-ink-muted transition-colors hover:text-ink">{l.label}</a>
+          </li>
+        ))}
+      </ul>
+    </div>
   </div>
 
   <div class="border-t border-line">
     <div class="container-page flex flex-col items-center justify-between gap-3 py-6 text-sm text-ink-subtle sm:flex-row">
       <p>© {year} Algorythmos. All rights reserved.</p>
       <div class="flex items-center gap-4">
-        <a href="https://www.linkedin.com/company/algorythmos" rel="me noopener" target="_blank" class="hover:text-ink">LinkedIn</a>
-        <a href="https://x.com/algorythmos" rel="me noopener" target="_blank" class="hover:text-ink">X</a>
+        {social.map((s) => (
+          <a href={s.url} rel="me noopener" target="_blank" class="hover:text-ink">{s.label}</a>
+        ))}
       </div>
     </div>
   </div>

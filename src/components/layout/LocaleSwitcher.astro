@@ -1,0 +1,58 @@
+---
+/**
+ * Region / language switcher. Maps the current page to its equivalent in each
+ * locale by stripping the active prefix and re-localizing. Standalone pages
+ * (single-locale local landings) have no cross-locale twin, so those fall back
+ * to the target locale's home — otherwise link:check would flag dead hrefs.
+ * A tiny inline script records the explicit choice in the `locale` cookie so
+ * the BaseLayout root-redirect respects it.
+ */
+import { asLocale, LOCALES, REGIONS, localizePath, stripLocale, useTranslations } from '@/i18n';
+
+const current = asLocale(Astro.currentLocale);
+const t = useTranslations(current);
+
+// Region-relative remainder of the current path (''/'/x'), locale prefix removed.
+const { rest } = stripLocale(new URL(Astro.url).pathname);
+
+// Pages with no cross-locale twin → switching region falls back to that
+// locale's home. Includes the single-locale local landings and the global-only
+// 404 (whose prefixed variants don't exist).
+const STANDALONE = ['/ai-consultancy-sydney', '/conseil-en-ia-paris', '/404'];
+const isStandalone = STANDALONE.some((p) => rest === p || rest === `${p}/`);
+
+const options = LOCALES.map((loc) => ({
+  loc,
+  meta: REGIONS[loc],
+  href: isStandalone ? localizePath(loc, '/') : localizePath(loc, rest),
+  active: loc === current,
+}));
+---
+
+<nav class="flex flex-wrap items-center gap-1.5" aria-label={t('localeSwitcher.label')}>
+  {options.map((o) => (
+    <a
+      href={o.href}
+      hreflang={o.meta.hreflang}
+      data-locale={o.loc}
+      aria-current={o.active ? 'true' : undefined}
+      class:list={[
+        'inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors',
+        o.active ? 'border-brand/50 bg-brand/10 text-ink' : 'border-line text-ink-muted hover:border-brand/40 hover:text-ink',
+      ]}
+    >
+      <span aria-hidden="true">{o.meta.flag}</span>
+      <span>{t(o.meta.labelKey)}</span>
+    </a>
+  ))}
+</nav>
+
+<script>
+  // Persist an explicit region choice so the root-path redirect honors it.
+  document.querySelectorAll('[data-locale]').forEach((el) => {
+    el.addEventListener('click', () => {
+      const loc = (el as HTMLElement).dataset.locale;
+      if (loc) document.cookie = `locale=${loc};path=/;max-age=31536000;samesite=lax`;
+    });
+  });
+</script>
