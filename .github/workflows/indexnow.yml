@@ -1,0 +1,62 @@
+name: IndexNow — ping search engines on publish
+
+# Notify IndexNow-participating engines (Bing, Yandex, Seznam, Naver…) when
+# content changes on master. Google ignores IndexNow but it's free coverage
+# elsewhere. Runs after the deploy settles; the key file is public by design.
+on:
+  push:
+    branches: [master, main]
+  workflow_dispatch: {}
+
+concurrency:
+  group: indexnow-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  HOST: algorythmos.com
+  INDEXNOW_KEY: 13ce8995c9dcb184bc9fc2c4ce4c802f
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for the production deploy to settle
+        run: sleep 90
+
+      - name: Collect URLs from the live sitemap and submit to IndexNow
+        run: |
+          set -euo pipefail
+          KEY_LOCATION="https://${HOST}/${INDEXNOW_KEY}.txt"
+
+          # Confirm the key file is actually being served before we submit.
+          if ! curl -fsS "$KEY_LOCATION" | grep -q "$INDEXNOW_KEY"; then
+            echo "Key file not reachable at $KEY_LOCATION yet — skipping this run."
+            exit 0
+          fi
+
+          # Flatten the sitemap index → child sitemaps → page URLs.
+          urls=$(
+            curl -fsS "https://${HOST}/sitemap-index.xml" \
+              | grep -oE '<loc>[^<]+</loc>' | sed -E 's:</?loc>::g' \
+            | while read -r sm; do
+                curl -fsS "$sm" | grep -oE '<loc>[^<]+</loc>' | sed -E 's:</?loc>::g'
+              done \
+            | sort -u
+          )
+
+          count=$(printf '%s\n' "$urls" | grep -c . || true)
+          echo "Submitting $count URLs to IndexNow."
+
+          # IndexNow caps a batch at 10,000 URLs; this site is far below that.
+          body=$(printf '%s\n' "$urls" | jq -R . | jq -s \
+            --arg host "$HOST" --arg key "$INDEXNOW_KEY" --arg kl "$KEY_LOCATION" \
+            '{host: $host, key: $key, keyLocation: $kl, urlList: .}')
+
+          code=$(curl -sS -o /tmp/indexnow.out -w '%{http_code}' \
+            -X POST 'https://api.indexnow.org/indexnow' \
+            -H 'Content-Type: application/json; charset=utf-8' \
+            --data "$body")
+          echo "IndexNow responded HTTP $code"
+          cat /tmp/indexnow.out || true
+          # 200/202 = accepted. Don't fail the workflow on IndexNow hiccups.
+          case "$code" in 200|202) ;; *) echo "Non-fatal: IndexNow returned $code";; esac
