@@ -1,0 +1,626 @@
+---
+/**
+ * HeroConsole — the living product console (replaces the static hero SVG
+ * visually; the SVG stays on disk as the crawler/sitemap/ImageObject asset,
+ * served via ConsoleShell's fallback <img>).
+ *
+ * Faithful DOM port of home-hero-ai-console.svg (1280×800) with a scripted
+ * ~46s story: KPI count-ups + live tick, chart draw-on, and the contract-
+ * review run progressing through approval → done → a new run rotating in,
+ * with the workflow stepper advancing in sync. One thing moves at a time;
+ * everything respects prefers-reduced-motion (static SSR baseline) and
+ * pauses off-screen / in hidden tabs. All strings via i18n (locale-blind JS).
+ */
+import ConsoleShell from '@/components/ui/ConsoleShell.astro';
+import { asLocale, useTranslations, REGIONS } from '@/i18n';
+import { heroVisual } from '@/data/visuals';
+import { formatValue } from '@/lib/consoleLoop';
+
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const lang = REGIONS[locale].lang;
+
+/* KPI source values — coherent story: 1,284 runs at 99.2% ⇒ ~10 failures/day. */
+const KPI = { runs: 1284, success: 99.2, latency: 1.8 };
+
+const nav = [
+  { key: 'console.nav.agents', active: true },
+  { key: 'console.nav.overview' },
+  { key: 'console.nav.documents' },
+  { key: 'console.nav.dashboards' },
+  { key: 'console.nav.pipelines' },
+  { key: 'console.nav.monitoring' },
+];
+
+const steps = [
+  t('console.steps.ingest'),
+  t('console.steps.extract'),
+  t('console.steps.review'),
+  t('console.steps.approve'),
+  t('console.steps.post'),
+];
+
+/* Localized dynamic strings for the loop script (locale-blind JS reads this). */
+const dynamicStrings = {
+  'contract.approved.sub': t('console.sub.contract.approved'),
+  'contract.approved.meta': t('console.meta.approved'),
+  'contract.done.sub': t('console.sub.contract.done'),
+  'contract.done.meta': t('console.time.justNow'),
+  'invoice.later': t('console.time.m4'),
+  'email.progress.sub': t('console.sub.email.running2'),
+  'email.retry.sub': t('console.sub.email.retrying'),
+  'email.retry.meta': t('console.meta.retrying'),
+  'email.running.meta': t('console.meta.running'),
+};
+---
+
+<ConsoleShell
+  svgFile={heroVisual.file}
+  width={heroVisual.width}
+  height={heroVisual.height}
+  altKey={heroVisual.altKey}
+  name="hero-console"
+>
+  <div class="hc">
+    <script type="application/json" data-hc-strings set:html={JSON.stringify(dynamicStrings)} />
+
+    {/* ── Chrome bar ── */}
+    <div class="hc-chrome">
+      <span class="hc-tdot"></span><span class="hc-tdot"></span><span class="hc-tdot"></span>
+      <span class="hc-urlpill"><span class="hc-dot hc-dot--success"></span>{t('console.url')}</span>
+    </div>
+
+    <div class="hc-body">
+      {/* ── Sidebar ── */}
+      <aside class="hc-side">
+        <div class="hc-brand">
+          <span class="hc-brandmark"></span>
+          <span class="hc-brandname">Algorythmos</span>
+        </div>
+        <nav class="hc-nav">
+          {nav.map((item) => (
+            <span class:list={['hc-navitem', { 'hc-navitem--active': item.active }]}>
+              <span class="hc-navdot"></span>
+              {t(item.key)}
+            </span>
+          ))}
+        </nav>
+        <div class="hc-user">
+          <span class="hc-avatar"></span>
+          <span>
+            <span class="hc-username">{t('console.user.name')}</span>
+            <span class="hc-userrole">{t('console.user.role')}</span>
+          </span>
+        </div>
+      </aside>
+
+      {/* ── Main ── */}
+      <main class="hc-main">
+        <header class="hc-header">
+          <div>
+            <div class="hc-title">{t('console.title')}</div>
+            <div class="hc-subtitle">{t('console.subtitle')}</div>
+          </div>
+          <div class="hc-header-actions">
+            <span class="hc-livepill"><span class="hc-livedot"></span>{t('console.live')}</span>
+            <span class="hc-cta">{t('console.newAgent')}</span>
+          </div>
+        </header>
+
+        {/* ── KPI cards ── */}
+        <div class="hc-kpis">
+          <div class="hc-card hc-kpi">
+            <span class="hc-kpi-label">{t('console.kpi.runs')}</span>
+            <span class="hc-kpi-value" data-hc-count={KPI.runs} data-hc-format="int" data-hc-tick>
+              {formatValue(KPI.runs, 'int', lang)}
+            </span>
+            <span class="hc-kpi-delta hc-kpi-delta--up">{t('console.kpi.runsDelta')}</span>
+            <svg class="hc-spark" viewBox="0 0 84 32" aria-hidden="true">
+              <polyline points="2,26 16,20 30,24 44,12 58,16 72,4" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </div>
+          <div class="hc-card hc-kpi">
+            <span class="hc-kpi-label">{t('console.kpi.success')}</span>
+            <span class="hc-kpi-value" data-hc-count={KPI.success} data-hc-format="pct1">
+              {formatValue(KPI.success, 'pct1', lang)}
+            </span>
+            <span class="hc-kpi-delta hc-kpi-delta--up">{t('console.kpi.successDelta')}</span>
+            <svg class="hc-spark" viewBox="0 0 84 32" aria-hidden="true">
+              <polyline points="2,24 16,22 30,18 44,19 58,12 72,8" fill="none" stroke="#22d3ee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </div>
+          <div class="hc-card hc-kpi">
+            <span class="hc-kpi-label">{t('console.kpi.latency')}</span>
+            <span class="hc-kpi-value" data-hc-count={KPI.latency} data-hc-format="sec1">
+              {formatValue(KPI.latency, 'sec1', lang)}
+            </span>
+            <span class="hc-kpi-delta">{t('console.kpi.latencyNote')}</span>
+            <svg class="hc-spark" viewBox="0 0 84 32" aria-hidden="true">
+              <polyline points="2,18 16,22 30,16 44,20 58,17 72,19" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </div>
+        </div>
+
+        <div class="hc-midrow">
+          {/* ── Throughput chart ── */}
+          <div class="hc-card hc-chart">
+            <div class="hc-card-title">{t('console.chart.title')}</div>
+            <div class="hc-card-sub">{t('console.chart.sub')}</div>
+            <svg class="hc-chart-svg" viewBox="0 0 640 176" aria-hidden="true">
+              <g stroke="#ffffff" stroke-opacity="0.05">
+                <line x1="24" y1="56" x2="616" y2="56" />
+                <line x1="24" y1="104" x2="616" y2="104" />
+                <line x1="24" y1="152" x2="616" y2="152" />
+              </g>
+              <defs>
+                <linearGradient id="hc-area" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="#a78bfa" stop-opacity="0.34" />
+                  <stop offset="1" stop-color="#a78bfa" stop-opacity="0" />
+                </linearGradient>
+                <linearGradient id="hc-line" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0" stop-color="#a78bfa" />
+                  <stop offset="1" stop-color="#22d3ee" />
+                </linearGradient>
+              </defs>
+              <path
+                class="hc-fill"
+                d="M24 152 L24 130 L98 136 L172 108 L246 116 L320 80 L394 92 L468 56 L542 72 L616 48 L616 152 Z"
+                fill="url(#hc-area)"
+              />
+              <polyline
+                class="hc-draw"
+                pathLength="1"
+                points="24,130 98,136 172,108 246,116 320,80 394,92 468,56 542,72 616,48"
+                fill="none"
+                stroke="url(#hc-line)"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <circle class="hc-endpoint" cx="616" cy="48" r="3.5" fill="#22d3ee" />
+            </svg>
+            <div class="hc-axis">
+              <span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>{t('console.chart.now')}</span>
+            </div>
+          </div>
+
+          {/* ── Recent runs ── */}
+          <div class="hc-card hc-runs">
+            <div class="hc-card-title">{t('console.runs.title')}</div>
+            <ul class="hc-runlist" data-hc-runlist data-hc-stage>
+              <li class="hc-run" data-run="invoice">
+                <span class="hc-dot hc-dot--success" data-slot="dot"></span>
+                <span class="hc-run-main">
+                  <span class="hc-run-name">{t('console.runs.invoice')}</span>
+                  <span class="hc-run-sub" data-slot="sub">{t('console.sub.invoice.done')}</span>
+                </span>
+                <span class="hc-run-meta" data-slot="meta">{t('console.time.m2')}</span>
+              </li>
+              <li class="hc-run" data-run="contract">
+                <span class="hc-dot hc-dot--accent" data-slot="dot"></span>
+                <span class="hc-run-main">
+                  <span class="hc-run-name">{t('console.runs.contract')}</span>
+                  <span class="hc-run-sub" data-slot="sub">{t('console.sub.contract.awaiting')}</span>
+                </span>
+                <span class="hc-run-meta" data-slot="meta">{t('console.meta.running')}</span>
+              </li>
+              <li class="hc-run" data-run="ledger">
+                <span class="hc-dot hc-dot--success" data-slot="dot"></span>
+                <span class="hc-run-main">
+                  <span class="hc-run-name">{t('console.runs.ledger')}</span>
+                  <span class="hc-run-sub" data-slot="sub">{t('console.sub.ledger.done')}</span>
+                </span>
+                <span class="hc-run-meta" data-slot="meta">{t('console.time.m9')}</span>
+              </li>
+            </ul>
+            <template data-hc-template="email">
+              <li class="hc-run" data-run="email">
+                <span class="hc-dot hc-dot--accent" data-slot="dot"></span>
+                <span class="hc-run-main">
+                  <span class="hc-run-name">{t('console.runs.email')}</span>
+                  <span class="hc-run-sub" data-slot="sub">{t('console.sub.email.running1')}</span>
+                </span>
+                <span class="hc-run-meta" data-slot="meta">{t('console.time.justNow')}</span>
+              </li>
+            </template>
+          </div>
+        </div>
+
+        {/* ── Agent workflow ── */}
+        <div class="hc-card hc-workflow">
+          <div class="hc-card-title">{t('console.wf.title')}</div>
+          <div class="hc-card-sub">{t('console.wf.sub')}</div>
+          <div class="hc-stepper hc-step-3" data-hc-stepper data-hc-stage>
+            <span class="hc-track" aria-hidden="true"></span>
+            <span class="hc-track-fill" aria-hidden="true"></span>
+            {steps.map((label, i) => (
+              <span class="hc-step" data-step={i + 1} style={`--i: ${i}`}>
+                {i === 3 && <span class="hc-humanbadge">{t('console.steps.human')}</span>}
+                <span class="hc-stepnode">{i + 1}</span>
+                <span class="hc-steplabel">{label}</span>
+              </span>
+            ))}
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+</ConsoleShell>
+
+<style>
+  /* ── Interior design system: 4px grid; sizes 11/12/13/15/22; radii 6/10/14 ─ */
+  .hc {
+    --c-canvas: #0c0c13;
+    --c-panel: #0f0f17;
+    --c-chrome: #14141e;
+    --c-card: #16161f;
+    --c-node: #1d1d2b;
+    --c-line: rgb(255 255 255 / 0.07);
+    --c-line-soft: rgb(255 255 255 / 0.05);
+    --c-ink: #f3f3f8;
+    --c-muted: #9a9cb4;
+    --c-subtle: #6c6e86;
+    --c-brand: rgb(var(--brand));
+    --c-accent: rgb(var(--accent));
+    --c-success: rgb(var(--success));
+    --c-warning: rgb(var(--warning));
+    width: 1280px;
+    height: 800px;
+    display: flex;
+    flex-direction: column;
+    background: var(--c-canvas);
+    color: var(--c-ink);
+    font-size: 13px;
+    line-height: 1.35;
+    color-scheme: dark;
+  }
+
+  /* Chrome bar */
+  .hc-chrome {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 52px;
+    padding: 0 20px;
+    background: var(--c-chrome);
+    border-bottom: 1px solid var(--c-line);
+    flex: none;
+  }
+  .hc-tdot { width: 11px; height: 11px; border-radius: 50%; background: rgb(255 255 255 / 0.18); }
+  .hc-urlpill {
+    position: absolute;
+    left: 452px;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    width: 376px;
+    height: 26px;
+    padding: 0 15px;
+    border-radius: 13px;
+    background: #222232;
+    font-size: 12.5px;
+    color: var(--c-muted);
+  }
+
+  .hc-body { display: flex; flex: 1; min-height: 0; }
+
+  /* Sidebar */
+  .hc-side {
+    width: 216px;
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    background: var(--c-panel);
+    border-right: 1px solid var(--c-line);
+    padding: 28px 16px 24px;
+  }
+  .hc-brand { display: flex; align-items: center; gap: 10px; padding: 0 8px; }
+  .hc-brandmark {
+    position: relative;
+    width: 26px; height: 26px; border-radius: 8px;
+    background: linear-gradient(135deg, #8b5cf6, #6366f1);
+  }
+  .hc-brandmark::after {
+    content: ''; position: absolute; top: -4px; right: -4px;
+    width: 10px; height: 10px; border-radius: 50%; background: var(--c-accent);
+  }
+  .hc-brandname { font-size: 15px; font-weight: 600; }
+  .hc-nav { display: flex; flex-direction: column; gap: 4px; margin-top: 40px; }
+  .hc-navitem {
+    position: relative;
+    display: flex; align-items: center; gap: 12px;
+    height: 36px; padding: 0 16px; border-radius: 9px;
+    font-size: 13.5px; color: var(--c-muted);
+  }
+  .hc-navdot { width: 8px; height: 8px; border-radius: 50%; background: #5a5c74; flex: none; }
+  .hc-navitem--active { background: rgb(255 255 255 / 0.06); color: var(--c-ink); }
+  .hc-navitem--active::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+    width: 3px; border-radius: 1.5px; background: var(--c-brand);
+  }
+  .hc-navitem--active .hc-navdot { background: var(--c-brand); }
+  .hc-user {
+    margin-top: auto; display: flex; align-items: center; gap: 12px;
+    padding: 20px 8px 0; border-top: 1px solid var(--c-line-soft);
+  }
+  .hc-avatar { width: 18px; height: 18px; border-radius: 50%; background: #262636; flex: none; }
+  .hc-username { display: block; font-size: 12.5px; color: var(--c-muted); }
+  .hc-userrole { display: block; font-size: 11px; color: var(--c-subtle); }
+
+  /* Main column */
+  .hc-main { flex: 1; min-width: 0; padding: 28px 36px 32px; display: flex; flex-direction: column; gap: 24px; }
+  .hc-header { display: flex; align-items: flex-start; justify-content: space-between; }
+  .hc-title { font-size: 22px; font-weight: 600; }
+  .hc-subtitle { margin-top: 6px; font-size: 13px; color: var(--c-muted); }
+  .hc-header-actions { display: flex; align-items: center; gap: 12px; }
+  .hc-livepill {
+    display: inline-flex; align-items: center; gap: 8px;
+    height: 30px; padding: 0 16px; border-radius: 15px;
+    background: rgb(52 211 153 / 0.12); font-size: 12.5px; color: var(--c-success);
+  }
+  .hc-livedot { position: relative; width: 8px; height: 8px; border-radius: 50%; background: var(--c-success); }
+  .hc-cta {
+    display: inline-flex; align-items: center;
+    height: 30px; padding: 0 20px; border-radius: 9px;
+    background: linear-gradient(135deg, #8b5cf6, #6366f1);
+    font-size: 13px; font-weight: 600; color: #fff;
+  }
+
+  /* Cards */
+  .hc-card { background: var(--c-card); border: 1px solid var(--c-line); border-radius: 14px; }
+  .hc-card-title { font-size: 14px; font-weight: 600; }
+  .hc-card-sub { margin-top: 4px; font-size: 11.5px; color: var(--c-subtle); }
+
+  /* KPI row */
+  .hc-kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .hc-kpi { position: relative; height: 104px; padding: 20px; }
+  .hc-kpi-label { display: block; font-size: 12.5px; color: var(--c-muted); }
+  .hc-kpi-value {
+    display: block; margin-top: 6px;
+    font-size: 27px; font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    min-width: 6ch; /* digits can never shift neighbors mid-count */
+  }
+  .hc-kpi-delta { display: block; margin-top: 4px; font-size: 11.5px; color: var(--c-subtle); }
+  .hc-kpi-delta--up { color: var(--c-success); }
+  .hc-spark { position: absolute; right: 20px; bottom: 18px; width: 84px; height: 32px; }
+
+  /* Middle row */
+  .hc-midrow { display: grid; grid-template-columns: 1fr 288px; gap: 16px; }
+  .hc-chart { padding: 20px 24px; }
+  .hc-chart-svg { display: block; width: 640px; height: 176px; margin-top: 8px; }
+  .hc-axis { display: flex; justify-content: space-between; font-size: 11px; color: var(--c-subtle); padding: 2px 24px 0; }
+
+  /* Recent runs */
+  .hc-runs { padding: 20px; display: flex; flex-direction: column; }
+  .hc-runlist { list-style: none; margin: 10px 0 0; padding: 0; position: relative; }
+  .hc-run {
+    display: flex; align-items: flex-start; gap: 12px;
+    height: 58px; padding-top: 10px;
+    border-bottom: 1px solid var(--c-line-soft);
+  }
+  .hc-run:last-child { border-bottom: none; }
+  .hc-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 4px; flex: none; }
+  .hc-dot--success { background: var(--c-success); }
+  .hc-dot--accent { background: var(--c-accent); }
+  .hc-dot--warning { background: var(--c-warning); }
+  .hc-run-main { flex: 1; min-width: 0; }
+  .hc-run-name { display: block; font-size: 12.5px; color: var(--c-ink); }
+  .hc-run-sub { display: block; margin-top: 2px; font-size: 10.5px; color: var(--c-subtle); }
+  .hc-run-meta { font-size: 11px; color: var(--c-subtle); white-space: nowrap; }
+
+  /* Workflow stepper */
+  .hc-workflow { padding: 20px 24px 24px; }
+  .hc-stepper {
+    --progress: 0.5; /* SSR baseline = step 3 of 5 */
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    margin: 44px 56px 8px;
+    height: 84px;
+  }
+  .hc-track, .hc-track-fill {
+    position: absolute; left: 16px; right: 16px; top: 16px; height: 2px;
+  }
+  .hc-track { background: rgb(255 255 255 / 0.12); }
+  .hc-track-fill {
+    background: linear-gradient(90deg, #a78bfa, #22d3ee);
+    transform-origin: left center;
+    transform: scaleX(var(--progress));
+  }
+  .hc-step { position: relative; width: 32px; text-align: center; }
+  .hc-stepnode {
+    position: relative; z-index: 1;
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: #15151f; border: 1.5px solid #3a3a4e;
+    font-size: 11px; font-weight: 600; color: var(--c-subtle);
+  }
+  .hc-steplabel {
+    display: block; margin-top: 8px; font-size: 11px; color: var(--c-subtle);
+    white-space: nowrap;
+  }
+  .hc-humanbadge {
+    position: absolute; bottom: calc(100% + 12px); left: 50%; transform: translateX(-50%);
+    display: inline-flex; align-items: center; height: 20px; padding: 0 12px;
+    border-radius: 10px; background: rgb(34 211 238 / 0.12);
+    font-size: 10px; color: var(--c-accent); white-space: nowrap;
+  }
+  /* step-state matrix: done < active < future, driven by .hc-step-N on the stepper */
+  .hc-stepper[class*='hc-step-'] .hc-step { color: var(--c-subtle); }
+  /* done + active node styling per current step */
+  .hc-step-2 .hc-step:nth-child(-n + 4) .hc-stepnode, /* children 1-2 are track elements */
+  .hc-step-3 .hc-step:nth-child(-n + 5) .hc-stepnode,
+  .hc-step-4 .hc-step:nth-child(-n + 6) .hc-stepnode,
+  .hc-step-5 .hc-step:nth-child(-n + 7) .hc-stepnode {
+    background: var(--c-node);
+    border-color: var(--c-brand);
+    color: var(--c-ink);
+  }
+  .hc-step-2 .hc-step[data-step='2'] .hc-stepnode,
+  .hc-step-3 .hc-step[data-step='3'] .hc-stepnode,
+  .hc-step-4 .hc-step[data-step='4'] .hc-stepnode,
+  .hc-step-5 .hc-step[data-step='5'] .hc-stepnode {
+    border-color: var(--c-accent);
+  }
+  .hc-step-2 .hc-step[data-step='2'] .hc-steplabel,
+  .hc-step-3 .hc-step[data-step='3'] .hc-steplabel,
+  .hc-step-4 .hc-step[data-step='4'] .hc-steplabel,
+  .hc-step-5 .hc-step[data-step='5'] .hc-steplabel {
+    color: var(--c-accent);
+  }
+  .hc-step-2 { --progress: 0.25; }
+  .hc-step-3 { --progress: 0.5; }
+  .hc-step-4 { --progress: 0.75; }
+  .hc-step-5 { --progress: 1; }
+  .hc-step-4 .hc-humanbadge { background: rgb(34 211 238 / 0.28); box-shadow: 0 0 0 1px rgb(34 211 238 / 0.4); }
+
+  /* ── Motion (JS-armed; default/reduced-motion state = fully drawn & static) ── */
+  @media (prefers-reduced-motion: no-preference) {
+    /* pulses — the only continuous motion */
+    :global(.hc-live) .hc-livedot::after,
+    :global(.hc-live) .hc-endpoint {
+      animation: hc-pulse 2.6s var(--ease-smooth, ease-in-out) infinite;
+    }
+    :global(.hc-live) .hc-livedot::after {
+      content: ''; position: absolute; inset: -4px; border-radius: 50%;
+      border: 1px solid var(--c-success);
+    }
+    :global(.hc-live) .hc-step-3 .hc-step[data-step='3'] .hc-stepnode,
+    :global(.hc-live) .hc-step-2 .hc-step[data-step='2'] .hc-stepnode,
+    :global(.hc-live) .hc-step-4 .hc-step[data-step='4'] .hc-stepnode {
+      animation: hc-node-pulse 2.6s var(--ease-smooth, ease-in-out) infinite;
+    }
+
+    /* chart draw-on: armed = undrawn; .hc-live triggers the transition */
+    :global(.hc-armed) .hc-draw { stroke-dasharray: 1; stroke-dashoffset: 1; }
+    :global(.hc-armed) .hc-fill,
+    :global(.hc-armed) .hc-endpoint { opacity: 0; }
+    :global(.hc-armed.hc-live) .hc-draw {
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset 1.6s var(--ease-quint, cubic-bezier(0.22, 1, 0.36, 1)) 0.2s;
+    }
+    :global(.hc-armed.hc-live) .hc-fill {
+      opacity: 1;
+      transition: opacity 0.9s ease 1.1s;
+    }
+    :global(.hc-armed.hc-live) .hc-endpoint {
+      opacity: 1;
+      transition: opacity 0.4s ease 1.7s;
+    }
+
+    /* stepper fill moves between states */
+    .hc-track-fill { transition: transform 0.45s var(--ease-quint, ease-out); }
+
+    /* run list choreography */
+    .hc-run { transition: transform 0.45s var(--ease-quint, ease-out), opacity 0.45s ease; }
+    :global(.hc-enter) { transform: translateY(-10px); opacity: 0; }
+    :global(.hc-exit) { transform: translateY(10px); opacity: 0; }
+    :global(.hc-flash) { animation: hc-row-flash 1.1s ease-out 1; }
+
+    /* loop reset cross-fade */
+    :global([data-hc-stage]) { transition: opacity 0.3s ease; }
+    :global(.hc-fading) { opacity: 0; }
+  }
+
+  @keyframes hc-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.45; transform: scale(1.35); }
+  }
+  @keyframes hc-node-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgb(34 211 238 / 0.35); }
+    50% { box-shadow: 0 0 0 7px rgb(34 211 238 / 0); }
+  }
+  @keyframes hc-row-flash {
+    0% { background: rgb(34 211 238 / 0.14); }
+    100% { background: transparent; }
+  }
+</style>
+
+<script>
+  import { initConsole, setRun, rotateRunList, setStep, scheduleIdle } from '@/lib/consoleLoop';
+  import type { ConsoleContext } from '@/lib/consoleLoop';
+
+  function setup() {
+    const root = document.querySelector<HTMLElement>('[data-console="hero-console"]');
+    if (!root) return;
+
+    /* ~46s story. One focal event per keyframe; ≥4s rest between beats. */
+    initConsole(root, {
+      loopMs: 46000,
+      keyframes: [
+        {
+          // Approve: contract 3/5 → 4/5, stepper advances to the human gate.
+          t: 8000,
+          apply: ({ root, strings }: ConsoleContext) => {
+            setRun(root, 'contract', {
+              sub: strings['contract.approved.sub'],
+              meta: strings['contract.approved.meta'],
+              flash: true,
+            });
+            setStep(root, 4);
+          },
+        },
+        {
+          // Complete: contract 5/5 done; stepper reaches Post.
+          t: 15000,
+          apply: ({ root, strings }: ConsoleContext) => {
+            setRun(root, 'contract', {
+              sub: strings['contract.done.sub'],
+              meta: strings['contract.done.meta'],
+              dot: 'success',
+              flash: true,
+            });
+            setStep(root, 5);
+          },
+        },
+        {
+          // Rotate: a fresh run arrives on top, the oldest leaves; timeline advances.
+          t: 21000,
+          apply: ({ root, strings }: ConsoleContext) => {
+            rotateRunList(root, 'email');
+            setRun(root, 'invoice', { meta: strings['invoice.later'] });
+            setStep(root, 2);
+          },
+        },
+        {
+          // Progress: the new run advances — every 3rd loop it hits a retry first
+          // (a 99.2% success rate implies occasional failures; flawless reads fake).
+          t: 30000,
+          apply: ({ root, strings, loop }: ConsoleContext) => {
+            if (loop % 3 === 2) {
+              setRun(root, 'email', {
+                sub: strings['email.retry.sub'],
+                meta: strings['email.retry.meta'],
+                dot: 'warning',
+                flash: true,
+              });
+            } else {
+              setRun(root, 'email', { sub: strings['email.progress.sub'], flash: false });
+            }
+            setStep(root, 3);
+          },
+        },
+        {
+          // Recover: retry succeeds — back to the canonical running pose.
+          t: 36000,
+          apply: ({ root, strings, loop }: ConsoleContext) => {
+            if (loop % 3 === 2) {
+              setRun(root, 'email', {
+                sub: strings['email.progress.sub'],
+                meta: strings['email.running.meta'],
+                dot: 'accent',
+                flash: true,
+              });
+            }
+          },
+        },
+      ],
+    });
+  }
+
+  const arm = () => scheduleIdle(setup);
+  document.addEventListener('astro:page-load', arm);
+  if (document.readyState !== 'loading') arm();
+</script>
