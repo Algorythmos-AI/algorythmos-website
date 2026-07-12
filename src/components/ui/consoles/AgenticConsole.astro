@@ -1,0 +1,271 @@
+---
+/**
+ * AgenticConsole — living port of service-agentic-automation.svg (1120×760).
+ * Signature loop (~30s): the paused human-approval gate is approved → the final
+ * "Post to system" step runs → completes; run stats update; then the run resets.
+ */
+import ConsoleShell from '@/components/ui/ConsoleShell.astro';
+import { asLocale, useTranslations } from '@/i18n';
+import { serviceVisuals } from '@/data/visuals';
+
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const v = serviceVisuals['agentic-automation'];
+
+const timeline = [
+  { title: t('console.svc.agentic.step1'), sub: 'plan · 5 tool steps', state: 'done' },
+  { title: t('console.svc.agentic.step2'), sub: 'tool: storage.get · validated', state: 'done' },
+  { title: t('console.svc.agentic.step3'), sub: 'tool: doc.extract · 18 clauses', state: 'done' },
+  { title: t('console.svc.agentic.step4'), sub: 'tool: policy.eval · 2 flagged', state: 'review' },
+  { title: t('console.svc.agentic.step5'), sub: t('console.svc.agentic.step5sub'), state: 'pending', key: 'approval' },
+  { title: t('console.svc.agentic.step6'), sub: 'tool: erp.write', state: 'queued', key: 'post' },
+];
+
+const guardrails = [
+  { label: t('console.svc.agentic.g1'), tone: 'success' },
+  { label: t('console.svc.agentic.g2'), tone: 'success' },
+  { label: t('console.svc.agentic.g3'), tone: 'success' },
+  { label: t('console.svc.agentic.g4'), tone: 'accent', key: 'gate' },
+  { label: t('console.svc.agentic.g5'), tone: 'success' },
+];
+
+const stats = [
+  { label: t('console.svc.agentic.s1'), value: '5', key: 'tools' },
+  { label: t('console.svc.agentic.s2'), value: '12', key: 'checks' },
+  { label: t('console.svc.agentic.s3'), value: '3' },
+  { label: 'Tokens', value: '48.2k' },
+  { label: t('console.svc.agentic.s4'), value: '7.4 s', key: 'duration' },
+];
+
+const strings = {
+  approvedSub: t('console.svc.agentic.approvedSub'),
+  approvedMeta: t('console.meta.approved'),
+  postingSub: t('console.svc.agentic.postingSub'),
+  runningMeta: t('console.meta.running'),
+  doneSub: t('console.svc.agentic.doneSub'),
+  doneMeta: t('console.svc.agentic.doneMeta'),
+  headerDone: t('console.svc.agentic.headerDone'),
+  headerAwaiting: t('console.svc.agentic.headerAwaiting'),
+};
+
+const statuses: Record<string, string> = {
+  done: t('console.svc.agentic.stDone'),
+  review: t('console.svc.agentic.stReview'),
+  pending: t('console.svc.agentic.stPending'),
+  queued: t('console.svc.agentic.stQueued'),
+};
+---
+
+<ConsoleShell svgFile={v.file} width={v.width} height={v.height} altKey={v.altKey} name="svc-agentic-automation">
+  <div class="hc ac">
+    <script type="application/json" data-hc-strings set:html={JSON.stringify(strings)} />
+    <div class="hc-chrome">
+      <span class="hc-tdot"></span><span class="hc-tdot"></span><span class="hc-tdot"></span>
+      <span class="hc-urlpill">app.algorythmos.com/agents/contract-review</span>
+    </div>
+
+    <div class="ac-head">
+      <div>
+        <div class="ac-title">{t('console.svc.agentic.title')}</div>
+        <div class="ac-sub" data-slot="runsub" data-hc-stage>{t('console.svc.agentic.runSub')}</div>
+      </div>
+      <span class="hc-livepill hc-livepill--accent"><span class="hc-livedot"></span>{t('console.svc.agentic.hitl')}</span>
+    </div>
+
+    <div class="ac-cols">
+      {/* Run timeline */}
+      <div class="hc-card ac-timeline">
+        <div class="hc-card-title">{t('console.svc.agentic.timeline')}</div>
+        <div class="ac-steps" data-hc-stage>
+          <span class="ac-rail" aria-hidden="true"></span>
+          <span class="ac-rail-fill" aria-hidden="true"></span>
+          {timeline.map((s) => (
+            <div class="ac-step" data-state={s.state} data-tstep={s.key}>
+              <span class="ac-node">
+                {(s.state === 'done' || s.state === 'review') && (
+                  <svg viewBox="0 0 18 18" aria-hidden="true"><path d="M5 9.5 l2.5 2.5 L13.5 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                )}
+                {s.state === 'pending' && <span class="ac-node-dot"></span>}
+              </span>
+              <span class="ac-step-main">
+                <span class="ac-step-title">{s.title}</span>
+                <span class="ac-step-sub" data-slot="sub">{s.sub}</span>
+              </span>
+              <span class="ac-step-status" data-slot="status">{statuses[s.state]}</span>
+            </div>
+          ))}
+          <div class="ac-approvebar">
+            <span class="ac-approvetext" data-slot="decision">{t('console.svc.agentic.decision')}</span>
+            <span class="hc-cta ac-btn" data-slot="approve">{t('console.svc.agentic.approve')}</span>
+            <span class="ac-btn ac-btn--ghost">{t('console.svc.agentic.reject')}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Guardrails */}
+      <div class="hc-card ac-guard">
+        <div class="hc-card-title">{t('console.svc.agentic.guardrails')}</div>
+        <ul class="ac-checks">
+          {guardrails.map((g) => (
+            <li class="ac-check" data-tone={g.tone} data-guard={g.key}>
+              <span class="ac-check-icon">
+                <svg viewBox="0 0 18 18" aria-hidden="true"><path d="M5 9.5 l2.5 2.5 L13.5 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              </span>
+              {g.label}
+            </li>
+          ))}
+        </ul>
+        <div class="ac-divider"></div>
+        <div class="ac-runstats" data-hc-stage>
+          <div class="ac-runstats-title">{t('console.svc.agentic.thisRun')}</div>
+          {stats.map((s) => (
+            <div class="ac-stat">
+              <span>{s.label}</span>
+              <span class="ac-stat-val" data-stat={s.key}>{s.value}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</ConsoleShell>
+
+<style>
+  .ac { width: 1120px; height: 760px; }
+  .ac-head { display: flex; align-items: flex-start; justify-content: space-between; padding: 24px 40px 0; }
+  .ac-title { font-size: 18px; font-weight: 600; }
+  .ac-sub { margin-top: 6px; font-size: 12.5px; color: var(--c-muted); }
+  .ac-cols { display: grid; grid-template-columns: 660px 1fr; gap: 20px; padding: 22px 40px 40px; flex: 1; min-height: 0; }
+  .ac-timeline, .ac-guard { background: var(--c-card-2); padding: 24px; }
+
+  .ac-steps { position: relative; margin-top: 18px; padding-left: 2px; }
+  .ac-rail, .ac-rail-fill { position: absolute; left: 11px; top: 14px; width: 2px; height: 440px; }
+  .ac-rail { background: rgb(255 255 255 / 0.1); }
+  .ac-rail-fill {
+    background: var(--c-brand);
+    transform-origin: top center;
+    transform: scaleY(var(--rail, 0.6));
+  }
+  .ac-step { position: relative; display: flex; align-items: flex-start; gap: 18px; height: 70px; }
+  .ac-node {
+    position: relative; z-index: 1;
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 24px; height: 24px; border-radius: 50%; flex: none;
+    background: var(--c-node); border: 1.5px solid #3a3a4e;
+    color: var(--c-success);
+  }
+  .ac-node svg { width: 15px; height: 15px; }
+  .ac-node-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--c-accent); }
+  .ac-step[data-state='done'] .ac-node { border-color: var(--c-success); }
+  .ac-step[data-state='review'] .ac-node { border-color: var(--c-success); }
+  .ac-step[data-state='pending'] .ac-node { border-color: var(--c-accent); }
+  .ac-step[data-state='queued'] .ac-node { background: #13131c; }
+  .ac-step-main { flex: 1; min-width: 0; padding-top: 2px; }
+  .ac-step-title { display: block; font-size: 13px; font-weight: 600; }
+  .ac-step[data-state='queued'] .ac-step-title { color: var(--c-muted); }
+  .ac-step-sub { display: block; margin-top: 3px; font-size: 10.5px; color: var(--c-subtle); }
+  .ac-step[data-state='pending'] .ac-step-sub { color: var(--c-accent); }
+  .ac-step-status { font-size: 10.5px; color: var(--c-subtle); padding-top: 4px; white-space: nowrap; }
+  .ac-step[data-state='done'] .ac-step-status { color: var(--c-success); }
+  .ac-step[data-state='review'] .ac-step-status { color: var(--c-warning); }
+  .ac-step[data-state='pending'] .ac-step-status { color: var(--c-accent); }
+
+  .ac-approvebar {
+    display: flex; align-items: center; gap: 12px;
+    margin-top: 8px; padding: 14px 20px;
+    background: var(--c-card); border: 1px solid var(--c-line-soft); border-radius: 10px;
+  }
+  .ac-approvetext { flex: 1; font-size: 11.5px; color: var(--c-muted); }
+  .ac-btn { height: 30px; padding: 0 24px; font-size: 12px; border-radius: 8px; display: inline-flex; align-items: center; }
+  .ac-btn--ghost { border: 1px solid #3a3a4e; color: var(--c-muted); font-weight: 400; }
+
+  .ac-checks { list-style: none; margin: 20px 0 0; padding: 0; display: flex; flex-direction: column; gap: 24px; }
+  .ac-check { display: flex; align-items: center; gap: 14px; font-size: 12.5px; }
+  .ac-check-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 20px; height: 20px; border-radius: 50%; flex: none;
+    background: rgb(52 211 153 / 0.15); color: var(--c-success);
+  }
+  .ac-check[data-tone='accent'] .ac-check-icon { background: rgb(34 211 238 / 0.15); color: var(--c-accent); }
+  .ac-check-icon svg { width: 13px; height: 13px; }
+  .ac-divider { height: 1px; background: var(--c-line-soft); margin: 26px 0 22px; }
+  .ac-runstats-title { font-size: 12.5px; font-weight: 600; margin-bottom: 14px; }
+  .ac-stat { display: flex; justify-content: space-between; font-size: 11.5px; color: var(--c-muted); padding: 8px 0; }
+  .ac-stat-val { color: var(--c-ink); font-variant-numeric: tabular-nums; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .ac-rail-fill { transition: transform 0.6s var(--ease-quint, ease-out); }
+    :global(.hc-live) .ac-step[data-state='pending'] .ac-node {
+      animation: hc-node-pulse 2.6s var(--ease-smooth, ease-in-out) infinite;
+    }
+    :global(.hc-live) .ac-check[data-guard='gate'] .ac-check-icon {
+      animation: hc-node-pulse 2.6s var(--ease-smooth, ease-in-out) infinite;
+    }
+  }
+</style>
+
+<script>
+  import { initConsole, scheduleIdle } from '@/lib/consoleLoop';
+  import type { ConsoleContext } from '@/lib/consoleLoop';
+
+  function setStepState(root: HTMLElement, key: string, patch: { state?: string; sub?: string; status?: string; flash?: boolean }) {
+    const step = root.querySelector<HTMLElement>(`[data-tstep="${key}"]`);
+    if (!step) return;
+    if (patch.state) step.dataset.state = patch.state;
+    if (patch.sub !== undefined) { const el = step.querySelector('[data-slot="sub"]'); if (el) el.textContent = patch.sub; }
+    if (patch.status !== undefined) { const el = step.querySelector('[data-slot="status"]'); if (el) el.textContent = patch.status; }
+    if (patch.flash) { step.classList.remove('hc-flash'); void step.offsetWidth; step.classList.add('hc-flash'); }
+  }
+  const rail = (root: HTMLElement, v: number) => {
+    const el = root.querySelector<HTMLElement>('.ac-rail-fill');
+    if (el) el.style.setProperty('--rail', String(v));
+  };
+  const stat = (root: HTMLElement, key: string, v: string) => {
+    const el = root.querySelector<HTMLElement>(`[data-stat="${key}"]`);
+    if (el) el.textContent = v;
+  };
+
+  function setup() {
+    const root = document.querySelector<HTMLElement>('[data-console="svc-agentic-automation"]');
+    if (!root) return;
+    initConsole(root, {
+      loopMs: 30000,
+      keyframes: [
+        {
+          // The reviewer approves — the gate opens.
+          t: 7000,
+          apply: ({ root, strings }: ConsoleContext) => {
+            setStepState(root, 'approval', { state: 'done', sub: strings['approvedSub'], status: strings['approvedMeta'], flash: true });
+            const btn = root.querySelector('[data-slot="approve"]');
+            if (btn) { btn.classList.remove('hc-flash'); btn.classList.add('hc-flash'); }
+            rail(root, 0.76);
+          },
+        },
+        {
+          // Final step starts writing to the ERP.
+          t: 12000,
+          apply: ({ root, strings }: ConsoleContext) => {
+            setStepState(root, 'post', { state: 'pending', sub: strings['postingSub'], status: strings['runningMeta'] });
+            rail(root, 0.9);
+          },
+        },
+        {
+          // Run completes; stats update coherently.
+          t: 18000,
+          apply: ({ root, strings }: ConsoleContext) => {
+            setStepState(root, 'post', { state: 'done', sub: strings['doneSub'], status: strings['doneMeta'], flash: true });
+            rail(root, 1);
+            stat(root, 'tools', '6');
+            stat(root, 'checks', '14');
+            stat(root, 'duration', '9.1 s');
+            const sub = root.querySelector('[data-slot="runsub"]');
+            if (sub) sub.textContent = strings['headerDone'];
+          },
+        },
+      ],
+    });
+  }
+  const arm = () => scheduleIdle(setup);
+  document.addEventListener('astro:page-load', arm);
+  if (document.readyState !== 'loading') arm();
+</script>

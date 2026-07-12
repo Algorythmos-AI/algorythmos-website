@@ -1,0 +1,225 @@
+---
+/**
+ * DocumentConsole — living port of service-document-intelligence.svg (1120×760).
+ * Signature: on first view a scan line sweeps the invoice and the extracted
+ * fields populate one-by-one with growing confidence bars; the loop advances
+ * the batch counter and re-scans the next invoice (~24s).
+ */
+import ConsoleShell from '@/components/ui/ConsoleShell.astro';
+import { asLocale, useTranslations } from '@/i18n';
+import { serviceVisuals } from '@/data/visuals';
+
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const v = serviceVisuals['document-intelligence'];
+
+const fields = [
+  { label: t('console.svc.doc.f1'), value: 'INV-2048', conf: 99, tone: 'success' },
+  { label: t('console.svc.doc.f2'), value: '2026-05-12', conf: 98, tone: 'success' },
+  { label: t('console.svc.doc.f3'), value: 'Acme Pty Ltd', conf: 97, tone: 'success' },
+  { label: t('console.svc.doc.f4'), value: '$12,480.00', conf: 95, tone: 'warning' },
+  { label: t('console.svc.doc.f5'), value: '$1,134.55', conf: 96, tone: 'success' },
+];
+
+const strings = {
+  batch2: t('console.svc.doc.batch2'),
+  scanning: t('console.svc.doc.scanning'),
+  validated: t('console.svc.doc.validated'),
+};
+---
+
+<ConsoleShell svgFile={v.file} width={v.width} height={v.height} altKey={v.altKey} name="svc-document-intelligence">
+  <div class="hc dc">
+    <script type="application/json" data-hc-strings set:html={JSON.stringify(strings)} />
+    <div class="hc-chrome">
+      <span class="hc-tdot"></span><span class="hc-tdot"></span><span class="hc-tdot"></span>
+      <span class="hc-urlpill">app.algorythmos.com/documents</span>
+    </div>
+
+    <div class="dc-head">
+      <div>
+        <div class="dc-title">{t('console.svc.doc.title')}</div>
+        <div class="dc-sub" data-slot="batch" data-hc-stage>{t('console.svc.doc.batch1')}</div>
+      </div>
+      <span class="hc-cta">{t('console.svc.doc.export')}</span>
+    </div>
+
+    <div class="dc-cols">
+      {/* Document */}
+      <div class="hc-card dc-docpanel">
+        <div class="dc-paper">
+          <span class="dc-scan" aria-hidden="true"></span>
+          <div class="dc-vendor">Acme Pty Ltd</div>
+          <div class="dc-doclabel">INVOICE</div>
+          <div class="dc-hl dc-hl--brand" style="top: 24px; right: 24px;">
+            <span class="dc-hl-label">Invoice #</span><span class="dc-hl-value">INV-2048</span>
+          </div>
+          <div class="dc-hl dc-hl--accent" style="top: 64px; right: 24px;">
+            <span class="dc-hl-label">Date</span><span class="dc-hl-value">2026-05-12</span>
+          </div>
+          <div class="dc-rule" style="margin-top: 64px;"></div>
+          <div class="dc-lines">
+            {[220, 190, 234, 170].map((w) => (
+              <div class="dc-lineitem"><span style={`width: ${w}px`}></span><span style="width: 74px"></span></div>
+            ))}
+          </div>
+          <div class="dc-rule"></div>
+          <div class="dc-hl dc-hl--success dc-hl--total">
+            <span class="dc-hl-label">Total</span><span class="dc-hl-value dc-hl-value--big">$12,480.00</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Extracted fields */}
+      <div class="hc-card dc-fields">
+        <div class="dc-fields-head">
+          <span class="hc-card-title">{t('console.svc.doc.extracted')}</span>
+          <span class="dc-validated">{t('console.svc.doc.count')}</span>
+        </div>
+        <div data-hc-stage>
+          {fields.map((f, i) => (
+            <div class="dc-field" style={`--i: ${i}`}>
+              <span class="dc-field-main">
+                <span class="dc-field-label">{f.label}</span>
+                <span class="dc-field-value">{f.value}</span>
+              </span>
+              <span class="dc-field-conf" data-tone={f.tone}>
+                <span class="dc-conf-pct">{f.conf}%</span>
+                <span class="dc-conf-track"><span class="dc-conf-bar" style={`--w: ${f.conf}%`}></span></span>
+              </span>
+            </div>
+          ))}
+        </div>
+        <div class="dc-status">
+          <span class="hc-dot hc-dot--success"></span>
+          <span>
+            <span class="dc-status-title" data-slot="vstatus">{t('console.svc.doc.passed')}</span>
+            <span class="dc-status-sub">{t('console.svc.doc.passedSub')}</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</ConsoleShell>
+
+<style>
+  .dc { width: 1120px; height: 760px; }
+  .dc-head { display: flex; align-items: flex-start; justify-content: space-between; padding: 24px 40px 0; }
+  .dc-title { font-size: 18px; font-weight: 600; }
+  .dc-sub { margin-top: 6px; font-size: 12.5px; color: var(--c-muted); }
+  .dc-cols { display: grid; grid-template-columns: 470px 1fr; gap: 20px; padding: 22px 40px 40px; flex: 1; min-height: 0; }
+  .dc-docpanel { background: var(--c-card-2); padding: 32px; }
+  .dc-fields { background: var(--c-card-2); padding: 24px; display: flex; flex-direction: column; }
+
+  /* The invoice "paper" */
+  .dc-paper {
+    position: relative; height: 100%; border-radius: 8px; background: #f6f6f4;
+    padding: 40px 24px 24px; color: #1b1b24; overflow: hidden;
+  }
+  .dc-vendor { font-size: 17px; font-weight: 700; }
+  .dc-doclabel { margin-top: 6px; font-size: 10.5px; letter-spacing: 0.08em; color: #6a6a76; }
+  .dc-hl {
+    position: absolute; display: flex; flex-direction: column; gap: 1px;
+    width: 134px; padding: 5px 10px; border-radius: 6px; border: 1.5px solid;
+  }
+  .dc-hl--brand { border-color: #a78bfa; }
+  .dc-hl--brand .dc-hl-label { color: #7c5cf0; }
+  .dc-hl--accent { border-color: #22d3ee; }
+  .dc-hl--accent .dc-hl-label { color: #0e9fb8; }
+  .dc-hl--success { border-color: #34d399; }
+  .dc-hl--success .dc-hl-label { color: #1c9e74; }
+  .dc-hl--total { position: static; width: 154px; margin: 20px 0 0 auto; }
+  .dc-hl-label { font-size: 9px; }
+  .dc-hl-value { font-size: 11px; font-weight: 600; }
+  .dc-hl-value--big { font-size: 13px; font-weight: 700; }
+  .dc-rule { height: 1px; background: #dededa; margin: 24px 0 0; }
+  .dc-lines { display: flex; flex-direction: column; gap: 19px; margin-top: 20px; }
+  .dc-lineitem { display: flex; justify-content: space-between; }
+  .dc-lineitem span { height: 9px; border-radius: 4px; background: #c9c9c4; display: block; }
+
+  /* Scan line — sweeps on first view + each loop rescan */
+  .dc-scan {
+    position: absolute; left: 0; right: 0; top: -4px; height: 3px;
+    background: linear-gradient(90deg, transparent, #7c5cf0, transparent);
+    opacity: 0;
+  }
+
+  /* Extracted fields */
+  .dc-fields-head { display: flex; justify-content: space-between; align-items: baseline; }
+  .dc-validated { font-size: 11.5px; color: var(--c-success); }
+  .dc-field {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    height: 76px; border-bottom: 1px solid var(--c-line-soft);
+  }
+  .dc-field-label { display: block; font-size: 11.5px; color: var(--c-subtle); }
+  .dc-field-value { display: block; margin-top: 4px; font-size: 14px; font-weight: 600; }
+  .dc-field-conf { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; width: 152px; flex: none; }
+  .dc-conf-pct { font-size: 11px; color: var(--c-success); }
+  .dc-field-conf[data-tone='warning'] .dc-conf-pct { color: var(--c-warning); }
+  .dc-conf-track { width: 100%; height: 5px; border-radius: 2.5px; background: rgb(255 255 255 / 0.08); overflow: hidden; }
+  .dc-conf-bar {
+    display: block; height: 100%; width: var(--w); border-radius: 2.5px; background: var(--c-success);
+    transform-origin: left center;
+  }
+  .dc-field-conf[data-tone='warning'] .dc-conf-bar { background: var(--c-warning); }
+  .dc-status {
+    display: flex; align-items: flex-start; gap: 12px; margin-top: auto;
+    padding: 14px 20px; background: var(--c-card); border: 1px solid var(--c-line-soft); border-radius: 10px;
+  }
+  .dc-status .hc-dot { margin-top: 4px; }
+  .dc-status-title { display: block; font-size: 12px; }
+  .dc-status-sub { display: block; margin-top: 3px; font-size: 10.5px; color: var(--c-subtle); }
+
+  @media (prefers-reduced-motion: no-preference) {
+    /* first-view: fields cascade in, bars grow */
+    :global(.hc-armed) .dc-field { opacity: 0; transform: translateY(6px); }
+    :global(.hc-armed) .dc-conf-bar { transform: scaleX(0); }
+    :global(.hc-armed.hc-live) .dc-field {
+      opacity: 1; transform: none;
+      transition: opacity 0.45s ease calc(var(--i) * 0.14s + 0.5s), transform 0.45s var(--ease-quint, ease-out) calc(var(--i) * 0.14s + 0.5s);
+    }
+    :global(.hc-armed.hc-live) .dc-conf-bar {
+      transform: scaleX(1);
+      transition: transform 0.7s var(--ease-quint, ease-out) calc(var(--i, 0) * 0.14s + 0.8s);
+    }
+    :global(.hc-live) .dc-scan { animation: dc-sweep 2s var(--ease-smooth, ease-in-out) 0.2s 1; }
+    :global(.dc-rescan) .dc-scan { animation: dc-sweep 2s var(--ease-smooth, ease-in-out) 2; }
+  }
+  @keyframes dc-sweep {
+    0% { top: -4px; opacity: 0; }
+    8% { opacity: 1; }
+    92% { opacity: 1; }
+    100% { top: 100%; opacity: 0; }
+  }
+</style>
+
+<script>
+  import { initConsole, scheduleIdle } from '@/lib/consoleLoop';
+  import type { ConsoleContext } from '@/lib/consoleLoop';
+
+  function setup() {
+    const root = document.querySelector<HTMLElement>('[data-console="svc-document-intelligence"]');
+    if (!root) return;
+    initConsole(root, {
+      loopMs: 24000,
+      keyframes: [
+        {
+          // Next document in the batch — counter advances, a re-scan sweeps.
+          t: 14000,
+          apply: ({ root, strings }: ConsoleContext) => {
+            const batch = root.querySelector('[data-slot="batch"]');
+            if (batch) batch.textContent = strings['batch2'];
+            root.classList.add('dc-rescan');
+          },
+        },
+        {
+          t: 18000,
+          apply: ({ root }: ConsoleContext) => root.classList.remove('dc-rescan'),
+        },
+      ],
+    });
+  }
+  const arm = () => scheduleIdle(setup);
+  document.addEventListener('astro:page-load', arm);
+  if (document.readyState !== 'loading') arm();
+</script>

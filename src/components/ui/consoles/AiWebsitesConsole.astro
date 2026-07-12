@@ -1,0 +1,187 @@
+---
+/**
+ * AiWebsitesConsole — living port of service-ai-websites.svg (1120×760).
+ * Signature: the four Lighthouse score dials sweep to 100 with counting
+ * numerals on first view, then CWV bars grow; the loop is a periodic audit
+ * re-run beat (~26s) that re-pulses the rings.
+ */
+import ConsoleShell from '@/components/ui/ConsoleShell.astro';
+import { asLocale, useTranslations } from '@/i18n';
+import { serviceVisuals } from '@/data/visuals';
+
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const v = serviceVisuals['ai-websites'];
+
+const rings = [
+  t('console.svc.web.perf'),
+  t('console.svc.web.a11y'),
+  t('console.svc.web.bp'),
+  'SEO',
+];
+const RING_C = 2 * Math.PI * 46; // ≈ 289
+
+const cwv = [
+  { label: 'Largest Contentful Paint', value: '1.2 s', w: 25 },
+  { label: 'Interaction to Next Paint', value: '48 ms', w: 14 },
+  { label: 'Cumulative Layout Shift', value: '0.01', w: 7 },
+];
+
+const checks = [
+  t('console.svc.web.c1'),
+  t('console.svc.web.c2'),
+  t('console.svc.web.c3'),
+  'llms.txt + llms-full.txt',
+  t('console.svc.web.c5'),
+];
+---
+
+<ConsoleShell svgFile={v.file} width={v.width} height={v.height} altKey={v.altKey} name="svc-ai-websites">
+  <div class="hc aw">
+    <div class="hc-chrome">
+      <span class="hc-tdot"></span><span class="hc-tdot"></span><span class="hc-tdot"></span>
+      <span class="hc-urlpill">algorythmos.com · audit</span>
+    </div>
+
+    <div class="aw-head">
+      <div>
+        <div class="aw-title">{t('console.svc.web.title')}</div>
+        <div class="aw-sub">{t('console.svc.web.sub')}</div>
+      </div>
+      <span class="hc-livepill"><span class="hc-livedot"></span>{t('console.svc.web.passing')}</span>
+    </div>
+
+    {/* Score rings */}
+    <div class="aw-rings">
+      {rings.map((label, i) => (
+        <div class="aw-ring" style={`--i: ${i}`}>
+          <svg viewBox="0 0 110 110" aria-hidden="true">
+            <circle cx="55" cy="55" r="46" fill="none" stroke="rgb(255 255 255 / 0.06)" stroke-width="7" />
+            <circle
+              class="aw-arc"
+              cx="55"
+              cy="55"
+              r="46"
+              fill="none"
+              stroke="#34d399"
+              stroke-width="7"
+              stroke-linecap="round"
+              stroke-dasharray={`${RING_C} ${RING_C}`}
+              transform="rotate(-90 55 55)"
+            />
+          </svg>
+          <span class="aw-score" data-hc-count="100" data-hc-format="int">100</span>
+          <span class="aw-ringlabel">{label}</span>
+        </div>
+      ))}
+    </div>
+
+    <div class="aw-cols">
+      {/* Core Web Vitals */}
+      <div class="hc-card aw-cwv">
+        <div class="hc-card-title">Core Web Vitals</div>
+        <div class="hc-card-sub">{t('console.svc.web.cwvSub')}</div>
+        <div class="aw-vitals">
+          {cwv.map((m, i) => (
+            <div class="aw-vital" style={`--i: ${i}`}>
+              <div class="aw-vital-row">
+                <span>{m.label}</span>
+                <span class="aw-vital-val">{m.value}</span>
+              </div>
+              <span class="aw-track"><span class="aw-bar" style={`--w: ${m.w}%`}></span></span>
+            </div>
+          ))}
+        </div>
+        <div class="aw-foot">{t('console.svc.web.foot')}</div>
+      </div>
+
+      {/* AI & search ready */}
+      <div class="hc-card aw-checklist">
+        <div class="hc-card-title">{t('console.svc.web.ready')}</div>
+        <ul class="aw-checks">
+          {checks.map((label) => (
+            <li>
+              <span class="aw-check-icon">
+                <svg viewBox="0 0 18 18" aria-hidden="true"><path d="M5 9.5 l2.5 2.5 L13.5 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              </span>
+              {label}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+</ConsoleShell>
+
+<style>
+  .aw { width: 1120px; height: 760px; }
+  .aw-head { display: flex; align-items: flex-start; justify-content: space-between; padding: 24px 40px 0; }
+  .aw-title { font-size: 18px; font-weight: 600; }
+  .aw-sub { margin-top: 6px; font-size: 12.5px; color: var(--c-muted); }
+
+  .aw-rings { display: grid; grid-template-columns: repeat(4, 1fr); padding: 26px 60px 0; }
+  .aw-ring { position: relative; display: flex; flex-direction: column; align-items: center; }
+  .aw-ring svg { width: 110px; height: 110px; }
+  .aw-score {
+    position: absolute; top: 55px; left: 50%; transform: translate(-50%, -50%);
+    font-size: 30px; font-weight: 700; font-variant-numeric: tabular-nums;
+  }
+  .aw-ringlabel { margin-top: 14px; font-size: 12.5px; color: var(--c-muted); }
+
+  .aw-cols { display: grid; grid-template-columns: 640px 1fr; gap: 20px; padding: 30px 40px 40px; flex: 1; min-height: 0; }
+  .aw-cwv, .aw-checklist { background: var(--c-card-2); padding: 24px; display: flex; flex-direction: column; }
+  .aw-vitals { display: flex; flex-direction: column; gap: 30px; margin-top: 28px; }
+  .aw-vital-row { display: flex; justify-content: space-between; align-items: baseline; font-size: 12.5px; color: var(--c-muted); }
+  .aw-vital-val { font-size: 16px; font-weight: 700; color: var(--c-success); font-variant-numeric: tabular-nums; }
+  .aw-track { display: block; margin-top: 10px; height: 6px; border-radius: 3px; background: rgb(255 255 255 / 0.08); overflow: hidden; }
+  .aw-bar { display: block; height: 100%; width: var(--w); border-radius: 3px; background: var(--c-success); transform-origin: left center; }
+  .aw-foot { margin-top: auto; font-size: 11.5px; color: var(--c-subtle); }
+  .aw-checks { list-style: none; margin: 22px 0 0; padding: 0; display: flex; flex-direction: column; gap: 26px; }
+  .aw-checks li { display: flex; align-items: center; gap: 14px; font-size: 12.5px; }
+  .aw-check-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 20px; height: 20px; border-radius: 50%; flex: none;
+    background: rgb(52 211 153 / 0.15); color: var(--c-success);
+  }
+  .aw-check-icon svg { width: 13px; height: 13px; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    /* dial sweep on first view — numerals count via data-hc-count */
+    :global(.hc-armed) .aw-arc { stroke-dashoffset: 289; }
+    :global(.hc-armed.hc-live) .aw-arc {
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset 1.4s var(--ease-quint, ease-out) calc(var(--i, 0) * 0.12s + 0.2s);
+    }
+    :global(.hc-armed) .aw-bar { transform: scaleX(0); }
+    :global(.hc-armed.hc-live) .aw-bar {
+      transform: scaleX(1);
+      transition: transform 0.7s var(--ease-quint, ease-out) calc(var(--i, 0) * 0.12s + 1.2s);
+    }
+    /* audit re-run beat */
+    :global(.aw-rerun) .aw-ring svg { animation: aw-ping 1.4s var(--ease-smooth, ease-in-out) calc(var(--i, 0) * 0.1s) 1; }
+  }
+  @keyframes aw-ping {
+    0%, 100% { transform: scale(1); }
+    35% { transform: scale(1.05); }
+  }
+</style>
+
+<script>
+  import { initConsole, scheduleIdle } from '@/lib/consoleLoop';
+  import type { ConsoleContext } from '@/lib/consoleLoop';
+
+  function setup() {
+    const root = document.querySelector<HTMLElement>('[data-console="svc-ai-websites"]');
+    if (!root) return;
+    initConsole(root, {
+      loopMs: 26000,
+      keyframes: [
+        { t: 16000, apply: ({ root }: ConsoleContext) => root.classList.add('aw-rerun') },
+        { t: 19000, apply: ({ root }: ConsoleContext) => root.classList.remove('aw-rerun') },
+      ],
+    });
+  }
+  const arm = () => scheduleIdle(setup);
+  document.addEventListener('astro:page-load', arm);
+  if (document.readyState !== 'loading') arm();
+</script>

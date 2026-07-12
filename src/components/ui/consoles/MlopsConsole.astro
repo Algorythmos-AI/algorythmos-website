@@ -1,0 +1,264 @@
+---
+/**
+ * MlopsConsole — living port of service-mlops-cicd.svg (1120×760).
+ * Signature loop (~30s): the canary deploy promotes 25% → 60% → 100%, the
+ * Deploy stage completes, Monitor becomes active, and a fresh CI/CD run row
+ * rotates in. Health bars grow on first view.
+ */
+import ConsoleShell from '@/components/ui/ConsoleShell.astro';
+import { asLocale, useTranslations } from '@/i18n';
+import { serviceVisuals } from '@/data/visuals';
+
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const v = serviceVisuals['mlops-cicd'];
+
+const stages = [
+  { title: t('console.svc.mlops.st1'), sub: t('console.svc.mlops.st1sub'), state: 'done' },
+  { title: t('console.svc.mlops.st2'), sub: t('console.svc.mlops.st2sub'), state: 'done' },
+  { title: t('console.svc.mlops.st3'), sub: t('console.svc.mlops.st3sub'), state: 'done' },
+  { title: t('console.svc.mlops.st4'), sub: t('console.svc.mlops.canary25'), state: 'active', key: 'deploy' },
+  { title: t('console.svc.mlops.st5'), sub: t('console.svc.mlops.st5sub'), state: 'queued', key: 'monitor', num: 5 },
+];
+
+const health = [
+  { label: t('console.svc.mlops.h1'), value: '94.6%', w: 94, tone: 'success' },
+  { label: t('console.svc.mlops.h2'), value: '0.93 / 0.91', w: 91, tone: 'brand' },
+  { label: t('console.svc.mlops.h3'), value: '0.04 · stable', w: 15, tone: 'success', accentText: true },
+  { label: t('console.svc.mlops.h4'), value: '38 ms', w: 25, tone: 'accent' },
+];
+
+const runs = [
+  { label: '#418 ' + t('console.svc.mlops.r418'), meta: t('console.time.justNow'), tone: 'success' },
+  { label: '#417 ' + t('console.svc.mlops.r417'), meta: '26m', tone: 'success' },
+  { label: '#416 ' + t('console.svc.mlops.r416'), meta: '1h', tone: 'success' },
+  { label: '#415 ' + t('console.svc.mlops.r415'), meta: '3h', tone: 'warning' },
+  { label: '#414 ' + t('console.svc.mlops.r414'), meta: '12h', tone: 'success' },
+];
+
+const strings = {
+  canary60: t('console.svc.mlops.canary60'),
+  canary100: t('console.svc.mlops.canary100'),
+  deployed: t('console.svc.mlops.deployed'),
+  monitoring: t('console.svc.mlops.monitoring'),
+  pillDone: t('console.svc.mlops.pillDone'),
+  r419: '#419 ' + t('console.svc.mlops.r419'),
+  justNow: t('console.time.justNow'),
+};
+---
+
+<ConsoleShell svgFile={v.file} width={v.width} height={v.height} altKey={v.altKey} name="svc-mlops-cicd">
+  <div class="hc ml">
+    <script type="application/json" data-hc-strings set:html={JSON.stringify(strings)} />
+    <div class="hc-chrome">
+      <span class="hc-tdot"></span><span class="hc-tdot"></span><span class="hc-tdot"></span>
+      <span class="hc-urlpill">app.algorythmos.com/pipelines</span>
+    </div>
+
+    <div class="ml-head">
+      <div>
+        <div class="ml-title">{t('console.svc.mlops.title')}</div>
+        <div class="ml-sub">demand-forecast · v3.2 · CI/CD run #418</div>
+      </div>
+      <span class="hc-livepill hc-livepill--accent" data-hc-stage>
+        <span class="hc-livedot"></span><span data-slot="pill">{t('console.svc.mlops.pill')}</span>
+      </span>
+    </div>
+
+    {/* Pipeline stages */}
+    <div class="ml-stages" data-hc-stage>
+      <span class="ml-rail" aria-hidden="true"></span>
+      <span class="ml-rail-fill" aria-hidden="true" style="--fill: 0.72"></span>
+      {stages.map((s) => (
+        <div class="hc-card ml-stage" data-state={s.state} data-stage={s.key}>
+          <span class="ml-node">
+            {s.state === 'done' && (
+              <svg viewBox="0 0 18 18" aria-hidden="true"><path d="M5 9.5 l2.5 2.5 L13.5 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            )}
+            {s.state === 'active' && <span class="ml-node-dot"></span>}
+            {s.state === 'queued' && s.num}
+          </span>
+          <span class="ml-stage-title">{s.title}</span>
+          <span class="ml-stage-sub" data-slot="sub">{s.sub}</span>
+        </div>
+      ))}
+    </div>
+
+    <div class="ml-cols">
+      {/* Model health */}
+      <div class="hc-card ml-health">
+        <div class="hc-card-title">{t('console.svc.mlops.health')}</div>
+        <div class="ml-bars">
+          {health.map((h, i) => (
+            <div class="ml-metric" style={`--i: ${i}`}>
+              <div class="ml-metric-row">
+                <span>{h.label}</span>
+                <span class:list={['ml-metric-val', { 'ml-metric-val--success': h.accentText }]}>{h.value}</span>
+              </div>
+              <span class="ml-track"><span class="ml-bar" data-tone={h.tone} style={`--w: ${h.w}%`}></span></span>
+            </div>
+          ))}
+        </div>
+        <div class="ml-rollback">
+          <span class="hc-dot hc-dot--success"></span>
+          <span>
+            <span class="ml-rollback-title">{t('console.svc.mlops.rollback')}</span>
+            <span class="ml-rollback-sub">{t('console.svc.mlops.rollbackSub')}</span>
+          </span>
+        </div>
+      </div>
+
+      {/* CI/CD runs */}
+      <div class="hc-card ml-runs">
+        <div class="hc-card-title">{t('console.svc.mlops.runs')}</div>
+        <ul class="ml-runlist" data-hc-runlist data-hc-stage>
+          {runs.map((r) => (
+            <li class="ml-run" data-run>
+              <span class:list={['hc-dot', `hc-dot--${r.tone}`]}></span>
+              <span class="ml-run-label">{r.label}</span>
+              <span class="ml-run-meta">{r.meta}</span>
+            </li>
+          ))}
+        </ul>
+        <template data-hc-template="promoted">
+          <li class="ml-run" data-run>
+            <span class="hc-dot hc-dot--accent"></span>
+            <span class="ml-run-label" data-slot="label"></span>
+            <span class="ml-run-meta" data-slot="meta"></span>
+          </li>
+        </template>
+      </div>
+    </div>
+  </div>
+</ConsoleShell>
+
+<style>
+  .ml { width: 1120px; height: 760px; }
+  .ml-head { display: flex; align-items: flex-start; justify-content: space-between; padding: 24px 40px 0; }
+  .ml-title { font-size: 18px; font-weight: 600; }
+  .ml-sub { margin-top: 6px; font-size: 12.5px; color: var(--c-muted); }
+
+  .ml-stages { position: relative; display: grid; grid-template-columns: repeat(5, 1fr); gap: 30px; padding: 26px 40px 0; }
+  .ml-rail, .ml-rail-fill { position: absolute; left: 120px; right: 120px; top: 76px; height: 2.5px; }
+  .ml-rail { background: rgb(255 255 255 / 0.1); }
+  .ml-rail-fill {
+    background: linear-gradient(90deg, #a78bfa, #22d3ee);
+    transform-origin: left center;
+    transform: scaleX(var(--fill, 0.72));
+  }
+  .ml-stage {
+    position: relative; z-index: 1; background: var(--c-card-2);
+    height: 150px; padding: 34px 12px 0; text-align: center;
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .ml-stage[data-state='active'] { border-color: rgb(34 211 238 / 0.5); }
+  .ml-stage[data-state='queued'] { background: #13131c; }
+  .ml-node {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--c-node); border: 1.5px solid #3a3a4e;
+    font-size: 12px; color: var(--c-subtle);
+  }
+  .ml-node svg { width: 16px; height: 16px; }
+  .ml-stage[data-state='done'] .ml-node { border-color: var(--c-success); color: var(--c-success); }
+  .ml-stage[data-state='active'] .ml-node { border-color: var(--c-accent); }
+  .ml-node-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--c-accent); }
+  .ml-stage-title { margin-top: 14px; font-size: 12.5px; font-weight: 600; }
+  .ml-stage[data-state='queued'] .ml-stage-title { color: var(--c-muted); }
+  .ml-stage-sub { margin-top: 6px; font-size: 10.5px; color: var(--c-subtle); }
+  .ml-stage[data-state='active'] .ml-stage-sub { color: var(--c-accent); }
+
+  .ml-cols { display: grid; grid-template-columns: 520px 1fr; gap: 20px; padding: 26px 40px 40px; flex: 1; min-height: 0; }
+  .ml-health, .ml-runs { background: var(--c-card-2); padding: 24px; display: flex; flex-direction: column; }
+  .ml-bars { display: flex; flex-direction: column; gap: 24px; margin-top: 22px; }
+  .ml-metric-row { display: flex; justify-content: space-between; font-size: 12px; color: var(--c-muted); }
+  .ml-metric-val { color: var(--c-ink); font-weight: 600; font-size: 13px; font-variant-numeric: tabular-nums; }
+  .ml-metric-val--success { color: var(--c-success); }
+  .ml-track { display: block; margin-top: 10px; height: 6px; border-radius: 3px; background: rgb(255 255 255 / 0.08); overflow: hidden; }
+  .ml-bar { display: block; height: 100%; width: var(--w); border-radius: 3px; transform-origin: left center; }
+  .ml-bar[data-tone='success'] { background: var(--c-success); }
+  .ml-bar[data-tone='brand'] { background: var(--c-brand); }
+  .ml-bar[data-tone='accent'] { background: var(--c-accent); }
+  .ml-rollback {
+    display: flex; align-items: flex-start; gap: 12px; margin-top: auto;
+    padding: 14px 20px; background: var(--c-card); border: 1px solid var(--c-line-soft); border-radius: 10px;
+  }
+  .ml-rollback .hc-dot { margin-top: 4px; }
+  .ml-rollback-title { display: block; font-size: 11.5px; }
+  .ml-rollback-sub { display: block; margin-top: 3px; font-size: 10.5px; color: var(--c-subtle); }
+
+  .ml-runlist { list-style: none; margin: 14px 0 0; padding: 0; }
+  .ml-run { display: flex; align-items: center; gap: 14px; height: 48px; border-bottom: 1px solid var(--c-line-soft); font-size: 12px; }
+  .ml-run:last-child { border-bottom: none; }
+  .ml-run-label { flex: 1; min-width: 0; }
+  .ml-run-meta { font-size: 11px; color: var(--c-subtle); white-space: nowrap; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.hc-armed) .ml-bar { transform: scaleX(0); }
+    :global(.hc-armed.hc-live) .ml-bar {
+      transform: scaleX(1);
+      transition: transform 0.7s var(--ease-quint, ease-out) calc(var(--i, 0) * 0.12s + 0.4s);
+    }
+    .ml-rail-fill { transition: transform 0.6s var(--ease-quint, ease-out); }
+    .ml-run { transition: transform 0.45s var(--ease-quint, ease-out), opacity 0.45s ease; }
+    :global(.hc-live) .ml-stage[data-state='active'] .ml-node {
+      animation: hc-node-pulse 2.6s var(--ease-smooth, ease-in-out) infinite;
+    }
+  }
+</style>
+
+<script>
+  import { initConsole, scheduleIdle } from '@/lib/consoleLoop';
+  import type { ConsoleContext } from '@/lib/consoleLoop';
+
+  function stage(root: HTMLElement, key: string, patch: { state?: string; sub?: string }) {
+    const el = root.querySelector<HTMLElement>(`[data-stage="${key}"]`);
+    if (!el) return;
+    if (patch.state) el.dataset.state = patch.state;
+    if (patch.sub !== undefined) { const s = el.querySelector('[data-slot="sub"]'); if (s) s.textContent = patch.sub; }
+  }
+  const fill = (root: HTMLElement, v: number) => {
+    const el = root.querySelector<HTMLElement>('.ml-rail-fill');
+    if (el) el.style.setProperty('--fill', String(v));
+  };
+
+  function setup() {
+    const root = document.querySelector<HTMLElement>('[data-console="svc-mlops-cicd"]');
+    if (!root) return;
+    initConsole(root, {
+      loopMs: 30000,
+      keyframes: [
+        { t: 7000, apply: ({ root, strings }: ConsoleContext) => stage(root, 'deploy', { sub: strings['canary60'] }) },
+        { t: 13000, apply: ({ root, strings }: ConsoleContext) => { stage(root, 'deploy', { sub: strings['canary100'] }); fill(root, 0.86); } },
+        {
+          // Deploy completes; monitoring takes over; the run log gets its promotion entry.
+          t: 19000,
+          apply: ({ root, strings }: ConsoleContext) => {
+            stage(root, 'deploy', { state: 'done', sub: strings['deployed'] });
+            stage(root, 'monitor', { state: 'active', sub: strings['monitoring'] });
+            fill(root, 1);
+            const pill = root.querySelector('[data-slot="pill"]');
+            if (pill) pill.textContent = strings['pillDone'];
+            const tpl = root.querySelector<HTMLTemplateElement>('template[data-hc-template="promoted"]');
+            const list = root.querySelector('[data-hc-runlist]');
+            if (tpl && list) {
+              const row = tpl.content.firstElementChild?.cloneNode(true) as HTMLElement;
+              const label = row.querySelector('[data-slot="label"]');
+              const meta = row.querySelector('[data-slot="meta"]');
+              if (label) label.textContent = strings['r419'];
+              if (meta) meta.textContent = strings['justNow'];
+              row.classList.add('hc-enter');
+              list.prepend(row);
+              requestAnimationFrame(() => requestAnimationFrame(() => row.classList.remove('hc-enter')));
+              const rows = list.querySelectorAll('[data-run]');
+              if (rows.length > 5) rows[rows.length - 1].remove();
+            }
+          },
+        },
+      ],
+    });
+  }
+  const arm = () => scheduleIdle(setup);
+  document.addEventListener('astro:page-load', arm);
+  if (document.readyState !== 'loading') arm();
+</script>
