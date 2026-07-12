@@ -20,6 +20,7 @@
     "link:check": "node scripts/link-check.mjs",
     "keys:check": "node scripts/check-keys.mjs",
     "perf": "node scripts/perf-report.js",
+    "lh": "node scripts/lh-check.mjs",
     "compress:videos": "node scripts/compress-video.mjs",
     "i18n:check": "node scripts/i18nCheck.mjs",
     "health:check": "node scripts/healthCheck.mjs"
