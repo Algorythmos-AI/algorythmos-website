@@ -64,6 +64,14 @@ export const blogRelated: Record<string, RelatedRef[]> = {
     { type: 'service', slug: 'document-intelligence' },
     { type: 'case-study', slug: 'healthcare-burden' },
   ],
+  'ai-automation-australian-smes': [
+    { type: 'service', slug: 'agentic-automation' },
+    { type: 'blog', slug: 'ai-consultancy-australia' },
+  ],
+  'eu-ai-act-gdpr-sme-roadmap': [
+    { type: 'service', slug: 'document-intelligence' },
+    { type: 'blog', slug: 'gdpr-ai' },
+  ],
 };
 
 /** Case study → the service that delivered it + a sibling study. */

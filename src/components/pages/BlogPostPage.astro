@@ -68,9 +68,31 @@ const crumbItems = [
   { name: title, url: abs(path) },
 ];
 const crumbs = breadcrumb(crumbItems);
+
+/** Optional FAQ (same key shape as service pages) → visible section + FAQPage schema. */
+const faqs: { q: string; a: string }[] = [];
+for (let i = 0; i < 12; i++) {
+  const q = t(`${base}.faqs.${i}.question`);
+  const a = t(`${base}.faqs.${i}.answer`);
+  if (q === `${base}.faqs.${i}.question` || a === `${base}.faqs.${i}.answer`) break;
+  faqs.push({ q, a });
+}
+const faqsTitle = faqs.length ? (t(`${base}.faqs.title`) !== `${base}.faqs.title` ? t(`${base}.faqs.title`) : t('serviceAiWebsites.faqs.title')) : '';
+const faqLd = faqs.length
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      '@id': `${abs(path)}#faq`,
+      mainEntity: faqs.map((f) => ({
+        '@type': 'Question',
+        name: f.q,
+        acceptedAnswer: { '@type': 'Answer', text: f.a },
+      })),
+    }
+  : null;
 ---
 
-<BaseLayout title={`${title} — Algorythmos`} description={description} path={path} ogType="article" image={ogImg} jsonLd={[articleLd, crumbs]}>
+<BaseLayout title={`${title} — Algorythmos`} description={description} path={path} ogType="article" image={ogImg} jsonLd={[articleLd, crumbs, ...(faqLd ? [faqLd] : [])]}>
   <Breadcrumbs items={crumbItems} />
   <PageHeader eyebrow={t(`blog.posts.${post.postIndex}.date`)} title={title} lead={description} />
 
@@ -135,6 +157,25 @@ const crumbs = breadcrumb(crumbItems);
       </div>
     </article>
   </section>
+
+  {faqs.length > 0 && (
+    <section class="container-page pb-24">
+      <h2 data-reveal class="text-h2 font-bold tracking-tight text-ink">
+        <span class="text-gradient-brand">{faqsTitle}</span>
+      </h2>
+      <div data-reveal class="mt-8 max-w-measure divide-y divide-line overflow-hidden rounded-2xl border border-line glass">
+        {faqs.map((f) => (
+          <details class="group">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-4 p-6 text-lg font-semibold text-ink [&::-webkit-details-marker]:hidden">
+              <span>{f.q}</span>
+              <svg class="h-5 w-5 shrink-0 text-ink-muted transition-transform duration-200 group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+            </summary>
+            <p class="px-6 pb-6 text-ink-muted">{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+  )}
 
   <RelatedLinks items={blogRelated[post.slug] ?? []} />
 </BaseLayout>
