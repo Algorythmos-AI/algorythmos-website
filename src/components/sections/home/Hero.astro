@@ -6,7 +6,7 @@ import NeuralOrb from '@/components/ui/NeuralOrb.astro';
 import NeuralField from '@/components/ui/NeuralField.astro';
 import Visual from '@/components/ui/Visual.astro';
 import { heroVisual } from '@/data/visuals';
-import { BOOKING_URL } from '@/lib/links';
+import { bookingUrl } from '@/lib/links';
 
 const locale = asLocale(Astro.currentLocale);
 const t = useTranslations(locale);
@@ -36,7 +36,7 @@ const t = useTranslations(locale);
     </p>
 
     <div data-reveal style="--reveal-delay: 260ms" class="mt-10 flex flex-wrap items-center gap-4">
-      <Button href={BOOKING_URL} target="_blank" rel="noopener" size="lg" class="w-full sm:w-auto">{t('hero.cta.primary')}</Button>
+      <Button href={bookingUrl(locale)} target="_blank" rel="noopener" size="lg" class="w-full sm:w-auto">{t('hero.cta.primary')}</Button>
       <Button href={localizePath(locale, '/pricing')} size="lg" variant="secondary" class="w-full sm:w-auto">{t('hero.cta.secondary')}</Button>
     </div>
 

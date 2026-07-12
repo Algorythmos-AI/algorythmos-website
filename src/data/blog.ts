@@ -38,6 +38,11 @@ export interface BlogPost {
   postIndex: number;
   /** Machine-readable publish date (ISO 8601) for Article schema. */
   date: string;
+  /**
+   * Last substantive revision (ISO 8601) — set ONLY when a post is genuinely
+   * updated. Feeds BlogPosting.dateModified, sitemap lastmod, and RSS.
+   */
+  updatedAt?: string;
   /** Ordered body blocks resolved from `blogDetail.posts.<slug>.*` keys. */
   body: BlogBlock[];
 }
