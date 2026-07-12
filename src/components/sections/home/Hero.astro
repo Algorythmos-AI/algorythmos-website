@@ -4,8 +4,7 @@ import Button from '@/components/ui/Button.astro';
 import Aurora from '@/components/ui/Aurora.astro';
 import NeuralOrb from '@/components/ui/NeuralOrb.astro';
 import NeuralField from '@/components/ui/NeuralField.astro';
-import Visual from '@/components/ui/Visual.astro';
-import { heroVisual } from '@/data/visuals';
+import HeroConsole from '@/components/sections/home/HeroConsole.astro';
 import { bookingUrl } from '@/lib/links';
 
 const locale = asLocale(Astro.currentLocale);
@@ -69,13 +68,6 @@ const t = useTranslations(locale);
   </div>
 
   <div class="container-page pb-24">
-    <Visual
-      src={heroVisual.file}
-      alt={t(heroVisual.altKey)}
-      width={heroVisual.width}
-      height={heroVisual.height}
-      reveal="lcp"
-      shimmer
-    />
+    <HeroConsole />
   </div>
 </section>
