@@ -1,0 +1,43 @@
+---
+/**
+ * Visible breadcrumb trail — mirrors the BreadcrumbList JSON-LD already emitted
+ * on detail pages (same {name,url} array), giving users and crawlers an in-page
+ * navigational path. Fixed height row → no layout shift. Absolute URLs are
+ * accepted (matching the schema helper) and rendered as-is.
+ */
+import { asLocale, useTranslations } from '@/i18n';
+
+interface Crumb {
+  name: string;
+  url: string;
+}
+interface Props {
+  items: Crumb[];
+}
+const { items } = Astro.props;
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const label = t('nav.breadcrumb');
+---
+
+{items.length > 1 && (
+  <nav aria-label={label} class="container-page pt-8 text-sm">
+    <ol class="flex flex-wrap items-center gap-1.5 text-ink-subtle">
+      {items.map((item, i) => {
+        const last = i === items.length - 1;
+        return (
+          <li class="flex items-center gap-1.5">
+            {last ? (
+              <span aria-current="page" class="text-ink-muted">{item.name}</span>
+            ) : (
+              <a href={item.url} class="transition-colors hover:text-ink">{item.name}</a>
+            )}
+            {!last && (
+              <svg class="h-3.5 w-3.5 text-ink-subtle/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg>
+            )}
+          </li>
+        );
+      })}
+    </ol>
+  </nav>
+)}

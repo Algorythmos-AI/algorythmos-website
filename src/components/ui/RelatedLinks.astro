@@ -1,0 +1,77 @@
+---
+/**
+ * Related-content module — resolves a list of typed RelatedRefs into localized
+ * label + path cards, and (on prefixed locales) appends the local landing page
+ * so every service/case-study/post links toward the region's money page.
+ * Static, zero JS.
+ */
+import { asLocale, useTranslations, localizePath, type Locale } from '@/i18n';
+import { getService } from '@/data/services';
+import { blog } from '@/data/blog';
+import { caseStudies } from '@/data/caseStudies';
+import type { RelatedRef } from '@/data/related';
+
+interface Props {
+  items: RelatedRef[];
+  /** Also surface the locale's local landing page (Sydney / Paris). Default true. */
+  includeLanding?: boolean;
+}
+const { items, includeLanding = true } = Astro.props;
+
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+
+interface Card {
+  kind: string;
+  label: string;
+  href: string;
+}
+
+function resolve(ref: RelatedRef): Card | null {
+  if (ref.type === 'service') {
+    const svc = getService(ref.slug);
+    if (!svc) return null;
+    return { kind: t('related.kind.service'), label: svc.name, href: localizePath(locale, `/services/${svc.slug}`) };
+  }
+  if (ref.type === 'blog') {
+    const post = blog.find((p) => p.slug === ref.slug);
+    if (!post) return null;
+    return { kind: t('related.kind.article'), label: t(`blog.posts.${post.postIndex}.title`), href: localizePath(locale, `/blog/${post.slug}`) };
+  }
+  const cs = caseStudies.find((c) => c.slug === ref.slug);
+  if (!cs || cs.i18nIndex === undefined) return null;
+  return { kind: t('related.kind.caseStudy'), label: t(`caseStudies.items.${cs.i18nIndex}.title`), href: localizePath(locale, `/case-studies/${cs.slug}`) };
+}
+
+/** Local landing page for prefixed locales (au-en → Sydney, fr-fr → Paris). */
+const LANDING: Partial<Record<Locale, { path: string; labelKey: string }>> = {
+  'au-en': { path: '/ai-consultancy-sydney', labelKey: 'footer.localSydney' },
+  'fr-fr': { path: '/conseil-en-ia-paris', labelKey: 'footer.localParis' },
+};
+
+const cards: Card[] = items.map(resolve).filter((c): c is Card => c !== null);
+
+const landing = includeLanding ? LANDING[locale] : undefined;
+if (landing) {
+  cards.push({ kind: t('related.kind.local'), label: t(landing.labelKey), href: localizePath(locale, landing.path) });
+}
+---
+
+{cards.length > 0 && (
+  <section class="container-page pb-24" aria-labelledby="related-heading">
+    <h2 id="related-heading" data-reveal class="text-h3 font-semibold tracking-tight text-ink">{t('related.heading')}</h2>
+    <ul data-reveal class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {cards.map((c) => (
+        <li>
+          <a
+            href={c.href}
+            class="group flex h-full flex-col justify-between gap-3 rounded-2xl border border-line glass p-5 transition-colors hover:border-brand/50"
+          >
+            <span class="text-xs font-semibold uppercase tracking-wide text-brand">{c.kind}</span>
+            <span class="text-base font-semibold text-ink transition-colors group-hover:text-brand">{c.label}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}

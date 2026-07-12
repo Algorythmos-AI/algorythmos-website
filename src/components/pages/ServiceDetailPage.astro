@@ -9,7 +9,10 @@ import { bookingUrl } from '@/lib/links';
 import Visual from '@/components/ui/Visual.astro';
 import BlueprintFigure from '@/components/ui/BlueprintFigure.astro';
 import BlueprintArt from '@/components/ui/BlueprintArt.astro';
+import Breadcrumbs from '@/components/ui/Breadcrumbs.astro';
+import RelatedLinks from '@/components/ui/RelatedLinks.astro';
 import { serviceVisuals } from '@/data/visuals';
+import { serviceRelated } from '@/data/related';
 
 interface Props {
   slug: string;
@@ -41,11 +44,12 @@ const serviceLd = {
     : ogImg,
   url: abs(path),
 };
-const crumbs = breadcrumb([
-  { name: 'Home', url: abs('/') },
+const crumbItems = [
+  { name: t('nav.home'), url: abs('/') },
   { name: t('nav.services'), url: abs('/services') },
   { name: svc.name, url: abs(path) },
-]);
+];
+const crumbs = breadcrumb(crumbItems);
 
 /**
  * FAQs — rendered visibly AND emitted as FAQPage schema (Google requires the
@@ -103,6 +107,7 @@ const faqLd = faqs.length
 ---
 
 <BaseLayout title={metaTitle} description={metaDescription} path={path} image={ogImg} jsonLd={[serviceLd, crumbs, ...(faqLd ? [faqLd] : [])]}>
+  <Breadcrumbs items={crumbItems} />
   <PageHeader eyebrow={t('nav.services')} title={svc.name} lead={heroLead} />
 
   {svcVisual && (
@@ -167,4 +172,6 @@ const faqLd = faqs.length
       </div>
     </section>
   )}
+
+  <RelatedLinks items={serviceRelated[svc.slug] ?? []} />
 </BaseLayout>
