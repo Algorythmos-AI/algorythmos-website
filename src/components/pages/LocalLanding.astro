@@ -12,7 +12,7 @@ import Photo from '@/components/ui/Photo.astro';
 import { localizePath, useTranslations } from '@/i18n';
 import { professionalService, breadcrumb, SITE, ogImageUrl, imageObject } from '@/seo/schema';
 import { cityVisuals, photos, photoFile, type PhotoAsset } from '@/data/visuals';
-import { BOOKING_URL } from '@/lib/links';
+import { bookingUrl } from '@/lib/links';
 
 interface FAQ {
   q: string;
@@ -91,7 +91,7 @@ const crumbs = breadcrumb([
 
   <section class="container-page pb-6">
     <div class="flex flex-wrap gap-4">
-      <Button href={BOOKING_URL} target="_blank" rel="noopener" size="lg">{p.ctaPrimary}</Button>
+      <Button href={bookingUrl(locale)} target="_blank" rel="noopener" size="lg">{p.ctaPrimary}</Button>
       <Button href={loc('/contact')} variant="secondary" size="lg">{p.ctaContact}</Button>
     </div>
   </section>
@@ -183,7 +183,7 @@ const crumbs = breadcrumb([
       <h2 class="mx-auto max-w-3xl text-display font-extrabold tracking-tight text-ink">{p.closingHeading}</h2>
       <p class="mx-auto mt-5 max-w-xl text-lead text-ink-muted">{p.closingBody}</p>
       <div class="mt-10 flex flex-wrap justify-center gap-4">
-        <Button href={BOOKING_URL} target="_blank" rel="noopener" size="lg">{p.ctaPrimary}</Button>
+        <Button href={bookingUrl(locale)} target="_blank" rel="noopener" size="lg">{p.ctaPrimary}</Button>
         <Button href={loc('/contact')} variant="secondary" size="lg">{p.ctaContact}</Button>
       </div>
     </div>

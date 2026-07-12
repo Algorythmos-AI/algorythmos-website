@@ -39,6 +39,20 @@ exports[`professionalService > matches the snapshot graph for both regions 1`] =
     "en",
   ],
   "name": "Algorythmos Australia",
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "closes": "17:00",
+      "dayOfWeek": [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+      ],
+      "opens": "09:00",
+    },
+  ],
   "parentOrganization": {
     "@id": "https://algorythmos.com/#organization",
   },
@@ -93,6 +107,20 @@ exports[`professionalService > matches the snapshot graph for both regions 2`] =
     "en",
   ],
   "name": "Algorythmos France",
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "closes": "17:00",
+      "dayOfWeek": [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+      ],
+      "opens": "09:00",
+    },
+  ],
   "parentOrganization": {
     "@id": "https://algorythmos.com/#organization",
   },

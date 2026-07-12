@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { orgGraph, professionalService, breadcrumb, ogImageUrl } from './schema';
-import { BUSINESS } from '@/data/business';
+import { BUSINESS, SAME_AS } from '@/data/business';
 
 describe('orgGraph', () => {
   const nodes = orgGraph['@graph'];
@@ -17,7 +17,8 @@ describe('orgGraph', () => {
   });
 
   it('mirrors sameAs profiles from business.ts', () => {
-    expect(org.sameAs).toEqual([...BUSINESS.sameAs]);
+    expect(org.sameAs).toEqual([...SAME_AS]);
+    expect(org.sameAs).toEqual(BUSINESS.profiles.map((p) => p.url));
   });
 });
 

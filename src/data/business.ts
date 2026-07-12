@@ -18,11 +18,18 @@ export const BUSINESS = {
   pressEmail: 'info@algorythmos.com.au',
   /** No phone published yet — leave empty until a real number exists. */
   phone: '',
-  sameAs: [
-    'https://www.linkedin.com/company/algorythmos',
-    'https://www.youtube.com/@AlgorythmosAI',
-    'https://medium.com/@algorythmos',
-    'https://x.com/algorythmos',
+  /**
+   * Owned properties + social profiles. The schema `sameAs` array AND the
+   * footer's entity links both derive from this list so they can never drift
+   * (reciprocal links strengthen entity verification).
+   */
+  profiles: [
+    { label: 'LinkedIn', url: 'https://www.linkedin.com/company/algorythmos' },
+    { label: 'YouTube', url: 'https://www.youtube.com/@AlgorythmosAI' },
+    { label: 'Medium', url: 'https://medium.com/@algorythmos' },
+    { label: 'X', url: 'https://x.com/algorythmos' },
+    { label: 'Docs', url: 'https://docs.algorythmos.fr' },
+    { label: 'App', url: 'https://app.algorythmos.fr' },
   ],
   regions: {
     AU: {
@@ -35,6 +42,8 @@ export const BUSINESS = {
       lat: -33.8688,
       lng: 151.2093,
       priceRange: '$$',
+      /** Local business hours (region-local time — schema.org interprets via the address). */
+      hours: { opens: '09:00', closes: '17:00' },
     },
     FR: {
       name: 'Algorythmos France',
@@ -46,8 +55,12 @@ export const BUSINESS = {
       lat: 48.8566,
       lng: 2.3522,
       priceRange: '€€',
+      hours: { opens: '09:00', closes: '17:00' },
     },
   },
 } as const;
+
+/** Schema.org sameAs — derived from the labeled profile list above. */
+export const SAME_AS: readonly string[] = BUSINESS.profiles.map((p) => p.url);
 
 export type BusinessRegion = keyof typeof BUSINESS.regions;

@@ -4,7 +4,7 @@ import PageHeader from '@/components/sections/PageHeader.astro';
 import Button from '@/components/ui/Button.astro';
 import { asLocale, useTranslations, localizePath } from '@/i18n';
 import { breadcrumb, SITE, ORG_ID, imageObject } from '@/seo/schema';
-import { BOOKING_URL } from '@/lib/links';
+import { bookingUrl } from '@/lib/links';
 import Visual from '@/components/ui/Visual.astro';
 import { cityVisuals } from '@/data/visuals';
 
@@ -82,7 +82,7 @@ const offices = [
         <p class="mt-3 max-w-measure text-lead text-ink-muted">{t('contact.subtitle')}</p>
 
         <div class="mt-6">
-          <Button href={BOOKING_URL} target="_blank" rel="noopener" variant="secondary">{t('hero.cta.primary')}</Button>
+          <Button href={bookingUrl(locale)} target="_blank" rel="noopener" variant="secondary">{t('hero.cta.primary')}</Button>
         </div>
 
         {/* TODO P7: wire to Astro Action — server submission lands in a later phase. */}

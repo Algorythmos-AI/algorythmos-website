@@ -1,5 +1,5 @@
 /** Reconciled structured data — ONE identity graph, all URLs on bare .com. */
-import { BUSINESS } from '@/data/business';
+import { BUSINESS, SAME_AS } from '@/data/business';
 
 export const SITE = 'https://algorythmos.com';
 export const OG_IMAGE = `${SITE}/Algorythmos.png`;
@@ -84,7 +84,7 @@ export const orgGraph = {
         availableLanguage: ['English', 'French'],
         ...(BUSINESS.phone ? { telephone: BUSINESS.phone } : {}),
       },
-      sameAs: [...BUSINESS.sameAs],
+      sameAs: [...SAME_AS],
       founder: { '@id': FOUNDER_ID },
     },
     founderPerson,
@@ -127,6 +127,14 @@ export function professionalService(region: 'AU' | 'FR') {
     serviceType: ['AI Consulting', 'Agentic Automation', 'Document Intelligence', 'SQL Dashboards', 'MLOps'],
     knowsLanguage: ['en-AU', 'fr-FR', 'en'],
     priceRange: map.priceRange,
+    openingHoursSpecification: [
+      {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+        opens: map.hours.opens,
+        closes: map.hours.closes,
+      },
+    ],
   };
 }
 

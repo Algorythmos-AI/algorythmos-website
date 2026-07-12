@@ -7,7 +7,7 @@ import { asLocale, useTranslations, localizePath } from '@/i18n';
 import { getCaseStudy } from '@/data/caseStudies';
 import { caseStudyCharts } from '@/data/caseStudyCharts';
 import { breadcrumb, SITE, ORG_ID, ogImageUrl } from '@/seo/schema';
-import { BOOKING_URL } from '@/lib/links';
+import { bookingUrl } from '@/lib/links';
 
 interface Props {
   slug: string;
@@ -174,7 +174,7 @@ for (let i = 0; i < 4; i++) {
           ))}
         </ul>
         {study.cta && <p class="mt-6 text-sm text-ink-subtle">{study.cta}</p>}
-        <Button href={BOOKING_URL} target="_blank" rel="noopener" size="lg" class="mt-6 w-full">{t('caseStudyDetail.cta.button')}</Button>
+        <Button href={bookingUrl(locale)} target="_blank" rel="noopener" size="lg" class="mt-6 w-full">{t('caseStudyDetail.cta.button')}</Button>
       </aside>
     </div>
   </section>
