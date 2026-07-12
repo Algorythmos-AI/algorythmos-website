@@ -49,6 +49,28 @@ export interface BlogPost {
 
 export const blog: BlogPost[] = [
   {
+    slug: 'ai-automation-australian-smes',
+    postIndex: 12,
+    date: '2026-07-12',
+    body: [
+      { kind: 'prose', base: 'content.0', paragraphs: [0, 1] },
+      { kind: 'prose', base: 'content.1', list: [0, 1, 2, 3, 4] },
+      { kind: 'prose', base: 'content.2', paragraphs: [0, 1] },
+      { kind: 'prose', base: 'content.3', paragraphs: [0, 1] },
+    ],
+  },
+  {
+    slug: 'eu-ai-act-gdpr-sme-roadmap',
+    postIndex: 13,
+    date: '2026-07-12',
+    body: [
+      { kind: 'prose', base: 'content.0', paragraphs: [0, 1] },
+      { kind: 'prose', base: 'content.1', list: [0, 1, 2, 3] },
+      { kind: 'prose', base: 'content.2', paragraphs: [0, 1] },
+      { kind: 'prose', base: 'content.3', list: [0, 1, 2, 3, 4] },
+    ],
+  },
+  {
     slug: 'pulse-clinical-ai',
     postIndex: 10,
     date: '2026-01-15',
