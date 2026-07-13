@@ -39,6 +39,8 @@ export const BUSINESS = {
       adminArea: 'NSW',
       country: 'AU',
       countryName: 'Australia',
+      /** Region enquiries mailbox (shown on the contact page for this region). */
+      email: 'info@algorythmos.com.au',
       lat: -33.8688,
       lng: 151.2093,
       priceRange: '$$',
@@ -52,6 +54,7 @@ export const BUSINESS = {
       adminArea: 'Île-de-France',
       country: 'FR',
       countryName: 'France',
+      email: 'info@algorythmos.fr',
       lat: 48.8566,
       lng: 2.3522,
       priceRange: '€€',
