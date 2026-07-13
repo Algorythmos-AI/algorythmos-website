@@ -16,6 +16,11 @@ const abs = (p: string) => SITE + localizePath(locale, p);
 import { BUSINESS } from '@/data/business';
 const EMAIL = BUSINESS.email;
 
+/* Per-region contacts, ordered so the visitor's own region shows first. */
+const primaryRegion = locale === 'fr-fr' ? 'FR' : 'AU';
+const regionOrder: ('AU' | 'FR')[] = primaryRegion === 'FR' ? ['FR', 'AU'] : ['AU', 'FR'];
+const contacts = regionOrder.map((k) => ({ city: BUSINESS.regions[k].city, email: BUSINESS.regions[k].email }));
+
 const cityAU = cityVisuals.AU;
 const cityFR = cityVisuals.FR;
 const cityAUAlt = t(cityAU.altKey);
@@ -40,14 +45,24 @@ const contactLd = {
   isPartOf: { '@id': ORG_ID },
   mainEntity: {
     '@id': ORG_ID,
-    contactPoint: {
-      '@type': 'ContactPoint',
-      contactType: 'customer service',
-      email: EMAIL,
-      url: abs(path),
-      areaServed: ['AU', 'FR'],
-      availableLanguage: ['en', 'fr'],
-    },
+    contactPoint: [
+      {
+        '@type': 'ContactPoint',
+        contactType: 'customer service',
+        email: BUSINESS.regions.AU.email,
+        url: abs(path),
+        areaServed: 'AU',
+        availableLanguage: ['en'],
+      },
+      {
+        '@type': 'ContactPoint',
+        contactType: 'customer service',
+        email: BUSINESS.regions.FR.email,
+        url: abs(path),
+        areaServed: 'FR',
+        availableLanguage: ['fr', 'en'],
+      },
+    ],
   },
 };
 
@@ -189,16 +204,14 @@ const offices = [
           <h2 class="text-h3 font-semibold text-ink">{t('nav.contactUs')}</h2>
           <p class="mt-3 text-sm text-ink-muted">{t('contactPage.globalMap.subheading')}</p>
           <dl class="mt-5 space-y-4 text-sm">
-            <div>
-              <dt class="font-semibold text-ink">Email</dt>
-              <dd class="mt-1">
-                <a href={`mailto:${EMAIL}`} class="text-brand underline-offset-4 hover:underline focus-visible:underline">{EMAIL}</a>
-              </dd>
-            </div>
-            <div>
-              <dt class="font-semibold text-ink">Locations</dt>
-              <dd class="mt-1 text-ink-muted">Sydney · Paris</dd>
-            </div>
+            {contacts.map((c) => (
+              <div>
+                <dt class="font-semibold text-ink">{c.city}</dt>
+                <dd class="mt-1">
+                  <a href={`mailto:${c.email}`} class="text-brand underline-offset-4 hover:underline focus-visible:underline">{c.email}</a>
+                </dd>
+              </div>
+            ))}
           </dl>
         </div>
 
