@@ -414,6 +414,34 @@ const dynamicStrings = {
     .hc-track-fill { transition: transform 0.45s var(--ease-quint, ease-out); }
     .hc-run { transition: transform 0.45s var(--ease-quint, ease-out), opacity 0.45s ease; }
   }
+
+  /* ── Mobile reflow: single-column, readable, animations intact ── */
+  @media (max-width: 767px) {
+    .hc { width: 100%; height: auto; }
+    .hc-side { display: none; }
+    .hc-main { padding: 18px 16px 22px; gap: 18px; }
+    .hc-header { align-items: center; }
+    .hc-title { font-size: 17px; }
+    .hc-subtitle { font-size: 11.5px; margin-top: 3px; }
+    .hc-header .hc-cta { display: none; } /* keep the Live pill, drop the CTA on mobile */
+
+    .hc-kpis { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .hc-kpi { height: auto; padding: 12px 12px 14px; }
+    .hc-kpi-value { font-size: 17px; min-width: 0; margin-top: 4px; }
+    .hc-kpi-label { font-size: 10px; }
+    .hc-kpi-delta { font-size: 9.5px; }
+    .hc-spark { display: none; }
+
+    .hc-midrow { grid-template-columns: 1fr; gap: 14px; }
+    .hc-chart { padding: 16px; }
+    .hc-chart-svg { width: 100%; height: 128px; }
+
+    .hc-workflow { padding: 16px; }
+    .hc-stepper { margin: 30px 12px 4px; height: 40px; }
+    .hc-steplabel { display: none; }
+    .hc-stepnode { width: 26px; height: 26px; }
+    .hc-humanbadge { font-size: 9px; padding: 0 8px; bottom: calc(100% + 8px); }
+  }
 </style>
 
 <script>

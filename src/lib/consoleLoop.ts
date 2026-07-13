@@ -26,6 +26,39 @@ export function easeOutQuart(p: number): number {
 }
 
 /**
+ * Scale factor to fit a fixed-width canvas into a container. Pure so it can be
+ * unit-tested; the DOM plumbing lives in mountConsoleScaler below.
+ */
+export function scaleFor(clientWidth: number, canvasWidth: number): number {
+  if (!(clientWidth > 0) || !(canvasWidth > 0)) return 1;
+  return clientWidth / canvasWidth;
+}
+
+/**
+ * Drive the console scaler from measured width (bulletproof cross-browser —
+ * replaces the CSS container-unit trig that iOS Safari couldn't resolve).
+ * Sets a numeric `--hc-scale` consumed by `zoom` (crisp, re-laid-out) with a
+ * transform fallback, and adds `.hc-scaled` to reveal. Idempotent, ResizeObserver-
+ * kept, torn down on astro:before-swap. Runs regardless of reduced-motion.
+ * On mobile the CSS media query neutralizes zoom/transform, so this is a no-op there.
+ */
+export function mountConsoleScaler(viewport: HTMLElement): void {
+  if (viewport.dataset.hcScalerInit) return;
+  viewport.dataset.hcScalerInit = '1';
+  const canvasW = parseFloat(getComputedStyle(viewport).getPropertyValue('--hc-w')) || 0;
+
+  const apply = () => {
+    viewport.style.setProperty('--hc-scale', String(scaleFor(viewport.clientWidth, canvasW)));
+    viewport.classList.add('hc-scaled');
+  };
+  apply();
+
+  const ro = new ResizeObserver(apply);
+  ro.observe(viewport);
+  document.addEventListener('astro:before-swap', () => ro.disconnect(), { once: true });
+}
+
+/**
  * Locale-aware number formatting shared by SSR (frontmatter) and the client
  * count-up so the final animation frame always matches the server-rendered
  * text. Formats: 'int' (1,284 / 1 284), 'pct1' (99.2% / 99,2 %),
@@ -211,7 +244,9 @@ export function initConsole(root: HTMLElement, opts: ConsoleOptions = {}): void 
         if (kfs.length) runFrom(0);
       }
     },
-    { threshold: 0.35 },
+    // Low threshold so the story still fires when a tall (reflowed mobile)
+    // console can never reach 35% visibility in a short viewport.
+    { threshold: 0.15 },
   );
   io.observe(root);
 

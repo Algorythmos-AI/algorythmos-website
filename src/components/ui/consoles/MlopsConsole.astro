@@ -205,6 +205,16 @@ const strings = {
       animation: hc-node-pulse 2.6s var(--ease-smooth, ease-in-out) infinite;
     }
   }
+
+  @media (max-width: 767px) {
+    .ml { width: 100%; height: auto; }
+    .ml-head { padding: 20px 16px 0; }
+    .ml-title { font-size: 16px; }
+    .ml-stages { grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 20px 16px 0; }
+    .ml-rail, .ml-rail-fill { display: none; }
+    .ml-stage { height: auto; padding: 20px 10px; }
+    .ml-cols { grid-template-columns: 1fr; gap: 16px; padding: 20px 16px 24px; }
+  }
 </style>
 
 <script>

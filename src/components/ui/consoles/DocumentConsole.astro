@@ -191,6 +191,15 @@ const strings = {
     92% { opacity: 1; }
     100% { top: 100%; opacity: 0; }
   }
+
+  @media (max-width: 767px) {
+    .dc { width: 100%; height: auto; }
+    .dc-head { padding: 20px 16px 0; }
+    .dc-title { font-size: 16px; }
+    .dc-cols { grid-template-columns: 1fr; padding: 18px 16px 24px; }
+    .dc-docpanel { display: none; } /* absolute-positioned invoice — fields column carries the story */
+    .dc-fields { padding: 18px; }
+  }
 </style>
 
 <script>

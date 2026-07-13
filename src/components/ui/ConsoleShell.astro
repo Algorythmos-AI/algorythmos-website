@@ -5,18 +5,19 @@
  * (e.g. 1280×800) and scaled to fit the container, so the composition is
  * pixel-faithful at every width and FR copy fits deterministically.
  *
- * Scaling strategy (crisp text first):
- *  1. CSS `zoom` with a typed-math ratio — `calc(tan(atan2(100cqw, <w>px)))`
- *     yields a true <number> (length ÷ length), and `zoom` re-lays-out text so
- *     it rasterizes crisp at every scale.
- *  2. Browsers without `zoom` (old Firefox): `transform: scale(var(--hc-scale))`.
- *  3. Browsers without container-query units or CSS trig: the DOM screen is
- *     hidden and a plain lazy `<img>` of the original SVG shows instead.
+ * Scaling strategy (crisp text, bulletproof cross-browser):
+ *  - Desktop/tablet: a JS-measured NUMERIC `--hc-scale` (clientWidth ÷ canvas)
+ *    fed to `zoom` — `zoom` re-lays-out so text rasterizes crisp at any scale.
+ *    (The old `calc(tan(atan2(100cqw,…)))` trick broke on iOS Safari, which
+ *    couldn't resolve a container unit inside trig → invalid zoom → clip.)
+ *  - Ancient Firefox (<126, no `zoom`): `transform: scale(var(--hc-scale))`.
+ *  - Mobile (<768px): the media query in console.css neutralizes zoom/transform
+ *    and the console reflows to a readable single column (scaler is a no-op).
+ *  - No-JS / crawlers: the <noscript> <img> of the original SVG.
  *
- * The original SVG stays on disk untouched — it remains the image-sitemap /
- * ImageObject / llms.txt asset, is served to raw-HTML crawlers via the always-
- * present fallback <img> below (hidden + loading="lazy" → modern browsers
- * never fetch it), and is the visual for the no-modern-CSS rung.
+ * The screen is hidden until the scaler adds `.hc-scaled` (no FOUC). The
+ * original SVG stays on disk untouched — image-sitemap / ImageObject / llms.txt
+ * asset, and the no-JS visual via <noscript>.
  *
  * A11y: the console is a *picture* of a product — role="img" with one label;
  * the screen is aria-hidden and inert (pointer-events/user-select none), and
@@ -53,66 +54,84 @@ const alt = t(altKey);
   <div class="ring-gradient relative rounded-2xl border border-line glass p-2 shadow-e2 sm:p-2.5 shimmer-frame">
     <div
       class="hc-viewport"
-      style={`--hc-w: ${width}px; aspect-ratio: ${width} / ${height};`}
+      style={`--hc-w: ${width}px; --hc-h: ${height}px; --hc-ar: ${width} / ${height};`}
       role="img"
       aria-label={alt}
       data-console={name}
     >
-      <div class="hc-screen" style={`width: ${width}px; height: ${height}px;`} aria-hidden="true">
+      <div class="hc-screen" aria-hidden="true">
         <slot />
       </div>
-      <img
-        src={svgFile}
-        alt={alt}
-        width={width}
-        height={height}
-        loading="lazy"
-        decoding="async"
-        class="hc-fallback"
-      />
+      <noscript>
+        <img src={svgFile} alt={alt} width={width} height={height} loading="lazy" decoding="async" class="hc-fallback" />
+      </noscript>
     </div>
   </div>
 </figure>
 
 <style>
   .hc-viewport {
-    container-type: inline-size;
     position: relative;
     overflow: hidden;
+    aspect-ratio: var(--hc-ar);
     border-radius: 0.75rem; /* matches Visual's rounded-xl inner */
     background: #0c0c13; /* console canvas — theme-neutral dark "screen" */
   }
 
   .hc-screen {
-    /* length ÷ length via trig → a true <number> for zoom/scale */
-    --hc-scale: calc(tan(atan2(100cqw, var(--hc-w))));
-    zoom: var(--hc-scale);
+    /* Native canvas box (vars, not inline, so the mobile query can override). */
+    width: var(--hc-w);
+    height: var(--hc-h);
+    /* --hc-scale is a plain number set by the scaler (mountConsoleScaler). */
+    zoom: var(--hc-scale, 1);
     contain: layout paint; /* console animations can never invalidate page layout */
     pointer-events: none;
     user-select: none;
+    visibility: hidden; /* revealed once scaled → no FOUC */
+  }
+  .hc-viewport.hc-scaled .hc-screen {
+    visibility: visible;
   }
 
-  /* Old Firefox (< 126): no zoom — compositor scale fallback. */
+  /* Ancient Firefox (<126): no `zoom` — compositor scale fallback. */
   @supports not (zoom: 1) {
     .hc-screen {
-      transform: scale(var(--hc-scale));
+      zoom: normal;
+      transform: scale(var(--hc-scale, 1));
       transform-origin: top left;
     }
   }
 
-  /* Fallback image: crawlers read it from HTML; hidden + lazy → modern
-     browsers never fetch it. Shown only on the no-modern-CSS rung. */
   .hc-fallback {
-    display: none;
     width: 100%;
     height: auto;
+    display: block;
   }
-  @supports not ((container-type: inline-size) and (top: calc(tan(atan2(1px, 1px)) * 1px))) {
-    .hc-screen {
-      display: none;
+
+  /* Mobile: drop the scaled fixed canvas → the console reflows to a readable
+     single column (per-console rules live in each console's own styles). */
+  @media (max-width: 767px) {
+    .hc-viewport {
+      aspect-ratio: auto;
+      overflow: visible;
     }
-    .hc-fallback {
-      display: block;
+    .hc-screen {
+      zoom: normal;
+      transform: none;
+      width: 100%;
+      height: auto;
+      contain: none;
+      visibility: visible;
     }
   }
 </style>
+
+<script>
+  import { mountConsoleScaler } from '@/lib/consoleLoop';
+
+  function mountAll() {
+    document.querySelectorAll<HTMLElement>('.hc-viewport[data-console]').forEach(mountConsoleScaler);
+  }
+  document.addEventListener('astro:page-load', mountAll);
+  if (document.readyState !== 'loading') mountAll();
+</script>
