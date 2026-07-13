@@ -1,5 +1,18 @@
 import { describe, expect, it } from 'vitest';
-import { easeOutQuart, formatValue } from './consoleLoop';
+import { easeOutQuart, formatValue, scaleFor } from './consoleLoop';
+
+describe('scaleFor', () => {
+  it('returns the fit ratio', () => {
+    expect(scaleFor(1114, 1280)).toBeCloseTo(0.8703, 3);
+    expect(scaleFor(640, 1280)).toBe(0.5);
+    expect(scaleFor(1280, 1280)).toBe(1);
+  });
+  it('is safe on zero/negative/NaN inputs (never divides by 0 → 1)', () => {
+    expect(scaleFor(0, 1280)).toBe(1);
+    expect(scaleFor(390, 0)).toBe(1);
+    expect(scaleFor(NaN, 1280)).toBe(1);
+  });
+});
 
 describe('easeOutQuart', () => {
   it('is bounded and monotonic on [0,1]', () => {

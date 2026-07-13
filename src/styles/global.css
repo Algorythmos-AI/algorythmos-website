@@ -14,6 +14,10 @@
   body {
     @apply bg-bg text-ink font-sans antialiased;
     min-height: 100svh;
+    /* Safety net: a stray wide element can never cause page-wide horizontal
+       scroll. `clip` (not `hidden`) doesn't create a scroll container, so it
+       won't break the sticky header or in-page anchors. */
+    overflow-x: clip;
   }
   :focus-visible {
     outline: 2px solid rgb(var(--ring));

@@ -202,6 +202,16 @@ const statuses: Record<string, string> = {
       animation: hc-node-pulse 2.6s var(--ease-smooth, ease-in-out) infinite;
     }
   }
+
+  @media (max-width: 767px) {
+    .ac { width: 100%; height: auto; }
+    .ac-head { padding: 20px 16px 0; }
+    .ac-title { font-size: 16px; }
+    .ac-cols { grid-template-columns: 1fr; gap: 14px; padding: 18px 16px 24px; }
+    .ac-timeline, .ac-guard { padding: 18px; }
+    .ac-approvebar { flex-wrap: wrap; }
+    .ac-approvetext { flex-basis: 100%; }
+  }
 </style>
 
 <script>

@@ -7,6 +7,63 @@
 import { test, expect } from '@playwright/test';
 
 const HERO = '[data-console="hero-console"]';
+const SERVICE_SLUGS = ['agentic-automation', 'document-intelligence', 'sql-dashboards', 'mlops-cicd', 'ai-websites'];
+
+// Regression guard for the iOS-Safari clip bug: at phone width the console must
+// scale/reflow to fit, never render at its 1280/1120 canvas width, and no page
+// must scroll horizontally.
+test.describe('mobile (phone viewport)', () => {
+  test.use({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true });
+
+  test('hero console fits the phone (no clip) and does not cause horizontal scroll', async ({ page }) => {
+    await page.goto('/');
+    const console_ = page.locator(HERO);
+    await console_.scrollIntoViewIfNeeded();
+    await page.waitForTimeout(600);
+    const r = await page.evaluate(() => {
+      const root = document.querySelector('[data-console="hero-console"]')!;
+      const screen = root.querySelector('.hc-screen')!;
+      return {
+        screenW: Math.round(screen.getBoundingClientRect().width),
+        innerW: window.innerWidth,
+        docScrollW: document.documentElement.scrollWidth,
+      };
+    });
+    expect(r.screenW).toBeLessThanOrEqual(r.innerW + 1); // NOT 1280 → not clipped
+    expect(r.docScrollW).toBeLessThanOrEqual(r.innerW + 1); // no horizontal scroll
+  });
+
+  test('no page scrolls horizontally', async ({ page }) => {
+    for (const path of ['/', '/fr-fr', ...SERVICE_SLUGS.map((s) => `/services/${s}`)]) {
+      await page.goto(path);
+      await page.waitForTimeout(300);
+      const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+      expect(overflow, `horizontal overflow on ${path}`).toBeLessThanOrEqual(1);
+    }
+  });
+
+  test('"Four disciplines" shows all four tabs within the viewport', async ({ page }) => {
+    await page.goto('/');
+    await page.locator('[data-blueprint]').scrollIntoViewIfNeeded();
+    const within = await page.evaluate(() => {
+      const tabs = [...document.querySelectorAll('[role="tab"][data-bp-tab]')];
+      return { count: tabs.length, allWithin: tabs.every((t) => t.getBoundingClientRect().right <= window.innerWidth + 1) };
+    });
+    expect(within.count).toBe(4);
+    expect(within.allWithin).toBe(true);
+  });
+
+  test('service consoles fit the phone', async ({ page }) => {
+    for (const slug of SERVICE_SLUGS) {
+      await page.goto(`/services/${slug}`);
+      const console_ = page.locator(`[data-console="svc-${slug}"]`);
+      await console_.scrollIntoViewIfNeeded();
+      await page.waitForTimeout(300);
+      const w = await console_.locator('.hc-screen').evaluate((el) => Math.round(el.getBoundingClientRect().width));
+      expect(w, slug).toBeLessThanOrEqual(page.viewportSize()!.width + 1);
+    }
+  });
+});
 
 test.describe('hero console', () => {
   test('renders with a localized label and SSR values (EN)', async ({ page }) => {
