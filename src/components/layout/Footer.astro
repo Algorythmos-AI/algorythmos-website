@@ -1,6 +1,7 @@
 ---
 import { asLocale, useTranslations, localizePath } from '@/i18n';
 import { BUSINESS } from '@/data/business';
+import { services } from '@/data/services';
 import LocaleSwitcher from '@/components/layout/LocaleSwitcher.astro';
 
 const locale = asLocale(Astro.currentLocale);
@@ -15,11 +16,7 @@ const cols = [
     title: t('footer.services'),
     links: [
       { label: t('nav.services'), path: '/services' },
-      { label: 'Agentic Automation', path: '/services/agentic-automation' },
-      { label: 'Document Intelligence', path: '/services/document-intelligence' },
-      { label: 'SQL Dashboards', path: '/services/sql-dashboards' },
-      { label: 'MLOps & CI/CD', path: '/services/mlops-cicd' },
-      { label: 'AI-Powered Websites', path: '/services/ai-websites' },
+      ...services.map((s) => ({ label: t(`services.items.${s.slug}.name`), path: `/services/${s.slug}` })),
     ],
   },
   {
@@ -112,7 +109,7 @@ const legal = [
 
   <div class="border-t border-line">
     <div class="container-page flex flex-col items-center justify-between gap-3 py-6 text-sm text-ink-subtle sm:flex-row">
-      <p>© {year} Algorythmos. All rights reserved.</p>
+      <p>{t('footer.copyright', { year })}</p>
       <div class="flex items-center gap-4">
         {social.map((s) => (
           <a href={s.url} rel="me noopener" target="_blank" class="hover:text-ink">{s.label}</a>

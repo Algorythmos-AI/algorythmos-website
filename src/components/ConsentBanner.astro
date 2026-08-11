@@ -4,26 +4,30 @@
  * Vanilla (no React). Functional cookies (theme/locale) are essential and not gated;
  * analytics loads only after explicit Accept. View-Transition safe.
  */
+import { asLocale, useTranslations, localizePath } from '@/i18n';
+
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
 ---
 
 <div
   id="consent"
   hidden
   role="region"
-  aria-label="Privacy and cookies"
+  aria-label={t('consent.ariaLabel')}
   class="fixed inset-x-0 bottom-0 z-[var(--z-toast)] border-t border-line glass"
 >
   <div class="container-page flex flex-col gap-4 py-4 sm:flex-row sm:items-center sm:justify-between">
     <p class="text-sm text-ink-muted">
-      We use privacy-friendly, cookieless analytics to improve this site. Read our{' '}
-      <a href="/privacy" class="font-medium text-brand underline underline-offset-2">Privacy Policy</a>.
+      {t('consent.message')}{' '}
+      <a href={localizePath(locale, '/privacy')} class="font-medium text-brand underline underline-offset-2">{t('nav.privacy')}</a>.
     </p>
     <div class="flex shrink-0 gap-3">
       <button id="consent-decline" type="button" class="rounded-lg border border-line-strong px-4 py-2 text-sm font-semibold text-ink transition-colors hover:border-brand">
-        Decline
+        {t('consent.decline')}
       </button>
       <button id="consent-accept" type="button" class="rounded-lg bg-grad-cta px-4 py-2 text-sm font-semibold text-white shadow-e1">
-        Accept
+        {t('consent.accept')}
       </button>
     </div>
   </div>

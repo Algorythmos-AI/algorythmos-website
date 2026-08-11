@@ -1,17 +1,20 @@
 ---
 // Qualitative differentiators — no fabricated metrics (claims sign-off pending, P6).
-const points = [
-  { title: 'Senior engineers only', desc: 'You work directly with the people who build your systems — no hand-offs to juniors.' },
-  { title: 'Compliance-first', desc: 'GDPR (EU) and Australian Privacy Principles considered from day one, not bolted on.' },
-  { title: 'Outcome-based delivery', desc: 'Scoped to measurable business results, with working software shipped in weeks, not quarters.' },
-  { title: 'Bilingual, two regions', desc: 'Delivery and support in English and French, across Sydney (APAC) and Paris (EU).' },
-];
+import { asLocale, useTranslations } from '@/i18n';
+
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+
+const points = [0, 1, 2, 3].map((i) => ({
+  title: t(`home.whyUs.points.${i}.title`),
+  desc: t(`home.whyUs.points.${i}.desc`),
+}));
 ---
 
 <section class="relative overflow-hidden border-y border-line bg-surface-2/40">
   <div class="container-page py-24">
     <h2 data-reveal class="max-w-2xl text-h2 font-bold tracking-tight text-ink">
-      Why teams choose <span class="text-gradient-brand">Algorythmos</span>
+      {t('home.whyUs.title')} <span class="text-gradient-brand">Algorythmos</span>
     </h2>
     <div class="mt-14 grid gap-x-10 gap-y-12 sm:grid-cols-2">
       {points.map((p, i) => (

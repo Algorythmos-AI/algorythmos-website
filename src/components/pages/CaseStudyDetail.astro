@@ -6,6 +6,7 @@ import Chart from '@/components/islands/Chart';
 import { asLocale, useTranslations, localizePath } from '@/i18n';
 import { getCaseStudy } from '@/data/caseStudies';
 import { caseStudyCharts } from '@/data/caseStudyCharts';
+import { localizeChart } from '@/lib/localizeChart';
 import { breadcrumb, SITE, ORG_ID, ogImageUrl } from '@/seo/schema';
 import { bookingUrl } from '@/lib/links';
 import Breadcrumbs from '@/components/ui/Breadcrumbs.astro';
@@ -26,45 +27,29 @@ const abs = (p: string) => SITE + localizePath(locale, p);
 const ogImg = ogImageUrl(localizePath(locale, path));
 
 /**
- * Normalise both content shapes into one richer view model:
- *  - inline EN (2 research studies) → authored arrays in the data module
- *  - i18n-backed (4 studies)        → flat dot keys (approach.0-3, results.0-4)
- * Both expose: challenge, approach[], solution, results[], plus the context
- * band (industry/region/focus) and SEO keywords[].
+ * All studies are i18n-backed — flat dot keys under `caseStudyDetail.studies.<slug>.*`
+ * (approach.0-3, results.0-4). Exposes: challenge, approach[], solution, results[],
+ * plus the context band (industry/region/focus) and SEO keywords[].
  */
 const idx = (key: string, n: number): string[] =>
   Array.from({ length: n }, (_, i) => t(`caseStudyDetail.studies.${slug}.${key}.${i}`));
 
-const study = cs.inline
-  ? {
-      title: cs.inline.title,
-      meta: cs.inline.meta,
-      industry: cs.inline.industry,
-      region: cs.inline.region,
-      focus: cs.inline.focus,
-      challenge: cs.inline.challenge,
-      approach: cs.inline.approach,
-      solution: cs.inline.solution,
-      results: cs.inline.result,
-      cta: cs.inline.cta,
-      keywords: cs.inline.keywords,
-    }
-  : {
-      title: t(`caseStudyDetail.studies.${slug}.title`),
-      meta: t(`caseStudyDetail.studies.${slug}.meta`),
-      industry: t(`caseStudyDetail.studies.${slug}.industry`),
-      region: t(`caseStudyDetail.studies.${slug}.region`),
-      focus: t(`caseStudyDetail.studies.${slug}.focus`),
-      challenge: t(`caseStudyDetail.studies.${slug}.challenge`),
-      approach: idx('approach', 4),
-      solution: t(`caseStudyDetail.studies.${slug}.solution`),
-      results: idx('results', 5),
-      cta: t(`caseStudyDetail.studies.${slug}.cta`),
-      keywords: t(`caseStudyDetail.studies.${slug}.keywords`)
-        .split(',')
-        .map((s) => s.trim())
-        .filter(Boolean),
-    };
+const study = {
+  title: t(`caseStudyDetail.studies.${slug}.title`),
+  meta: t(`caseStudyDetail.studies.${slug}.meta`),
+  industry: t(`caseStudyDetail.studies.${slug}.industry`),
+  region: t(`caseStudyDetail.studies.${slug}.region`),
+  focus: t(`caseStudyDetail.studies.${slug}.focus`),
+  challenge: t(`caseStudyDetail.studies.${slug}.challenge`),
+  approach: idx('approach', 4),
+  solution: t(`caseStudyDetail.studies.${slug}.solution`),
+  results: idx('results', 5),
+  cta: t(`caseStudyDetail.studies.${slug}.cta`),
+  keywords: t(`caseStudyDetail.studies.${slug}.keywords`)
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean),
+};
 
 /** At-a-glance context chips (label + value). */
 const facts = [
@@ -94,8 +79,8 @@ const crumbItems = [
 ];
 const crumbs = breadcrumb(crumbItems);
 
-/** Charts exist only for the two data-heavy inline studies; undefined → [] otherwise. */
-const charts = caseStudyCharts[slug] ?? [];
+/** Charts exist only for the two data-heavy evidence studies; undefined → [] otherwise. */
+const charts = (caseStudyCharts[slug] ?? []).map((c) => localizeChart(t, c));
 
 /**
  * Headline stat band — values restate figures already published in this study's

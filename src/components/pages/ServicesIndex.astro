@@ -2,22 +2,23 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHeader from '@/components/sections/PageHeader.astro';
 import { asLocale, useTranslations, localizePath } from '@/i18n';
-import { services } from '@/data/services';
+import { services, localizeService } from '@/data/services';
 import { breadcrumb, SITE } from '@/seo/schema';
 
 const locale = asLocale(Astro.currentLocale);
 const t = useTranslations(locale);
+const localized = services.map((s) => localizeService(t, s));
 const abs = (p: string) => SITE + localizePath(locale, p);
 const crumbs = breadcrumb([
-  { name: 'Home', url: abs('/') },
+  { name: t('nav.home'), url: abs('/') },
   { name: t('nav.services'), url: abs('/services') },
 ]);
 const collection = {
   '@context': 'https://schema.org',
   '@type': 'CollectionPage',
-  name: 'Services — Algorythmos',
+  name: `${t('nav.services')} — Algorythmos`,
   url: abs('/services'),
-  hasPart: services.map((s) => ({ '@type': 'Service', name: s.name, url: abs(`/services/${s.slug}`) })),
+  hasPart: localized.map((s) => ({ '@type': 'Service', name: s.name, url: abs(`/services/${s.slug}`) })),
 };
 ---
 
@@ -31,7 +32,7 @@ const collection = {
 
   <section class="container-page py-20">
     <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      {services.map((s, i) => (
+      {localized.map((s, i) => (
         <a
           href={localizePath(locale, `/services/${s.slug}`)}
           data-reveal

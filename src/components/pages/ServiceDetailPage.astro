@@ -3,7 +3,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHeader from '@/components/sections/PageHeader.astro';
 import Button from '@/components/ui/Button.astro';
 import { asLocale, useTranslations, localizePath } from '@/i18n';
-import { getService } from '@/data/services';
+import { getService, localizeService } from '@/data/services';
 import { breadcrumb, SITE, ORG_ID, ogImageUrl, imageObject } from '@/seo/schema';
 import { bookingUrl } from '@/lib/links';
 import Visual from '@/components/ui/Visual.astro';
@@ -38,6 +38,8 @@ if (!svc) throw new Error(`Unknown service slug: ${slug}`);
 
 const locale = asLocale(Astro.currentLocale);
 const t = useTranslations(locale);
+/** Localized catalogue copy (name/tagline/summary/capabilities/outcomes). */
+const loc = localizeService(t, svc);
 const path = `/services/${svc.slug}`;
 const abs = (p: string) => SITE + localizePath(locale, p);
 const ogImg = ogImageUrl(localizePath(locale, path));
@@ -47,8 +49,8 @@ const svcVisualAlt = svcVisual ? t(svcVisual.altKey) : '';
 const serviceLd = {
   '@context': 'https://schema.org',
   '@type': 'Service',
-  name: svc.name,
-  description: svc.summary,
+  name: loc.name,
+  description: loc.summary,
   provider: { '@id': ORG_ID },
   areaServed: [
     { '@type': 'Country', name: 'Australia' },
@@ -62,7 +64,7 @@ const serviceLd = {
 const crumbItems = [
   { name: t('nav.home'), url: abs('/') },
   { name: t('nav.services'), url: abs('/services') },
-  { name: svc.name, url: abs(path) },
+  { name: loc.name, url: abs(path) },
 ];
 const crumbs = breadcrumb(crumbItems);
 
@@ -93,10 +95,10 @@ const tOr = (key: string, fallback: string) => {
   const v = t(key);
   return v === key ? fallback : v;
 };
-const metaTitle = ns ? tOr(`${ns}.meta.title`, `${svc.name} — Algorythmos`) : `${svc.name} — Algorythmos`;
-const metaDescription = ns ? tOr(`${ns}.meta.description`, svc.summary) : svc.summary;
-const heroLead = ns ? tOr(`${ns}.hero.subtitle`, svc.tagline) : svc.tagline;
-const faqsTitle = ns ? tOr(`${ns}.faqs.title`, 'Frequently asked questions') : 'Frequently asked questions';
+const metaTitle = ns ? tOr(`${ns}.meta.title`, `${loc.name} — Algorythmos`) : `${loc.name} — Algorythmos`;
+const metaDescription = ns ? tOr(`${ns}.meta.description`, loc.summary) : loc.summary;
+const heroLead = ns ? tOr(`${ns}.hero.subtitle`, loc.tagline) : loc.tagline;
+const faqsTitle = ns ? tOr(`${ns}.faqs.title`, t('services.detail.faqTitle')) : t('services.detail.faqTitle');
 const faqNs = ns;
 const faqs: { q: string; a: string }[] = [];
 if (faqNs) {
@@ -123,7 +125,7 @@ const faqLd = faqs.length
 
 <BaseLayout title={metaTitle} description={metaDescription} path={path} image={ogImg} jsonLd={[serviceLd, crumbs, ...(faqLd ? [faqLd] : [])]}>
   <Breadcrumbs items={crumbItems} />
-  <PageHeader eyebrow={t('nav.services')} title={svc.name} lead={heroLead} />
+  <PageHeader eyebrow={t('nav.services')} title={loc.name} lead={heroLead} />
 
   {svcVisual && (
     <section class="container-page pt-12">
@@ -137,11 +139,11 @@ const faqLd = faqs.length
   <section class="container-page py-20">
     <div class="grid gap-12 lg:grid-cols-[1.5fr_1fr]">
       <div data-reveal>
-        <p class="text-lead text-ink-muted">{svc.summary}</p>
+        <p class="text-lead text-ink-muted">{loc.summary}</p>
 
         <h2 class="mt-12 text-h3 font-semibold text-ink">{tOr('services.detail.included', "What's included")}</h2>
         <ul class="mt-5 space-y-3">
-          {svc.capabilities.map((c) => (
+          {loc.capabilities.map((c) => (
             <li class="flex items-start gap-3">
               <svg class="mt-0.5 h-5 w-5 shrink-0 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
               <span class="text-ink-muted">{c}</span>
@@ -159,7 +161,7 @@ const faqLd = faqs.length
         <div class="rounded-2xl border border-line glass p-6">
         <h2 class="text-h3 font-semibold text-ink">{tOr('services.detail.outcomes', 'Outcomes')}</h2>
         <ul class="mt-4 space-y-3">
-          {svc.outcomes.map((o) => (
+          {loc.outcomes.map((o) => (
             <li class="flex items-start gap-3 text-sm text-ink-muted">
               <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent"></span>
               {o}
