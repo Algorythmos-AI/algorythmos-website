@@ -66,8 +66,8 @@ function buildPages(): Record<string, OGPage> {
 
     for (const cs of caseStudies) {
       pages[ogKey(localizePath(loc, `/case-studies/${cs.slug}`))] = {
-        title: cs.inline ? cs.inline.title : t(`caseStudyDetail.studies.${cs.slug}.title`),
-        description: cs.inline ? cs.inline.meta : t(`caseStudyDetail.studies.${cs.slug}.meta`),
+        title: t(`caseStudyDetail.studies.${cs.slug}.title`),
+        description: t(`caseStudyDetail.studies.${cs.slug}.meta`),
       };
     }
 
@@ -78,8 +78,8 @@ function buildPages(): Record<string, OGPage> {
       const metaTitle = ns ? t(`${ns}.meta.title`) : '';
       const heroSubtitle = ns ? t(`${ns}.hero.subtitle`) : '';
       pages[ogKey(localizePath(loc, `/services/${s.slug}`))] = {
-        title: metaTitle && metaTitle !== `${ns}.meta.title` ? metaTitle : s.name,
-        description: heroSubtitle && heroSubtitle !== `${ns}.hero.subtitle` ? heroSubtitle : s.tagline,
+        title: metaTitle && metaTitle !== `${ns}.meta.title` ? metaTitle : t(`services.items.${s.slug}.name`),
+        description: heroSubtitle && heroSubtitle !== `${ns}.hero.subtitle` ? heroSubtitle : t(`services.items.${s.slug}.tagline`),
       };
     }
   }

@@ -31,7 +31,7 @@ function resolve(ref: RelatedRef): Card | null {
   if (ref.type === 'service') {
     const svc = getService(ref.slug);
     if (!svc) return null;
-    return { kind: t('related.kind.service'), label: svc.name, href: localizePath(locale, `/services/${svc.slug}`) };
+    return { kind: t('related.kind.service'), label: t(`services.items.${svc.slug}.name`), href: localizePath(locale, `/services/${svc.slug}`) };
   }
   if (ref.type === 'blog') {
     const post = blog.find((p) => p.slug === ref.slug);

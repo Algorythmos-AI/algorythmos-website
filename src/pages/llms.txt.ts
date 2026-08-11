@@ -27,7 +27,8 @@ export const GET: APIRoute = () => {
   L.push(`- [Press & media kit](${SITE}/press): Boilerplate, founder bio, logos, and media contact.`);
   L.push('');
   L.push('## Services');
-  for (const s of services) L.push(`- [${s.name}](${SITE}/services/${s.slug}): ${s.tagline}`);
+  for (const s of services)
+    L.push(`- [${t(`services.items.${s.slug}.name`)}](${SITE}/services/${s.slug}): ${t(`services.items.${s.slug}.tagline`)}`);
   L.push('');
   L.push('## Regions');
   L.push(`- [Australia — Sydney](${SITE}/au-en): AI consultancy for Australian SMEs and enterprises.`);

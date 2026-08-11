@@ -205,7 +205,7 @@ const jsonLd = faqLd ? [crumbs, faqLd] : [crumbs];
     <section class="relative overflow-hidden border-y border-line bg-surface-2/40">
       <div class="container-page py-24">
         <h2 data-reveal class="max-w-2xl text-h2 font-bold tracking-tight text-ink">
-          Frequently asked <span class="text-gradient-brand">questions</span>
+          {t('pricing.faqTitle')} <span class="text-gradient-brand">{t('pricing.faqTitleHighlight')}</span>
         </h2>
         <div class="mt-12 grid gap-4 lg:grid-cols-2">
           {faqItems.map((f, i) => (

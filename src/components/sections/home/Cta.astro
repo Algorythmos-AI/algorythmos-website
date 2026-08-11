@@ -12,10 +12,10 @@ const t = useTranslations(locale);
   <div data-reveal class="relative overflow-hidden rounded-[2rem] border border-line glass px-6 py-20 text-center shadow-e2 sm:px-12">
     <Aurora class="opacity-70" />
     <h2 class="mx-auto max-w-3xl text-display font-extrabold tracking-tight text-ink">
-      Ready to put AI to work — <span class="text-gradient-brand">properly?</span>
+      {t('home.ctaBanner.title')} <span class="text-gradient-brand">{t('home.ctaBanner.titleHighlight')}</span>
     </h2>
     <p class="mx-auto mt-5 max-w-xl text-lead text-ink-muted">
-      Book a free discovery call. We'll map the highest-leverage AI opportunity in your business and how to ship it.
+      {t('home.ctaBanner.subtitle')}
     </p>
     <div class="mt-10 flex flex-wrap justify-center gap-4">
       <Button href={bookingUrl(locale)} target="_blank" rel="noopener" size="lg">{t('hero.cta.primary')}</Button>

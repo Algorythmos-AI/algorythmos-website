@@ -9,11 +9,10 @@ const locale = asLocale(Astro.currentLocale);
 const t = useTranslations(locale);
 const abs = (p: string) => SITE + localizePath(locale, p);
 
-/** Resolve a card's translatable field from its i18n index, or fall back to inline EN. */
+/** Resolve a card's translatable field from its i18n index. */
 function field(slug: string, key: 'title' | 'challenge' | 'solution' | 'result'): string {
   const cs = getCaseStudy(slug);
-  if (cs?.i18nIndex !== undefined) return t(`caseStudies.items.${cs.i18nIndex}.${key}`);
-  return cs?.inline?.[key === 'result' ? 'meta' : key] ?? '';
+  return cs ? t(`caseStudies.items.${cs.i18nIndex}.${key}`) : '';
 }
 
 const cards = caseStudies.map((c) => ({
@@ -41,7 +40,7 @@ const collection = {
   },
 };
 const crumbs = breadcrumb([
-  { name: 'Home', url: abs('/') },
+  { name: t('nav.home'), url: abs('/') },
   { name: t('nav.caseStudies'), url: abs('/case-studies') },
 ]);
 ---

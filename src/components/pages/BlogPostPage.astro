@@ -5,6 +5,7 @@ import Button from '@/components/ui/Button.astro';
 import { asLocale, useTranslations, localizePath } from '@/i18n';
 import { getPost } from '@/data/blog';
 import { getBlogCharts } from '@/data/blogCharts';
+import { localizeChart } from '@/lib/localizeChart';
 import Chart from '@/components/islands/Chart';
 import { breadcrumb, SITE, ORG_ID, FOUNDER_ID, ogImageUrl } from '@/seo/schema';
 import { bookingUrl } from '@/lib/links';
@@ -19,11 +20,11 @@ const { slug } = Astro.props;
 const post = getPost(slug);
 if (!post) throw new Error(`Unknown blog slug: ${slug}`);
 
-/** Real charts harvested from the legacy layouts, keyed by slug. */
-const charts = getBlogCharts(post.slug);
-
 const locale = asLocale(Astro.currentLocale);
 const t = useTranslations(locale);
+
+/** Real charts harvested from the legacy layouts, keyed by slug — localized per locale. */
+const charts = getBlogCharts(post.slug).map((c) => localizeChart(t, c));
 const path = `/blog/${post.slug}`;
 const abs = (p: string) => SITE + localizePath(locale, p);
 const ogImg = ogImageUrl(localizePath(locale, path));
