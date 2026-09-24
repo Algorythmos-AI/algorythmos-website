@@ -73,9 +73,9 @@ A consolidated record of all audits, fixes, and governance implementations.
 
 ---
 
-## 3. AI Governance System (2025-12-11)
+## 3. Governance System (2025-12-11)
 
-**Purpose:** Protect codebase from AI agent errors
+**Purpose:** Protect the codebase from accidental regressions (i18n, SEO, legacy code)
 
 ### Protection Layers Installed
 
@@ -94,14 +94,14 @@ A consolidated record of all audits, fixes, and governance implementations.
 
 | File | Purpose |
 |------|---------|
-| `README_FOR_AGENTS.md` | Entry point for AI |
+| `README.md` | Entry point |
 | `TRANSLATION_GUIDE.md` | EN/FR i18n rules |
 | `SEO_CHECKLIST.md` | Meta/schema requirements |
 | `COMPONENT_STYLE_GUIDE.md` | H1/H2/spacing rules |
 | `SCHEMA_PATTERNS.md` | JSON-LD patterns |
 | `CODE_STYLE_GUIDE.md` | React/Tailwind conventions |
 | `CONTENT_MODEL.md` | i18n key naming |
-| `LLM_CHANGE_POLICY.md` | AI permissions |
+| `CHANGE_POLICY.md` | Change rules |
 
 ### Translation Validation
 

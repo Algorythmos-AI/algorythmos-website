@@ -1,6 +1,6 @@
 # Algorythmos SEO Governance
 
-> **AI Agents**: This document defines mandatory SEO rules. Treat as hard constraints.
+> This document defines mandatory SEO rules. Treat them as hard constraints.
 
 ---
 
@@ -134,13 +134,13 @@
 
 ## 7. Modification Constraints
 
-### AI Agents May Modify
+### Safe to modify
 - Canonical tags
 - Hreflang tags
 - JSON-LD schemas (metadata only)
 - OG/Twitter URLs
 
-### AI Agents Must NOT Modify
+### Do not modify without review
 - React components
 - JSX files
 - Routing logic

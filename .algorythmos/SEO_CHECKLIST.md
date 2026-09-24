@@ -3,4 +3,4 @@ Every page needs:
 - Canonical URL
 - OpenGraph tags
 - JSON-LD (Article or BreadcrumbList)
-Full rules: /docs/AI_AGENT_WORKFLOW.md
+Full rules: /docs/CONTRIBUTING.md

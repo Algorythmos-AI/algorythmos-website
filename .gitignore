@@ -44,6 +44,7 @@ Clients/
 
 # Corporate / statutory records — never commit (ASIC keys, ACN/ABN paperwork, signed consents)
 asic/
+apple-developer/
 
 # Loose commercial documents at repo root (SOWs, signed quotes, client logos)
 SOW*
@@ -52,3 +53,14 @@ Integrant-Logo-*.png
 
 # Virtual office provider records (invoices, card details, correspondence)
 Bustle-studios/
+
+# Company bank correspondence — never commit (account confirmations, statements)
+business-bank-account/
+
+# Supplier bills / receipts — never commit
+bills/
+
+# Local tooling and orientation notes — kept locally, never tracked
+CLAUDE.md
+src/CLAUDE.md
+.claude/

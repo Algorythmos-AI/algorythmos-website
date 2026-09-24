@@ -22,4 +22,4 @@ src/
 - max-w-7xl for containers
 - Prefer dark mode by default
 
-## Full rules: /docs/AI_AGENT_WORKFLOW.md
+## Full rules: /docs/CONTRIBUTING.md

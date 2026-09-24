@@ -1,8 +1,8 @@
 # Copy & Claims Sign-off (EN + FR)
 
 **Owner:** skalaliya · **Purpose:** verify every *factual / quantitative / comparative* claim on the live
-site is truthful and defensible **before** heavy marketing/ads. Nothing on the site was invented — the
-figures were harvested verbatim from the legacy app — but they still need your sign-off.
+site is truthful and defensible **before** heavy marketing/ads. This register lists each claim, its
+source, and its sign-off status so the site never publishes a figure nobody can stand behind.
 
 Mark each: `[x]` approved as-is · `[~]` reword (note the fix) · `[ ]` not yet reviewed.
 Anything you change in EN must be mirrored in FR (`i18n:check` enforces key parity, not meaning — that's on us).

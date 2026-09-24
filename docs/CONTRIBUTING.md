@@ -1,6 +1,6 @@
-# AI Agent Workflow — Algorythmos (Astro 6)
+# Contributing — Algorythmos website (Astro 6)
 
-> **Canonical workflow for every AI agent and human contributor.**
+> **Canonical workflow for every contributor.**
 > This document supersedes the prior Vite + React SPA rules. The project has
 > migrated to **Astro 6**; the old SPA is archived under `legacy/` and must not
 > be touched. Read this file before changing anything.

@@ -1,113 +1,85 @@
-# Algorythmos
+# Algorythmos — company website
 
-A professional website for **Algorythmos**, an AI consultancy delivering agentic automation, document intelligence, SQL analytics, and MLOps engineering for SMEs across Europe and Australia.
+Source for [algorythmos.com](https://algorythmos.com): the bilingual (EN/FR) website of
+Algorythmos Pty Ltd, an AI consultancy delivering agentic automation, document
+intelligence, SQL dashboards and MLOps for SMEs in Australia and France.
 
-> **AI Agents & Developers**: Read [`docs/DEVELOPMENT_GUIDE.md`](./docs/DEVELOPMENT_GUIDE.md) before making any changes.
-
----
-
-## 🚀 Quick Start
-
-```bash
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-
-# Before committing (MANDATORY)
-npm run i18n:check   # Verify EN/FR translations
-npm run lint         # Code quality
-npm run build        # Production build
-```
-
----
-
-## ⚠️ Git Configuration (MANDATORY FOR AI AGENTS)
-
-> [!CAUTION]
-> All commits **MUST** use this exact author configuration to ensure Vercel deployments succeed:
-
-```bash
-git config user.name "skalaliya"
-git config user.email "Skalaliya@gmail.com"
-```
-
-| Field | Value |
-|-------|-------|
-| **Name** | `skalaliya` |
-| **Email** | `Skalaliya@gmail.com` |
-
-Failure to use the correct email will cause Vercel to reject deployments with "No GitHub account was found matching the commit author email address".
-
----
-
-## 📋 Tech Stack
+## Stack
 
 | Layer | Technology |
-|-------|------------|
-| Framework | React 18 + React Router |
-| Build | Vite 6 |
-| Styling | Tailwind CSS |
-| Animations | Framer Motion |
-| Charts | Recharts |
-| SEO | React Helmet Async |
-| Testing | Playwright (E2E), Vitest (unit) |
-| Deployment | Vercel |
+|---|---|
+| Framework | Astro 6, static output |
+| Styling | Tailwind CSS 3 + semantic CSS custom properties (light/dark) |
+| Islands | React 18 (charts only) |
+| i18n | Build-time dictionaries in `src/i18n/ui/*.json` via `useTranslations()` |
+| SEO | Centralised head (`src/components/seo/SEO.astro`), JSON-LD (`src/seo/schema.ts`), sitemap, RSS, OG cards |
+| Contact API | Vercel serverless function (`api/contact.js`, Nodemailer over SMTP) |
+| Testing | Vitest (unit), Playwright (e2e), custom SEO / i18n / link validators |
+| Hosting | Vercel |
 
----
+Node 22 (`.nvmrc`).
 
-## 🎯 Services
+## Quick start
 
-| Service | Description |
-|---------|-------------|
-| **Agentic Automation** | AI workflows with guardrails |
-| **Document Intelligence** | OCR + NLP for documents |
-| **SQL Dashboards** | Business intelligence |
-| **MLOps CI/CD** | Production ML pipelines |
-| **AI Websites** | Custom AI-powered sites |
+```bash
+npm install
+npm run dev        # http://localhost:4321
+```
 
----
+## Quality gate (mirrors CI — run before every commit)
 
-## 🌍 Multi-Region
+```bash
+npm run check && npm run i18n:check && npm run health:check && npm run build \
+  && npm run seo:check && npm run link:check && npm run keys:check \
+  && npm test && npm run test:e2e
+```
 
-| Region | URL Pattern |
-|--------|-------------|
-| Global (EN) | `/services/...` |
-| Australia | `/au-en/services/...` |
-| France | `/fr-fr/services/...` |
+| Script | What it checks |
+|---|---|
+| `check` | Astro / TypeScript diagnostics |
+| `i18n:check` | EN ↔ FR key parity, untranslated strings, hard-coded copy |
+| `health:check` | CTAs, accessibility attributes, oversized images |
+| `seo:check` | Canonicals, hreflang, OG, JSON-LD, sitemap, robots, RSS on the built site |
+| `link:check` | Every internal link in `dist/` resolves |
+| `keys:check` | No unresolved translation keys leak into HTML |
+| `test` / `test:e2e` | Unit and browser tests |
 
----
+## Locales and URLs
 
-## 📁 Project Structure
+| Locale | Path |
+|---|---|
+| Australia (en-AU) | `/au-en/...` |
+| France (fr-FR) | `/fr-fr/...` |
+
+`algorythmos.com.au` and `algorythmos.fr` redirect to the matching locale on the
+canonical domain. Locale paths and the canonical domain are frozen; changing them
+breaks canonicals, hreflang and the sitemap.
+
+## Project structure
 
 ```
 src/
-├── App.jsx              # Main router
-├── pages/               # Page components
-├── components/          # Reusable UI
-├── data/                # services.js, team.js
-├── app/i18n/            # EN/FR translations
-└── lib/                 # Utilities
+├── pages/             # Routes (root + [locale]/ for /au-en and /fr-fr)
+├── layouts/           # BaseLayout: head, theme, consent, transitions
+├── components/        # Astro components (layout, sections, ui, pages, seo)
+├── data/              # Typed content: services, case studies, blog, business facts
+├── i18n/              # useTranslations + dictionaries (en.global, en.au, fr.fr)
+├── seo/               # schema.ts, OG page map, snapshot tests
+└── styles/            # tokens.css, themes.css, global.css, console.css
+api/                   # Vercel serverless functions
+scripts/               # Validators and build tooling
+e2e/                   # Playwright specs
+legacy/                # Archived pre-Astro SPA — frozen, do not modify
 ```
 
----
+## Contributing
 
-## 📚 Documentation
+Read [`docs/CONTRIBUTING.md`](docs/CONTRIBUTING.md) first. In short: every user-facing
+string goes through `t()` with keys added to both EN and FR dictionaries; style only
+with the semantic tokens; extend structured data, never replace it; never modify
+`legacy/`. Supporting guides live in [`.algorythmos/`](.algorythmos/) and
+[`docs/`](docs/).
 
-| Document | Purpose |
-|----------|---------|
-| [`docs/DEVELOPMENT_GUIDE.md`](./docs/DEVELOPMENT_GUIDE.md) | AI agent & developer workflow |
-| [`docs/SEO_GOVERNANCE.md`](./docs/SEO_GOVERNANCE.md) | SEO rules for all regions |
-| [`docs/AUDIT_HISTORY.md`](./docs/AUDIT_HISTORY.md) | Past audits and fixes |
+## Licence
 
----
-
-## 🔗 Links
-
-- **Website**: [algorythmos.com](https://algorythmos.com)
-- **Twitter**: [@algorythmos](https://x.com/algorythmos)
-
----
-
-Built with ❤️ by the Algorythmos team
+Proprietary — see [`LICENSE`](LICENSE). © Algorythmos Pty Ltd.

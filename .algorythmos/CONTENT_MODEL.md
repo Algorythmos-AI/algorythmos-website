@@ -19,4 +19,4 @@ Keys: `blog.posts.{index}.*`, `blogDetail.posts.{slug}.*`
 ## CTAs
 Keys: `cta.regionAU.*`, `cta.regionFR.*`
 
-## Full rules: /docs/AI_AGENT_WORKFLOW.md
+## Full rules: /docs/CONTRIBUTING.md

@@ -48,7 +48,7 @@ const DESC_KEY = /(^|\.)(meta\.description|metaDescription)$/;
 
 // Keys to ignore when checking for identical values (structurally non-copy)
 const IGNORE_IDENTICAL = [
-    '_AI_AGENT_NOTE',
+
     /\.value$/,  // Metric values like "<1s", "99.9%"
     /\.icon$/,
     /url/i,
