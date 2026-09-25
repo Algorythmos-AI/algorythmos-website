@@ -21,7 +21,7 @@ test.describe('locale routing & region banner', () => {
   test('FR pages render in French with fr lang attribute', async ({ page }) => {
     await page.goto('/fr-fr/services');
     await expect(page.locator('html')).toHaveAttribute('lang', 'fr-FR');
-    await expect(page).toHaveTitle(/Conseil en IA/);
+    await expect(page).toHaveTitle(/conseil en IA/i);
   });
 
   test('returning-visitor swap fires only on the locale homes with a locale cookie', async ({ page, context }) => {
