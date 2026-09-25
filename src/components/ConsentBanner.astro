@@ -15,7 +15,7 @@ const t = useTranslations(locale);
   hidden
   role="region"
   aria-label={t('consent.ariaLabel')}
-  class="fixed inset-x-0 bottom-0 z-[var(--z-toast)] border-t border-line glass"
+  class="fixed inset-x-0 bottom-0 z-[var(--z-toast)] border-t border-line bg-bg shadow-e3"
 >
   <div class="container-page flex flex-col gap-3 py-3 sm:flex-row sm:items-center sm:justify-between">
     <p class="text-xs leading-relaxed text-ink-muted sm:text-sm">
@@ -58,10 +58,20 @@ const t = useTranslations(locale);
     }
     if (consent === 'denied') return;
     el.hidden = false;
+    /* Publish the strip's live height so the page can reserve room for it
+       (global.css) and the region banner can sit above it. */
+    const root = document.documentElement;
+    const publish = () => root.style.setProperty('--consent-h', `${el.offsetHeight}px`);
+    publish(); // now, not only when the observer next runs (it waits for a rendered frame)
+    const ro = new ResizeObserver(publish);
+    ro.observe(el);
     const set = (v: string) => {
       document.cookie = `consent=${v};path=/;max-age=15552000;samesite=lax`;
       el.hidden = true;
+      ro.disconnect();
+      root.style.removeProperty('--consent-h');
     };
+    document.addEventListener('astro:before-swap', () => ro.disconnect(), { once: true });
     el.querySelector('#consent-accept')?.addEventListener('click', () => {
       set('granted');
       loadAnalytics();

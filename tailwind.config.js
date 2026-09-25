@@ -3,6 +3,17 @@ export default {
   content: ['./src/**/*.{astro,html,js,ts,jsx,tsx,md,mdx}'],
   darkMode: ['selector', '[data-theme="dark"]'],
   theme: {
+    /* Full list, in ascending order, so `nav` sits between lg and xl in the
+       generated CSS. Adding it via `extend` would append it after 2xl and break
+       the cascade. `nav` is where the desktop header fits in both locales. */
+    screens: {
+      sm: '640px',
+      md: '768px',
+      lg: '1024px',
+      nav: '1120px',
+      xl: '1280px',
+      '2xl': '1536px',
+    },
     extend: {
       // ── Semantic, theme-aware tokens (light + dark via CSS vars) ──
       colors: {

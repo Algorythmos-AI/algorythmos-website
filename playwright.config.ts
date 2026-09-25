@@ -30,7 +30,19 @@ export default defineConfig({
       /* The worst historical mobile bug was iOS-only, so WebKit runs the console + FR specs too. */
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
-      testMatch: /(console|french-locale|a11y)\.spec\.ts/,
+      testMatch: /(console|french-locale|a11y|responsive-header|overlays)\.spec\.ts/,
+    },
+    /* Real phone viewports, touch and pixel density. The desktop projects never saw the
+       see-through menu or cookie banner, so overlays and a11y also run on a phone of each engine. */
+    {
+      name: 'mobile-chromium',
+      use: { ...devices['Pixel 7'] },
+      testMatch: /(overlays|a11y)\.spec\.ts/,
+    },
+    {
+      name: 'mobile-webkit',
+      use: { ...devices['iPhone 15'] },
+      testMatch: /(overlays|a11y)\.spec\.ts/,
     },
   ],
   webServer: {
