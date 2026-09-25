@@ -91,7 +91,9 @@ try {
       if (m.lcp <= BUDGET.lcp && m.tbt <= BUDGET.tbt && m.cls <= BUDGET.cls) break; // already within budget
     }
     if (!m) {
-      console.log(`  ⚠️  ${label}: Lighthouse run failed (skipped)`);
+      // A URL we could not measure is not a pass: count it, so --strict fails.
+      breaches += 1;
+      console.log(`  ❌ ${label}: every Lighthouse run failed — counted as a breach`);
       continue;
     }
     const flags = [];
@@ -106,7 +108,9 @@ try {
     );
   }
 } catch (e) {
-  console.error(`  Lighthouse check error: ${e.message}`);
+  // e.g. the preview server never came up: nothing was measured, so fail --strict.
+  breaches += 1;
+  console.error(`  Lighthouse check error: ${e.message} — counted as a breach`);
 } finally {
   preview.kill();
 }
