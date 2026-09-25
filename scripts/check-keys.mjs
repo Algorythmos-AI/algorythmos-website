@@ -2,19 +2,25 @@
  * Guard: fail if any unresolved i18n key leaked into rendered HTML.
  * (t() returns the key string on a miss, so a typo'd/absent key renders as
  *  literal "namespace.some.key" text. Hyphen-aware — slugs contain hyphens.)
+ *
+ * The namespaces come from the dictionaries themselves, so a new or rarely used
+ * namespace (ui, console, press, …) is always covered. Both text nodes and the
+ * copy-bearing attributes (alt, aria-label, title, placeholder, content) are
+ * scanned — a leaked key in an attribute is just as visible to a screen reader.
  * Run after `astro build`.
  */
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 
 const DIST = 'dist';
+const DICTS = ['src/i18n/ui/en.global.json', 'src/i18n/ui/fr.fr.json', 'src/i18n/ui/en.au.json'];
+
 const NS = [
-  'caseStudyDetail', 'caseStudies', 'blogDetail', 'blog', 'about', 'pricing',
-  'contactPage', 'contact', 'careers', 'privacy', 'terms', 'services',
-  'hero', 'nav', 'footer', 'region', 'notFoundPage', 'seo',
-  'home', 'industries', 'regionAu', 'regionFr', 'visuals',
-];
-const RE = new RegExp(`>\\s*(?:${NS.join('|')})\\.[a-zA-Z0-9._-]+\\s*<`, 'g');
+  ...new Set(DICTS.flatMap((p) => Object.keys(JSON.parse(readFileSync(p, 'utf8'))).map((k) => k.split('.')[0]))),
+].sort((a, b) => b.length - a.length); // longest first, so "blogDetail" wins over "blog"
+const KEY = `(?:${NS.join('|')})\\.[a-zA-Z0-9._-]+`;
+const TEXT_RE = new RegExp(`>\\s*(${KEY})\\s*<`, 'g');
+const ATTR_RE = new RegExp(`\\s(?:alt|aria-label|title|placeholder|content)="\\s*(${KEY})\\s*"`, 'g');
 
 if (!existsSync(DIST)) {
   console.error('❌ dist/ not found — run `npm run build` first.');
@@ -27,8 +33,9 @@ function walk(dir) {
     const p = join(dir, f);
     if (statSync(p).isDirectory()) walk(p);
     else if (f.endsWith('.html')) {
-      const m = readFileSync(p, 'utf8').match(RE);
-      if (m) hits.push({ file: p, keys: [...new Set(m.map((s) => s.slice(1, -1).trim()))] });
+      const html = readFileSync(p, 'utf8');
+      const keys = new Set([...html.matchAll(TEXT_RE), ...html.matchAll(ATTR_RE)].map((m) => m[1]));
+      if (keys.size) hits.push({ file: p, keys: [...keys] });
     }
   }
 }
@@ -40,4 +47,4 @@ if (hits.length) {
   console.error(`\n${hits.length} page(s) affected. Fix the missing keys or content source.`);
   process.exit(1);
 }
-console.log('\x1b[32m✅ No unresolved i18n keys in dist/.\x1b[0m');
+console.log(`\x1b[32m✅ No unresolved i18n keys in dist/ (${NS.length} namespaces, text and attributes).\x1b[0m`);
