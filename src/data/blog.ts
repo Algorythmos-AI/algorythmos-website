@@ -29,7 +29,7 @@ export type BlogBlock =
       /** Sub-key holding the list items (default `list`; pulse uses `points`). */
       listKey?: string;
     }
-  /** A placeholder where a legacy chart/visualisation lived (rendered as a TODO island). */
+  /** Marks where a post has charts; BlogPostPage skips it inline and renders the post's charts (src/data/blogCharts.ts) once, after the prose. */
   | { kind: 'chart'; label: string };
 
 export interface BlogPost {
