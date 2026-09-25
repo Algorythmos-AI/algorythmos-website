@@ -18,7 +18,6 @@
     "footer.localParis",
     "footer.localSydney",
     "press.founder.name",
-    "pricing.hero.glance.algorythmos.title",
     "pricing.tooltip.algorythmos.label",
     "privacy.sections.intro.title",
     "region.fr",
@@ -31,9 +30,7 @@
     "serviceSqlDashboards.techStack.warehouses.description",
     "serviceSqlDashboards.techStack.warehouses.title",
     "services.items.mlops-cicd.name",
-    "services.mlops",
-    "ui.servicesShowcase.services.3.bullets.0",
-    "ui.servicesShowcase.services.3.bullets.1"
+    "services.mlops"
   ],
   "sourceOk": {
     "src/components/ui/consoles/AiWebsitesConsole.astro": [
