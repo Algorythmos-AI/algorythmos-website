@@ -20,8 +20,8 @@ export const serviceRelated: Record<string, RelatedRef[]> = {
   ],
   'document-intelligence': [
     { type: 'blog', slug: 'gdpr-ai' },
+    { type: 'case-study', slug: 'port-botany-ai-ml' },
     { type: 'case-study', slug: 'manufacturing-docs' },
-    { type: 'case-study', slug: 'healthcare-burden' },
   ],
   'sql-dashboards': [
     { type: 'case-study', slug: 'retail-sql' },
@@ -29,7 +29,7 @@ export const serviceRelated: Record<string, RelatedRef[]> = {
   ],
   'mlops-cicd': [
     { type: 'blog', slug: 'mlops-production' },
-    { type: 'blog', slug: 'llmsecops' },
+    { type: 'case-study', slug: 'port-botany-ai-ml' },
     { type: 'case-study', slug: 'healthcare-mlops' },
   ],
   'ai-websites': [
@@ -66,7 +66,7 @@ export const blogRelated: Record<string, RelatedRef[]> = {
   ],
   'ai-automation-australian-smes': [
     { type: 'service', slug: 'agentic-automation' },
-    { type: 'blog', slug: 'ai-consultancy-australia' },
+    { type: 'case-study', slug: 'port-botany-ai-ml' },
   ],
   'eu-ai-act-gdpr-sme-roadmap': [
     { type: 'service', slug: 'document-intelligence' },
@@ -80,6 +80,11 @@ export const blogRelated: Record<string, RelatedRef[]> = {
 
 /** Case study → the service that delivered it + a sibling study. */
 export const caseStudyRelated: Record<string, RelatedRef[]> = {
+  'port-botany-ai-ml': [
+    { type: 'service', slug: 'document-intelligence' },
+    { type: 'service', slug: 'mlops-cicd' },
+    { type: 'blog', slug: 'ai-automation-australian-smes' },
+  ],
   'admin-burden-evidence': [
     { type: 'service', slug: 'document-intelligence' },
     { type: 'case-study', slug: 'healthcare-burden' },

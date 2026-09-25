@@ -13,6 +13,7 @@ import { test, expect } from '@playwright/test';
 
 const SERVICE_SLUGS = ['agentic-automation', 'document-intelligence', 'sql-dashboards', 'mlops-cicd', 'ai-websites'];
 const CASE_STUDY_SLUGS = [
+  'port-botany-ai-ml',
   'admin-burden-evidence',
   'healthcare-burden',
   'financial-compliance',

@@ -6,8 +6,8 @@
  * Set `enabled: false` to remove the bar site-wide without touching layout.
  */
 export const announcement = {
-  id: 'case-studies-2026-07',
+  id: 'case-studies-2026-09',
   enabled: true,
   /** Region-relative path, localized at render time via localizePath(). */
-  href: '/case-studies',
+  href: '/case-studies/port-botany-ai-ml',
 } as const;

@@ -101,11 +101,23 @@ for (let i = 0; i < 4; i++) {
  * dictionary so a missing key renders nothing rather than the key string.
  */
 const note = getDict(locale)[`caseStudyDetail.studies.${slug}.note`] ?? '';
+
+/** Optional eyebrow badge (e.g. "Evidence report · Industry analysis"); falls back to the section name. */
+const badge = getDict(locale)[`caseStudyDetail.studies.${slug}.badge`] ?? t('nav.caseStudies');
+
+/** Optional cited sources (`sources.N.label` + `sources.N.url`), read until the first gap. */
+const sources: { label: string; url: string }[] = [];
+for (let i = 0; i < 20; i++) {
+  const label = getDict(locale)[`caseStudyDetail.studies.${slug}.sources.${i}.label`];
+  const url = getDict(locale)[`caseStudyDetail.studies.${slug}.sources.${i}.url`];
+  if (!label || !url) break;
+  sources.push({ label, url });
+}
 ---
 
 <BaseLayout title={`${study.title} — Algorythmos`} description={study.meta} path={path} ogType="article" image={ogImg} jsonLd={[articleLd, crumbs]}>
   <Breadcrumbs items={crumbItems} />
-  <PageHeader eyebrow={t('nav.caseStudies')} title={study.title} lead={study.meta} />
+  <PageHeader eyebrow={badge} title={study.title} lead={study.meta} />
 
   {facts.length > 0 && (
     <section class="container-page">
@@ -199,6 +211,20 @@ const note = getDict(locale)[`caseStudyDetail.studies.${slug}.note`] ?? '';
           </figure>
         ))}
       </div>
+    </section>
+  )}
+
+  {sources.length > 0 && (
+    <section class="container-page pb-4">
+      <h2 data-reveal class="text-h3 font-semibold text-ink">{t('caseStudyDetail.sections.sources')}</h2>
+      <ol data-reveal class="mt-4 grid gap-2 text-sm text-ink-muted sm:grid-cols-2">
+        {sources.map((src, i) => (
+          <li class="flex gap-2">
+            <span class="w-6 shrink-0 font-mono text-xs text-ink-subtle">[{i + 1}]</span>
+            <a href={src.url} target="_blank" rel="noopener nofollow" class="underline-offset-4 hover:text-ink hover:underline">{src.label}</a>
+          </li>
+        ))}
+      </ol>
     </section>
   )}
 

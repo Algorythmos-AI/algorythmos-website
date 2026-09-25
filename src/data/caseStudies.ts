@@ -7,10 +7,10 @@
  *    (title, meta, industry, region, focus, challenge, approach.0-3, solution,
  *    results.0-4, cta, keywords — resolved in CaseStudyDetail.astro)
  *
- * The two evidence/research studies (healthcare-burden, admin-burden-evidence)
- * were migrated from inline English objects to the dictionaries so the FR site
- * renders fully in French. No fabricated metrics — every figure matches the
- * verified legal/clinical evidence reports.
+ * Evidence/research studies (port-botany-ai-ml, healthcare-burden,
+ * admin-burden-evidence) cite their public sources via `sources.N.{label,url}`
+ * and carry a `badge`; representative engagements carry a `note` flagging the
+ * figures as illustrative. No fabricated metrics.
  */
 export interface CaseStudy {
   slug: string;
@@ -23,6 +23,7 @@ export interface CaseStudy {
  * matches the existing site.
  */
 export const caseStudies: CaseStudy[] = [
+  { slug: 'port-botany-ai-ml', i18nIndex: 6 },
   { slug: 'admin-burden-evidence', i18nIndex: 5 },
   { slug: 'healthcare-burden', i18nIndex: 4 },
   { slug: 'financial-compliance', i18nIndex: 0 },

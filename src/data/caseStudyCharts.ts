@@ -32,6 +32,36 @@ const labelKeys = (slug: string, i: number, n: number) =>
 /** slug → ordered list of charts to render on the detail page. */
 export const caseStudyCharts: Record<string, ChartDef[]> = {
   /**
+   * Sources (see the study's sources list): NSW Ports rail page + Shipping
+   * Australia (rail volumes), Patrick Terminals (AutoRail capacity), NSW Ports
+   * port page (import distance), and the cited literature for the low end of
+   * the reported AI/automation ranges.
+   */
+  'port-botany-ai-ml': [
+    {
+      type: 'bar',
+      titleKey: keys('port-botany-ai-ml', 0).title,
+      captionKey: keys('port-botany-ai-ml', 0).caption,
+      labelKeys: labelKeys('port-botany-ai-ml', 0, 3),
+      datasets: [{ labelKey: keys('port-botany-ai-ml', 0).series(0), data: [0.4, 1.0, 3.0] }],
+    },
+    {
+      type: 'bar',
+      titleKey: keys('port-botany-ai-ml', 1).title,
+      captionKey: keys('port-botany-ai-ml', 1).caption,
+      labelKeys: labelKeys('port-botany-ai-ml', 1, 3),
+      datasets: [{ labelKey: keys('port-botany-ai-ml', 1).series(0), data: [30, 14, 25] }],
+    },
+    {
+      type: 'doughnut',
+      titleKey: keys('port-botany-ai-ml', 2).title,
+      captionKey: keys('port-botany-ai-ml', 2).caption,
+      labelKeys: labelKeys('port-botany-ai-ml', 2, 2),
+      datasets: [{ labelKey: keys('port-botany-ai-ml', 2).series(0), data: [80, 20] }],
+    },
+  ],
+
+  /**
    * Source: legacy/src/pages/insights/HealthcareBurdenContent.jsx
    * (the interactive Leaflet PHN map and the unsourced "Pain Intensity"
    * PolarArea are intentionally not ported.)
