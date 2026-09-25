@@ -1,0 +1,46 @@
+name: External links — weekly rot check
+
+# The evidence reports cite public sources that can move or vanish. Once a week
+# every unique external href in the built site is probed; 404/410 fail the job
+# so it shows up in the Actions tab. Nothing else depends on this workflow.
+on:
+  schedule:
+    - cron: "0 21 * * 0" # Monday 07:00 Sydney (UTC+10) = Sunday 21:00 UTC
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Probe every external link
+        shell: bash
+        run: |
+          set -uo pipefail
+          urls=$(grep -rhoE 'href="https?://[^"]+"' dist/au-en dist/fr-fr \
+            | sed -E 's/^href="//; s/"$//' | grep -vE '^https?://algorythmos\.com' | sort -u)
+          total=$(printf '%s\n' "$urls" | grep -c . || true)
+          echo "## External links ($total unique)" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Status | URL |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|---|---|" >> "$GITHUB_STEP_SUMMARY"
+          dead=0
+          while IFS= read -r u; do
+            [ -z "$u" ] && continue
+            code=$(curl -sIL --max-time 15 -A "Mozilla/5.0 (compatible; AlgorythmosLinkCheck/1.0)" -o /dev/null -w '%{http_code}' "$u" || echo "000")
+            echo "| $code | $u |" >> "$GITHUB_STEP_SUMMARY"
+            case "$code" in 404|410) dead=$((dead+1)); echo "::warning::$code $u";; esac
+          done <<< "$urls"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "Dead (404/410): $dead" >> "$GITHUB_STEP_SUMMARY"
+          [ "$dead" -eq 0 ]

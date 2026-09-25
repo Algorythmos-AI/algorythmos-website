@@ -46,7 +46,8 @@ follow automatically.
 **A case study.** Add `{ slug, i18nIndex, date }` to `src/data/caseStudies.ts`, the
 `caseStudies.items.<i>.*` card keys and the `caseStudyDetail.studies.<slug>.*` detail keys
 (`title, meta, industry, region, focus, challenge, solution, approach.0-3, results.0-4,
-stats.0-2.{value,label}, cta, keywords`; optional `badge`, `note`, `sources.N.{label,url}`),
+stats.0-2.{value,label}, cta, keywords`; optional `badge`, `note`, `sources.N.{label,url}`,
+`faqs.N.{question,answer}` — the FAQ renders visibly and as FAQPage schema),
 charts in `src/data/caseStudyCharts.ts`, links in `related.ts`, the slug in
 `e2e/french-locale.spec.ts`, and a claims section in `COPY_CLAIMS_SIGNOFF.md`.
 
@@ -85,6 +86,14 @@ npm run lint && npm run check && npm run i18n:check && npm run health:check \
 | `perf` | Bundle report; warns above 200 kB per chunk |
 | Playwright | Chromium + WebKit: consoles, FR locale, SEO/marketing flows, axe accessibility |
 | `lh-check --strict` | Mobile Lighthouse: LCP < 2.5 s, CLS < 0.1, TBT < 300 ms |
+
+## Scheduled checks
+
+`.github/workflows/external-links.yml` probes every external link in the built site weekly
+and fails on 404/410, so cited sources that move are noticed. Dependabot runs weekly for npm
+and monthly for Actions; majors for React, Tailwind, vitest, ESLint and TypeScript are
+ignored until migrated deliberately. Master has a ruleset: the CI check must pass for
+pull-request merges, force-pushes are blocked, and the repository admin can bypass.
 
 ## Deployment
 
