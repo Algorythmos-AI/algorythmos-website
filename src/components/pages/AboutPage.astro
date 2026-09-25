@@ -14,7 +14,7 @@ const path = '/about';
 const abs = (p: string) => SITE + localizePath(locale, p);
 
 const crumbs = breadcrumb([
-  { name: 'Home', url: abs('/') },
+  { name: t('nav.home'), url: abs('/') },
   { name: t('nav.about'), url: abs(path) },
 ]);
 const photoLd = imageObject({

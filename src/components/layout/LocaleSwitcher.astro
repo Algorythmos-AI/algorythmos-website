@@ -9,6 +9,12 @@
  */
 import { asLocale, LOCALES, REGIONS, localizePath, stripLocale, useTranslations } from '@/i18n';
 
+interface Props {
+  /** Flag-only pills for the header; full labels in the footer. */
+  compact?: boolean;
+}
+const { compact = false } = Astro.props;
+
 const current = asLocale(Astro.currentLocale);
 const t = useTranslations(current);
 
@@ -29,30 +35,39 @@ const options = LOCALES.map((loc) => ({
 }));
 ---
 
-<nav class="flex flex-wrap items-center gap-1.5" aria-label={t('localeSwitcher.label')}>
+<nav class:list={['flex flex-wrap items-center', compact ? 'gap-1' : 'gap-1.5']} aria-label={compact ? t('localeSwitcher.compactLabel') : t('localeSwitcher.label')}>
   {options.map((o) => (
     <a
       href={o.href}
       hreflang={o.meta.hreflang}
+      lang={o.meta.lang}
       data-locale={o.loc}
       aria-current={o.active ? 'true' : undefined}
+      aria-label={compact ? t(o.meta.labelKey) : undefined}
+      title={compact ? t(o.meta.labelKey) : undefined}
       class:list={[
-        'inline-flex items-center gap-1.5 rounded-full border px-3.5 py-2 text-xs font-medium transition-colors',
+        'inline-flex items-center gap-1.5 rounded-full border text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-bg',
+        compact ? 'h-9 w-9 justify-center' : 'px-3.5 py-2',
         o.active ? 'border-brand/50 bg-brand/10 text-ink' : 'border-line text-ink-muted hover:border-brand/40 hover:text-ink',
       ]}
     >
       <span aria-hidden="true">{o.meta.flag}</span>
-      <span>{t(o.meta.labelKey)}</span>
+      {!compact && <span>{t(o.meta.labelKey)}</span>}
     </a>
   ))}
 </nav>
 
 <script>
-  // Persist an explicit region choice so the root-path redirect honors it.
-  document.querySelectorAll('[data-locale]').forEach((el) => {
-    el.addEventListener('click', () => {
-      const loc = (el as HTMLElement).dataset.locale;
+  /* Persist an explicit region choice so the root-path redirect honours it.
+     Delegated on document so it survives view-transition swaps (the footer is
+     replaced on every navigation, so per-element listeners went stale). */
+  if (!(window as any).__algLocaleDelegated) {
+    (window as any).__algLocaleDelegated = true;
+    document.addEventListener('click', (e) => {
+      const t = e.target as Element | null;
+      const el = t && t.closest ? (t.closest('[data-locale]') as HTMLElement | null) : null;
+      const loc = el?.dataset.locale;
       if (loc) document.cookie = `locale=${loc};path=/;max-age=31536000;samesite=lax`;
     });
-  });
+  }
 </script>

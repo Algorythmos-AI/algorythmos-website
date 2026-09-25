@@ -13,10 +13,6 @@ const locale = asLocale(Astro.params.locale);
 const region = localeToRegion(locale) as 'AU' | 'FR';
 const t = useTranslations(locale);
 
-const titles: Record<'AU' | 'FR', string> = {
-  AU: 'Algorythmos Australia — AI consultancy for Australian SMEs',
-  FR: 'Algorythmos France — Cabinet de conseil en IA pour PME & ETI',
-};
 const heroImg = imageObject({ path: heroVisual.file, alt: t(heroVisual.altKey), width: heroVisual.width, height: heroVisual.height, primary: true });
 const bandImg = imageObject({
   path: photoFile(photos.teamCollaboration, 1600),
@@ -26,6 +22,6 @@ const bandImg = imageObject({
 });
 ---
 
-<BaseLayout title={titles[region]} description={t('hero.subtitle')} path="/" jsonLd={[professionalService(region), heroImg, bandImg]}>
+<BaseLayout title={t('home.meta.title')} description={t('hero.subtitle')} path="/" jsonLd={[professionalService(region), heroImg, bandImg]}>
   <HomePage />
 </BaseLayout>

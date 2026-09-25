@@ -1,4 +1,7 @@
 ---
+import { asLocale, useTranslations } from '@/i18n';
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
 /**
  * Region SUGGESTION banner — never auto-redirects (avoids the Google
  * geo-redirect anti-pattern). Shows on global (non-prefixed) pages to a
@@ -12,14 +15,17 @@
   id="region-banner"
   hidden
   role="region"
-  aria-label="Regional site suggestion"
-  class="fixed bottom-4 left-1/2 z-[var(--z-banner)] w-[min(92vw,32rem)] -translate-x-1/2 rounded-2xl border border-line glass p-4 shadow-e3"
+  aria-label={t('regionBanner.label')}
+  data-template={t('regionBanner.text')}
+  data-label-fr={t('regionBanner.regionFr')}
+  data-label-au={t('regionBanner.regionAu')}
+  class="region-banner fixed bottom-4 left-1/2 z-[var(--z-banner)] w-[min(92vw,32rem)] -translate-x-1/2 rounded-2xl border border-line glass p-4 shadow-e3"
 >
   <div class="flex items-center gap-4">
     <p id="region-banner-text" class="flex-1 text-sm text-ink"></p>
     <div class="flex shrink-0 items-center gap-2">
-      <a id="region-banner-go" href="/" class="rounded-lg bg-grad-cta px-3 py-1.5 text-sm font-semibold text-white">View</a>
-      <button id="region-banner-dismiss" type="button" aria-label="Dismiss" class="rounded-lg border border-line-strong px-2.5 py-1.5 text-sm text-ink-muted hover:text-ink">✕</button>
+      <a id="region-banner-go" href="/" class="rounded-lg bg-grad-cta px-3 py-1.5 text-sm font-semibold text-white">{t('regionBanner.view')}</a>
+      <button id="region-banner-dismiss" type="button" aria-label={t('regionBanner.dismiss')} class="rounded-lg border border-line-strong px-2.5 py-1.5 text-sm text-ink-muted hover:text-ink">✕</button>
     </div>
   </div>
 </div>
@@ -38,15 +44,15 @@
     const lang = (navigator.language || '').toLowerCase();
     let target: string | null = null;
     let label = '';
-    if (lang.startsWith('fr')) { target = '/fr-fr'; label = 'France'; }
-    else if (lang === 'en-au' || lang.startsWith('en-au')) { target = '/au-en'; label = 'Australia'; }
+    if (lang.startsWith('fr')) { target = '/fr-fr'; label = el.dataset.labelFr || 'France'; }
+    else if (lang === 'en-au' || lang.startsWith('en-au')) { target = '/au-en'; label = el.dataset.labelAu || 'Australia'; }
     if (!target) return;
 
     const go = el.querySelector('#region-banner-go') as HTMLAnchorElement | null;
     const txt = el.querySelector('#region-banner-text');
     if (!go || !txt) return;
     go.href = target;
-    txt.textContent = `Visiting from ${label}? See the ${label} site.`;
+    txt.textContent = (el.dataset.template || 'Visiting from {region}? See the {region} site.').split('{region}').join(label);
     go.addEventListener('click', () => {
       document.cookie = `locale=${target!.slice(1)};path=/;max-age=31536000;samesite=lax`;
     });

@@ -15,7 +15,7 @@ const path = '/careers';
 const abs = (p: string) => SITE + localizePath(locale, p);
 
 const crumbs = breadcrumb([
-  { name: 'Home', url: abs('/') },
+  { name: t('nav.home'), url: abs('/') },
   { name: t('careers.breadcrumb'), url: abs(path) },
 ]);
 

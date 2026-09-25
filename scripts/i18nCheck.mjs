@@ -165,6 +165,28 @@ function astroTextNodes(source) {
 }
 
 /**
+ * Literal (non-expression) values of human-facing attributes in an .astro
+ * template. These leak into the FR build silently because they are not text
+ * nodes — every one must go through t().
+ */
+const COPY_ATTRS = ['aria-label', 'title', 'placeholder', 'alt', 'aria-description'];
+function astroAttrLiterals(source) {
+    let tpl = source;
+    if (tpl.startsWith('---')) {
+        const end = tpl.indexOf('\n---', 3);
+        if (end !== -1) tpl = tpl.slice(end + 4);
+    }
+    tpl = tpl.replace(/<script[\s\S]*?<\/script>/gi, '').replace(/<style[\s\S]*?<\/style>/gi, '').replace(/<!--[\s\S]*?-->/g, '');
+    const out = [];
+    const re = new RegExp(`\\s(${COPY_ATTRS.join('|')})=("([^"]*)"|'([^']*)')`, 'g');
+    for (const m of tpl.matchAll(re)) {
+        const val = (m[3] ?? m[4] ?? '').trim();
+        if (val && copyWordCount(val) >= 2) out.push(`${m[1]}="${val}"`);
+    }
+    return out;
+}
+
+/**
  * Extract string literals from TS/frontmatter source. String-aware enough for
  * this codebase; skips comments, import specifiers, and non-copy shapes
  * (paths, dot-keys, SVG path data, CSS-ish values).
@@ -201,6 +223,9 @@ function scanSource(allowlist) {
                 if (copyWordCount(node) >= 3 && !allowed(rel, node)) {
                     findings.push({ file: rel, kind: 'text-node', text: node });
                 }
+            }
+            for (const attr of astroAttrLiterals(src)) {
+                if (!allowed(rel, attr)) findings.push({ file: rel, kind: 'attribute', text: attr });
             }
         }
     }

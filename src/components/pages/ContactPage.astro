@@ -139,7 +139,7 @@ const offices = [
                 autocomplete="name"
                 aria-required="true"
                 aria-describedby="cf-name-error"
-                class="mt-2 block w-full rounded-lg border border-line bg-surface-2/50 px-4 py-3 text-ink placeholder:text-ink-subtle transition-[border-color,box-shadow] duration-200 ease-smooth focus-visible:border-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring aria-[invalid=true]:border-danger"
+                class="mt-2 block w-full rounded-lg border border-line-input bg-surface-2/50 px-4 py-3 text-ink placeholder:text-ink-subtle transition-[border-color,box-shadow] duration-200 ease-smooth focus-visible:border-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring aria-[invalid=true]:border-danger"
               />
               <p id="cf-name-error" class="mt-1.5 hidden text-sm text-danger" role="alert"></p>
             </div>
@@ -157,7 +157,7 @@ const offices = [
                 autocomplete="email"
                 aria-required="true"
                 aria-describedby="cf-email-error"
-                class="mt-2 block w-full rounded-lg border border-line bg-surface-2/50 px-4 py-3 text-ink placeholder:text-ink-subtle transition-[border-color,box-shadow] duration-200 ease-smooth focus-visible:border-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring aria-[invalid=true]:border-danger"
+                class="mt-2 block w-full rounded-lg border border-line-input bg-surface-2/50 px-4 py-3 text-ink placeholder:text-ink-subtle transition-[border-color,box-shadow] duration-200 ease-smooth focus-visible:border-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring aria-[invalid=true]:border-danger"
               />
               <p id="cf-email-error" class="mt-1.5 hidden text-sm text-danger" role="alert"></p>
             </div>
@@ -165,14 +165,14 @@ const offices = [
             {/* Company (optional) */}
             <div class="sm:col-span-2">
               <label for="cf-company" class="block text-sm font-semibold text-ink">
-                Company <span class="font-normal text-ink-subtle">(optional)</span>
+                {t('contactPage.form.companyLabel')} <span class="font-normal text-ink-subtle">{t('contactPage.form.optional')}</span>
               </label>
               <input
                 type="text"
                 id="cf-company"
                 name="company"
                 autocomplete="organization"
-                class="mt-2 block w-full rounded-lg border border-line bg-surface-2/50 px-4 py-3 text-ink placeholder:text-ink-subtle transition-[border-color,box-shadow] duration-200 ease-smooth focus-visible:border-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                class="mt-2 block w-full rounded-lg border border-line-input bg-surface-2/50 px-4 py-3 text-ink placeholder:text-ink-subtle transition-[border-color,box-shadow] duration-200 ease-smooth focus-visible:border-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               />
             </div>
 
@@ -189,7 +189,7 @@ const offices = [
                 rows="5"
                 aria-required="true"
                 aria-describedby="cf-message-error"
-                class="mt-2 block w-full resize-y rounded-lg border border-line bg-surface-2/50 px-4 py-3 text-ink placeholder:text-ink-subtle transition-[border-color,box-shadow] duration-200 ease-smooth focus-visible:border-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring aria-[invalid=true]:border-danger"
+                class="mt-2 block w-full resize-y rounded-lg border border-line-input bg-surface-2/50 px-4 py-3 text-ink placeholder:text-ink-subtle transition-[border-color,box-shadow] duration-200 ease-smooth focus-visible:border-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring aria-[invalid=true]:border-danger"
               ></textarea>
               <p id="cf-message-error" class="mt-1.5 hidden text-sm text-danger" role="alert"></p>
             </div>

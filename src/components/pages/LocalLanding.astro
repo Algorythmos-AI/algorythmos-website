@@ -68,7 +68,7 @@ const faqLd = {
   mainEntity: p.faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
 };
 const crumbs = breadcrumb([
-  { name: 'Home', url: SITE + loc('/') },
+  { name: t('nav.home'), url: SITE + loc('/') },
   { name: p.h1, url: SITE + loc(p.path) },
 ]);
 ---

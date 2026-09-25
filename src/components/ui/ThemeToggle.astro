@@ -1,4 +1,7 @@
 ---
+import { asLocale, useTranslations } from '@/i18n';
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
 /**
  * Vanilla theme toggle — intentionally NOT a React island, so it never pulls
  * the React runtime onto pages. Event delegation + astro:after-swap make it
@@ -9,9 +12,9 @@
 <button
   type="button"
   id="theme-toggle"
-  class="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-line text-ink-muted transition-colors duration-200 hover:border-brand hover:text-ink focus-visible:outline-none"
-  aria-label="Toggle light or dark theme"
-  title="Toggle theme"
+  class="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-line text-ink-muted transition-colors duration-200 hover:border-brand hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+  aria-label={t('ui.themeToggle')}
+  title={t('ui.themeToggle')}
 >
   {/* Sun — shown in dark mode (click → light) */}
   <svg class="hidden h-5 w-5 dark:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">

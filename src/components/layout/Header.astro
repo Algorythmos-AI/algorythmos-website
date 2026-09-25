@@ -1,6 +1,8 @@
 ---
 import { asLocale, useTranslations, localizePath } from '@/i18n';
 import ThemeToggle from '@/components/ui/ThemeToggle.astro';
+import MotionToggle from '@/components/ui/MotionToggle.astro';
+import LocaleSwitcher from '@/components/layout/LocaleSwitcher.astro';
 import Button from '@/components/ui/Button.astro';
 
 const locale = asLocale(Astro.currentLocale);
@@ -28,7 +30,7 @@ const contact = localizePath(locale, '/contact');
   class="group sticky top-0 z-[var(--z-nav)] border-b border-line/80 bg-bg/80 backdrop-blur-xl transition-[background-color,border-color,box-shadow] duration-300 ease-smooth data-[scrolled]:border-line data-[scrolled]:bg-bg/95 data-[scrolled]:shadow-e2"
 >
   <div class="container-page flex h-16 items-center justify-between gap-6 transition-[height] duration-300 ease-smooth group-data-[scrolled]:h-14">
-    <a href={home} class="group/logo flex items-center gap-2.5 text-lg font-bold tracking-tight text-ink" aria-label="Algorythmos home">
+    <a href={home} class="group/logo flex items-center gap-2.5 text-lg font-bold tracking-tight text-ink" aria-label={t('ui.homeLink')}>
       <img src="/logo-mark.png" alt="" aria-hidden="true" width="218" height="258" class="h-8 w-auto transition-transform duration-300 ease-bounce-soft group-hover/logo:scale-105" />
       <span>Algoryth<span class="text-gradient-brand">mos</span></span>
     </a>
@@ -51,6 +53,8 @@ const contact = localizePath(locale, '/contact');
     </nav>
 
     <div class="flex items-center gap-2">
+      <div class="hidden lg:block"><LocaleSwitcher compact /></div>
+      <MotionToggle />
       <ThemeToggle />
       <Button href={contact} size="md" class="cta-arrow hidden transition-transform hover:-translate-y-px sm:inline-flex">
         {t('nav.contactUs')}
@@ -58,10 +62,12 @@ const contact = localizePath(locale, '/contact');
       </Button>
 
       {/* Mobile disclosure menu — no JS required */}
-      <details class="md:hidden [&_svg.close]:hidden [&[open]_svg.open]:hidden [&[open]_svg.close]:block">
+      <details data-mobile-menu class="md:hidden [&_svg.close]:hidden [&[open]_svg.open]:hidden [&[open]_svg.close]:block">
         <summary
-          class="flex h-11 w-11 cursor-pointer list-none items-center justify-center rounded-lg border border-line text-ink-muted [&::-webkit-details-marker]:hidden"
-          aria-label="Open menu"
+          class="flex h-11 w-11 cursor-pointer list-none items-center justify-center rounded-lg border border-line text-ink-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-bg [&::-webkit-details-marker]:hidden"
+          aria-label={t('ui.openMenu')}
+          data-label-open={t('ui.openMenu')}
+          data-label-close={t('ui.closeMenu')}
         >
           <svg class="open h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
           <svg class="close h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
@@ -72,6 +78,7 @@ const contact = localizePath(locale, '/contact');
               <a href={localizePath(locale, item.path)} class="rounded-md px-3 py-3 text-base font-medium text-ink-muted hover:bg-surface-2 hover:text-ink" aria-current={isActive(item.path) ? 'page' : undefined}>{t(item.key)}</a>
             ))}
             <Button href={contact} size="lg" class="mt-2">{t('nav.contactUs')}</Button>
+            <div class="mt-4 border-t border-line pt-4"><LocaleSwitcher /></div>
           </nav>
         </div>
       </details>
@@ -169,4 +176,41 @@ const contact = localizePath(locale, '/contact');
   }
   document.addEventListener('astro:page-load', setupMagicLine);
   if (document.readyState !== 'loading') setupMagicLine();
+
+  /* Mobile menu: label reflects state, Escape and outside-click close it. */
+  function setupMobileMenu() {
+    const details = document.querySelector('[data-mobile-menu]');
+    if (!(details instanceof HTMLDetailsElement) || details.dataset.menuInit) return;
+    details.dataset.menuInit = '1';
+    const summary = details.querySelector('summary');
+    const sync = () => {
+      if (!(summary instanceof HTMLElement)) return;
+      const open = details.open;
+      summary.setAttribute('aria-label', (open ? summary.dataset.labelClose : summary.dataset.labelOpen) || '');
+      summary.setAttribute('aria-expanded', String(open));
+    };
+    details.addEventListener('toggle', sync);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && details.open) {
+        details.open = false;
+        (summary as HTMLElement | null)?.focus();
+      }
+    };
+    const onClick = (e: MouseEvent) => {
+      if (details.open && !details.contains(e.target as Node)) details.open = false;
+    };
+    document.addEventListener('keydown', onKey);
+    document.addEventListener('click', onClick);
+    document.addEventListener(
+      'astro:before-swap',
+      () => {
+        document.removeEventListener('keydown', onKey);
+        document.removeEventListener('click', onClick);
+      },
+      { once: true },
+    );
+    sync();
+  }
+  document.addEventListener('astro:page-load', setupMobileMenu);
+  if (document.readyState !== 'loading') setupMobileMenu();
 </script>

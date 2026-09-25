@@ -3,7 +3,7 @@ import '@fontsource-variable/inter';
 import interLatinWoff2 from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
 import '@/styles/global.css';
 import { ClientRouter } from 'astro:transitions';
-import { asLocale, REGIONS } from '@/i18n';
+import { asLocale, REGIONS, useTranslations } from '@/i18n';
 import Header from '@/components/layout/Header.astro';
 import AnnouncementBar from '@/components/layout/AnnouncementBar.astro';
 import Footer from '@/components/layout/Footer.astro';
@@ -40,6 +40,7 @@ const {
 
 const locale = asLocale(Astro.currentLocale);
 const lang = REGIONS[locale].lang;
+const t = useTranslations(locale);
 ---
 
 <!doctype html>
@@ -53,14 +54,13 @@ const lang = REGIONS[locale].lang;
     {/* No-flash theme init — before paint */}
     <script is:inline>
       (function () {
-        /* JS-available marker — reveal styles only hide content under html.js */
-        document.documentElement.classList.add('js');
         try {
           var t = localStorage.getItem('theme');
           if (t !== 'light' && t !== 'dark') {
             t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
           }
           document.documentElement.dataset.theme = t;
+          if (localStorage.getItem('motion') === 'off') document.documentElement.dataset.motion = 'off';
         } catch (e) {
           document.documentElement.dataset.theme = 'dark';
         }
@@ -104,7 +104,7 @@ const lang = REGIONS[locale].lang;
     <link
       rel="alternate"
       type="application/rss+xml"
-      title="Algorythmos Blog"
+      title={t('ui.rssFeed')}
       href={locale === 'fr-fr' ? '/fr-fr/rss.xml' : '/rss.xml'}
     />
     <link rel="icon" href="/favicon.ico" />
@@ -126,7 +126,7 @@ const lang = REGIONS[locale].lang;
       href="#main"
       class="sr-only rounded-lg bg-brand px-4 py-2 font-semibold text-brand-fg focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[var(--z-toast)]"
     >
-      Skip to content
+      {t('ui.skipToContent')}
     </a>
     <Header />
     <AnnouncementBar />
@@ -140,10 +140,16 @@ const lang = REGIONS[locale].lang;
         try {
           var t = localStorage.getItem('theme');
           if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+          if (localStorage.getItem('motion') === 'off') document.documentElement.dataset.motion = 'off';
         } catch (e) {}
       });
     </script>
     <script>
+      /* JS-available marker — reveal styles only hide content under html.js.
+         Set HERE, in the module that performs the reveal, so a failed or blocked
+         module never leaves the page hidden (the inline scripts still run when a
+         module 404s or is blocked by CSP). */
+      document.documentElement.classList.add('js');
       function setupReveal() {
         const els = document.querySelectorAll('[data-reveal]:not(.is-visible)');
         if (!('IntersectionObserver' in window)) {
@@ -161,13 +167,21 @@ const lang = REGIONS[locale].lang;
           },
           { rootMargin: '0px 0px -10% 0px', threshold: 0.05 },
         );
-        els.forEach((e) => io.observe(e));
+        /* Anything already inside the first viewport is shown synchronously — the
+           opening screen must never wait on an observer callback (or on a
+           screenshot/crawler that never scrolls). Only below-the-fold content animates in. */
+        const vh = window.innerHeight || document.documentElement.clientHeight;
+        els.forEach((e) => {
+          const r = e.getBoundingClientRect();
+          if (r.top < vh && r.bottom > 0) e.classList.add('is-visible');
+          else io.observe(e);
+        });
         /* Failsafe: never leave content hidden if IO misfires (zoom, exotic viewports) */
         window.setTimeout(() => {
           document
             .querySelectorAll('[data-reveal]:not(.is-visible)')
             .forEach((e) => e.classList.add('is-visible'));
-        }, 2500);
+        }, 1500);
       }
       document.addEventListener('astro:page-load', setupReveal);
       /* Initialize immediately if astro:page-load already fired before this module ran */
