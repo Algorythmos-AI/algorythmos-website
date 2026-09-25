@@ -66,7 +66,7 @@ function statAsset(dir, name) {
   };
 }
 
-/** Collect the /_astro/*.js chunks referenced by dist/index.html. */
+/** Collect the /_astro/*.js chunks referenced by the home page (HOME_HTML, dist/au-en/index.html). */
 function homeReferencedJs() {
   if (!fs.existsSync(HOME_HTML)) return [];
   const html = fs.readFileSync(HOME_HTML, 'utf-8');

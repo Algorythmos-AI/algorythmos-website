@@ -13,9 +13,9 @@ updates:
         patterns: ["astro", "@astrojs/*"]
       tooling:
         patterns: ["eslint*", "@playwright/*", "vitest", "@vitest/*", "typescript", "lighthouse"]
-    # Majors that need a deliberate migration (React 19, vitest 4/5 hits an npm 10.9
-    # resolver bug, ESLint 10 flat-config changes, TypeScript 7). Security updates
-    # are never filtered by `ignore`.
+    # Majors that need a deliberate migration (React 19, the next vitest major —
+    # vitest 5 is current and green — ESLint 10 flat-config changes, TypeScript 7).
+    # Security updates are never filtered by `ignore`.
     ignore:
       - dependency-name: "react"
         update-types: ["version-update:semver-major"]
