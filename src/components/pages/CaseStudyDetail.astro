@@ -134,7 +134,7 @@ for (let i = 0; i < 20; i++) {
 }
 ---
 
-<BaseLayout title={study.title} description={study.meta} path={path} ogType="article" image={ogImg} jsonLd={[articleLd, crumbs, ...(faqLd ? [faqLd] : [])]}>
+<BaseLayout title={getDict(locale)[`caseStudyDetail.studies.${slug}.seoTitle`] ?? study.title} description={getDict(locale)[`caseStudyDetail.studies.${slug}.seoDescription`] ?? study.meta} path={path} ogType="article" image={ogImg} jsonLd={[articleLd, crumbs, ...(faqLd ? [faqLd] : [])]}>
   <Breadcrumbs items={crumbItems} />
   <PageHeader eyebrow={badge} title={study.title} lead={study.meta} />
 
