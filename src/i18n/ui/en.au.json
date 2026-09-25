@@ -9,7 +9,6 @@
   "nav.contact": "Contact",
   "nav.industries": "Industries",
   "nav.careers": "Careers",
-  "nav.openCalculator": "Open calculator",
   "hero.title": "AI That Delivers for Australia",
   "hero.subtitle": "Algorythmos Australia delivers AI consultancy, agentic automation, document intelligence, and MLOps for Australian SMEs and enterprises across healthcare, logistics, mining, and financial services.",
   "footer.description": "AI consultancy delivering agentic automation, document intelligence, and MLOps for Australian SMEs across healthcare, logistics, mining, and finance.",
@@ -32,10 +31,5 @@
   "pricing.notes.addonSso": "SAML SSO: A$800/mo",
   "pricing.notes.addonVpc": "Private VPC: A$1,600/mo",
   "pricing.notes.addonTam": "Named technical lead: A$2,500/mo",
-  "ui.calculator.labels.currentCostHint": "(A$/month) — M",
-  "ui.calculator.labels.hourlyCost": "Hourly cost — w (A$/hour)",
-  "ui.calculator.labels.aiRunCost": "AI run cost per item — a (A$/item)",
-  "ui.calculator.labels.algFee": "Algorythmos fee — F (A$/month)",
-  "ui.calculator.labels.setupCost": "One-time setup cost — S (A$)",
   "pricing.tooltip.diy.detail": "3 FTE in Sydney (ML, full-stack, DevOps) at typical market salaries, incl. on-costs and tools —"
 }
