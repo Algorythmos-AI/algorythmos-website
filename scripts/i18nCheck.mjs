@@ -26,6 +26,14 @@
  *   - No key may appear twice in a dictionary file: JSON.parse silently keeps
  *     the last one, which hides a bad merge.
  *
+ * Tier 6 — claims (FATAL): phrases a single-director consultancy cannot stand
+ *   behind (SOC 2 "ready", dedicated TAMs, follow-the-sun or 24h support,
+ *   employee perks, GDPR "compliant", guaranteed uptime, staffed teams, a live
+ *   calculator that isn't rendered, delivered-client framing) fail the build.
+ *   Blog posts discuss these topics legitimately, so blog*, charts.blog* and
+ *   case-study FAQs are out of scope; single keys can be allowlisted under
+ *   "claimOk" with a reason in the PR.
+ *
  * Advisory — FR Title Case: short French strings written in English Title Case
  *   ("En Savoir Plus") are listed as warnings; proper nouns are allowlisted in
  *   scripts/i18n-allowlist.json → "titleCaseOk".
@@ -328,6 +336,37 @@ function frTitleCase(frFlat, titleCaseOk) {
     return out;
 }
 
+/** Banned claims, EN + FR. Each entry: pattern and the reason shown on failure. */
+const BANNED_CLAIMS = [
+    { re: /SOC\s?2[\s-]?(ready|prêt)|prêt\s+SOC\s?2/i, why: 'SOC 2 readiness is unverified — say "aligned to SOC 2 principles"' },
+    { re: /\bTAM\b/, why: 'there is no dedicated technical account manager — say "named technical lead"' },
+    { re: /live\s+(ROI\s+)?calculator|calculateur\s+(de\s+)?(ROI\s+)?en\s+direct|calculator below|calculateur ci-dessous|use the calculator|utilisez le calculateur/i, why: 'no calculator is rendered — offer the ROI review' },
+    { re: /follow-the-sun|24\s?h\s?\/\s?24|plusieurs fuseaux horaires|spans multiple time zones/i, why: 'no round-the-clock or multi-timezone team' },
+    { re: /health insurance|assurance santé|equity participation|participation au capital|off-sites?\b/i, why: 'no employee benefits are offered' },
+    { re: /conform(e|es|ité)\s+(au\s+|à\s+la\s+)?RGPD|GDPR[- ]compliant|compliant with (the )?GDPR|GDPR compliance/i, why: 'claim GDPR alignment, not compliance' },
+    { re: /\bSLA\s*99|uptime guarantee|disponibilité garantie|garantie de disponibilit/i, why: 'availability is a target agreed per engagement, not a guarantee' },
+    { re: /never leaves? your infrastructure|ne quittent jamais votre infrastructure|résidence des données garantie/i, why: 'data stays in client infrastructure only when required — no absolute promise' },
+    { re: /talk to sales|contact sales|contacter les ventes/i, why: 'there is no sales team — say "talk to us"' },
+    { re: /has helped (enterprises|businesses|companies)|a aidé des entreprises|real ai outcomes|résultats ia concrets/i, why: 'representative studies are illustrative, not delivered client results' },
+    { re: /teams? in (paris|sydney)|équipes? algorythmos|our team in|notre équipe à|one senior team|une équipe senior|senior engineers|ingénieurs seniors|from the algorythmos team|de l.équipe algorythmos|team size|taille de l.équipe/i, why: 'implies a staffed team — use the senior-led boutique voice' },
+    { re: /trusted by (smes|\d)|approuvé par les pme|AI Act Ready|^We delivered|^Nous avons livré/i, why: 'unsubstantiated trust or delivery claim' },
+];
+const CLAIM_SCOPE_EXCLUDED = /^(blog\.|blogDetail\.|charts\.blog)|^caseStudyDetail\.studies\.[^.]+\.faqs\./;
+
+function claimFindings(dicts, claimOk) {
+    const ok = new Set(claimOk);
+    const out = [];
+    for (const [label, flat] of dicts) {
+        for (const [key, raw] of Object.entries(flat)) {
+            if (typeof raw !== 'string' || CLAIM_SCOPE_EXCLUDED.test(key) || ok.has(key)) continue;
+            for (const { re, why } of BANNED_CLAIMS) {
+                if (re.test(raw)) out.push(`[${label}] ${key} — ${why}\n       "${raw.slice(0, 100)}${raw.length > 100 ? '…' : ''}"`);
+            }
+        }
+    }
+    return out;
+}
+
 /**
  * Main check function
  */
@@ -415,6 +454,9 @@ function runCheck() {
         ...duplicateKeys(AU_PATH).map((k) => `[AU] ${k}`),
     ];
 
+    // Claims — FATAL
+    const claims = claimFindings([['EN', enFlat], ['FR', frFlat], ['AU', auFlat]], allowlist.claimOk ?? []);
+
     // FR Title Case — advisory
     const titleCase = frTitleCase(frFlat, allowlist.titleCaseOk ?? []);
 
@@ -500,6 +542,15 @@ function runCheck() {
         console.log('   → JSON keeps only the last one; remove the duplicate.');
     }
 
+    // Claims (fatal)
+    if (claims.length > 0) {
+        hasIssues = true;
+        console.log(`\n❌ Claims we cannot stand behind (${claims.length}):\n`);
+        claims.slice(0, 20).forEach((c) => console.log(`   - ${c}`));
+        if (claims.length > 20) console.log(`   ... and ${claims.length - 20} more`);
+        console.log('   → reword (see docs/COPY_CLAIMS_SIGNOFF.md), or allowlist the key under "claimOk" with a reason.');
+    }
+
     // FR Title Case (advisory)
     if (titleCase.length > 0) {
         console.log(`\n⚠️  FR strings in English Title Case (${titleCase.length}) — French uses sentence case:\n`);
@@ -530,6 +581,7 @@ function runCheck() {
     console.log(`   Hardcoded copy in source (fatal): ${sourceFindings.length}`);
     console.log(`   SEO length violations (fatal): ${lengthWarnings.length}`);
     console.log(`   Structure mismatches (fatal): ${structural.length} · duplicate keys (fatal): ${duplicates.length}`);
+    console.log(`   Banned claims (fatal): ${claims.length}`);
     console.log(`   FR Title Case (advisory): ${titleCase.length}`);
 
     if (!hasIssues) {
