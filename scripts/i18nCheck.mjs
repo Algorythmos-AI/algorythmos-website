@@ -118,16 +118,26 @@ function copyWordCount(text) {
  * Skips: <script>/<style> blocks, HTML comments, tags (incl. attributes), and
  * {expressions} (brace-balanced, string-aware).
  */
+/** Remove <script>/<style> blocks and comments, repeating until nothing changes (no nested leftovers). */
+function stripNonCopy(tpl) {
+    let prev;
+    do {
+        prev = tpl;
+        tpl = tpl
+            .replace(/<script\b[^>]*>[\s\S]*?<\/script[^>]*>/gi, '')
+            .replace(/<style\b[^>]*>[\s\S]*?<\/style[^>]*>/gi, '')
+            .replace(/<!--[\s\S]*?--!?>/g, '');
+    } while (tpl !== prev);
+    return tpl;
+}
+
 function astroTextNodes(source) {
     let tpl = source;
     if (tpl.startsWith('---')) {
         const end = tpl.indexOf('\n---', 3);
         if (end !== -1) tpl = tpl.slice(end + 4);
     }
-    tpl = tpl
-        .replace(/<script[\s\S]*?<\/script>/gi, '')
-        .replace(/<style[\s\S]*?<\/style>/gi, '')
-        .replace(/<!--[\s\S]*?-->/g, '');
+    tpl = stripNonCopy(tpl);
 
     const nodes = [];
     let cur = '';
@@ -176,7 +186,7 @@ function astroAttrLiterals(source) {
         const end = tpl.indexOf('\n---', 3);
         if (end !== -1) tpl = tpl.slice(end + 4);
     }
-    tpl = tpl.replace(/<script[\s\S]*?<\/script>/gi, '').replace(/<style[\s\S]*?<\/style>/gi, '').replace(/<!--[\s\S]*?-->/g, '');
+    tpl = stripNonCopy(tpl);
     const out = [];
     const re = new RegExp(`\\s(${COPY_ATTRS.join('|')})=("([^"]*)"|'([^']*)')`, 'g');
     for (const m of tpl.matchAll(re)) {

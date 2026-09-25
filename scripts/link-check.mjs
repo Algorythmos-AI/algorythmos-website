@@ -69,20 +69,10 @@ function extractInternalLinks(html) {
   while ((m = re.exec(html)) !== null) {
     let href = m[1].trim();
     // Skip external / non-path schemes and protocol-relative URLs.
-    if (
-      href.startsWith('http://') ||
-      href.startsWith('https://') ||
-      href.startsWith('//') ||
-      href.startsWith('mailto:') ||
-      href.startsWith('tel:') ||
-      href.startsWith('data:') ||
-      href.startsWith('#') ||
-      href.startsWith('javascript:')
-    ) {
-      continue;
-    }
-    // Only validate site-absolute internal links ("/...").
-    if (!href.startsWith('/')) continue;
+    // Only validate site-absolute internal links ("/..."). One positive test instead of a
+    // scheme deny-list: every scheme (http:, mailto:, javascript:, data:, …), fragment and
+    // relative href fails startsWith('/'), and "//host" is protocol-relative, i.e. external.
+    if (!href.startsWith('/') || href.startsWith('//')) continue;
 
     // Strip query + hash.
     href = href.split('#')[0].split('?')[0];

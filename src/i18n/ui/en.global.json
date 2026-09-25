@@ -770,6 +770,8 @@
   "contactPage.validation.nameMin": "Name must be at least 2 characters",
   "contactPage.validation.emailInvalid": "Invalid email address",
   "contactPage.validation.messageMin": "Message must be at least 10 characters",
+  "contactPage.validation.tooLong": "Please keep this under {max} characters.",
+  "contactPage.noJs.back": "Back to the contact page",
   "contactPage.snackbar.success": "Message sent successfully!",
   "contactPage.snackbar.closeLabel": "Close notification",
   "contactPage.globalMap.badge": "Global Presence",

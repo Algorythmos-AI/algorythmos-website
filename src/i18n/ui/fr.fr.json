@@ -762,6 +762,8 @@
   "contactPage.validation.nameMin": "Le nom doit comporter au moins 2 caractères",
   "contactPage.validation.emailInvalid": "Adresse email invalide",
   "contactPage.validation.messageMin": "Le message doit comporter au moins 10 caractères",
+  "contactPage.validation.tooLong": "Merci de ne pas dépasser {max} caractères.",
+  "contactPage.noJs.back": "Retour à la page de contact",
   "contactPage.snackbar.success": "Message envoyé avec succès !",
   "contactPage.snackbar.closeLabel": "Fermer la notification",
   "contactPage.globalMap.badge": "Présence Mondiale",

@@ -116,14 +116,18 @@ const offices = [
           data-msg-name-min={t('contactPage.validation.nameMin')}
           data-msg-email-invalid={t('contactPage.validation.emailInvalid')}
           data-msg-message-min={t('contactPage.validation.messageMin')}
+          data-msg-too-long={t('contactPage.validation.tooLong')}
           class="mt-10 rounded-2xl border border-line glass p-6 sm:p-8"
         >
-          {/* Spam defences: honeypot (hidden from humans, filled by bots) + form-open timestamp. */}
+          {/* Spam defence: a honeypot hidden from humans (bots fill every field). Its name
+              avoids anything a password manager would autofill. Fill time is measured by the
+              page script with a clock-free timer; a no-JS post simply arrives untimed. */}
           <div class="cf-hp" aria-hidden="true">
-            <label for="cf-website">Website</label>
-            <input type="text" id="cf-website" name="website" tabindex="-1" autocomplete="off" />
+            <label for="cf-leave-blank">Website</label>
+            <input type="text" id="cf-leave-blank" name="leave_blank" tabindex="-1" autocomplete="off" />
           </div>
-          <input type="hidden" name="ts" id="cf-ts" value="" />
+          {/* Lets a no-JS post get its reply page in the right language. */}
+          <input type="hidden" name="locale" value={locale === 'fr-fr' ? 'fr-FR' : 'en-AU'} />
           <div class="grid gap-5 sm:grid-cols-2">
             {/* Name */}
             <div class="sm:col-span-1">
@@ -136,6 +140,7 @@ const offices = [
                 name="name"
                 required
                 minlength="2"
+                maxlength="200"
                 autocomplete="name"
                 aria-required="true"
                 aria-describedby="cf-name-error"
@@ -154,6 +159,7 @@ const offices = [
                 id="cf-email"
                 name="email"
                 required
+                maxlength="254"
                 autocomplete="email"
                 aria-required="true"
                 aria-describedby="cf-email-error"
@@ -171,6 +177,7 @@ const offices = [
                 type="text"
                 id="cf-company"
                 name="company"
+                maxlength="200"
                 autocomplete="organization"
                 class="mt-2 block w-full rounded-lg border border-line-input bg-surface-2/50 px-4 py-3 text-ink placeholder:text-ink-subtle transition-[border-color,box-shadow] duration-200 ease-smooth focus-visible:border-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               />
@@ -186,6 +193,7 @@ const offices = [
                 name="message"
                 required
                 minlength="10"
+                maxlength="5000"
                 rows="5"
                 aria-required="true"
                 aria-describedby="cf-message-error"
@@ -305,6 +313,7 @@ const offices = [
       nameMin: form.dataset.msgNameMin || 'Name must be at least 2 characters',
       emailInvalid: form.dataset.msgEmailInvalid || 'Invalid email address',
       messageMin: form.dataset.msgMessageMin || 'Message must be at least 10 characters',
+      tooLong: form.dataset.msgTooLong || 'Please keep this under {max} characters.',
     };
 
     const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -350,8 +359,8 @@ const offices = [
     fields.message.addEventListener('blur', validateMessage);
     fields.message.addEventListener('input', () => fields.message.getAttribute('aria-invalid') && validateMessage());
 
-    const tsField = form.querySelector('#cf-ts') as HTMLInputElement | null;
-    if (tsField) tsField.value = String(Date.now());
+    // performance.now() is monotonic: a device clock set wrong can't make a real person look like a bot.
+    let startedAt = performance.now();
     const errEl = document.getElementById('cf-form-error');
 
     form.addEventListener('submit', (e) => {
@@ -380,8 +389,8 @@ const offices = [
         company: (form.querySelector('#cf-company') as HTMLInputElement | null)?.value.trim() || '',
         locale: document.documentElement.lang || '',
         utm,
-        website: (form.querySelector('#cf-website') as HTMLInputElement | null)?.value || '',
-        ts: Number(tsField?.value || 0),
+        leave_blank: (form.querySelector('#cf-leave-blank') as HTMLInputElement | null)?.value || '',
+        elapsedMs: Math.round(performance.now() - startedAt),
       };
       if (submitBtn) submitBtn.disabled = true;
       fetch('/api/contact', {
@@ -389,10 +398,20 @@ const offices = [
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       })
-        .then((r) => {
-          if (!r.ok) throw new Error('send failed');
+        .then(async (r) => {
+          if (!r.ok) {
+            // A field over the server's cap gets its own message; anything else is generic.
+            const res = (await r.json().catch(() => ({}))) as { error?: string; field?: string; max?: number };
+            const input = res.error === 'too_long' && res.field ? form.querySelector<HTMLInputElement | HTMLTextAreaElement>(`[name="${res.field}"]`) : null;
+            if (input) {
+              setError(input, messages.tooLong.replace('{max}', String(res.max ?? '')));
+              input.focus();
+              return;
+            }
+            throw new Error('send failed');
+          }
           form.reset();
-          if (tsField) tsField.value = String(Date.now());
+          startedAt = performance.now();
           errEl?.classList.add('hidden');
           success?.classList.remove('hidden');
           success?.classList.add('inline-flex');
