@@ -2,7 +2,7 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHeader from '@/components/sections/PageHeader.astro';
 import Button from '@/components/ui/Button.astro';
-import { asLocale, useTranslations, localizePath } from '@/i18n';
+import { asLocale, useTranslations, localizePath, getDict } from '@/i18n';
 import { getPost } from '@/data/blog';
 import { getBlogCharts } from '@/data/blogCharts';
 import { localizeChart } from '@/lib/localizeChart';
@@ -32,6 +32,11 @@ const ogImg = ogImageUrl(localizePath(locale, path));
 const base = `blogDetail.posts.${post.slug}`;
 const title = t(`${base}.title`);
 const description = t(`${base}.meta`);
+/* Optional search-only overrides, for a headline or lead that doesn't fit the
+   title (≤ 60 incl. " | Algorythmos") or description (70–160) limits. The page
+   itself keeps the full headline and lead. */
+const seoTitle = getDict(locale)[`${base}.seoTitle`] ?? title;
+const seoDescription = getDict(locale)[`${base}.seoDescription`] ?? description;
 
 /** Resolve a prose section's heading + body from either key shape. */
 function resolveProse(sectionBase: string, paragraphs?: number[], list?: number[], listKey = 'list') {
@@ -93,7 +98,7 @@ const faqLd = faqs.length
   : null;
 ---
 
-<BaseLayout title={title} description={description} path={path} ogType="article" image={ogImg} jsonLd={[articleLd, crumbs, ...(faqLd ? [faqLd] : [])]}>
+<BaseLayout title={seoTitle} description={seoDescription} path={path} ogType="article" image={ogImg} jsonLd={[articleLd, crumbs, ...(faqLd ? [faqLd] : [])]}>
   <Breadcrumbs items={crumbItems} />
   <PageHeader eyebrow={t(`blog.posts.${post.postIndex}.date`)} title={title} lead={description} />
 

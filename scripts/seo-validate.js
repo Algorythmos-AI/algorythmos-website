@@ -745,6 +745,48 @@ function validateSeoFeatures() {
 }
 
 // ---------------------------------------------------------------------------
+// Rendered meta lengths (FATAL): what search engines actually see, per page.
+//   <title> ≤ 60 and meta description 70–160, counted in code points after
+//   decoding HTML entities. The i18n gate only sees dictionary keys; titles
+//   composed from a headline plus the brand suffix are only visible here.
+// ---------------------------------------------------------------------------
+const META_TITLE_MAX = 60;
+const META_DESC_MIN = 70;
+const META_DESC_MAX = 160;
+
+function decodeEntities(s) {
+  return s
+    .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16)))
+    .replace(/&(amp|lt|gt|quot|apos|nbsp);/g, (_, e) => ({ amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: '\u00a0' })[e]);
+}
+
+function validateMetaLengths() {
+  log.section('📏 Rendered meta lengths (every indexable page)');
+  const before = errors;
+  let pages = 0;
+  for (const file of walkHtml(DIST)) {
+    const html = readFileSync(file, 'utf8');
+    if (/<meta name="robots" content="noindex/.test(html)) continue;
+    pages++;
+    const where = relative(DIST, file);
+    const title = decodeEntities((html.match(/<title>([\s\S]*?)<\/title>/) || [])[1] || '').trim();
+    const desc = decodeEntities((html.match(/<meta name="description" content="([^"]*)"/) || [])[1] || '').trim();
+    const tLen = [...title].length;
+    const dLen = [...desc].length;
+    if (tLen > META_TITLE_MAX) {
+      log.error(`${where}: <title> is ${tLen} chars (max ${META_TITLE_MAX}) — "${title}"`);
+      errors++;
+    }
+    if (dLen < META_DESC_MIN || dLen > META_DESC_MAX) {
+      log.error(`${where}: description is ${dLen} chars (want ${META_DESC_MIN}–${META_DESC_MAX})`);
+      errors++;
+    }
+  }
+  if (errors === before) log.success(`All ${pages} indexable pages have titles ≤ ${META_TITLE_MAX} and descriptions ${META_DESC_MIN}–${META_DESC_MAX} chars`);
+}
+
+// ---------------------------------------------------------------------------
 // Build-output guards: defects that no source check can see
 //   - CSS: Lightning CSS keeps only the -webkit- line when a rule lists
 //     `backdrop-filter` then `-webkit-backdrop-filter`, silently dropping the
@@ -817,6 +859,7 @@ ${colors.cyan}╔═════════════════════
   validateStructuredData();
   validateStaticFiles();
   validateSeoFeatures();
+  validateMetaLengths();
   validateBuildOutput();
 
   log.section('📊 VALIDATION SUMMARY');

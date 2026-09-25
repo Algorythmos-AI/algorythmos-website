@@ -2,7 +2,6 @@
   "_note": "Curated exceptions for scripts/i18nCheck.mjs. identicalOk: keys whose EN and FR values are legitimately the same (brand names, metrics, dates, shared technical terms). sourceOk: file → substrings of intentional hardcoded strings (e.g. product-mockup console chrome).",
   "identicalOk": [
     "about.stats.foundedValue",
-    "blog.meta.title",
     "blogDetail.author.name",
     "blogDetail.posts.llmsecops.grid.cards.3.title",
     "blueprint.s3.name",
@@ -13,7 +12,6 @@
     "console.svc.web.c2",
     "console.svc.web.perf",
     "console.svc.web.sub",
-    "contactPage.meta.title",
     "footer.brandName",
     "footer.links.documentation",
     "footer.localParis",
