@@ -370,8 +370,28 @@ const BANNED_CLAIMS = [
     { re: /talk to sales|contact sales|contacter les ventes/i, why: 'there is no sales team — say "talk to us"' },
     { re: /has helped (enterprises|businesses|companies)|a aidé des entreprises|real ai outcomes|résultats ia concrets/i, why: 'representative studies are illustrative, not delivered client results' },
     { re: /teams? in (paris|sydney)|équipes? algorythmos|our team in|notre équipe à|one senior team|une équipe senior|senior engineers|ingénieurs seniors|from the algorythmos team|de l.équipe algorythmos|team size|taille de l.équipe/i, why: 'implies a staffed team — use the senior-led boutique voice' },
-    { re: /trusted by (smes|\d)|approuvé par les pme|AI Act Ready|^We delivered|^Nous avons livré/i, why: 'unsubstantiated trust or delivery claim' },
+    { re: /trusted by (smes|\d)|approuvé par les pme|AI Act[- ]ready|GDPR[- ]ready|^We delivered|^Nous avons livré/i, why: 'unsubstantiated trust, readiness or delivery claim' },
 ];
+
+/**
+ * Single-locale pages that keep their copy in the page file rather than the
+ * dictionaries; their string literals get the same claim check.
+ */
+const LANDING_COPY_FILES = ['src/pages/[locale]/ai-consultancy-sydney.astro', 'src/pages/[locale]/conseil-en-ia-paris.astro'];
+
+function landingClaimFindings() {
+    const out = [];
+    for (const rel of LANDING_COPY_FILES) {
+        const src = readFileSync(join(ROOT, rel), 'utf-8');
+        for (const m of src.matchAll(/(['"])((?:(?!\1)[^\\]|\\.)*)\1/g)) {
+            const text = m[2];
+            for (const { re, why } of BANNED_CLAIMS) {
+                if (re.test(text)) out.push(`[page] ${rel} — ${why}\n       "${text.slice(0, 100)}${text.length > 100 ? '…' : ''}"`);
+            }
+        }
+    }
+    return out;
+}
 const CLAIM_SCOPE_EXCLUDED = /^(blog\.|blogDetail\.|charts\.blog)|^caseStudyDetail\.studies\.[^.]+\.faqs\./;
 
 function claimFindings(dicts, claimOk) {
@@ -476,7 +496,10 @@ function runCheck() {
     ];
 
     // Claims — FATAL
-    const claims = claimFindings([['EN', enFlat], ['FR', frFlat], ['AU', auFlat]], allowlist.claimOk ?? []);
+    const claims = [
+        ...claimFindings([['EN', enFlat], ['FR', frFlat], ['AU', auFlat]], allowlist.claimOk ?? []),
+        ...landingClaimFindings(),
+    ];
 
     // FR Title Case — advisory
     const titleCase = frTitleCase(frFlat, allowlist.titleCaseOk ?? [], identicalOk, allowlist.titleCasePhrasesOk ?? []);
