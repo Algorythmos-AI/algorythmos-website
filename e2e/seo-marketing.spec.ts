@@ -55,7 +55,7 @@ test.describe('consent & attribution', () => {
     expect(await page.evaluate(() => sessionStorage.getItem('alg-utm'))).toContain('utm_source=e2e');
 
     // Stub the API and confirm the payload carries locale + utm.
-    let payload: Record<string, string> | undefined;
+    let payload: Record<string, string | number> | undefined;
     await page.route('**/api/contact', async (route) => {
       payload = route.request().postDataJSON();
       await route.fulfill({ status: 200, contentType: 'application/json', body: '{"ok":true}' });
@@ -67,6 +67,11 @@ test.describe('consent & attribution', () => {
     await expect(page.locator('#cf-success')).toBeVisible();
     expect(payload?.utm).toContain('utm_source=e2e');
     expect(payload?.locale).toBe('en-AU');
+    // Fill time is sent as a clock-free duration, never a wall-clock timestamp.
+    expect(typeof payload?.elapsedMs).toBe('number');
+    expect(Number(payload?.elapsedMs)).toBeGreaterThan(0);
+    expect(payload).not.toHaveProperty('ts');
+    expect(payload?.leave_blank).toBe('');
   });
 });
 

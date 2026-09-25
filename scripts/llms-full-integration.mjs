@@ -22,27 +22,30 @@ function walk(dir, acc = []) {
   return acc;
 }
 
+const ENTITIES = { amp: '&', quot: '"', '#39': "'", mdash: '—', ndash: '–', nbsp: ' ', lt: '<', gt: '>' };
+/** One pass, so "&amp;lt;" decodes to the text "&lt;", never to "<". Other named entities → space. */
 function decode(s) {
-  return s
-    .replace(/&amp;/g, '&')
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&mdash;/g, '—')
-    .replace(/&ndash;/g, '–')
-    .replace(/&nbsp;/g, ' ')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&[a-z]+;/g, ' ');
+  return s.replace(/&(#39|[a-z]+);/g, (_, name) => ENTITIES[name] ?? ' ');
+}
+
+/** Apply a stripping replace until nothing changes, so no fragment can reassemble a tag. */
+function stripUntilStable(s, re, sub) {
+  let prev;
+  do {
+    prev = s;
+    s = s.replace(re, sub);
+  } while (s !== prev);
+  return s;
 }
 
 /** Extract readable text from the <main> region (drop nav/footer/scripts/svg). */
 function mainText(html) {
   const m = html.match(/<main[^>]*>([\s\S]*?)<\/main>/i);
   let s = m ? m[1] : html;
-  s = s.replace(/<(script|style|svg|noscript|template)[^>]*>[\s\S]*?<\/\1>/gi, '');
+  s = stripUntilStable(s, /<(script|style|svg|noscript|template)\b[^>]*>[\s\S]*?<\/\1[^>]*>/gi, '');
   // Preserve content-image descriptions so AI ingestion "sees" the visuals (decorative alt="" is skipped).
   s = s.replace(/<img\b[^>]*\balt="([^"]+)"[^>]*>/gi, ' [Image: $1] ');
-  s = s.replace(/<[^>]+>/g, ' ');
+  s = stripUntilStable(s, /<[^>]+>/g, ' ');
   return decode(s).replace(/\s+/g, ' ').trim();
 }
 

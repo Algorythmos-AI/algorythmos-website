@@ -1,0 +1,4 @@
+Contact: mailto:info@algorythmos.com.au
+Expires: 2027-03-26T00:00:00.000Z
+Preferred-Languages: en, fr
+Canonical: https://algorythmos.com/.well-known/security.txt

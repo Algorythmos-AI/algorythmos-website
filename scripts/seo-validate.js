@@ -35,6 +35,18 @@ const DIST = join(ROOT, 'dist');
 
 const EXPECTED_DOMAIN = 'https://algorythmos.com';
 const EXPECTED_OG_IMAGE = 'https://algorythmos.com/Algorythmos.png';
+const SITE_ORIGIN = new URL(EXPECTED_DOMAIN).origin;
+/**
+ * True only for an absolute URL on the canonical origin (scheme + host + port).
+ * A prefix test would also accept https://algorythmos.com.evil.example.
+ */
+const onSite = (v) => {
+  try {
+    return new URL(v).origin === SITE_ORIGIN;
+  } catch {
+    return false;
+  }
+};
 
 // ANSI colors
 const colors = {
@@ -185,7 +197,7 @@ function validatePage(page) {
     const canonical = canonicals[0];
     const expected = `${EXPECTED_DOMAIN}${page.canonicalPath}`;
     const expectedAlt = expected.endsWith('/') ? expected.slice(0, -1) : `${expected}/`;
-    if (!canonical.startsWith(EXPECTED_DOMAIN)) {
+    if (!onSite(canonical)) {
       log.error(`Canonical not on ${EXPECTED_DOMAIN}: ${canonical}`);
       errors++;
     } else if (canonical === expected || canonical === expectedAlt) {
@@ -218,7 +230,7 @@ function validatePage(page) {
       continue;
     }
     const content = vals[0];
-    if (tag === 'og:url' && !content.startsWith(EXPECTED_DOMAIN)) {
+    if (tag === 'og:url' && !onSite(content)) {
       log.error(`${tag} not on ${EXPECTED_DOMAIN}: ${content}`);
       errors++;
     } else if (
@@ -459,7 +471,7 @@ function validateAllPages() {
     // canonical
     const canonicals = extractCanonicals(html);
     const isRootTree = !/^(au-en|fr-fr)\//.test(rel) && !/^(au-en|fr-fr)$/.test(rel.replace(/\/index\.html$/, ''));
-    if (canonicals.length !== 1 || !canonicals[0].startsWith(EXPECTED_DOMAIN)) {
+    if (canonicals.length !== 1 || !onSite(canonicals[0])) {
       log.error(`${where}: expected one canonical on ${EXPECTED_DOMAIN}, got [${canonicals.join(', ')}]`);
       errors++;
     } else {
@@ -484,8 +496,8 @@ function validateAllPages() {
 
     // og:image must resolve to a real file in dist
     const ogImages = extractMetaContent(html, 'og:image', 'property');
-    if (ogImages.length >= 1 && ogImages[0].startsWith(EXPECTED_DOMAIN)) {
-      const imgRel = decodeURIComponent(ogImages[0].slice(EXPECTED_DOMAIN.length));
+    if (ogImages.length >= 1 && onSite(ogImages[0])) {
+      const imgRel = decodeURIComponent(new URL(ogImages[0]).pathname);
       if (!existsSync(join(DIST, imgRel))) {
         log.error(`${where}: og:image file missing in dist: ${imgRel}`);
         errors++;
@@ -532,9 +544,13 @@ function validateAllPages() {
     const xml = readFileSync(join(DIST, entry), 'utf-8');
     for (const m of xml.matchAll(/<loc>([^<]+)<\/loc>/g)) {
       const url = m[1];
-      if (!url.startsWith(EXPECTED_DOMAIN)) continue;
+      if (!onSite(url)) {
+        log.error(`sitemap ${entry}: <loc> not on ${EXPECTED_DOMAIN}: ${url}`);
+        errors++;
+        continue;
+      }
       sitemapUrls++;
-      const urlPath = url.slice(EXPECTED_DOMAIN.length).replace(/\/$/, '') || '/';
+      const urlPath = new URL(url).pathname.replace(/\/$/, '') || '/';
       const canonical = canonicalByPage.get(urlPath);
       if (!canonical) {
         log.error(`sitemap ${entry}: URL has no built page: ${url}`);
@@ -589,6 +605,27 @@ function validateStaticFiles() {
   } else {
     log.error('dist/llms.txt is missing');
     errors++;
+  }
+
+  // security.txt (RFC 9116): present, with a contact, and not about to expire
+  const secTxt = join(DIST, '.well-known', 'security.txt');
+  if (!existsSync(secTxt)) {
+    log.error('dist/.well-known/security.txt is missing');
+    errors++;
+  } else {
+    const txt = readFileSync(secTxt, 'utf-8');
+    const expires = Date.parse((txt.match(/^Expires:\s*(\S+)/m) || [])[1] || '');
+    const daysLeft = (expires - Date.now()) / 86_400_000;
+    if (!/^Contact:\s*\S+/m.test(txt)) {
+      log.error('security.txt has no Contact line');
+      errors++;
+    } else if (!Number.isFinite(daysLeft) || daysLeft < 30) {
+      const left = Number.isFinite(daysLeft) ? `${Math.floor(daysLeft)} days` : 'no valid date';
+      log.error(`security.txt Expires is missing or under 30 days away (${left}) — renew it`);
+      errors++;
+    } else {
+      log.success(`security.txt present; expires in ${Math.floor(daysLeft)} days`);
+    }
   }
 }
 
