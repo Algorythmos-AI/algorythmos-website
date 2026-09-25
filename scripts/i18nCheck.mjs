@@ -20,6 +20,16 @@
  *
  * Tier 4 — SEO length gate on meta titles/descriptions (FATAL).
  *
+ * Tier 5 — structure (FATAL):
+ *   - {placeholders} and markup tags must match between EN and FR, and between
+ *     each AU override and its EN key (a translation must never drop {year}).
+ *   - No key may appear twice in a dictionary file: JSON.parse silently keeps
+ *     the last one, which hides a bad merge.
+ *
+ * Advisory — FR Title Case: short French strings written in English Title Case
+ *   ("En Savoir Plus") are listed as warnings; proper nouns are allowlisted in
+ *   scripts/i18n-allowlist.json → "titleCaseOk".
+ *
  * Run: npm run i18n:check
  */
 
@@ -275,6 +285,49 @@ function scanSource(allowlist) {
     return findings;
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Structure + style helpers
+// ─────────────────────────────────────────────────────────────────────────────
+
+const PLACEHOLDER_RE = /\{[a-zA-Z0-9_]+\}/g;
+const TAG_RE = /<\/?[a-zA-Z][a-zA-Z0-9-]*/g;
+/** Sorted placeholders + tags of a value; two locales of one key must agree. */
+function structureOf(value) {
+    const v = String(value);
+    const ph = [...v.matchAll(PLACEHOLDER_RE)].map((m) => m[0]).sort();
+    const tags = [...v.matchAll(TAG_RE)].map((m) => m[0].toLowerCase()).sort();
+    return JSON.stringify([ph, tags]);
+}
+
+/** Keys that occur more than once in a flat dictionary file (raw text scan). */
+function duplicateKeys(path) {
+    const counts = new Map();
+    for (const m of readFileSync(path, 'utf-8').matchAll(/^\s*"((?:[^"\\]|\\.)*)"\s*:/gm)) {
+        counts.set(m[1], (counts.get(m[1]) ?? 0) + 1);
+    }
+    return [...counts].filter(([, n]) => n > 1).map(([k]) => k);
+}
+
+/**
+ * Short FR strings in English Title Case: two or more capitalised non-initial
+ * words, ignoring allowlisted proper nouns and acronyms (all caps).
+ */
+function frTitleCase(frFlat, titleCaseOk) {
+    const ok = new Set(titleCaseOk);
+    const out = [];
+    for (const [key, raw] of Object.entries(frFlat)) {
+        if (typeof raw !== 'string' || /<|\{/.test(raw)) continue;
+        const words = raw.trim().split(/\s+/);
+        if (words.length < 2 || words.length > 8) continue;
+        const caps = words
+            .slice(1)
+            .map((w) => w.replace(/^[«"'(]+|[»"'),.:;!?]+$/g, ''))
+            .filter((w) => /^[A-ZÀ-ÖØ-Þ][a-zà-öø-ÿ'’-]{2,}$/.test(w) && !ok.has(w));
+        if (caps.length >= 2) out.push(`${key} = ${raw.trim()}`);
+    }
+    return out;
+}
+
 /**
  * Main check function
  */
@@ -348,6 +401,23 @@ function runCheck() {
     // Hardcoded copy in source — FATAL
     const sourceFindings = scanSource(allowlist);
 
+    // Structure — FATAL
+    const structural = [];
+    for (const k of enKeys) {
+        if (frKeys.has(k) && structureOf(enFlat[k]) !== structureOf(frFlat[k])) structural.push(`[FR] ${k}`);
+    }
+    for (const k of Object.keys(auFlat)) {
+        if (enKeys.has(k) && structureOf(auFlat[k]) !== structureOf(enFlat[k])) structural.push(`[AU] ${k}`);
+    }
+    const duplicates = [
+        ...duplicateKeys(EN_PATH).map((k) => `[EN] ${k}`),
+        ...duplicateKeys(FR_PATH).map((k) => `[FR] ${k}`),
+        ...duplicateKeys(AU_PATH).map((k) => `[AU] ${k}`),
+    ];
+
+    // FR Title Case — advisory
+    const titleCase = frTitleCase(frFlat, allowlist.titleCaseOk ?? []);
+
     // Report results
     let hasIssues = false;
 
@@ -416,6 +486,28 @@ function runCheck() {
         staleAllowlist.slice(0, 10).forEach(k => console.log(`   - ${k}`));
     }
 
+    // Structure (fatal)
+    if (structural.length > 0) {
+        hasIssues = true;
+        console.log(`\n❌ Placeholder/markup mismatch between locales (${structural.length}):\n`);
+        structural.slice(0, 20).forEach((k) => console.log(`   - ${k}`));
+        console.log('   → every locale of a key must carry the same {placeholders} and tags.');
+    }
+    if (duplicates.length > 0) {
+        hasIssues = true;
+        console.log(`\n❌ Duplicate keys in a dictionary file (${duplicates.length}):\n`);
+        duplicates.slice(0, 20).forEach((k) => console.log(`   - ${k}`));
+        console.log('   → JSON keeps only the last one; remove the duplicate.');
+    }
+
+    // FR Title Case (advisory)
+    if (titleCase.length > 0) {
+        console.log(`\n⚠️  FR strings in English Title Case (${titleCase.length}) — French uses sentence case:\n`);
+        titleCase.slice(0, 15).forEach((w) => console.log(`   - ${w}`));
+        if (titleCase.length > 15) console.log(`   ... and ${titleCase.length - 15} more`);
+        console.log('   → rewrite in sentence case, or add a proper noun to "titleCaseOk" in scripts/i18n-allowlist.json.');
+    }
+
     // SEO length gate (fatal)
     if (lengthWarnings.length > 0) {
         hasIssues = true;
@@ -437,6 +529,8 @@ function runCheck() {
     console.log(`   Untranslated (fatal): ${identical.length} (allowlisted identical: ${identicalOk.size})`);
     console.log(`   Hardcoded copy in source (fatal): ${sourceFindings.length}`);
     console.log(`   SEO length violations (fatal): ${lengthWarnings.length}`);
+    console.log(`   Structure mismatches (fatal): ${structural.length} · duplicate keys (fatal): ${duplicates.length}`);
+    console.log(`   FR Title Case (advisory): ${titleCase.length}`);
 
     if (!hasIssues) {
         console.log('\n✅ All translations are in sync!\n');
