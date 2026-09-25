@@ -114,23 +114,48 @@ function copyWordCount(text) {
 }
 
 /**
+ * Cut every <tag …>…</tag …> element (case-insensitive) with a plain index scan
+ * rather than a regex replace, so no half-matched tag can be left behind. An
+ * unterminated opener drops the rest of the template (a browser would treat it
+ * as that element's content too).
+ */
+function cutElements(src, tag) {
+    const lower = src.toLowerCase();
+    const open = `<${tag}`;
+    const close = `</${tag}`;
+    const isNameChar = (c) => c !== undefined && /[a-z0-9-]/.test(c);
+    let out = '';
+    let i = 0;
+    for (;;) {
+        let start = lower.indexOf(open, i);
+        // "<scripts" or "<style-guide" are other elements, not <script>/<style>
+        while (start !== -1 && isNameChar(lower[start + open.length])) start = lower.indexOf(open, start + 1);
+        if (start === -1) return out + src.slice(i);
+        out += src.slice(i, start);
+        const end = lower.indexOf(close, start + open.length);
+        if (end === -1) return out;
+        const gt = lower.indexOf('>', end + close.length);
+        if (gt === -1) return out;
+        i = gt + 1;
+    }
+}
+
+/** Remove <script>/<style> elements and HTML comments: none of them holds visible copy. */
+function stripNonCopy(tpl) {
+    let out = cutElements(cutElements(tpl, 'script'), 'style');
+    let prev;
+    do {
+        prev = out;
+        out = out.replace(/<!--[\s\S]*?--!?>/g, '');
+    } while (out !== prev);
+    return out;
+}
+
+/**
  * Extract bare text nodes from an .astro template (the part after frontmatter).
  * Skips: <script>/<style> blocks, HTML comments, tags (incl. attributes), and
  * {expressions} (brace-balanced, string-aware).
  */
-/** Remove <script>/<style> blocks and comments, repeating until nothing changes (no nested leftovers). */
-function stripNonCopy(tpl) {
-    let prev;
-    do {
-        prev = tpl;
-        tpl = tpl
-            .replace(/<script\b[^>]*>[\s\S]*?<\/script[^>]*>/gi, '')
-            .replace(/<style\b[^>]*>[\s\S]*?<\/style[^>]*>/gi, '')
-            .replace(/<!--[\s\S]*?--!?>/g, '');
-    } while (tpl !== prev);
-    return tpl;
-}
-
 function astroTextNodes(source) {
     let tpl = source;
     if (tpl.startsWith('---')) {
