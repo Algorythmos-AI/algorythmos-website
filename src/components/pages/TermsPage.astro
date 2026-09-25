@@ -24,7 +24,7 @@ const sections = sectionKeys.map((s) => {
   return {
     id: s,
     title: t(`${base}.title`),
-    content: t(`${base}.content`).replace('{email}', EMAIL),
+    content: t(`${base}.content`).replaceAll('{email}', EMAIL),
   };
 });
 ---
@@ -35,7 +35,7 @@ const sections = sectionKeys.map((s) => {
   <section class="container-page py-20">
     <div class="mx-auto max-w-measure">
       <p class="text-sm text-ink-subtle">
-        {t('terms.hero.lastUpdated')}: <time>{t('terms.hero.lastUpdatedDate')}</time>
+        {t('terms.hero.lastUpdated')} <time>{t('terms.hero.lastUpdatedDate')}</time>
       </p>
 
       <ol class="mt-10 space-y-12">

@@ -10,8 +10,10 @@ const t = useTranslations(locale);
 const path = '/privacy';
 const abs = (p: string) => SITE + localizePath(locale, p);
 
-import { BUSINESS } from '@/data/business';
+import { BUSINESS, regionAddressLine } from '@/data/business';
 const EMAIL = BUSINESS.email;
+/* Placeholders filled from business.ts, never retyped: every occurrence. */
+const fill = (s: string) => s.replaceAll('{email}', EMAIL).replaceAll('{address}', regionAddressLine('AU'));
 
 const crumbs = breadcrumb([
   { name: t('nav.home'), url: abs('/') },
@@ -25,18 +27,31 @@ function listItems(base: string): string[] {
     const key = `${base}.items.${i}`;
     const val = t(key);
     if (val === key) break;
-    out.push(val);
+    out.push(fill(val));
   }
   return out;
 }
 
-const sectionKeys = ['intro', 'googleAuth', 'dataCollected', 'dataUsage', 'thirdParties', 'contact'] as const;
+const sectionKeys = [
+  'intro',
+  'collect',
+  'use',
+  'share',
+  'overseas',
+  'cookies',
+  'retention',
+  'rights',
+  'security',
+  'complaints',
+  'changes',
+  'contact',
+] as const;
 const sections = sectionKeys.map((s) => {
   const base = `privacy.sections.${s}`;
   return {
     id: s,
     title: t(`${base}.title`),
-    content: t(`${base}.content`).replace('{email}', EMAIL),
+    content: fill(t(`${base}.content`)),
     items: listItems(base),
   };
 });
@@ -48,7 +63,7 @@ const sections = sectionKeys.map((s) => {
   <section class="container-page py-20">
     <div class="mx-auto max-w-measure">
       <p class="text-sm text-ink-subtle">
-        {t('privacy.hero.lastUpdated')}: <time>{t('privacy.hero.lastUpdatedDate')}</time>
+        {t('privacy.hero.lastUpdated')} <time>{t('privacy.hero.lastUpdatedDate')}</time>
       </p>
 
       <div class="mt-10 space-y-12">
