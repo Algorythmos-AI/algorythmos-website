@@ -35,6 +35,10 @@ updates:
         update-types: ["version-update:semver-major"]
       - dependency-name: "tailwindcss"
         update-types: ["version-update:semver-major"]
+      - dependency-name: "@eslint/js"
+        update-types: ["version-update:semver-major"]
+      # Peer-pinned by @astrojs/react; moves only when that integration does.
+      - dependency-name: "oxc-transform-react"
   - package-ecosystem: github-actions
     directory: /
     schedule:
