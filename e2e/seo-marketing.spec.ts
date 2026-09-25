@@ -25,7 +25,7 @@ test.describe('locale routing & region banner', () => {
   });
 
   test('returning-visitor redirect fires only on / with a locale cookie', async ({ page, context }) => {
-    await context.addCookies([{ name: 'locale', value: 'fr-fr', url: 'http://localhost:4321' }]);
+    await context.addCookies([{ name: 'locale', value: 'fr-fr', url: 'http://localhost:4331' }]);
     await page.goto('/');
     await expect(page).toHaveURL(/\/fr-fr\/?$/);
     // Non-root pages must NOT redirect.
