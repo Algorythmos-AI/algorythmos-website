@@ -24,6 +24,16 @@ describe('orgGraph', () => {
     expect(regionAddressLine('FR')).toBe('');
   });
 
+  it('points the contact point at the live contact page, not a redirect', () => {
+    expect(org.contactPoint.url).toBe('https://algorythmos.com/au-en/contact');
+  });
+
+  it('points the founder at the page that names the founder', () => {
+    const founder = nodes.find((n: Record<string, unknown>) => n['@type'] === 'Person') as Record<string, any>;
+    expect(org.founder).toEqual({ '@id': founder['@id'] });
+    expect(founder.url).toBe('https://algorythmos.com/au-en/press');
+  });
+
   it('mirrors sameAs profiles from business.ts', () => {
     expect(org.sameAs).toEqual([...SAME_AS]);
     expect(org.sameAs).toEqual(BUSINESS.profiles.map((p) => p.url));

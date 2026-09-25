@@ -13,7 +13,9 @@ export const founderPerson = {
   '@id': FOUNDER_ID,
   name: 'Sam Kalaliya',
   jobTitle: 'Founder & Chief Executive Officer',
-  url: `${SITE}/au-en/about`,
+  // The press page is where the founder is named and described on the site
+  // (structured data must describe visible content).
+  url: `${SITE}/au-en/press`,
   worksFor: { '@id': ORG_ID },
   knowsAbout: ['Artificial Intelligence', 'Machine Learning', 'MLOps', 'Data Engineering', 'Agentic Automation'],
 };
@@ -87,7 +89,7 @@ export const orgGraph = {
         '@type': 'ContactPoint',
         contactType: 'customer service',
         email: BUSINESS.email,
-        url: `${SITE}/contact`,
+        url: `${SITE}/au-en/contact`, // the live page, not the legacy URL that 308-redirects to it
         availableLanguage: ['English', 'French'],
         ...(BUSINESS.phone ? { telephone: BUSINESS.phone } : {}),
       },
