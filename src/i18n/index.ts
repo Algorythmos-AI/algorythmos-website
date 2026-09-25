@@ -94,7 +94,10 @@ export function localeToRegion(locale: Locale): Region {
  * fixes the missing AU prefix). `localizePath('au-en','/services') → '/au-en/services'`.
  */
 export function localizePath(locale: Locale, path: string): string {
-  const prefix = REGIONS[locale].prefix;
+  /* The unprefixed `en` tree is no longer built (25 Sep 2026): links produced in an
+     `en` context (404 page, English RSS items, llms.txt) point at the canonical /au-en
+     tree instead. Non-page routes (/rss.xml, /llms.txt) build their own paths. */
+  const prefix = locale === 'en' ? REGIONS['au-en'].prefix : REGIONS[locale].prefix;
   const clean = path === '' || path === '/' ? '' : path.startsWith('/') ? path : `/${path}`;
   const out = `${prefix}${clean}`.replace(/\/{2,}/g, '/');
   return out === '' ? '/' : out;

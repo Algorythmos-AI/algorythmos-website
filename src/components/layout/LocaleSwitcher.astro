@@ -7,7 +7,7 @@
  * A tiny inline script records the explicit choice in the `locale` cookie so
  * the BaseLayout root-redirect respects it.
  */
-import { asLocale, LOCALES, REGIONS, localizePath, stripLocale, useTranslations } from '@/i18n';
+import { asLocale, PREFIXED_LOCALES, REGIONS, localizePath, stripLocale, useTranslations } from '@/i18n';
 
 interface Props {
   /** Flag-only pills for the header; full labels in the footer. */
@@ -27,7 +27,7 @@ const { rest } = stripLocale(new URL(Astro.url).pathname);
 const STANDALONE = ['/ai-consultancy-sydney', '/conseil-en-ia-paris', '/404'];
 const isStandalone = STANDALONE.some((p) => rest === p || rest === `${p}/`);
 
-const options = LOCALES.map((loc) => ({
+const options = PREFIXED_LOCALES.map((loc) => ({
   loc,
   meta: REGIONS[loc],
   href: isStandalone ? localizePath(loc, '/') : localizePath(loc, rest),

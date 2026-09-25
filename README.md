@@ -52,14 +52,15 @@ npm run check && npm run i18n:check && npm run health:check && npm run build \
 | France (fr-FR) | `/fr-fr/...` |
 
 `algorythmos.com.au` and `algorythmos.fr` redirect to the matching locale on the
-canonical domain. Locale paths and the canonical domain are frozen; changing them
-breaks canonicals, hreflang and the sitemap.
+canonical domain, and legacy unprefixed URLs (`/about`, `/blog/...`) 308 to `/au-en`.
+Locale paths and the canonical domain are frozen; changing them breaks canonicals,
+hreflang and the sitemap.
 
 ## Project structure
 
 ```
 src/
-├── pages/             # Routes (root + [locale]/ for /au-en and /fr-fr)
+├── pages/             # Routes: [locale]/ for /au-en and /fr-fr, plus 404 and feed/robots/llms endpoints
 ├── layouts/           # BaseLayout: head, theme, consent, transitions
 ├── components/        # Astro components (layout, sections, ui, pages, seo)
 ├── data/              # Typed content: services, case studies, blog, business facts

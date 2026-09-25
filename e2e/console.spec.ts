@@ -16,7 +16,7 @@ test.describe('mobile (phone viewport)', () => {
   test.use({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true });
 
   test('hero console fits the phone (no clip) and does not cause horizontal scroll', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/au-en');
     const console_ = page.locator(HERO);
     await console_.evaluate((el) => el.scrollIntoView({ block: 'center' }));
     await page.waitForTimeout(600);
@@ -34,7 +34,7 @@ test.describe('mobile (phone viewport)', () => {
   });
 
   test('no page scrolls horizontally', async ({ page }) => {
-    for (const path of ['/', '/fr-fr', ...SERVICE_SLUGS.map((s) => `/services/${s}`)]) {
+    for (const path of ['/au-en', '/fr-fr', ...SERVICE_SLUGS.map((s) => `/au-en/services/${s}`)]) {
       await page.goto(path);
       await page.waitForTimeout(300);
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
@@ -43,7 +43,7 @@ test.describe('mobile (phone viewport)', () => {
   });
 
   test('"Four disciplines" shows all four tabs within the viewport', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/au-en');
     await page.locator('[data-blueprint]').scrollIntoViewIfNeeded();
     const within = await page.evaluate(() => {
       const tabs = [...document.querySelectorAll('[role="tab"][data-bp-tab]')];
@@ -55,7 +55,7 @@ test.describe('mobile (phone viewport)', () => {
 
   test('service consoles fit the phone', async ({ page }) => {
     for (const slug of SERVICE_SLUGS) {
-      await page.goto(`/services/${slug}`);
+      await page.goto(`/au-en/services/${slug}`);
       const console_ = page.locator(`[data-console="svc-${slug}"]`);
       await console_.evaluate((el) => el.scrollIntoView({ block: 'center' }));
       await page.waitForTimeout(300);
@@ -67,7 +67,7 @@ test.describe('mobile (phone viewport)', () => {
 
 test.describe('hero console', () => {
   test('renders with a localized label and SSR values (EN)', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/au-en');
     const console_ = page.locator(HERO);
     await console_.evaluate((el) => el.scrollIntoView({ block: 'center' }));
     await expect(console_).toHaveAttribute('aria-label', /Algorythmos AI console/);
@@ -86,7 +86,7 @@ test.describe('hero console', () => {
 
   test('reduced motion → static SSR baseline, no mutations', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
-    await page.goto('/');
+    await page.goto('/au-en');
     const console_ = page.locator(HERO);
     await console_.evaluate((el) => el.scrollIntoView({ block: 'center' }));
     await page.waitForTimeout(3000);
@@ -96,7 +96,7 @@ test.describe('hero console', () => {
 
   test('motion mode → the scripted story advances', async ({ page }) => {
     test.slow();
-    await page.goto('/');
+    await page.goto('/au-en');
     const console_ = page.locator(HERO);
     await console_.evaluate((el) => el.scrollIntoView({ block: 'center' }));
     await expect(console_).toHaveClass(/hc-live/, { timeout: 8000 });
@@ -106,7 +106,7 @@ test.describe('hero console', () => {
   });
 
   test('re-initializes cleanly after client-side navigation', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/au-en');
     await page.locator(HERO).scrollIntoViewIfNeeded();
     await expect(page.locator(HERO)).toHaveClass(/hc-live/, { timeout: 8000 });
     // navigate away and back through the client router
@@ -125,7 +125,7 @@ test.describe('hero console', () => {
 
 test.describe('service consoles', () => {
   test('agentic console renders and goes live', async ({ page }) => {
-    await page.goto('/services/agentic-automation');
+    await page.goto('/au-en/services/agentic-automation');
     const console_ = page.locator('[data-console="svc-agentic-automation"]');
     await console_.evaluate((el) => el.scrollIntoView({ block: 'center' }));
     await expect(console_).toHaveClass(/hc-live/, { timeout: 8000 });
@@ -134,7 +134,7 @@ test.describe('service consoles', () => {
 
   test('all five service consoles render their fallback-safe markup', async ({ page }) => {
     for (const slug of ['agentic-automation', 'document-intelligence', 'sql-dashboards', 'mlops-cicd', 'ai-websites']) {
-      await page.goto(`/services/${slug}`);
+      await page.goto(`/au-en/services/${slug}`);
       await expect(page.locator(`[data-console="svc-${slug}"]`)).toHaveCount(1);
     }
   });

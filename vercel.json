@@ -78,6 +78,76 @@
       ],
       "destination": "https://algorythmos.com/fr-fr/:path*",
       "permanent": true
+    },
+    {
+      "source": "/",
+      "destination": "/au-en",
+      "permanent": true
+    },
+    {
+      "source": "/about",
+      "destination": "/au-en/about",
+      "permanent": true
+    },
+    {
+      "source": "/services",
+      "destination": "/au-en/services",
+      "permanent": true
+    },
+    {
+      "source": "/services/:slug",
+      "destination": "/au-en/services/:slug",
+      "permanent": true
+    },
+    {
+      "source": "/case-studies",
+      "destination": "/au-en/case-studies",
+      "permanent": true
+    },
+    {
+      "source": "/case-studies/:slug",
+      "destination": "/au-en/case-studies/:slug",
+      "permanent": true
+    },
+    {
+      "source": "/blog",
+      "destination": "/au-en/blog",
+      "permanent": true
+    },
+    {
+      "source": "/blog/:slug",
+      "destination": "/au-en/blog/:slug",
+      "permanent": true
+    },
+    {
+      "source": "/pricing",
+      "destination": "/au-en/pricing",
+      "permanent": true
+    },
+    {
+      "source": "/contact",
+      "destination": "/au-en/contact",
+      "permanent": true
+    },
+    {
+      "source": "/press",
+      "destination": "/au-en/press",
+      "permanent": true
+    },
+    {
+      "source": "/careers",
+      "destination": "/au-en/careers",
+      "permanent": true
+    },
+    {
+      "source": "/privacy",
+      "destination": "/au-en/privacy",
+      "permanent": true
+    },
+    {
+      "source": "/terms",
+      "destination": "/au-en/terms",
+      "permanent": true
     }
   ],
   "headers": [

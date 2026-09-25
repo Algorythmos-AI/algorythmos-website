@@ -31,7 +31,7 @@ function pageImages(pathname) {
   const p = pathname.replace(/\/$/, '');
   /** @type {{ url: string, caption: string }[]} */
   const imgs = [];
-  if (p === '' || p === '/au-en' || p === '/fr-fr') {
+  if (p === '/au-en' || p === '/fr-fr') {
     imgs.push({ url: `${VIS}/home-hero-ai-console.svg`, caption: 'Algorythmos AI console — agentic automation and a live analytics dashboard' });
     imgs.push({ url: `${PHOTOS}/team-collaboration-1600.webp`, caption: 'Collaboration during an AI delivery sprint' });
   }

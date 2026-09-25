@@ -19,15 +19,17 @@ the practical companion: where things are, how to add content, and what the gate
 
 ## Locales and URLs
 
-| Locale | Prefix | Indexed |
-|---|---|---|
-| `en` (global) | none | No — every root page canonicalises to its `/au-en` twin |
-| `au-en` | `/au-en` | Yes (`x-default`) |
-| `fr-fr` | `/fr-fr` | Yes |
+| Locale | Prefix | Built | Indexed |
+|---|---|---|---|
+| `au-en` | `/au-en` | Yes | Yes (`x-default`) |
+| `fr-fr` | `/fr-fr` | Yes | Yes |
+| `en` (dictionary only) | none | No pages — legacy root URLs 308 to `/au-en` (`vercel.json`) | No |
 
-`src/pages/*.astro` are the root pages; `src/pages/[locale]/*.astro` generate the two
-prefixed trees. Both render the same page components from `src/components/pages/`.
-`algorythmos.com.au` and `algorythmos.fr` redirect to the matching locale.
+`src/pages/[locale]/*.astro` generate the two trees from the page components in
+`src/components/pages/`. Only the 404 page and the non-page routes (`rss.xml`, `llms.txt`,
+`robots.txt`, `og/`) live at the root. `localizePath('en', …)` deliberately resolves to
+`/au-en` so nothing can link into the retired tree. `algorythmos.com.au` and
+`algorythmos.fr` redirect to the matching locale.
 
 ## Adding content
 

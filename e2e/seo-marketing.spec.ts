@@ -7,12 +7,12 @@ import { test, expect } from '@playwright/test';
 
 test.describe('locale routing & region banner', () => {
   test('footer local links round-trip to landing pages', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/au-en');
     await page.locator('footer a[href="/au-en/ai-consultancy-sydney"]').click();
     await expect(page).toHaveURL(/\/au-en\/ai-consultancy-sydney$/);
     await expect(page.locator('h1')).toContainText('AI Consultancy in Sydney');
 
-    await page.goto('/');
+    await page.goto('/au-en');
     await page.locator('footer a[href="/fr-fr/conseil-en-ia-paris"]').click();
     await expect(page).toHaveURL(/\/fr-fr\/conseil-en-ia-paris$/);
     await expect(page.locator('h1')).toContainText('Conseil en IA à Paris');
@@ -24,19 +24,19 @@ test.describe('locale routing & region banner', () => {
     await expect(page).toHaveTitle(/Conseil en IA/);
   });
 
-  test('returning-visitor redirect fires only on / with a locale cookie', async ({ page, context }) => {
+  test('returning-visitor swap fires only on the locale homes with a locale cookie', async ({ page, context }) => {
     await context.addCookies([{ name: 'locale', value: 'fr-fr', url: 'http://localhost:4331' }]);
-    await page.goto('/');
+    await page.goto('/au-en');
     await expect(page).toHaveURL(/\/fr-fr\/?$/);
-    // Non-root pages must NOT redirect.
-    await page.goto('/about');
-    await expect(page).toHaveURL(/\/about$/);
+    // Deeper pages must NOT redirect.
+    await page.goto('/au-en/about');
+    await expect(page).toHaveURL(/\/au-en\/about$/);
   });
 });
 
 test.describe('consent & attribution', () => {
   test('analytics does not load without consent; loads after accept', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/au-en');
     expect(await page.evaluate(() => (window as never as Record<string, unknown>)['__algAnalytics'])).toBeFalsy();
     await page.locator('#consent-accept').click();
     await expect
@@ -51,7 +51,7 @@ test.describe('consent & attribution', () => {
     expect(await page.evaluate(() => sessionStorage.getItem('alg-utm'))).toContain('utm_source=e2e');
 
     // First-touch: a later navigation must not overwrite it.
-    await page.goto('/contact?utm_source=other');
+    await page.goto('/au-en/contact?utm_source=other');
     expect(await page.evaluate(() => sessionStorage.getItem('alg-utm'))).toContain('utm_source=e2e');
 
     // Stub the API and confirm the payload carries locale + utm.
@@ -66,14 +66,13 @@ test.describe('consent & attribution', () => {
     await page.click('#cf-submit');
     await expect(page.locator('#cf-success')).toBeVisible();
     expect(payload?.utm).toContain('utm_source=e2e');
-    expect(payload?.locale).toBe('en');
+    expect(payload?.locale).toBe('en-AU');
   });
 });
 
 test.describe('trust & PR surfaces', () => {
-  test('press page renders in all three locales with media contact', async ({ page }) => {
+  test('press page renders in both locales with media contact', async ({ page }) => {
     for (const [path, heading] of [
-      ['/press', 'Press kit'],
       ['/au-en/press', 'Press kit'],
       ['/fr-fr/press', 'Kit presse'],
     ] as const) {
@@ -91,7 +90,7 @@ test.describe('trust & PR surfaces', () => {
   });
 
   test('case study shows headline stat band (EN + FR)', async ({ page }) => {
-    await page.goto('/case-studies/healthcare-mlops');
+    await page.goto('/au-en/case-studies/healthcare-mlops');
     await expect(page.getByText('Faster deployments through automated CI/CD', { exact: true })).toBeVisible();
     await page.goto('/fr-fr/case-studies/healthcare-mlops');
     await expect(page.getByText('Déploiements plus rapides grâce au CI/CD automatisé', { exact: true })).toBeVisible();
@@ -100,9 +99,9 @@ test.describe('trust & PR surfaces', () => {
 
 test.describe('photography', () => {
   const photoPages = [
-    { path: '/', base: 'team-collaboration' },
-    { path: '/about', base: 'team-sunlit' },
-    { path: '/careers', base: 'modern-office' },
+    { path: '/au-en', base: 'team-collaboration' },
+    { path: '/au-en/about', base: 'team-sunlit' },
+    { path: '/au-en/careers', base: 'modern-office' },
     { path: '/au-en/ai-consultancy-sydney', base: 'sydney-scene' },
     { path: '/fr-fr/conseil-en-ia-paris', base: 'paris-scene' },
   ];

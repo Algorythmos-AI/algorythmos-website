@@ -142,7 +142,7 @@
 
 ### Do not modify without review
 - The canonical domain and locale prefixes (`/au-en`, `/fr-fr`)
-- Canonical consolidation (root pages → `/au-en`) and the hreflang set
+- The retired root tree (legacy `/…` URLs 308 to `/au-en` in `vercel.json`) and the hreflang set
 - `src/i18n/index.ts` locale/region logic
 - `src/seo/schema.ts` identity graph (`#organization`, `#website`, `#founder`)
 - `vercel.json` redirects and headers

@@ -5,7 +5,7 @@
  *  - `src/components/seo/SEO.astro` defaults a page's og:image to its card
  *    when an entry exists (brand fallback /Algorythmos.png otherwise)
  */
-import { LOCALES, useTranslations, localizePath } from '@/i18n';
+import { PREFIXED_LOCALES, useTranslations, localizePath } from '@/i18n';
 import { blog } from '@/data/blog';
 import { caseStudies } from '@/data/caseStudies';
 import { services } from '@/data/services';
@@ -41,7 +41,7 @@ const BRAND_PAGES: { path: string; titleKey: string; descKey: string }[] = [
 function buildPages(): Record<string, OGPage> {
   const pages: Record<string, OGPage> = {};
 
-  for (const loc of LOCALES) {
+  for (const loc of PREFIXED_LOCALES) {
     const t = useTranslations(loc);
 
     pages[ogKey(localizePath(loc, '/'))] = {

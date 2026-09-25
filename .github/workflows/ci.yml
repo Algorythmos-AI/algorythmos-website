@@ -72,8 +72,13 @@ jobs:
       - name: E2E + accessibility (Chromium, WebKit)
         run: npx playwright test
 
+      # Shared runners are ~20% slower than a laptop; LCP budget widened there only.
+      # CLS stays at 0.1 everywhere; TBT keeps 300 ms.
       - name: Core Web Vitals budget (Lighthouse, mobile)
         run: node scripts/lh-check.mjs --strict
+        env:
+          LH_LCP_BUDGET: "3000"
+          LH_RUNS: "2"
 
       - name: Upload Playwright report
         if: failure()

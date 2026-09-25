@@ -5,7 +5,7 @@
 // Analyses the emitted client assets in dist/_astro/*.{js,css}:
 //   - total + per-file sizes (raw + gzip)
 //   - flags any single JS chunk > 200 kB (warning)
-//   - reports the JS actually referenced by dist/index.html as the
+//   - reports the JS actually referenced by dist/au-en/index.html as the
 //     "home first-load" cost
 //
 // Astro is islands-first, so most pages ship little/zero JS. This is advisory:
@@ -25,7 +25,7 @@ const __dirname = path.dirname(__filename);
 const ROOT = path.join(__dirname, '..');
 const DIST_DIR = path.join(ROOT, 'dist');
 const ASTRO_DIR = path.join(DIST_DIR, '_astro');
-const HOME_HTML = path.join(DIST_DIR, 'index.html');
+const HOME_HTML = path.join(DIST_DIR, 'au-en', 'index.html');
 
 const SIZE_LIMIT_KB = 200; // single-chunk warning threshold
 const WARNING_LIMIT_KB = 100; // "getting big" advisory threshold
@@ -133,7 +133,7 @@ function analyzeBundle() {
   const homeRaw = homeChunks.reduce((s, f) => s + f.size, 0);
   const homeGzip = homeChunks.reduce((s, f) => s + f.gzip, 0);
 
-  console.log(colors.bold + '\n🏠 HOME FIRST-LOAD (referenced by dist/index.html)' + colors.reset);
+  console.log(colors.bold + '\n🏠 HOME FIRST-LOAD (referenced by dist/au-en/index.html)' + colors.reset);
   console.log('─'.repeat(60));
   if (homeChunks.length === 0) {
     console.log(`${colors.green}✅ Home ships 0 JS chunks from /_astro (pure static / islands idle)${colors.reset}`);

@@ -4,10 +4,10 @@ const locale = asLocale(Astro.currentLocale);
 const t = useTranslations(locale);
 /**
  * Region SUGGESTION banner — never auto-redirects (avoids the Google
- * geo-redirect anti-pattern). Shows on global (non-prefixed) pages to a
- * first-time visitor whose browser language hints AU/FR. Bots run no JS,
- * so they always see the global page. Returning users with an explicit
- * `locale` cookie are redirected on `/` by the inline script in BaseLayout.
+ * geo-redirect anti-pattern). Shows to a first-time visitor whose browser
+ * language points at the other locale tree. Bots run no JS. Returning users
+ * with an explicit `locale` cookie are swapped between the two locale homes
+ * by the inline script in BaseLayout.
  */
 ---
 
@@ -24,7 +24,7 @@ const t = useTranslations(locale);
   <div class="flex items-center gap-4">
     <p id="region-banner-text" class="flex-1 text-sm text-ink"></p>
     <div class="flex shrink-0 items-center gap-2">
-      <a id="region-banner-go" href="/" class="rounded-lg bg-grad-cta px-3 py-1.5 text-sm font-semibold text-white">{t('regionBanner.view')}</a>
+      <a id="region-banner-go" href="/au-en" class="rounded-lg bg-grad-cta px-3 py-1.5 text-sm font-semibold text-white">{t('regionBanner.view')}</a>
       <button id="region-banner-dismiss" type="button" aria-label={t('regionBanner.dismiss')} class="rounded-lg border border-line-strong px-2.5 py-1.5 text-sm text-ink-muted hover:text-ink">✕</button>
     </div>
   </div>
@@ -40,12 +40,15 @@ const t = useTranslations(locale);
     if (!el || el.dataset.regionInit) return;
     el.dataset.regionInit = '1';
     if (getCookie('locale') || getCookie('region-dismiss')) return;
-    if (/^\/(au-en|fr-fr)(\/|$)/.test(location.pathname)) return; // already regional
+    const onFr = /^\/fr-fr(\/|$)/.test(location.pathname);
+    const onAu = /^\/au-en(\/|$)/.test(location.pathname);
     const lang = (navigator.language || '').toLowerCase();
     let target: string | null = null;
     let label = '';
-    if (lang.startsWith('fr')) { target = '/fr-fr'; label = el.dataset.labelFr || 'France'; }
-    else if (lang === 'en-au' || lang.startsWith('en-au')) { target = '/au-en'; label = el.dataset.labelAu || 'Australia'; }
+    /* A French-language browser on the Australian tree, or an en-AU browser on the
+       French tree, gets a one-line suggestion. Never an automatic redirect. */
+    if (onAu && lang.startsWith('fr')) { target = '/fr-fr'; label = el.dataset.labelFr || 'France'; }
+    else if (onFr && lang.startsWith('en-au')) { target = '/au-en'; label = el.dataset.labelAu || 'Australia'; }
     if (!target) return;
 
     const go = el.querySelector('#region-banner-go') as HTMLAnchorElement | null;

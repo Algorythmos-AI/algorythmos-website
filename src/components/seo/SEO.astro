@@ -1,5 +1,5 @@
 ---
-import { asLocale, REGIONS, LOCALES, localizePath } from '@/i18n';
+import { asLocale, REGIONS, PREFIXED_LOCALES, localizePath } from '@/i18n';
 import { hasOgCard } from '@/seo/ogPages';
 import { ogImageUrl } from '@/seo/schema';
 
@@ -65,7 +65,7 @@ const robots = noindex || isPreview ? 'noindex, nofollow' : 'index, follow, max-
 <meta property="og:image:alt" content={fullTitle} />
 <meta property="og:site_name" content="Algorythmos" />
 <meta property="og:locale" content={REGIONS[locale].ogLocale} />
-{LOCALES.filter((l) => l !== locale).map((l) => <meta property="og:locale:alternate" content={REGIONS[l].ogLocale} />)}
+{PREFIXED_LOCALES.filter((l) => l !== locale).map((l) => <meta property="og:locale:alternate" content={REGIONS[l].ogLocale} />)}
 
 {/* Twitter */}
 <meta name="twitter:card" content="summary_large_image" />

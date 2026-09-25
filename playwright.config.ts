@@ -40,7 +40,8 @@ export default defineConfig({
     command: process.env.CI
       ? 'npx astro preview --port 4331 --ignore-lock'
       : 'npm run build && npx astro preview --port 4331 --ignore-lock',
-    url: E2E_ORIGIN,
+    /* Readiness probe hits a real page: `/` is a 404 now that only the locale trees are built. */
+    url: `${E2E_ORIGIN}/au-en`,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
   },

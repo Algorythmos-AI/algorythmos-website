@@ -114,7 +114,7 @@ test.describe('FR pages render fully in French', () => {
 
 test.describe('EN pages unaffected', () => {
   test('/services still renders the English catalogue', async ({ page }) => {
-    await page.goto('/services');
+    await page.goto('/au-en/services');
     const body = await page.locator('body').innerText();
     expect(body).toContain('Agentic Automation');
     expect(body).toContain('Autonomous workflows that act — safely.');
@@ -122,7 +122,7 @@ test.describe('EN pages unaffected', () => {
   });
 
   test('/ footer + consent are English', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/au-en');
     await expect(page.locator('footer')).toContainText('All rights reserved');
     await expect(page.locator('#consent')).toContainText('Decline');
   });

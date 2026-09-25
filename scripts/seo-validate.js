@@ -63,9 +63,8 @@ let warnings = 0;
 // Pages to validate. `path` is the canonical URL path (post-prefix); `file` is
 // the built HTML on disk. One blog slug is included as the dynamic-route smoke.
 // ---------------------------------------------------------------------------
-// The unprefixed `en` tree canonicalises to its /au-en twin (canonical consolidation).
+// Only /au-en and /fr-fr are built; legacy root URLs 308 to /au-en (vercel.json).
 const PAGES = [
-  { label: 'Home (EN root → au-en)', file: 'index.html', canonicalPath: '/au-en' },
   { label: 'AU (au-en)', file: join('au-en', 'index.html'), canonicalPath: '/au-en' },
   { label: 'FR (fr-fr)', file: join('fr-fr', 'index.html'), canonicalPath: '/fr-fr' },
   {
@@ -469,12 +468,9 @@ function validateAllPages() {
       const urlPath = urlPathRaw === '/' ? '/' : urlPathRaw.replace(/\/$/, '');
       const standalone = /\/(ai-consultancy-sydney|conseil-en-ia-paris)$/.test(urlPath);
       if (isRootTree && !standalone) {
-        // Unprefixed pages must canonicalise to their /au-en twin — never to themselves.
-        const twin = `${EXPECTED_DOMAIN}/au-en${urlPath === '/' ? '' : urlPath}`;
-        if (canonical.replace(/\/$/, '') !== twin) {
-          log.error(`${where}: root page must canonicalise to ${twin}, got ${canonical}`);
-          errors++;
-        }
+        // The unprefixed tree is no longer built; any root HTML page is a regression.
+        log.error(`${where}: unexpected root-tree page (only /au-en and /fr-fr are built)`);
+        errors++;
       } else {
         const prev = seenCanonicals.get(canonical);
         if (prev) {
@@ -609,7 +605,7 @@ function validateSeoFeatures() {
 
   // 1. FAQPage coverage
   const SERVICE_SLUGS = ['agentic-automation', 'document-intelligence', 'sql-dashboards', 'mlops-cicd', 'ai-websites'];
-  const PREFIXES = ['', 'au-en', 'fr-fr'];
+  const PREFIXES = ['au-en', 'fr-fr'];
   const faqPages = [];
   for (const slug of SERVICE_SLUGS) {
     for (const pre of PREFIXES) faqPages.push(join(...[pre, 'services', slug, 'index.html'].filter(Boolean)));
@@ -637,7 +633,7 @@ function validateSeoFeatures() {
 
   // 2. sameAs ⇄ business.ts profiles, and footer reciprocity
   const profiles = businessProfiles();
-  const homeAbs = join(DIST, 'index.html');
+  const homeAbs = join(DIST, 'au-en', 'index.html');
   if (profiles.length && existsSync(homeAbs)) {
     const homeHtml = readFileSync(homeAbs, 'utf-8');
     const org = collectLdNodes(homeHtml).find((n) => n['@type'] === 'Organization');
@@ -658,7 +654,7 @@ function validateSeoFeatures() {
       log.success('Every profile is reciprocally linked in the footer');
     }
   } else {
-    log.error('Could not read profiles from business.ts or dist/index.html');
+    log.error('Could not read profiles from business.ts or dist/au-en/index.html');
     errors++;
   }
 

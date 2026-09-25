@@ -29,7 +29,7 @@ function feedItems(locale: Locale) {
 /** Full RSS 2.0 document for a locale as a Response (Content-Type set). */
 export function rssFeed(locale: Locale): Response {
   const t = useTranslations(locale);
-  const selfPath = localizePath(locale, '/rss.xml');
+  const selfPath = locale === 'fr-fr' ? '/fr-fr/rss.xml' : '/rss.xml';
   const blogUrl = `${SITE}${localizePath(locale, '/blog')}`;
   const lang = locale === 'fr-fr' ? 'fr-FR' : locale === 'au-en' ? 'en-AU' : 'en';
 

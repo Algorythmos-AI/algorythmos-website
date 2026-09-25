@@ -67,12 +67,14 @@ const t = useTranslations(locale);
       })();
     </script>
     <script is:inline>
-      /* Returning visitor with an explicit region choice → redirect home only. Bots (no JS) stay global. */
+      /* Returning visitor with an explicit region choice → swap between the two locale
+         HOMES only (never deeper pages, never for bots — they run no JS). */
       (function () {
         try {
-          if (location.pathname !== '/') return;
+          var p = location.pathname.replace(/\/$/, '');
+          if (p !== '/au-en' && p !== '/fr-fr') return;
           var m = document.cookie.match(/(?:^|; )locale=(au-en|fr-fr)/);
-          if (m) location.replace('/' + m[1]);
+          if (m && '/' + m[1] !== p) location.replace('/' + m[1]);
         } catch (e) {}
       })();
     </script>
