@@ -612,6 +612,8 @@ function validateSeoFeatures() {
   }
   faqPages.push(join('au-en', 'ai-consultancy-sydney', 'index.html'));
   faqPages.push(join('fr-fr', 'conseil-en-ia-paris', 'index.html'));
+  // Evidence reports with an FAQ block
+  for (const pre of PREFIXES) faqPages.push(join(pre, 'case-studies', 'port-botany-ai-ml', 'index.html'));
 
   let faqOk = 0;
   for (const rel of faqPages) {

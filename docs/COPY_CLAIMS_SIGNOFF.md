@@ -76,6 +76,16 @@ approach is designed to deliver, not audited client results" (EN/FR). The homepa
       "by appointment" — approved 25 Sep 2026. Paris wording left unchanged by owner decision.
 - [x] Founding year on site = 2026 (registration 3 Aug 2026).
 
+## 3d. Port Botany FAQ block and the freight-forwarder post (26 Sep 2026)
+
+- FAQ answers on `/case-studies/port-botany-ai-ml` restate facts already sourced in §3a (NSW Ports
+  lease and terminal operators; mandatory standards since 2010, updated 2021; OCR at gates and the
+  MEDLOG park; Patrick automation; published ML studies). No new figures.
+- Blog post `/blog/port-botany-document-flows` reuses only §3a figures (2.8M TEU, 80% within 40 km,
+  ~$49M/yr empty-container cost). Process descriptions (what is extracted, which control stays human)
+  are Algorythmos's own delivery approach, not client results.
+- [x] Reviewed for consistency with the sources on 26 Sep 2026.
+
 ## 4. Homepage + global positioning (`/`, footer, meta)
 
 - [ ] **"AI consultancy for SMEs in Sydney & Paris"** — accurate descriptor?

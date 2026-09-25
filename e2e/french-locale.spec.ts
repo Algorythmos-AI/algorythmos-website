@@ -30,6 +30,7 @@ const FR_ROUTES = [
   ...CASE_STUDY_SLUGS.map((s) => `/fr-fr/case-studies/${s}`),
   '/fr-fr/pricing',
   '/fr-fr/blog',
+  '/fr-fr/blog/port-botany-document-flows',
   '/fr-fr/about',
   '/fr-fr/contact',
 ];

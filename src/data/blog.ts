@@ -49,6 +49,20 @@ export interface BlogPost {
 
 export const blog: BlogPost[] = [
   {
+    slug: 'port-botany-document-flows',
+    postIndex: 15,
+    date: '2026-09-26',
+    body: [
+      { kind: 'prose', base: 'content.0', paragraphs: [0, 1] },
+      { kind: 'prose', base: 'content.1', paragraphs: [0], list: [0, 1, 2] },
+      { kind: 'prose', base: 'content.2', paragraphs: [0], list: [0, 1, 2] },
+      { kind: 'prose', base: 'content.3', paragraphs: [0], list: [0, 1, 2] },
+      { kind: 'prose', base: 'content.4', paragraphs: [0], list: [0, 1, 2] },
+      { kind: 'prose', base: 'content.5', paragraphs: [0], list: [0, 1, 2] },
+      { kind: 'prose', base: 'content.6', paragraphs: [0, 1] },
+    ],
+  },
+  {
     slug: 'choosing-ai-consultancy-sydney',
     postIndex: 14,
     date: '2026-07-12',

@@ -108,6 +108,23 @@ const note = getDict(locale)[`caseStudyDetail.studies.${slug}.note`] ?? '';
 const badge = getDict(locale)[`caseStudyDetail.studies.${slug}.badge`] ?? t('nav.caseStudies');
 
 /** Optional cited sources (`sources.N.label` + `sources.N.url`), read until the first gap. */
+/** Optional FAQ (`faqs.N.{question,answer}`), rendered visibly and emitted as FAQPage schema. */
+const faqs: { q: string; a: string }[] = [];
+for (let i = 0; i < 12; i++) {
+  const q = getDict(locale)[`caseStudyDetail.studies.${slug}.faqs.${i}.question`];
+  const a = getDict(locale)[`caseStudyDetail.studies.${slug}.faqs.${i}.answer`];
+  if (!q || !a) break;
+  faqs.push({ q, a });
+}
+const faqLd = faqs.length
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      '@id': `${abs(path)}#faq`,
+      mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+    }
+  : null;
+
 const sources: { label: string; url: string }[] = [];
 for (let i = 0; i < 20; i++) {
   const label = getDict(locale)[`caseStudyDetail.studies.${slug}.sources.${i}.label`];
@@ -117,7 +134,7 @@ for (let i = 0; i < 20; i++) {
 }
 ---
 
-<BaseLayout title={study.title} description={study.meta} path={path} ogType="article" image={ogImg} jsonLd={[articleLd, crumbs]}>
+<BaseLayout title={study.title} description={study.meta} path={path} ogType="article" image={ogImg} jsonLd={[articleLd, crumbs, ...(faqLd ? [faqLd] : [])]}>
   <Breadcrumbs items={crumbItems} />
   <PageHeader eyebrow={badge} title={study.title} lead={study.meta} />
 
@@ -211,6 +228,23 @@ for (let i = 0; i < 20; i++) {
               <Chart client:visible type={c.type} data={c.data} title={c.title} height={340} />
             </div>
           </figure>
+        ))}
+      </div>
+    </section>
+  )}
+
+  {faqs.length > 0 && (
+    <section class="container-page pb-4">
+      <h2 data-reveal class="text-h3 font-semibold text-ink">{t('caseStudyDetail.sections.faq')}</h2>
+      <div data-reveal class="mt-6 max-w-measure divide-y divide-line overflow-hidden rounded-2xl border border-line glass">
+        {faqs.map((f) => (
+          <details class="group">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-4 p-6 text-base font-semibold text-ink [&::-webkit-details-marker]:hidden">
+              <span>{f.q}</span>
+              <span aria-hidden="true" class="shrink-0 text-ink-subtle transition-transform group-open:rotate-45">+</span>
+            </summary>
+            <p class="px-6 pb-6 text-ink-muted">{f.a}</p>
+          </details>
         ))}
       </div>
     </section>

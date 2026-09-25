@@ -3,10 +3,19 @@
  * Honest social proof — sectors Algorythmos actually serves (no client names).
  * Grounded in the case studies + stated industry focus; labels are i18n (EN/FR).
  */
-import { asLocale, useTranslations } from '@/i18n';
+import { asLocale, useTranslations, localizePath } from '@/i18n';
 const locale = asLocale(Astro.currentLocale);
 const t = useTranslations(locale);
 const sectors = ['healthcare', 'finance', 'manufacturing', 'retail', 'logistics', 'mining'] as const;
+/** Sector → the case study that proves it (chips without proof stay plain text). */
+const PROOF: Partial<Record<(typeof sectors)[number], string>> = {
+  healthcare: 'healthcare-burden',
+  finance: 'financial-compliance',
+  manufacturing: 'manufacturing-docs',
+  retail: 'retail-sql',
+  logistics: 'port-botany-ai-ml',
+};
+const chipClass = 'inline-flex items-center gap-2.5 rounded-full border border-line glass px-4 py-2 text-sm font-medium text-ink';
 ---
 
 <section class="border-y border-line bg-surface-2/30">
@@ -19,9 +28,23 @@ const sectors = ['healthcare', 'finance', 'manufacturing', 'retail', 'logistics'
     </p>
     <ul data-reveal style="--reveal-delay: 120ms" class="mt-8 flex flex-wrap items-center justify-center gap-3">
       {sectors.map((s) => (
-        <li class="inline-flex items-center gap-2.5 rounded-full border border-line glass px-4 py-2 text-sm font-medium text-ink">
-          <span class="h-1.5 w-1.5 rounded-full bg-grad-cta" aria-hidden="true"></span>
-          {t(`industries.${s}`)}
+        <li>
+          {PROOF[s] ? (
+            <a
+              href={localizePath(locale, `/case-studies/${PROOF[s]}`)}
+              class={`${chipClass} transition-colors hover:border-brand hover:text-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-bg`}
+              aria-label={t('home.industries.proofLabel', { sector: t(`industries.${s}`) })}
+            >
+              <span class="h-1.5 w-1.5 rounded-full bg-grad-cta" aria-hidden="true"></span>
+              {t(`industries.${s}`)}
+              <span aria-hidden="true">→</span>
+            </a>
+          ) : (
+            <span class={chipClass}>
+              <span class="h-1.5 w-1.5 rounded-full bg-grad-cta" aria-hidden="true"></span>
+              {t(`industries.${s}`)}
+            </span>
+          )}
         </li>
       ))}
     </ul>
