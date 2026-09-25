@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { orgGraph, professionalService, breadcrumb, ogImageUrl } from './schema';
+import { orgGraph, professionalService, breadcrumb, ogImageUrl, isoDateTime } from './schema';
 import { BUSINESS, SAME_AS, regionPostalAddress, regionAddressLine } from '@/data/business';
 
 describe('orgGraph', () => {
@@ -85,5 +85,17 @@ describe('helpers', () => {
   it('ogImageUrl normalizes paths to the /og/ key space', () => {
     expect(ogImageUrl('/')).toBe('https://algorythmos.com/og/index.png');
     expect(ogImageUrl('/fr-fr/blog/gdpr-ai')).toBe('https://algorythmos.com/og/fr-fr/blog/gdpr-ai.png');
+  });
+});
+
+describe('isoDateTime', () => {
+  it('adds 09:00 Sydney time with the AEST offset in winter', () => {
+    expect(isoDateTime('2026-07-15')).toBe('2026-07-15T09:00:00+10:00');
+  });
+  it('uses the AEDT offset in summer', () => {
+    expect(isoDateTime('2026-01-15')).toBe('2026-01-15T09:00:00+11:00');
+  });
+  it('leaves a full datetime untouched', () => {
+    expect(isoDateTime('2026-09-25T10:00:00Z')).toBe('2026-09-25T10:00:00Z');
   });
 });
