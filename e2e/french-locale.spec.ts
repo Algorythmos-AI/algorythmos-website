@@ -39,7 +39,7 @@ const FR_ROUTES = [
 const ENGLISH_SENTINELS = [
   'Autonomous workflows that act',
   'All rights reserved',
-  'Why teams choose',
+  'Why clients choose',
   'Read article',
   'Frequently asked questions',
   'Structured data from messy documents',
@@ -67,8 +67,8 @@ test.describe('FR pages render fully in French', () => {
   test('/fr-fr/services cards are French', async ({ page }) => {
     await page.goto('/fr-fr/services');
     const body = await page.locator('body').innerText();
-    expect(body).toContain('Automatisation Agentique');
-    expect(body).toContain('Intelligence Documentaire');
+    expect(body).toContain('Automatisation agentique');
+    expect(body).toContain('Intelligence documentaire');
     expect(body).toContain('En savoir plus');
   });
 
@@ -77,7 +77,7 @@ test.describe('FR pages render fully in French', () => {
     const body = await page.locator('body').innerText();
     expect(body).toContain('Ce qui est inclus');
     expect(body).toContain('Points de validation humaine');
-    await expect(page.locator('h1')).toContainText('Automatisation Agentique');
+    await expect(page.locator('h1')).toContainText('Automatisation agentique');
   });
 
   test('consent banner is French on /fr-fr', async ({ page }) => {
@@ -98,7 +98,7 @@ test.describe('FR pages render fully in French', () => {
 
   test('translated evidence case study renders French title and body', async ({ page }) => {
     await page.goto('/fr-fr/case-studies/healthcare-burden');
-    await expect(page.locator('h1')).toContainText('Déconnexion Numérique');
+    await expect(page.locator('h1')).toContainText('déconnexion numérique');
     const body = await page.locator('body').innerText();
     expect(body).toContain('Défi');
   });
@@ -108,7 +108,7 @@ test.describe('FR pages render fully in French', () => {
     const blocks = await page.locator('script[type="application/ld+json"]').allTextContents();
     const service = blocks.map((b) => JSON.parse(b)).find((b) => b['@type'] === 'Service');
     expect(service, 'Service JSON-LD block missing').toBeTruthy();
-    expect(service.name).toBe('Automatisation Agentique');
+    expect(service.name).toBe('Automatisation agentique');
     expect(service.description).toContain('Nous concevons');
   });
 });

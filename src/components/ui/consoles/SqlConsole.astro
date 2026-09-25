@@ -22,7 +22,9 @@ const kpis = [
 
 /* bar heights out of 332px plot area (Sep..May) */
 const bars = [180, 204, 162, 230, 252, 212, 278, 302, 332];
-const months = ['Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May'];
+/* Month labels in the page's language, from Intl rather than a hard-coded English list. */
+const monthFmt = new Intl.DateTimeFormat(locale === 'fr-fr' ? 'fr-FR' : 'en-AU', { month: 'short', timeZone: 'UTC' });
+const months = [8, 9, 10, 11, 0, 1, 2, 3, 4].map((m) => monthFmt.format(new Date(Date.UTC(2025, m, 15))));
 
 const metrics = ['revenue', 'net_revenue_retention', 'gross_margin', 'active_accounts'];
 

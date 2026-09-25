@@ -36,7 +36,8 @@
  *
  * Advisory — FR Title Case: short French strings written in English Title Case
  *   ("En Savoir Plus") are listed as warnings; proper nouns are allowlisted in
- *   scripts/i18n-allowlist.json → "titleCaseOk".
+ *   scripts/i18n-allowlist.json → "titleCaseOk" (words) and "titleCasePhrasesOk"
+ *   (multi-word names such as "Core Web Vitals").
  *
  * Run: npm run i18n:check
  */
@@ -317,21 +318,40 @@ function duplicateKeys(path) {
 }
 
 /**
- * Short FR strings in English Title Case: two or more capitalised non-initial
- * words, ignoring allowlisted proper nouns and acronyms (all caps).
+ * Short FR strings in English Title Case: any capitalised word after the first,
+ * except proper nouns and brands (allowlisted), acronyms (two capitals in one
+ * word: IA, SQL, MLOps) and words that start a new sentence or segment (after
+ * . ? ! • · | or a list number). Keys allowlisted as identical EN/FR (proper
+ * names such as "Australian Privacy Principles") are skipped.
  */
-function frTitleCase(frFlat, titleCaseOk) {
+function frTitleCase(frFlat, titleCaseOk, identicalOk, phrasesOk = []) {
     const ok = new Set(titleCaseOk);
     const out = [];
     for (const [key, raw] of Object.entries(frFlat)) {
-        if (typeof raw !== 'string' || /<|\{/.test(raw)) continue;
-        const words = raw.trim().split(/\s+/);
-        if (words.length < 2 || words.length > 8) continue;
-        const caps = words
-            .slice(1)
-            .map((w) => w.replace(/^[«"'(]+|[»"'),.:;!?]+$/g, ''))
-            .filter((w) => /^[A-ZÀ-ÖØ-Þ][a-zà-öø-ÿ'’-]{2,}$/.test(w) && !ok.has(w));
-        if (caps.length >= 2) out.push(`${key} = ${raw.trim()}`);
+        if (typeof raw !== 'string' || identicalOk.has(key) || /<|\{/.test(raw)) continue;
+        // Multi-word proper names ("Core Web Vitals") are removed before the word scan.
+        const text = phrasesOk.reduce((acc, ph) => acc.split(ph).join('X'), raw.trim());
+        const words = text.split(/\s+/);
+        if (words.length < 2 || words.length > 9) continue;
+        let seenWord = false;
+        let prev = '';
+        const caps = [];
+        for (const w of words) {
+            const core = w.replace(/^[«"'([]+|[»"'),.:;!?\]]+$/g, '').replace(/^(?:[dlsnjmtc]|qu)['’]/i, '');
+            const boundary = /[.?!]$|^[•·|]$|^\d+\.$/.test(prev);
+            if (!seenWord) {
+                if (/\p{L}/u.test(w)) seenWord = true;
+            } else if (
+                !boundary &&
+                /^[A-ZÀ-ÖØ-ÞŒ][a-zà-öø-ÿœ'’-]+$/.test(core) &&
+                !ok.has(core) &&
+                !core.split('-').some((part) => /[A-ZÀ-Þ].*[A-ZÀ-Þ]/.test(part))
+            ) {
+                caps.push(core);
+            }
+            prev = w;
+        }
+        if (caps.length) out.push(`${key} = ${raw.trim()}   [${caps.join(', ')}]`);
     }
     return out;
 }
@@ -458,7 +478,7 @@ function runCheck() {
     const claims = claimFindings([['EN', enFlat], ['FR', frFlat], ['AU', auFlat]], allowlist.claimOk ?? []);
 
     // FR Title Case — advisory
-    const titleCase = frTitleCase(frFlat, allowlist.titleCaseOk ?? []);
+    const titleCase = frTitleCase(frFlat, allowlist.titleCaseOk ?? [], identicalOk, allowlist.titleCasePhrasesOk ?? []);
 
     // Report results
     let hasIssues = false;
