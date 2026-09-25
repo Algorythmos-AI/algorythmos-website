@@ -27,20 +27,27 @@ const contact = localizePath(locale, '/contact');
 
 <header
   data-header
-  class="group sticky top-0 z-[var(--z-nav)] border-b border-line/80 bg-bg/80 backdrop-blur-xl transition-[background-color,border-color,box-shadow] duration-300 ease-smooth data-[scrolled]:border-line data-[scrolled]:bg-bg/95 data-[scrolled]:shadow-e2"
+  class="group sticky top-0 z-[var(--z-nav)] border-b border-line/80 transition-[border-color,box-shadow] duration-300 ease-smooth data-[scrolled]:border-line data-[scrolled]:shadow-e2"
 >
-  <div class="container-page flex h-16 items-center justify-between gap-6 transition-[height] duration-300 ease-smooth group-data-[scrolled]:h-14">
-    <a href={home} class="group/logo flex items-center gap-2.5 text-lg font-bold tracking-tight text-ink" aria-label={t('ui.homeLink')}>
+  {/* The frosted background lives on its own layer, never on <header> itself: a
+      backdrop-filter on an ancestor makes GPU-composited Chromium paint the
+      overflowing mobile menu see-through (seen on phones, 26 Sep 2026). */}
+  <div
+    aria-hidden="true"
+    class="header-backdrop pointer-events-none absolute inset-0 -z-10 bg-bg/80 backdrop-blur-xl transition-[background-color] duration-300 ease-smooth group-data-[scrolled]:bg-bg/95"
+  ></div>
+  <div class="container-page flex h-16 items-center justify-between gap-3 transition-[height] sm:gap-6 duration-300 ease-smooth group-data-[scrolled]:h-14">
+    <a href={home} class="group/logo flex shrink-0 items-center gap-2.5 whitespace-nowrap text-lg font-bold tracking-tight text-ink" aria-label={t('ui.homeLink')}>
       <img src="/logo-mark.webp" alt="" aria-hidden="true" width="54" height="64" class="h-8 w-auto transition-transform duration-300 ease-bounce-soft group-hover/logo:scale-105" />
       <span>Algoryth<span class="text-gradient-brand">mos</span></span>
     </a>
 
-    <nav class="nav-spotlight relative hidden items-center gap-1 md:flex" aria-label="Primary" data-magic-nav>
+    <nav class="nav-spotlight relative hidden items-center gap-1 nav:flex" aria-label="Primary" data-magic-nav>
       {nav.map((item) => (
         <a
           href={localizePath(locale, item.path)}
           class:list={[
-            'nav-link rounded-md px-3 py-2 text-[13px] font-semibold uppercase tracking-[0.08em] transition-colors hover:text-ink',
+            'nav-link whitespace-nowrap rounded-md px-3 py-2 text-[13px] font-semibold uppercase tracking-[0.08em] transition-colors hover:text-ink',
             isActive(item.path) ? 'text-ink' : 'text-ink-muted',
           ]}
           aria-current={isActive(item.path) ? 'page' : undefined}
@@ -52,17 +59,18 @@ const contact = localizePath(locale, '/contact');
       <span class="magic-line" aria-hidden="true"></span>
     </nav>
 
-    <div class="flex items-center gap-2">
-      <div class="hidden lg:block"><LocaleSwitcher compact /></div>
-      <MotionToggle />
+    <div class="flex shrink-0 items-center gap-2">
+      <div class="hidden nav:block"><LocaleSwitcher compact /></div>
+      {/* Below sm the motion toggle moves into the menu so the row fits at 320px */}
+      <MotionToggle class="hidden sm:inline-flex" />
       <ThemeToggle />
-      <Button href={contact} size="md" class="cta-arrow hidden transition-transform hover:-translate-y-px sm:inline-flex">
+      <Button href={contact} size="md" class="cta-arrow hidden whitespace-nowrap transition-transform hover:-translate-y-px sm:inline-flex">
         {t('nav.contactUs')}
         <span class="cta-arrow-glyph" aria-hidden="true">→</span>
       </Button>
 
       {/* Mobile disclosure menu — no JS required */}
-      <details data-mobile-menu class="md:hidden [&_svg.close]:hidden [&[open]_svg.open]:hidden [&[open]_svg.close]:block">
+      <details data-mobile-menu class="nav:hidden [&_svg.close]:hidden [&[open]_svg.open]:hidden [&[open]_svg.close]:block">
         <summary
           class="flex h-11 w-11 cursor-pointer list-none items-center justify-center rounded-lg border border-line text-ink-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-bg [&::-webkit-details-marker]:hidden"
           aria-label={t('ui.openMenu')}
@@ -72,13 +80,16 @@ const contact = localizePath(locale, '/contact');
           <svg class="open h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
           <svg class="close h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
         </summary>
-        <div class="menu-panel absolute inset-x-0 top-16 border-b border-line bg-bg/95 backdrop-blur-xl group-data-[scrolled]:top-14">
+        <div class="menu-panel absolute inset-x-0 top-full max-h-[calc(100svh-4rem)] overflow-y-auto overscroll-contain border-b border-line bg-bg shadow-e2">
           <nav class="container-page flex flex-col gap-1 py-4" aria-label="Mobile">
             {nav.map((item) => (
               <a href={localizePath(locale, item.path)} class="rounded-md px-3 py-3 text-base font-medium text-ink-muted hover:bg-surface-2 hover:text-ink" aria-current={isActive(item.path) ? 'page' : undefined}>{t(item.key)}</a>
             ))}
             <Button href={contact} size="lg" class="mt-2">{t('nav.contactUs')}</Button>
-            <div class="mt-4 border-t border-line pt-4"><LocaleSwitcher /></div>
+            <div class="mt-4 flex items-center justify-between gap-3 border-t border-line pt-4">
+              <LocaleSwitcher />
+              <MotionToggle class="sm:hidden" />
+            </div>
           </nav>
         </div>
       </details>
@@ -132,7 +143,7 @@ const contact = localizePath(locale, '/contact');
     const active = nav.querySelector('a[aria-current="page"]');
 
     const moveTo = (el: Element | null, rest: boolean) => {
-      /* Nav is display:none below md — offsetWidth 0; skip until it's laid out */
+      /* Nav is display:none below the `nav` breakpoint — offsetWidth 0; skip until it's laid out */
       if (!(el instanceof HTMLElement) || !el.offsetWidth) {
         line.style.opacity = '0';
         return;
@@ -199,6 +210,11 @@ const contact = localizePath(locale, '/contact');
     const onClick = (e: MouseEvent) => {
       if (details.open && !details.contains(e.target as Node)) details.open = false;
     };
+    /* Tabbing out of the open menu closes it, so it never hides the page behind it */
+    details.addEventListener('focusout', (e) => {
+      const next = (e as FocusEvent).relatedTarget as Node | null;
+      if (details.open && next && !details.contains(next)) details.open = false;
+    });
     document.addEventListener('keydown', onKey);
     document.addEventListener('click', onClick);
     document.addEventListener(
