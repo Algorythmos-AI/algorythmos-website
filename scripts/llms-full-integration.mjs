@@ -60,17 +60,16 @@ export default function llmsFull() {
         const files = walk(distPath)
           .filter((p) => {
             const r = relative(distPath, p).replace(/\\/g, '/');
-            // English-canonical pages only; skip locale mirrors, the OG image route, and 404.
-            return !r.startsWith('au-en/') && !r.startsWith('fr-fr/') && !r.startsWith('og/') && r !== '404.html';
+            // The two indexable locale trees (the unprefixed tree canonicalises to /au-en).
+            return (r.startsWith('au-en/') || r.startsWith('fr-fr/')) && !r.startsWith('og/');
           })
           .sort();
 
         const out = [
           '# Algorythmos — Full Site Content (for LLMs)',
           '',
-          '> Full text of every primary page on https://algorythmos.com, concatenated for AI ingestion in a single fetch.',
+          '> Full text of every page on https://algorythmos.com — English (/au-en) then French (/fr-fr) — concatenated for AI ingestion in a single fetch.',
           '> Curated link index: https://algorythmos.com/llms.txt · Sitemap: https://algorythmos.com/sitemap-index.xml',
-          '> Locale variants under /au-en (English) and /fr-fr (French) mirror this content.',
           '',
           '---',
           '',

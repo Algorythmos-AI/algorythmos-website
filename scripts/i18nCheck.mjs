@@ -18,7 +18,7 @@
  *   - String literals in copy-free data modules (services, case studies,
  *     charts) — these carry structure + i18n key references only.
  *
- * Tier 4 — SEO length lint on meta titles/descriptions (warning only).
+ * Tier 4 — SEO length gate on meta titles/descriptions (FATAL).
  *
  * Run: npm run i18n:check
  */
@@ -37,7 +37,7 @@ const FR_PATH = join(ROOT, 'src/i18n/ui/fr.fr.json');
 const AU_PATH = join(ROOT, 'src/i18n/ui/en.au.json');
 const ALLOWLIST_PATH = join(ROOT, 'scripts/i18n-allowlist.json');
 
-// SEO length guidance (warning tier — surfaced but non-fatal).
+// SEO length gate (fatal): titles ≤ 60, descriptions 70–160 chars.
 // Scoped to real <title>/<meta name=description> keys; article headlines and
 // chart titles also end in ".title" but are not SEO titles.
 const TITLE_MAX = 60;
@@ -381,9 +381,10 @@ function runCheck() {
         staleAllowlist.slice(0, 10).forEach(k => console.log(`   - ${k}`));
     }
 
-    // SEO length warnings (non-fatal)
+    // SEO length gate (fatal)
     if (lengthWarnings.length > 0) {
-        console.log(`\n⚠️  SEO length warnings (${lengthWarnings.length}):\n`);
+        hasIssues = true;
+        console.log(`\n❌ SEO length violations (${lengthWarnings.length}) — titles ≤ ${TITLE_MAX}, descriptions ${DESC_MIN}–${DESC_MAX} chars:\n`);
         lengthWarnings.slice(0, 20).forEach(w => console.log(`   - ${w}`));
         if (lengthWarnings.length > 20) {
             console.log(`   ... and ${lengthWarnings.length - 20} more`);
@@ -400,7 +401,7 @@ function runCheck() {
     console.log(`   Missing in EN: ${missingInEn.length}`);
     console.log(`   Untranslated (fatal): ${identical.length} (allowlisted identical: ${identicalOk.size})`);
     console.log(`   Hardcoded copy in source (fatal): ${sourceFindings.length}`);
-    console.log(`   SEO length warnings: ${lengthWarnings.length}`);
+    console.log(`   SEO length violations (fatal): ${lengthWarnings.length}`);
 
     if (!hasIssues) {
         console.log('\n✅ All translations are in sync!\n');

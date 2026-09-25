@@ -68,6 +68,8 @@ const articleLd = {
   ...(study.keywords && study.keywords.length ? { keywords: study.keywords.join(', ') } : {}),
   author: { '@id': ORG_ID },
   publisher: { '@id': ORG_ID },
+  datePublished: cs.date,
+  dateModified: cs.updatedAt ?? cs.date,
   inLanguage: locale === 'fr-fr' ? 'fr' : 'en',
   image: ogImg,
   url: abs(path),
@@ -115,7 +117,7 @@ for (let i = 0; i < 20; i++) {
 }
 ---
 
-<BaseLayout title={`${study.title} — Algorythmos`} description={study.meta} path={path} ogType="article" image={ogImg} jsonLd={[articleLd, crumbs]}>
+<BaseLayout title={study.title} description={study.meta} path={path} ogType="article" image={ogImg} jsonLd={[articleLd, crumbs]}>
   <Breadcrumbs items={crumbItems} />
   <PageHeader eyebrow={badge} title={study.title} lead={study.meta} />
 

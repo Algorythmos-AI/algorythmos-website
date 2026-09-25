@@ -9,7 +9,7 @@
  *   - a <meta name="description">
  *   - exactly one <link rel="canonical"> on https://algorythmos.com with the
  *     correct per-locale prefix
- *   - 4 hreflang alternates, including x-default
+ *   - 3 hreflang alternates (en-AU, fr-FR, x-default)
  *   - og:title / og:description / og:url / og:image
  *     (og:image = brand card /Algorythmos.png, or a per-page /og/*.png)
  *   - twitter:card
@@ -63,21 +63,24 @@ let warnings = 0;
 // Pages to validate. `path` is the canonical URL path (post-prefix); `file` is
 // the built HTML on disk. One blog slug is included as the dynamic-route smoke.
 // ---------------------------------------------------------------------------
+// The unprefixed `en` tree canonicalises to its /au-en twin (canonical consolidation).
 const PAGES = [
-  { label: 'Home (EN)', file: 'index.html', canonicalPath: '/' },
+  { label: 'Home (EN root → au-en)', file: 'index.html', canonicalPath: '/au-en' },
   { label: 'AU (au-en)', file: join('au-en', 'index.html'), canonicalPath: '/au-en' },
   { label: 'FR (fr-fr)', file: join('fr-fr', 'index.html'), canonicalPath: '/fr-fr' },
   {
-    label: 'Service: mlops-cicd',
-    file: join('services', 'mlops-cicd', 'index.html'),
-    canonicalPath: '/services/mlops-cicd',
+    label: 'Service: mlops-cicd (au-en)',
+    file: join('au-en', 'services', 'mlops-cicd', 'index.html'),
+    canonicalPath: '/au-en/services/mlops-cicd',
   },
   {
-    label: 'Blog post: agentic-ai',
-    file: join('blog', 'agentic-ai', 'index.html'),
-    canonicalPath: '/blog/agentic-ai',
+    label: 'Blog post: agentic-ai (fr-fr)',
+    file: join('fr-fr', 'blog', 'agentic-ai', 'index.html'),
+    canonicalPath: '/fr-fr/blog/agentic-ai',
   },
 ];
+/** Locale trees that are indexed (self-canonical); everything else canonicalises to /au-en. */
+const HREFLANG_COUNT = 3; // en-AU, fr-FR, x-default
 
 // ---------------------------------------------------------------------------
 // Extraction helpers
@@ -194,14 +197,14 @@ function validatePage(page) {
     }
   }
 
-  // 4. 4 hreflang alternates incl. x-default
+  // 4. hreflang alternates: en-AU + fr-FR + x-default
   const hreflangs = extractHreflangs(html);
   const hasXDefault = hreflangs.includes('x-default');
-  if (hreflangs.length === 4 && hasXDefault) {
-    log.success(`4 hreflang alternates incl. x-default: [${hreflangs.join(', ')}]`);
+  if (hreflangs.length === HREFLANG_COUNT && hasXDefault) {
+    log.success(`${HREFLANG_COUNT} hreflang alternates incl. x-default: [${hreflangs.join(', ')}]`);
   } else {
     log.error(
-      `Expected 4 hreflang alternates incl. x-default, got ${hreflangs.length}: [${hreflangs.join(', ')}]`
+      `Expected ${HREFLANG_COUNT} hreflang alternates incl. x-default, got ${hreflangs.length}: [${hreflangs.join(', ')}]`
     );
     errors++;
   }
@@ -401,8 +404,8 @@ function validateStructuredData() {
 //   - unique title + canonical across the whole site (duplicate = locale merge bug)
 //   - og:image points at a file that actually exists in dist/
 //   - og:locale matches the URL locale prefix
-//   - hreflang: exactly 4 incl. x-default and self, OR none (standalone pages)
-//   - every sitemap URL is its own canonical (no canonicalized-away URLs listed)
+//   - hreflang: exactly 3 (en-AU, fr-FR, x-default) incl. self on indexed trees, OR none (standalone)
+//   - every sitemap URL is its own canonical; root (`en`) pages canonicalise to /au-en and are not listed
 // ---------------------------------------------------------------------------
 const OG_LOCALE_BY_PREFIX = { 'au-en': 'en_AU', 'fr-fr': 'fr_FR' };
 
@@ -456,19 +459,31 @@ function validateAllPages() {
 
     // canonical
     const canonicals = extractCanonicals(html);
+    const isRootTree = !/^(au-en|fr-fr)\//.test(rel) && !/^(au-en|fr-fr)$/.test(rel.replace(/\/index\.html$/, ''));
     if (canonicals.length !== 1 || !canonicals[0].startsWith(EXPECTED_DOMAIN)) {
       log.error(`${where}: expected one canonical on ${EXPECTED_DOMAIN}, got [${canonicals.join(', ')}]`);
       errors++;
     } else {
       const canonical = canonicals[0];
-      const prev = seenCanonicals.get(canonical);
-      if (prev) {
-        log.error(`${where}: duplicate canonical also used by ${prev}: ${canonical}`);
-        errors++;
+      const urlPathRaw = '/' + rel.replace(/index\.html$/, '').replace(/\.html$/, '').replace(/\/$/, '');
+      const urlPath = urlPathRaw === '/' ? '/' : urlPathRaw.replace(/\/$/, '');
+      const standalone = /\/(ai-consultancy-sydney|conseil-en-ia-paris)$/.test(urlPath);
+      if (isRootTree && !standalone) {
+        // Unprefixed pages must canonicalise to their /au-en twin — never to themselves.
+        const twin = `${EXPECTED_DOMAIN}/au-en${urlPath === '/' ? '' : urlPath}`;
+        if (canonical.replace(/\/$/, '') !== twin) {
+          log.error(`${where}: root page must canonicalise to ${twin}, got ${canonical}`);
+          errors++;
+        }
+      } else {
+        const prev = seenCanonicals.get(canonical);
+        if (prev) {
+          log.error(`${where}: duplicate canonical also used by ${prev}: ${canonical}`);
+          errors++;
+        }
+        seenCanonicals.set(canonical, where);
       }
-      seenCanonicals.set(canonical, where);
-      const urlPath = '/' + rel.replace(/index\.html$/, '').replace(/\.html$/, '').replace(/\/$/, '');
-      canonicalByPage.set(urlPath === '/' ? '/' : urlPath.replace(/\/$/, ''), canonical);
+      canonicalByPage.set(urlPath, canonical);
     }
 
     // og:image must resolve to a real file in dist
@@ -498,11 +513,11 @@ function validateAllPages() {
       }
     }
 
-    // hreflang: 4 incl x-default + self, or none (standalone single-locale pages)
+    // hreflang: en-AU + fr-FR + x-default (+ self for the indexed trees), or none (standalone pages)
     const hreflangs = extractHreflangs(html);
     if (hreflangs.length > 0) {
-      if (hreflangs.length !== 4 || !hreflangs.includes('x-default')) {
-        log.error(`${where}: hreflang set must be 4 incl. x-default or empty, got [${hreflangs.join(', ')}]`);
+      if (hreflangs.length !== HREFLANG_COUNT || !hreflangs.includes('x-default')) {
+        log.error(`${where}: hreflang set must be ${HREFLANG_COUNT} incl. x-default or empty, got [${hreflangs.join(', ')}]`);
         errors++;
       } else if (expectedOgLocale) {
         const selfHreflang = expectedOgLocale.replace('_', '-');

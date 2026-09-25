@@ -8,6 +8,9 @@ import { BUSINESS, regionAddressLine } from '@/data/business';
 export const prerender = true;
 
 const SITE = 'https://algorythmos.com';
+/** Canonical English tree (the unprefixed pages canonicalise here). */
+const AU = `${SITE}/au-en`;
+const FR = `${SITE}/fr-fr`;
 
 export const GET: APIRoute = () => {
   const t = useTranslations('en');
@@ -20,16 +23,16 @@ export const GET: APIRoute = () => {
     '',
   );
   L.push('## Overview');
-  L.push(`- [Home](${SITE}/): What Algorythmos does and who it serves.`);
-  L.push(`- [Services](${SITE}/services): Full catalogue of AI consulting offerings.`);
-  L.push(`- [Pricing](${SITE}/pricing): Engagement models and transparent pricing.`);
-  L.push(`- [About](${SITE}/about): Company background and approach.`);
-  L.push(`- [Contact](${SITE}/contact): How to start an engagement.`);
-  L.push(`- [Press & media kit](${SITE}/press): Boilerplate, founder bio, logos, and media contact.`);
+  L.push(`- [Home](${AU}): What Algorythmos does and who it serves.`);
+  L.push(`- [Services](${AU}/services): Full catalogue of AI consulting offerings.`);
+  L.push(`- [Pricing](${AU}/pricing): Engagement models and transparent pricing.`);
+  L.push(`- [About](${AU}/about): Company background and approach.`);
+  L.push(`- [Contact](${AU}/contact): How to start an engagement.`);
+  L.push(`- [Press & media kit](${AU}/press): Boilerplate, founder bio, logos, and media contact.`);
   L.push('');
   L.push('## Services');
   for (const s of services)
-    L.push(`- [${t(`services.items.${s.slug}.name`)}](${SITE}/services/${s.slug}): ${t(`services.items.${s.slug}.tagline`)}`);
+    L.push(`- [${t(`services.items.${s.slug}.name`)}](${AU}/services/${s.slug}): ${t(`services.items.${s.slug}.tagline`)}`);
   L.push('');
   L.push('## Regions');
   L.push(`- [Australia — Sydney](${SITE}/au-en): AI consultancy for Australian SMEs and enterprises.`);
@@ -43,17 +46,23 @@ export const GET: APIRoute = () => {
   L.push(`- General enquiries: ${BUSINESS.email}.`);
   L.push('');
   L.push('## Blog');
-  L.push(`- [Blog index](${SITE}/blog)`);
-  for (const p of blog) L.push(`- [${t(`blog.posts.${p.postIndex}.title`)}](${SITE}/blog/${p.slug})`);
+  L.push(`- [Blog index](${AU}/blog)`);
+  for (const p of blog) L.push(`- [${t(`blog.posts.${p.postIndex}.title`)}](${AU}/blog/${p.slug})`);
   L.push('');
   L.push('## Case Studies');
-  L.push(`- [Case Studies](${SITE}/case-studies)`);
-  for (const c of caseStudies) L.push(`- [${t(`caseStudies.items.${c.i18nIndex}.title`)}](${SITE}/case-studies/${c.slug})`);
+  L.push(`- [Case Studies](${AU}/case-studies)`);
+  for (const c of caseStudies) L.push(`- [${t(`caseStudies.items.${c.i18nIndex}.title`)}](${AU}/case-studies/${c.slug})`);
+  L.push('');
+  L.push('## En français');
+  const tf = useTranslations('fr-fr');
+  L.push(`- [Accueil](${FR}): ${tf('hero.subtitle')}`);
+  L.push(`- [Services](${FR}/services) · [Études de cas](${FR}/case-studies) · [Blog](${FR}/blog) · [Tarifs](${FR}/pricing) · [Contact](${FR}/contact)`);
+  for (const c of caseStudies) L.push(`- [${tf(`caseStudies.items.${c.i18nIndex}.title`)}](${FR}/case-studies/${c.slug})`);
   L.push('');
   L.push('## Policies and careers');
-  L.push(`- [Careers](${SITE}/careers)`);
-  L.push(`- [Privacy Policy](${SITE}/privacy)`);
-  L.push(`- [Terms of Service](${SITE}/terms)`);
+  L.push(`- [Careers](${AU}/careers)`);
+  L.push(`- [Privacy Policy](${AU}/privacy)`);
+  L.push(`- [Terms of Service](${AU}/terms)`);
   L.push('');
   L.push('## Key visuals');
   L.push('> Branded product-UI illustrations (not photographs). Theme-neutral SVG.');

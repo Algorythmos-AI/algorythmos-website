@@ -95,7 +95,7 @@ const tOr = (key: string, fallback: string) => {
   const v = t(key);
   return v === key ? fallback : v;
 };
-const metaTitle = ns ? tOr(`${ns}.meta.title`, `${loc.name} — Algorythmos`) : `${loc.name} — Algorythmos`;
+const metaTitle = ns ? tOr(`${ns}.meta.title`, loc.name) : loc.name;
 const metaDescription = ns ? tOr(`${ns}.meta.description`, loc.summary) : loc.summary;
 const heroLead = ns ? tOr(`${ns}.hero.subtitle`, loc.tagline) : loc.tagline;
 const faqsTitle = ns ? tOr(`${ns}.faqs.title`, t('services.detail.faqTitle')) : t('services.detail.faqTitle');

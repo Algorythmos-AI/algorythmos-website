@@ -1,15 +1,16 @@
 name: IndexNow — ping search engines on publish
 
-# Notify IndexNow-participating engines (Bing, Yandex, Seznam, Naver…) when
-# content changes on master. Google ignores IndexNow but it's free coverage
-# elsewhere. Runs after the deploy settles; the key file is public by design.
+# Notify IndexNow-participating engines (Bing, Yandex, Seznam, Naver…) once a
+# PRODUCTION deploy has actually succeeded (the Vercel GitHub app emits
+# deployment_status events), instead of guessing with a fixed sleep after push.
+# Google ignores IndexNow but it is free coverage elsewhere. The key file is
+# public by design.
 on:
-  push:
-    branches: [master, main]
+  deployment_status: {}
   workflow_dispatch: {}
 
 concurrency:
-  group: indexnow-${{ github.ref }}
+  group: indexnow
   cancel-in-progress: true
 
 env:
@@ -18,11 +19,12 @@ env:
 
 jobs:
   ping:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.deployment_status.state == 'success' &&
+       contains(github.event.deployment.environment, 'roduction'))
     runs-on: ubuntu-latest
     steps:
-      - name: Wait for the production deploy to settle
-        run: sleep 90
-
       - name: Collect URLs from the live sitemap and submit to IndexNow
         run: |
           set -euo pipefail
@@ -30,7 +32,7 @@ jobs:
 
           # Confirm the key file is actually being served before we submit.
           if ! curl -fsS "$KEY_LOCATION" | grep -q "$INDEXNOW_KEY"; then
-            echo "Key file not reachable at $KEY_LOCATION yet — skipping this run."
+            echo "Key file not reachable at $KEY_LOCATION — skipping this run."
             exit 0
           fi
 
@@ -47,7 +49,6 @@ jobs:
           count=$(printf '%s\n' "$urls" | grep -c . || true)
           echo "Submitting $count URLs to IndexNow."
 
-          # IndexNow caps a batch at 10,000 URLs; this site is far below that.
           body=$(printf '%s\n' "$urls" | jq -R . | jq -s \
             --arg host "$HOST" --arg key "$INDEXNOW_KEY" --arg kl "$KEY_LOCATION" \
             '{host: $host, key: $key, keyLocation: $kl, urlList: .}')
@@ -58,5 +59,4 @@ jobs:
             --data "$body")
           echo "IndexNow responded HTTP $code"
           cat /tmp/indexnow.out || true
-          # 200/202 = accepted. Don't fail the workflow on IndexNow hiccups.
           case "$code" in 200|202) ;; *) echo "Non-fatal: IndexNow returned $code";; esac

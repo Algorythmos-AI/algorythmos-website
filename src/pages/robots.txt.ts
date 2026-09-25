@@ -23,7 +23,6 @@ export const GET: APIRoute = () => {
     `Sitemap: ${SITE}/sitemap-index.xml`,
     `# AI agent guide: ${SITE}/llms.txt`,
     `# Full content for LLMs: ${SITE}/llms-full.txt`,
-    `Host: ${SITE}`,
     '',
   ];
   return new Response(lines.join('\n'), { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });

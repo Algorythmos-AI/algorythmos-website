@@ -4,10 +4,13 @@ import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import llmsFull from './scripts/llms-full-integration.mjs';
 import { blog } from './src/data/blog.ts';
+import { caseStudies } from './src/data/caseStudies.ts';
 
 // slug → last-meaningful date (updatedAt ?? published) for sitemap <lastmod>.
 /** @type {Record<string, string>} */
 const BLOG_LASTMOD = Object.fromEntries(blog.map((p) => [p.slug, p.updatedAt ?? p.date]));
+/** @type {Record<string, string>} */
+const CASE_LASTMOD = Object.fromEntries(caseStudies.map((c) => [c.slug, c.updatedAt ?? c.date]));
 
 // Page-path → on-page content visuals, for <image:image> sitemap entries.
 const VIS = 'https://algorythmos.com/assets/visuals';
@@ -66,10 +69,10 @@ export default defineConfig({
   integrations: [
     react(),
     sitemap({
-      i18n: {
-        defaultLocale: 'en',
-        locales: { en: 'en', 'au-en': 'en-AU', 'fr-fr': 'fr-FR' },
-      },
+      // Only the two indexable locale trees. The unprefixed `en` tree canonicalises
+      // to /au-en (see SEO.astro), so listing it would advertise non-canonical URLs.
+      // hreflang lives in each page's <head>, so no xhtml:link block is needed here.
+      filter: (page) => /\/(au-en|fr-fr)(\/|$)/.test(new URL(page).pathname),
       serialize(item) {
         try {
           const pathname = new URL(item.url).pathname;
@@ -82,6 +85,10 @@ export default defineConfig({
           const blogMatch = pathname.match(/\/blog\/([a-z0-9-]+)\/?$/);
           if (blogMatch && BLOG_LASTMOD[blogMatch[1]]) {
             item.lastmod = new Date(BLOG_LASTMOD[blogMatch[1]]).toISOString();
+          }
+          const caseMatch = pathname.match(/\/case-studies\/([a-z0-9-]+)\/?$/);
+          if (caseMatch && CASE_LASTMOD[caseMatch[1]]) {
+            item.lastmod = new Date(CASE_LASTMOD[caseMatch[1]]).toISOString();
           }
         } catch {
           /* leave item unchanged */

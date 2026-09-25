@@ -13,6 +13,7 @@ export const founderPerson = {
   '@id': FOUNDER_ID,
   name: 'Sam Kalaliya',
   jobTitle: 'Founder & Chief Executive Officer',
+  url: `${SITE}/au-en/about`,
   worksFor: { '@id': ORG_ID },
   knowsAbout: ['Artificial Intelligence', 'Machine Learning', 'MLOps', 'Data Engineering', 'Agentic Automation'],
 };

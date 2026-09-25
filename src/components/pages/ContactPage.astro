@@ -3,7 +3,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHeader from '@/components/sections/PageHeader.astro';
 import Button from '@/components/ui/Button.astro';
 import { asLocale, useTranslations, localizePath } from '@/i18n';
-import { breadcrumb, SITE, ORG_ID, imageObject } from '@/seo/schema';
+import { breadcrumb, SITE, ORG_ID, WEBSITE_ID, imageObject } from '@/seo/schema';
 import { bookingUrl } from '@/lib/links';
 import Visual from '@/components/ui/Visual.astro';
 import { cityVisuals } from '@/data/visuals';
@@ -50,7 +50,7 @@ const contactLd = {
     imageObject({ path: cityAU.file, alt: cityAUAlt, width: cityAU.width, height: cityAU.height }),
     imageObject({ path: cityFR.file, alt: cityFRAlt, width: cityFR.width, height: cityFR.height }),
   ],
-  isPartOf: { '@id': ORG_ID },
+  isPartOf: { '@id': WEBSITE_ID },
   mainEntity: {
     '@id': ORG_ID,
     contactPoint: [

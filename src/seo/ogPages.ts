@@ -5,7 +5,7 @@
  *  - `src/components/seo/SEO.astro` defaults a page's og:image to its card
  *    when an entry exists (brand fallback /Algorythmos.png otherwise)
  */
-import { LOCALES, useTranslations, localizePath, type Locale } from '@/i18n';
+import { LOCALES, useTranslations, localizePath } from '@/i18n';
 import { blog } from '@/data/blog';
 import { caseStudies } from '@/data/caseStudies';
 import { services } from '@/data/services';
@@ -24,13 +24,6 @@ const SERVICE_NS: Record<string, string> = {
   'ai-websites': 'serviceAiWebsites',
 };
 
-/** Home cards keep the hand-tuned regional positioning lines. */
-const HOME_TITLES: Record<Locale, string> = {
-  en: 'Algorythmos — AI consultancy for SMEs in Sydney & Paris',
-  'au-en': 'Algorythmos Australia — AI consultancy for Australian SMEs',
-  'fr-fr': 'Algorythmos France — Cabinet de conseil en IA pour PME & ETI',
-};
-
 /** Brand pages: path + the i18n keys their <head> already uses. */
 const BRAND_PAGES: { path: string; titleKey: string; descKey: string }[] = [
   { path: '/about', titleKey: 'about.meta.title', descKey: 'about.meta.description' },
@@ -40,6 +33,9 @@ const BRAND_PAGES: { path: string; titleKey: string; descKey: string }[] = [
   { path: '/blog', titleKey: 'blog.meta.title', descKey: 'blog.meta.description' },
   { path: '/case-studies', titleKey: 'caseStudies.meta.title', descKey: 'caseStudies.meta.description' },
   { path: '/press', titleKey: 'press.meta.title', descKey: 'press.meta.description' },
+  { path: '/careers', titleKey: 'careers.hero.title', descKey: 'careers.hero.description' },
+  { path: '/privacy', titleKey: 'privacy.meta.title', descKey: 'privacy.meta.description' },
+  { path: '/terms', titleKey: 'terms.meta.title', descKey: 'terms.meta.description' },
 ];
 
 function buildPages(): Record<string, OGPage> {
@@ -49,7 +45,7 @@ function buildPages(): Record<string, OGPage> {
     const t = useTranslations(loc);
 
     pages[ogKey(localizePath(loc, '/'))] = {
-      title: HOME_TITLES[loc],
+      title: t('home.meta.title'),
       description: t('hero.subtitle'),
     };
 

@@ -1,12 +1,11 @@
 {
-  "name": "Algorythmos - AI Consultancy for SMEs",
+  "name": "Algorythmos \u2014 AI consultancy for SMEs",
   "short_name": "Algorythmos",
-  "description": "Boutique AI consultancy delivering agentic automation, document intelligence, SQL analytics, and MLOps for SMEs across Europe and Australia",
-  "start_url": "/",
+  "description": "AI consultancy delivering agentic automation, document intelligence, SQL dashboards and MLOps for SMEs in Australia and France.",
+  "start_url": "/au-en",
   "display": "standalone",
-  "background_color": "#000000",
-  "theme_color": "#6D00FF",
-  "orientation": "portrait-primary",
+  "background_color": "#08080c",
+  "theme_color": "#7c3aed",
   "icons": [
     {
       "src": "/favicon-192.png",

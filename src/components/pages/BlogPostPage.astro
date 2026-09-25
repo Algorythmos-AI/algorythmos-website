@@ -93,7 +93,7 @@ const faqLd = faqs.length
   : null;
 ---
 
-<BaseLayout title={`${title} — Algorythmos`} description={description} path={path} ogType="article" image={ogImg} jsonLd={[articleLd, crumbs, ...(faqLd ? [faqLd] : [])]}>
+<BaseLayout title={title} description={description} path={path} ogType="article" image={ogImg} jsonLd={[articleLd, crumbs, ...(faqLd ? [faqLd] : [])]}>
   <Breadcrumbs items={crumbItems} />
   <PageHeader eyebrow={t(`blog.posts.${post.postIndex}.date`)} title={title} lead={description} />
 
