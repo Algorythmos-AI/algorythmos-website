@@ -17,11 +17,13 @@
   --c-line-soft: rgb(255 255 255 / 0.05);
   --c-ink: #f3f3f8;
   --c-muted: #9a9cb4;
-  --c-subtle: #6c6e86;
-  --c-brand: rgb(var(--brand));
-  --c-accent: rgb(var(--accent));
-  --c-success: rgb(var(--success));
-  --c-warning: rgb(var(--warning));
+  --c-subtle: #8a8ca6; /* ≥4.5:1 on the card */
+  /* The screen is always dark, so these are the DARK-theme brand values, fixed:
+     inheriting the site theme made the light palette fail contrast on the console. */
+  --c-brand: #a78bfa;
+  --c-accent: #22d3ee;
+  --c-success: #34d399;
+  --c-warning: #fbbf24;
   display: flex;
   flex-direction: column;
   background: var(--c-canvas);

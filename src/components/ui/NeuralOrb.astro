@@ -65,6 +65,7 @@ const { class: klass = '' } = Astro.props;
 </style>
 
 <script>
+  import { motionOff } from '@/lib/motion';
   interface Vec3 {
     x: number;
     y: number;
@@ -127,9 +128,11 @@ const { class: klass = '' } = Astro.props;
     const FORM_DUR = 1.6; // s, entrance convergence
     const FORM_STAGGER = 0.6; // s, per-particle delay spread
 
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const reduceMotion = motionOff();
     const deviceMemory = (navigator as Navigator & { deviceMemory?: number }).deviceMemory;
-    const staticMode = reduceMotion || (deviceMemory !== undefined && deviceMemory <= 4);
+    /* Safari never reports deviceMemory, so treat touch-only devices as low-power too */
+    const coarseOnly = window.matchMedia('(pointer: coarse)').matches && !window.matchMedia('(hover: hover)').matches;
+    const staticMode = reduceMotion || (deviceMemory !== undefined && deviceMemory <= 4) || (deviceMemory === undefined && coarseOnly);
     const canHover = window.matchMedia('(hover: hover)').matches;
 
     /* Skip the entrance if it already played this session (view transitions,
@@ -427,8 +430,10 @@ const { class: klass = '' } = Astro.props;
         const radius = (0.9 + 1.7 * p.depth) * (1 + fl * 1.2);
         const size = radius * 3.2;
         const idx = Math.min(SPRITE_STEPS - 1, Math.floor(p.depth * SPRITE_STEPS));
+        const sprite = sprites[idx];
+        if (!sprite) continue; /* NaN depth (zero-size canvas mid-navigation) → skip, never throw */
         ctx.globalAlpha = Math.min(1, (0.15 + 0.75 * p.depth) * twinkle * (0.3 + 0.7 * formProgress) + fl * 0.5);
-        ctx.drawImage(sprites[idx], p.px - size, p.py - size, size * 2, size * 2);
+        ctx.drawImage(sprite, p.px - size, p.py - size, size * 2, size * 2);
       }
       /* ring particles */
       const ringAlpha = formProgress >= 1 ? 1 : Math.max(0, (formProgress - 0.7) / 0.3);
@@ -438,8 +443,10 @@ const { class: klass = '' } = Astro.props;
           const p = proj[i];
           if (front ? p.depth < 0.5 : p.depth >= 0.5) continue;
           const size = (0.6 + 1.0 * p.depth) * 3.2;
+          const sprite = sprites[idx];
+          if (!sprite || !Number.isFinite(p.px)) continue;
           ctx.globalAlpha = (0.1 + 0.5 * p.depth) * ringAlpha;
-          ctx.drawImage(sprites[idx], p.px - size, p.py - size, size * 2, size * 2);
+          ctx.drawImage(sprite, p.px - size, p.py - size, size * 2, size * 2);
         }
       }
       ctx.globalAlpha = 1;

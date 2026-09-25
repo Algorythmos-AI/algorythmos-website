@@ -9,6 +9,7 @@ export default {
         bg: 'rgb(var(--bg) / <alpha-value>)',
         surface: {
           DEFAULT: 'rgb(var(--surface-1) / <alpha-value>)',
+          1: 'rgb(var(--surface-1) / <alpha-value>)',
           2: 'rgb(var(--surface-2) / <alpha-value>)',
           3: 'rgb(var(--surface-3) / <alpha-value>)',
         },
@@ -26,6 +27,8 @@ export default {
         line: {
           DEFAULT: 'rgb(var(--border) / <alpha-value>)',
           strong: 'rgb(var(--border-strong) / <alpha-value>)',
+          /* ≥3:1 against bg — required for form-control boundaries (WCAG 1.4.11) */
+          input: 'rgb(var(--border-input) / <alpha-value>)',
         },
         ring: 'rgb(var(--ring) / <alpha-value>)',
         success: 'rgb(var(--success) / <alpha-value>)',

@@ -18,10 +18,11 @@
 
   --text: 244 244 247;
   --text-muted: 168 170 188;
-  --text-subtle: 124 126 144;
+  --text-subtle: 142 144 162; /* ≥4.5:1 on surface-2 */
 
   --border: 40 40 60;
   --border-strong: 60 60 88;
+  --border-input: 104 106 138; /* ≥3:1 on bg for form controls */
 
   --brand: 167 139 250;
   --brand-strong: 139 92 246;
@@ -40,7 +41,7 @@
 
   /* Kinetic gradient mood */
   --grad-brand: linear-gradient(120deg, rgb(167 139 250) 0%, rgb(99 179 237) 45%, rgb(34 211 238) 100%);
-  --grad-cta: linear-gradient(120deg, rgb(139 92 246) 0%, rgb(79 70 229) 100%);
+  --grad-cta: linear-gradient(120deg, rgb(124 58 237) 0%, rgb(79 70 229) 100%); /* white text ≥4.5:1 across the run */
   --grad-surface: linear-gradient(180deg, rgb(255 255 255 / 0.05) 0%, rgb(255 255 255 / 0.01) 100%);
   --glass-bg: rgb(255 255 255 / 0.05);
   --glass-border: rgb(255 255 255 / 0.10);
@@ -59,10 +60,11 @@
 
   --text: 17 18 24;
   --text-muted: 79 82 99;
-  --text-subtle: 110 114 130;
+  --text-subtle: 96 100 118; /* ≥4.5:1 on surface-2 */
 
   --border: 226 228 233;
   --border-strong: 201 204 213;
+  --border-input: 134 138 156; /* ≥3:1 on bg for form controls */
 
   --brand: 109 40 217;
   --brand-strong: 91 33 182;
@@ -70,7 +72,7 @@
   --accent: 14 116 144;
 
   --ring: 124 58 237;
-  --success: 5 150 105;
+  --success: 4 120 87; /* ≥4.5:1 on bg for small text */
   --warning: 180 83 9;
   --danger: 220 38 38;
 

@@ -31,6 +31,13 @@
   :lang(fr) {
     hyphens: auto;
   }
+  /* Headlines and leads must not break mid-word ("spéciali-sé") */
+  :lang(fr) h1,
+  :lang(fr) h2,
+  :lang(fr) .text-lead,
+  :lang(fr) .text-mega {
+    hyphens: manual;
+  }
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -40,6 +47,20 @@
       transition-duration: 0.01ms !important;
       scroll-behavior: auto !important;
     }
+  }
+  /* On-page "pause motion" toggle — same kill switch as the OS preference */
+  html[data-motion='off'] *,
+  html[data-motion='off'] *::before,
+  html[data-motion='off'] *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  html[data-motion='off'] [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
   }
 }
 
@@ -204,6 +225,10 @@
 
   /* Below-fold section wrapper: skip layout/paint until near the viewport.
      `auto 800px` keeps the real size once rendered (stable scrollbar). */
+  /* Region suggestion never hides behind the consent strip */
+  body:has(#consent:not([hidden])) .region-banner {
+    bottom: 7.5rem;
+  }
   .cv-auto {
     content-visibility: auto;
     contain-intrinsic-size: auto 800px;
@@ -223,6 +248,14 @@
   }
   body:has(#announce:not([hidden])) .hero-viewport {
     min-height: calc(100svh - 4rem - 2.8rem);
+  }
+  /* Phones: let the copy, orb and console flow naturally — a forced full-height
+     band left an empty screen under the CTAs at 375px. */
+  @media (max-width: 767px) {
+    .hero-viewport,
+    body:has(#announce:not([hidden])) .hero-viewport {
+      min-height: 0;
+    }
   }
 }
 
