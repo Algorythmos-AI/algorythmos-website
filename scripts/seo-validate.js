@@ -329,14 +329,15 @@ function validateStructuredData() {
     return;
   }
 
+  // AU publishes the registered office (locality = suburb + street); FR stays city-level.
   const REGIONAL = [
-    { file: join('au-en', 'index.html'), city: 'Sydney' },
-    { file: join('fr-fr', 'index.html'), city: 'Paris' },
-    { file: join('au-en', 'ai-consultancy-sydney', 'index.html'), city: 'Sydney' },
-    { file: join('fr-fr', 'conseil-en-ia-paris', 'index.html'), city: 'Paris' },
+    { file: join('au-en', 'index.html'), city: 'Surry Hills', street: true },
+    { file: join('fr-fr', 'index.html'), city: 'Paris', street: false },
+    { file: join('au-en', 'ai-consultancy-sydney', 'index.html'), city: 'Surry Hills', street: true },
+    { file: join('fr-fr', 'conseil-en-ia-paris', 'index.html'), city: 'Paris', street: false },
   ];
 
-  for (const { file, city } of REGIONAL) {
+  for (const { file, city, street } of REGIONAL) {
     const abs = join(DIST, file);
     if (!existsSync(abs)) {
       log.error(`Missing regional page: dist/${file}`);
@@ -371,6 +372,16 @@ function validateStructuredData() {
       }
       if (svc.address?.addressLocality !== city) {
         log.error(`dist/${file}: ProfessionalService addressLocality "${svc.address?.addressLocality}" ≠ "${city}"`);
+        errors++;
+        ok = false;
+      }
+      if (street && !(svc.address?.streetAddress && svc.address?.postalCode)) {
+        log.error(`dist/${file}: ProfessionalService must publish streetAddress + postalCode for ${city}`);
+        errors++;
+        ok = false;
+      }
+      if (!street && svc.address?.streetAddress) {
+        log.error(`dist/${file}: ProfessionalService for ${city} must stay city-level (no streetAddress)`);
         errors++;
         ok = false;
       }

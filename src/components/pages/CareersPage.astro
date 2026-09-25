@@ -35,7 +35,7 @@ const benefits = [
   'mentorship',
 ].map((k) => t(`careers.benefits.${k}`));
 
-const locations = (['london', 'paris', 'sydney', 'remote'] as const).map((k) => ({
+const locations = (['sydney', 'paris', 'remote'] as const).map((k) => ({
   city: t(`careers.locations.${k}.city`),
   country: t(`careers.locations.${k}.country`),
 }));

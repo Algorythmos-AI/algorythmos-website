@@ -1,6 +1,6 @@
 ---
 import { asLocale, useTranslations, localizePath } from '@/i18n';
-import { BUSINESS } from '@/data/business';
+import { BUSINESS, regionAddressLine } from '@/data/business';
 import { services } from '@/data/services';
 import LocaleSwitcher from '@/components/layout/LocaleSwitcher.astro';
 
@@ -35,8 +35,6 @@ const cols = [
 const resources = [
   { label: t('nav.blog'), href: localizePath(locale, '/blog'), external: false },
   { label: t('footer.rss'), href: rssHref, external: false },
-  { label: 'Docs', href: profile('Docs'), external: true },
-  { label: 'App', href: profile('App'), external: true },
 ];
 
 // Social profiles surfaced for entity reciprocity (schema sameAs ⇄ visible links).
@@ -109,7 +107,12 @@ const legal = [
 
   <div class="border-t border-line">
     <div class="container-page flex flex-col items-center justify-between gap-3 py-6 text-sm text-ink-subtle sm:flex-row">
-      <p>{t('footer.copyright', { year })}</p>
+      <div class="space-y-1 text-center sm:text-left">
+        <p>{t('footer.copyright', { year })}</p>
+        <p class="text-xs">
+          {BUSINESS.legalName.replace(/\.$/, '')} · ABN {BUSINESS.abn} · {regionAddressLine('AU')}, {t('footer.legalCountry')}
+        </p>
+      </div>
       <div class="flex items-center gap-4">
         {social.map((s) => (
           <a href={s.url} rel="me noopener" target="_blank" class="hover:text-ink">{s.label}</a>

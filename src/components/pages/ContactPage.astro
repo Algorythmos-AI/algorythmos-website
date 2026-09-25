@@ -13,13 +13,21 @@ const t = useTranslations(locale);
 const path = '/contact';
 const abs = (p: string) => SITE + localizePath(locale, p);
 
-import { BUSINESS } from '@/data/business';
+import { BUSINESS, regionAddressLine } from '@/data/business';
 const EMAIL = BUSINESS.email;
 
 /* Per-region contacts, ordered so the visitor's own region shows first. */
 const primaryRegion = locale === 'fr-fr' ? 'FR' : 'AU';
 const regionOrder: ('AU' | 'FR')[] = primaryRegion === 'FR' ? ['FR', 'AU'] : ['AU', 'FR'];
 const contacts = regionOrder.map((k) => ({ city: BUSINESS.regions[k].city, email: BUSINESS.regions[k].email }));
+
+/* Registered office (AU) — data-driven so every surface publishes the identical address. */
+const office = {
+  addressLine: regionAddressLine('AU'),
+  countryName: BUSINESS.regions.AU.countryName,
+  hours: `${BUSINESS.regions.AU.hours.opens}–${BUSINESS.regions.AU.hours.closes}`,
+  mapsUrl: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${BUSINESS.tradingName}, ${regionAddressLine('AU')}, ${BUSINESS.regions.AU.countryName}`)}`,
+};
 
 const cityAU = cityVisuals.AU;
 const cityFR = cityVisuals.FR;
@@ -110,6 +118,12 @@ const offices = [
           data-msg-message-min={t('contactPage.validation.messageMin')}
           class="mt-10 rounded-2xl border border-line glass p-6 sm:p-8"
         >
+          {/* Spam defences: honeypot (hidden from humans, filled by bots) + form-open timestamp. */}
+          <div class="cf-hp" aria-hidden="true">
+            <label for="cf-website">Website</label>
+            <input type="text" id="cf-website" name="website" tabindex="-1" autocomplete="off" />
+          </div>
+          <input type="hidden" name="ts" id="cf-ts" value="" />
           <div class="grid gap-5 sm:grid-cols-2">
             {/* Name */}
             <div class="sm:col-span-1">
@@ -215,6 +229,38 @@ const offices = [
           </dl>
         </div>
 
+        {office.addressLine && (
+          <div class="rounded-2xl border border-line glass p-6">
+            <p class="text-sm font-semibold uppercase tracking-widest text-accent">{t('contactPage.office.badge')}</p>
+            <h2 class="mt-2 text-h3 font-semibold text-ink">{t('contactPage.office.heading')}</h2>
+            <address class="mt-4 text-sm not-italic leading-relaxed text-ink">
+              <span class="block font-semibold">{BUSINESS.legalName.replace(/\.$/, '')}</span>
+              <span class="block">{office.addressLine}</span>
+              <span class="block">{office.countryName}</span>
+            </address>
+            <dl class="mt-4 grid gap-2 text-sm text-ink-muted">
+              <div class="flex gap-2">
+                <dt class="font-medium text-ink">{t('contactPage.office.hoursLabel')}</dt>
+                <dd>{t('contactPage.office.hoursValue', { hours: office.hours })}</dd>
+              </div>
+              <div class="flex gap-2">
+                <dt class="font-medium text-ink">{t('contactPage.office.visitsLabel')}</dt>
+                <dd>{t('contactPage.office.byAppointment')}</dd>
+              </div>
+            </dl>
+            <a
+              href={office.mapsUrl}
+              target="_blank"
+              rel="noopener"
+              class="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-brand underline-offset-4 hover:underline focus-visible:underline"
+            >
+              {t('contactPage.office.directions')}
+              <span aria-hidden="true">↗</span>
+            </a>
+            <p class="mt-4 border-t border-line pt-3 text-xs text-ink-subtle">{t('contactPage.office.abn', { abn: BUSINESS.abn })}</p>
+          </div>
+        )}
+
         <div class="rounded-2xl border border-line glass p-6">
           <p class="text-sm font-semibold uppercase tracking-widest text-accent">{t('contactPage.globalMap.badge')}</p>
           <h2 class="mt-2 text-h3 font-semibold text-ink">{t('contactPage.globalMap.heading')}</h2>
@@ -304,10 +350,15 @@ const offices = [
     fields.message.addEventListener('blur', validateMessage);
     fields.message.addEventListener('input', () => fields.message.getAttribute('aria-invalid') && validateMessage());
 
+    const tsField = form.querySelector('#cf-ts') as HTMLInputElement | null;
+    if (tsField) tsField.value = String(Date.now());
+    const errEl = document.getElementById('cf-form-error');
+
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       success?.classList.add('hidden');
       success?.classList.remove('inline-flex');
+      errEl?.classList.add('hidden');
 
       const results = [validateName(), validateEmail(), validateMessage()];
       const firstInvalid = [fields.name, fields.email, fields.message].find((f) => f.getAttribute('aria-invalid') === 'true');
@@ -329,6 +380,8 @@ const offices = [
         company: (form.querySelector('#cf-company') as HTMLInputElement | null)?.value.trim() || '',
         locale: document.documentElement.lang || '',
         utm,
+        website: (form.querySelector('#cf-website') as HTMLInputElement | null)?.value || '',
+        ts: Number(tsField?.value || 0),
       };
       if (submitBtn) submitBtn.disabled = true;
       fetch('/api/contact', {
@@ -339,6 +392,8 @@ const offices = [
         .then((r) => {
           if (!r.ok) throw new Error('send failed');
           form.reset();
+          if (tsField) tsField.value = String(Date.now());
+          errEl?.classList.add('hidden');
           success?.classList.remove('hidden');
           success?.classList.add('inline-flex');
           // Conversion event — only when the visitor accepted analytics (same
@@ -350,7 +405,6 @@ const offices = [
           }
         })
         .catch(() => {
-          const errEl = document.getElementById('cf-form-error');
           if (errEl) {
             errEl.textContent = errEl.dataset.message || 'Something went wrong — please email us directly.';
             errEl.classList.remove('hidden');
@@ -366,3 +420,7 @@ const offices = [
   /* Initialize immediately if astro:page-load already fired before this module ran */
   if (document.readyState !== 'loading') setupContactForm();
 </script>
+
+<style>
+  .cf-hp { position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+</style>

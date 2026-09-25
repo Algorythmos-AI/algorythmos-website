@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { orgGraph, professionalService, breadcrumb, ogImageUrl } from './schema';
-import { BUSINESS, SAME_AS } from '@/data/business';
+import { BUSINESS, SAME_AS, regionPostalAddress, regionAddressLine } from '@/data/business';
 
 describe('orgGraph', () => {
   const nodes = orgGraph['@graph'];
@@ -16,6 +16,14 @@ describe('orgGraph', () => {
     expect(org.contactPoint.email).toBe(BUSINESS.email);
   });
 
+  it('publishes the registered legal identity and office', () => {
+    expect(org.legalName).toBe(BUSINESS.legalName);
+    expect(org.address).toEqual(regionPostalAddress('AU'));
+    expect(org.identifier).toContainEqual({ '@type': 'PropertyValue', propertyID: 'ABN', value: BUSINESS.abn });
+    expect(regionAddressLine('AU')).toBe('Level 1, 457–459 Elizabeth Street, Surry Hills NSW 2010');
+    expect(regionAddressLine('FR')).toBe('');
+  });
+
   it('mirrors sameAs profiles from business.ts', () => {
     expect(org.sameAs).toEqual([...SAME_AS]);
     expect(org.sameAs).toEqual(BUSINESS.profiles.map((p) => p.url));
@@ -23,20 +31,30 @@ describe('orgGraph', () => {
 });
 
 describe('professionalService', () => {
-  it.each(['AU', 'FR'] as const)('%s: service-area NAP matches business.ts', (region) => {
+  it.each(['AU', 'FR'] as const)('%s: NAP matches business.ts', (region) => {
     const svc = professionalService(region) as Record<string, any>;
-    const b = BUSINESS.regions[region];
+    const b = BUSINESS.regions[region] as Record<string, any>;
     expect(svc['@type']).toBe('ProfessionalService');
     expect(svc.email).toBe(BUSINESS.email);
-    expect(svc.address.addressLocality).toBe(b.city);
+    expect(svc.address).toEqual(regionPostalAddress(region));
     expect(svc.address.addressCountry).toBe(b.country);
     expect(svc.geo).toEqual({ '@type': 'GeoCoordinates', latitude: b.lat, longitude: b.lng });
     expect(svc.areaServed).toContainEqual({ '@type': 'City', name: b.city });
     expect(svc.parentOrganization['@id']).toContain('#organization');
     expect(svc.priceRange).toBe(b.priceRange);
-    // Service-area business: no street address, and never an invented phone.
-    expect(svc.address.streetAddress).toBeUndefined();
+    // Never an invented phone.
     if (!BUSINESS.phone) expect(svc.telephone).toBeUndefined();
+  });
+
+  it('AU publishes the registered office; FR stays city-level (no French entity)', () => {
+    const au = professionalService('AU') as Record<string, any>;
+    const fr = professionalService('FR') as Record<string, any>;
+    expect(au.address.streetAddress).toBe(BUSINESS.regions.AU.streetAddress);
+    expect(au.address.addressLocality).toBe(BUSINESS.regions.AU.suburb);
+    expect(au.address.postalCode).toBe(BUSINESS.regions.AU.postalCode);
+    expect(fr.address.streetAddress).toBeUndefined();
+    expect(fr.address.postalCode).toBeUndefined();
+    expect(fr.address.addressLocality).toBe(BUSINESS.regions.FR.city);
   });
 
   it('matches the snapshot graph for both regions', () => {

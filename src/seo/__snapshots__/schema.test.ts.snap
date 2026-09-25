@@ -8,8 +8,10 @@ exports[`professionalService > matches the snapshot graph for both regions 1`] =
   "address": {
     "@type": "PostalAddress",
     "addressCountry": "AU",
-    "addressLocality": "Sydney",
+    "addressLocality": "Surry Hills",
     "addressRegion": "NSW",
+    "postalCode": "2010",
+    "streetAddress": "Level 1, 457–459 Elizabeth Street",
   },
   "areaServed": [
     {
@@ -29,8 +31,8 @@ exports[`professionalService > matches the snapshot graph for both regions 1`] =
   "email": "info@algorythmos.com.au",
   "geo": {
     "@type": "GeoCoordinates",
-    "latitude": -33.8688,
-    "longitude": 151.2093,
+    "latitude": -33.8853,
+    "longitude": 151.2099,
   },
   "image": "https://algorythmos.com/Algorythmos.png",
   "knowsLanguage": [

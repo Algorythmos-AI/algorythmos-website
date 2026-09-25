@@ -3,6 +3,7 @@ import { services } from '@/data/services';
 import { caseStudies } from '@/data/caseStudies';
 import { blog } from '@/data/blog';
 import { useTranslations } from '@/i18n';
+import { BUSINESS, regionAddressLine } from '@/data/business';
 
 export const prerender = true;
 
@@ -36,6 +37,11 @@ export const GET: APIRoute = () => {
   L.push(`- [AI Consultancy in Sydney](${SITE}/au-en/ai-consultancy-sydney): Local landing page for businesses in Sydney, NSW & Australia.`);
   L.push(`- [Conseil en IA à Paris](${SITE}/fr-fr/conseil-en-ia-paris): Page locale pour les PME et ETI à Paris et en Île-de-France.`);
   L.push('');
+  L.push('## Company');
+  L.push(`- Legal entity: ${BUSINESS.legalName.replace(/\.$/, '')} (ABN ${BUSINESS.abn}, ACN ${BUSINESS.acn}).`);
+  L.push(`- Registered office (meetings by appointment): ${regionAddressLine('AU')}, ${BUSINESS.regions.AU.countryName}.`);
+  L.push(`- General enquiries: ${BUSINESS.email}.`);
+  L.push('');
   L.push('## Blog');
   L.push(`- [Blog index](${SITE}/blog)`);
   for (const p of blog) L.push(`- [${t(`blog.posts.${p.postIndex}.title`)}](${SITE}/blog/${p.slug})`);
@@ -44,7 +50,7 @@ export const GET: APIRoute = () => {
   L.push(`- [Case Studies](${SITE}/case-studies)`);
   for (const c of caseStudies) L.push(`- [${t(`caseStudies.items.${c.i18nIndex}.title`)}](${SITE}/case-studies/${c.slug})`);
   L.push('');
-  L.push('## Company');
+  L.push('## Policies and careers');
   L.push(`- [Careers](${SITE}/careers)`);
   L.push(`- [Privacy Policy](${SITE}/privacy)`);
   L.push(`- [Terms of Service](${SITE}/terms)`);

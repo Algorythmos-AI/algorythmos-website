@@ -3,7 +3,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHeader from '@/components/sections/PageHeader.astro';
 import Button from '@/components/ui/Button.astro';
 import Chart from '@/components/islands/Chart';
-import { asLocale, useTranslations, localizePath } from '@/i18n';
+import { asLocale, useTranslations, localizePath, getDict } from '@/i18n';
 import { getCaseStudy } from '@/data/caseStudies';
 import { caseStudyCharts } from '@/data/caseStudyCharts';
 import { localizeChart } from '@/lib/localizeChart';
@@ -94,6 +94,13 @@ for (let i = 0; i < 4; i++) {
   if (v === `caseStudyDetail.studies.${slug}.stats.${i}.value` || l === `caseStudyDetail.studies.${slug}.stats.${i}.label`) break;
   stats.push({ value: v, label: l });
 }
+
+/**
+ * Optional honesty note (e.g. "representative engagement — figures illustrative",
+ * or "industry evidence report — sources cited"). Looked up on the merged
+ * dictionary so a missing key renders nothing rather than the key string.
+ */
+const note = getDict(locale)[`caseStudyDetail.studies.${slug}.note`] ?? '';
 ---
 
 <BaseLayout title={`${study.title} — Algorythmos`} description={study.meta} path={path} ogType="article" image={ogImg} jsonLd={[articleLd, crumbs]}>
@@ -126,6 +133,14 @@ for (let i = 0; i < 4; i++) {
           </div>
         ))}
       </div>
+    </section>
+  )}
+
+  {note && (
+    <section class="container-page pt-4">
+      <p data-reveal class="rounded-xl border border-line/70 bg-surface-2/40 px-4 py-3 text-xs leading-relaxed text-ink-subtle" role="note">
+        {note}
+      </p>
     </section>
   )}
 

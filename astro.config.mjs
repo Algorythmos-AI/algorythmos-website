@@ -30,7 +30,7 @@ function pageImages(pathname) {
   const imgs = [];
   if (p === '' || p === '/au-en' || p === '/fr-fr') {
     imgs.push({ url: `${VIS}/home-hero-ai-console.svg`, caption: 'Algorythmos AI console — agentic automation and a live analytics dashboard' });
-    imgs.push({ url: `${PHOTOS}/team-collaboration-1600.webp`, caption: 'Algorythmos engineers collaborating during an AI delivery sprint' });
+    imgs.push({ url: `${PHOTOS}/team-collaboration-1600.webp`, caption: 'Collaboration during an AI delivery sprint' });
   }
   const svc = p.match(/\/services\/([a-z-]+)$/);
   if (svc && SERVICE_VISUAL[svc[1]]) {
@@ -44,7 +44,7 @@ function pageImages(pathname) {
     imgs.push({ url: `${VIS}/city-paris.svg`, caption: 'Conseil en IA à Paris, France' });
     imgs.push({ url: `${PHOTOS}/paris-scene-1600.webp`, caption: 'La tour Eiffel au-dessus de la Seine, Paris' });
   }
-  if (p.endsWith('/about')) imgs.push({ url: `${PHOTOS}/team-sunlit-1600.webp`, caption: 'The Algorythmos team collaborating in a sunlit studio' });
+  if (p.endsWith('/about')) imgs.push({ url: `${PHOTOS}/team-sunlit-1600.webp`, caption: 'Collaborative working session in a sunlit studio' });
   if (p.endsWith('/contact')) {
     imgs.push({ url: `${VIS}/city-sydney.svg`, caption: 'Sydney, Australia' }, { url: `${VIS}/city-paris.svg`, caption: 'Paris, France' });
   }

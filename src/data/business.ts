@@ -9,7 +9,13 @@
  * propagate to schema + pages automatically.
  */
 export const BUSINESS = {
-  legalName: 'Algorythmos',
+  /** Registered legal name (ASIC). */
+  legalName: 'ALGORYTHMOS PTY LTD.',
+  /** Trading / brand name. */
+  tradingName: 'Algorythmos',
+  /** Public register identifiers (ABN Lookup / ASIC) — safe to publish. */
+  abn: '22 701 006 626',
+  acn: '701 006 626',
   /** General enquiries — the address wired to the live contact-form mailbox. */
   email: 'info@algorythmos.com.au',
   /** Careers enquiries (careers page only). */
@@ -28,8 +34,6 @@ export const BUSINESS = {
     { label: 'YouTube', url: 'https://www.youtube.com/@AlgorythmosAI' },
     { label: 'Medium', url: 'https://medium.com/@algorythmos' },
     { label: 'X', url: 'https://x.com/algorythmos' },
-    { label: 'Docs', url: 'https://docs.algorythmos.fr' },
-    { label: 'App', url: 'https://app.algorythmos.fr' },
   ],
   regions: {
     AU: {
@@ -39,10 +43,18 @@ export const BUSINESS = {
       adminArea: 'NSW',
       country: 'AU',
       countryName: 'Australia',
+      /**
+       * Registered office (virtual office, meetings by appointment). "Level 1" is
+       * the form Algorythmos publishes itself; see the address note in CLAUDE.md
+       * before copying it into third-party forms.
+       */
+      streetAddress: 'Level 1, 457–459 Elizabeth Street',
+      suburb: 'Surry Hills',
+      postalCode: '2010',
       /** Region enquiries mailbox (shown on the contact page for this region). */
       email: 'info@algorythmos.com.au',
-      lat: -33.8688,
-      lng: 151.2093,
+      lat: -33.8853,
+      lng: 151.2099,
       priceRange: '$$',
       /** Local business hours (region-local time — schema.org interprets via the address). */
       hours: { opens: '09:00', closes: '17:00' },
@@ -67,3 +79,30 @@ export const BUSINESS = {
 export const SAME_AS: readonly string[] = BUSINESS.profiles.map((p) => p.url);
 
 export type BusinessRegion = keyof typeof BUSINESS.regions;
+
+/** Postal-address fields a region may publish (AU does; FR is city-level only). */
+export interface RegionAddress {
+  streetAddress?: string;
+  suburb?: string;
+  postalCode?: string;
+}
+
+/** Single-line postal address for a region, or '' when only city-level data exists. */
+export function regionAddressLine(region: BusinessRegion): string {
+  const r = BUSINESS.regions[region] as (typeof BUSINESS.regions)[BusinessRegion] & RegionAddress;
+  if (!r.streetAddress) return '';
+  return `${r.streetAddress}, ${r.suburb} ${r.adminArea} ${r.postalCode}`;
+}
+
+/** schema.org PostalAddress for a region — full when a street address exists. */
+export function regionPostalAddress(region: BusinessRegion) {
+  const r = BUSINESS.regions[region] as (typeof BUSINESS.regions)[BusinessRegion] & RegionAddress;
+  return {
+    '@type': 'PostalAddress',
+    ...(r.streetAddress ? { streetAddress: r.streetAddress } : {}),
+    addressLocality: r.suburb ?? r.city,
+    addressRegion: r.adminArea,
+    ...(r.postalCode ? { postalCode: r.postalCode } : {}),
+    addressCountry: r.country,
+  };
+}

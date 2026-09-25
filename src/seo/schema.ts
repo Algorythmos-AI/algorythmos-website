@@ -1,5 +1,5 @@
 /** Reconciled structured data — ONE identity graph, all URLs on bare .com. */
-import { BUSINESS, SAME_AS } from '@/data/business';
+import { BUSINESS, SAME_AS, regionPostalAddress } from '@/data/business';
 
 export const SITE = 'https://algorythmos.com';
 export const OG_IMAGE = `${SITE}/Algorythmos.png`;
@@ -63,19 +63,25 @@ export const orgGraph = {
     {
       '@type': 'Organization',
       '@id': ORG_ID,
-      name: 'Algorythmos',
+      name: BUSINESS.tradingName,
+      legalName: BUSINESS.legalName,
       alternateName: 'Algorythmos™',
       url: SITE,
       logo: OG_IMAGE,
       image: OG_IMAGE,
       description:
         'Boutique AI consultancy delivering agentic automation, document intelligence, SQL dashboards, and MLOps for SMEs in Australia and France.',
-      foundingDate: '2025',
+      foundingDate: '2026',
       areaServed: [
         { '@type': 'Country', name: 'Australia' },
         { '@type': 'Country', name: 'France' },
       ],
       email: BUSINESS.email,
+      address: regionPostalAddress('AU'),
+      identifier: [
+        { '@type': 'PropertyValue', propertyID: 'ABN', value: BUSINESS.abn },
+        { '@type': 'PropertyValue', propertyID: 'ACN', value: BUSINESS.acn },
+      ],
       contactPoint: {
         '@type': 'ContactPoint',
         contactType: 'customer service',
@@ -99,7 +105,7 @@ export const orgGraph = {
   ],
 };
 
-/** Service-area ProfessionalService — city-level, real NAP from BUSINESS only. */
+/** Regional ProfessionalService — real NAP from BUSINESS only (AU carries the registered office). */
 export function professionalService(region: 'AU' | 'FR') {
   const map = BUSINESS.regions[region];
   const description =
@@ -117,7 +123,7 @@ export function professionalService(region: 'AU' | 'FR') {
     parentOrganization: { '@id': ORG_ID },
     email: BUSINESS.email,
     ...(BUSINESS.phone ? { telephone: BUSINESS.phone } : {}),
-    address: { '@type': 'PostalAddress', addressLocality: map.city, addressRegion: map.adminArea, addressCountry: map.country },
+    address: regionPostalAddress(region),
     geo: { '@type': 'GeoCoordinates', latitude: map.lat, longitude: map.lng },
     areaServed: [
       { '@type': 'City', name: map.city },
