@@ -12,17 +12,17 @@ const { class: klass = '' } = Astro.props;
 
 <div class:list={['pointer-events-none absolute inset-0 -z-10 overflow-hidden', klass]} aria-hidden="true">
   <div
-    class="aurora-blob absolute -left-[12%] top-[-22%] h-[55vw] w-[55vw] rounded-full blur-[100px]"
+    class="aurora-blob absolute -left-[12%] top-[-22%] h-[55vw] w-[55vw] rounded-full blur-[60px] md:blur-[100px]"
     style="background: radial-gradient(circle at center, var(--aurora-1), transparent 62%);"
   >
   </div>
   <div
-    class="aurora-blob absolute right-[-12%] top-[-12%] h-[48vw] w-[48vw] rounded-full blur-[100px]"
+    class="aurora-blob absolute right-[-12%] top-[-12%] h-[48vw] w-[48vw] rounded-full blur-[60px] md:blur-[100px]"
     style="background: radial-gradient(circle at center, var(--aurora-2), transparent 62%); --aurora-dur: 34s; animation-delay: -7s;"
   >
   </div>
   <div
-    class="aurora-blob absolute left-[24%] top-[18%] h-[42vw] w-[42vw] rounded-full blur-[120px]"
+    class="aurora-blob absolute left-[24%] top-[18%] hidden h-[42vw] w-[42vw] rounded-full blur-[120px] md:block"
     style="background: radial-gradient(circle at center, var(--aurora-3), transparent 62%); --aurora-dur: 42s; animation-delay: -14s;"
   >
   </div>

@@ -15,9 +15,9 @@ const PORT = 4399;
 const STRICT = process.argv.includes('--strict');
 const BUDGET = { lcp: 2500, cls: 0.1, tbt: 300 }; // ms / unitless / ms
 const URLS = [
-  { label: 'home (en)', path: '/' },
   { label: 'home (au-en)', path: '/au-en' },
   { label: 'service (fr-fr)', path: '/fr-fr/services/agentic-automation' },
+  { label: 'case study (au-en)', path: '/au-en/case-studies/port-botany-ai-ml' },
 ];
 
 const preview = spawn('npx', ['astro', 'preview', '--port', String(PORT)], { stdio: 'ignore' });

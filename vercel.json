@@ -120,7 +120,7 @@
       ]
     },
     {
-      "source": "/(logo-mark.png|favicon-192.png|favicon-512.png|apple-touch-icon.png|Algorythmos.png)",
+      "source": "/(logo-mark.png|logo-mark.webp|favicon-192.png|favicon-512.png|apple-touch-icon.png|Algorythmos.png)",
       "headers": [
         {
           "key": "Cache-Control",

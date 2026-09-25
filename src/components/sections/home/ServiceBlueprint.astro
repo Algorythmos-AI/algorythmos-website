@@ -31,6 +31,8 @@ const services = [
 
     <div data-reveal style="--reveal-delay: 120ms" class="mt-14 grid gap-8 lg:grid-cols-[240px_minmax(0,1fr)_280px]" data-blueprint>
       {/* ── Service tabs ─────────────────────────────── */}
+      <div class="lg:flex lg:flex-col">
+      {/* Only role=tab children may live inside a tablist (WAI-ARIA); the catalogue link sits outside it. */}
       <div role="tablist" aria-label={t('blueprint.tag')} class="grid grid-cols-2 gap-2 lg:flex lg:flex-col lg:gap-0 lg:divide-y lg:divide-line/60">
         {services.map((s, i) => (
           <button
@@ -48,9 +50,10 @@ const services = [
             </span>
           </button>
         ))}
+      </div>
         <a
           href={localizePath(locale, '/services')}
-          class="hidden items-center gap-1.5 pt-5 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-brand hover:underline lg:inline-flex"
+          class="hidden items-center gap-1.5 border-t border-line/60 pt-5 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-brand hover:underline lg:inline-flex"
         >
           {t('nav.services')}
           <span aria-hidden="true">↗</span>

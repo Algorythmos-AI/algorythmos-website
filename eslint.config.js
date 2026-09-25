@@ -4,10 +4,28 @@ import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 
 export default [
-  { ignores: ['dist'] },
+  // Build output, the frozen legacy SPA, tooling caches and the git-ignored
+  // corporate/client folders (which can contain third-party JS, e.g. Python venvs).
+  {
+    ignores: [
+      'dist',
+      'legacy',
+      'node_modules',
+      '.astro',
+      'playwright-report',
+      'test-results',
+      'Clients',
+      'asic',
+      'bills',
+      'apple-developer',
+      'business-bank-account',
+      'Bustle-studios',
+      'SOW*',
+    ],
+  },
   // Node.js scripts + serverless API routes - use Node environment
   {
-    files: ['scripts/**/*.js', 'api/**/*.js'],
+    files: ['scripts/**/*.{js,mjs}', 'api/**/*.js'],
     languageOptions: {
       ecmaVersion: 2020,
       globals: {
@@ -26,7 +44,7 @@ export default [
   // Browser/React files
   {
     files: ['**/*.{js,jsx}'],
-    ignores: ['scripts/**/*.js', 'api/**/*.js'],
+    ignores: ['scripts/**/*.{js,mjs}', 'api/**/*.js'],
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,

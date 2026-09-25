@@ -1,10 +1,44 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Chart as ChartJS, registerables } from 'chart.js';
+import {
+  Chart as ChartJS,
+  BarController,
+  LineController,
+  DoughnutController,
+  RadarController,
+  CategoryScale,
+  LinearScale,
+  RadialLinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  ArcElement,
+  Filler,
+  Tooltip,
+  Legend,
+} from 'chart.js';
 import { Chart as ReactChart } from 'react-chartjs-2';
 
-ChartJS.register(...registerables);
+/* Register only the chart types the site renders (bar, line, doughnut, radar):
+   `registerables` pulled every controller/scale into the island bundle. Add a
+   controller here before using a new type in blogCharts / caseStudyCharts. */
+ChartJS.register(
+  BarController,
+  LineController,
+  DoughnutController,
+  RadarController,
+  CategoryScale,
+  LinearScale,
+  RadialLinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  ArcElement,
+  Filler,
+  Tooltip,
+  Legend,
+);
 
-export type ChartType = 'bar' | 'line' | 'doughnut' | 'pie' | 'radar' | 'polarArea' | 'bubble' | 'scatter';
+export type ChartType = 'bar' | 'line' | 'doughnut' | 'radar';
 
 interface Props {
   type: ChartType;
@@ -51,7 +85,7 @@ export default function Chart({ type, data, options = {}, title, height = 320 }:
   const { themedData, themedOptions } = useMemo(() => {
     if (!ready) return { themedData: data, themedOptions: options };
     const t = readTheme();
-    const circular = type === 'doughnut' || type === 'pie' || type === 'polarArea';
+    const circular = type === 'doughnut';
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const themedData = {

@@ -1,90 +1,84 @@
-name: CI - Algorythmos Quality Pipeline
+name: CI — quality pipeline
 
 on:
   push:
-    branches:
-      - "**"
+    branches: [master]
   pull_request:
-    branches:
-      - master
-      - main
+    branches: [master]
+  workflow_dispatch: {}
 
-# Cancel in-progress runs when a new commit is pushed
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  # ============================================================================
-  # Single Astro pipeline job — ordered gates against the real build output.
-  # ============================================================================
   quality:
-    name: 🏗️ Astro Quality Pipeline
+    name: Build, validate and test
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
-          cache: 'npm'
+          node-version-file: .nvmrc
+          cache: npm
 
       - name: Install dependencies
         run: npm ci
 
-      # --- Hard gates that don't need a build ---
-      - name: Lint (eslint)
+      # --- Source gates (no build needed) ---
+      - name: Lint
         run: npm run lint
 
-      - name: Type-check (astro check)
+      - name: Type-check
         run: npm run check
 
-      - name: i18n parity (EN/FR)
+      - name: i18n parity, attribute copy and meta lengths
         run: npm run i18n:check
 
-      - name: Health check (hardcoded strings, alt text, image weight)
+      - name: Health check (CTAs, a11y attributes, image weight)
         run: npm run health:check
 
-      # Security audit — production deps only. The build is adapter-free (static site +
-      # /api serverless), so prod deps are currently clean; kept non-blocking as a safety net.
-      - name: Security audit (prod deps, non-blocking)
-        run: npm audit --omit=dev --audit-level=high || true
+      - name: Security audit (production dependencies)
+        run: npm audit --omit=dev --audit-level=high
 
-      # --- Build, then validate the built output ---
-      - name: Build (astro build → dist/)
+      # --- Build once, validate the output ---
+      - name: Build
         run: npm run build
 
-      - name: SEO validation (dist/)
+      - name: SEO validation
         run: npm run seo:check
 
-      - name: Internal link check (dist/)
+      - name: Internal links
         run: npm run link:check
 
-      - name: Unit tests (vitest)
+      - name: No leaked translation keys
+        run: npm run keys:check
+
+      - name: Bundle weight report
+        run: npm run perf
+
+      - name: Unit tests
         run: npm test -- --run
 
-      # --- E2E against the built output (chromium; preview server auto-started
-      #     by playwright.config webServer) ---
+      # --- Browser tests against the built output (preview server reuses dist/) ---
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium
+        run: npx playwright install --with-deps chromium webkit
 
-      - name: E2E tests (Playwright, chromium)
-        run: npx playwright test --project=chromium
+      - name: E2E + accessibility (Chromium, WebKit)
+        run: npx playwright test
 
-      # --- Summary ---
-      - name: CI summary
-        if: always()
-        run: |
-          echo "📊 Astro CI Pipeline Summary"
-          echo "============================"
-          echo "Job result: ${{ job.status }}"
-          echo "Gates: astro check → i18n:check → health:check → audit(non-fatal) → build → seo:check → link:check → test"
-          echo "============================"
-          if [ "${{ job.status }}" = "success" ]; then
-            echo "✅ CI Pipeline PASSED"
-          else
-            echo "❌ CI Pipeline FAILED"
-          fi
+      - name: Core Web Vitals budget (Lighthouse, mobile)
+        run: node scripts/lh-check.mjs --strict
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7

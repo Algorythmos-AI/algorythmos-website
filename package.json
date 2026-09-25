@@ -39,6 +39,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
+    "@axe-core/playwright": "^4.13.0",
     "@eslint/js": "^9.22.0",
     "@jridgewell/gen-mapping": "^0.3.13",
     "@jridgewell/trace-mapping": "^0.3.30",

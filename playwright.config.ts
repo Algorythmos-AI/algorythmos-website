@@ -26,9 +26,16 @@ export default defineConfig({
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
     },
+    {
+      /* The worst historical mobile bug was iOS-only, so WebKit runs the console + FR specs too. */
+      name: 'webkit',
+      use: { ...devices['Desktop Safari'] },
+      testMatch: /(console|french-locale|a11y)\.spec\.ts/,
+    },
   ],
   webServer: {
-    command: 'npm run build && npx astro preview --port 4331',
+    /* CI has already run `npm run build`; locally we build first so the preview is fresh. */
+    command: process.env.CI ? 'npx astro preview --port 4331' : 'npm run build && npx astro preview --port 4331',
     url: E2E_ORIGIN,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
