@@ -9,19 +9,29 @@ Anything you change in EN must be mirrored in FR (`i18n:check` enforces key pari
 
 ---
 
-## 1. Pricing page (`/pricing`, `/au-en/pricing`, `/fr-fr/pricing`) — **highest scrutiny**
+## 1. Pricing page (`/au-en/pricing`, `/fr-fr/pricing`) — **highest scrutiny**
 
-These are commercial claims; comparative ones carry the most risk.
+Live figures (26 Sep 2026). AUD on `/au-en` (from `en.au.json`), EUR on `/fr-fr` (from `fr.fr.json`):
 
-- [ ] **€2,000/mo** — entry tier price + what's included ("Up to …"). Correct & current?
-- [ ] **€4,500/mo** — growth tier price + inclusions. Correct & current?
-- [ ] **€600 / €900/day** — day-rate figures. Correct?
-- [ ] **Comparison: €18,000/mo (Algorythmos) vs €24,500/mo ("traditional agency")** — ⚠️ *comparative
-      advertising.* Can you substantiate the €24,500 "traditional agency" benchmark (source / basis)? In the
-      EU/FR, unsubstantiated comparative claims are legally risky. Either cite a basis or soften to a
-      qualitative statement.
-- [ ] Currency: prices shown in **€ on all three locales** (incl. `/au-en`). Confirm that's intended, or
-      should AU show AUD? *(currently € everywhere — flag if AU buyers expect AUD.)*
+| Item | `/au-en` | `/fr-fr` |
+|---|---|---|
+| Pilot tier | A$3,300/mo | 2 000 €/mois |
+| Operations tier | A$7,500/mo | 4 500 €/mois |
+| Add-ons (SAML SSO / private VPC / named technical lead) | A$800 / A$1,600 / A$2,500 per month | 500 € / 1 000 € / 1 500 € par mois |
+| "DIY" comparison | ≈ A$40,000/mo — 3 FTE in Sydney at typical market salaries, incl. on-costs and tools | ≈ 24 500 €/mois — 3 ETP à Paris aux salaires de marché habituels, charges et outils inclus |
+| "Traditional agency" comparison | ≈ A$30,000/mo — 1–1.5 FTE senior consultants at typical day rates of A$1,000–A$1,500 | ≈ 18 000 €/mois — 1 à 1,5 ETP de consultants seniors à 600–900 €/jour |
+
+Wording decisions (Sam Kalaliya, 26 Sep 2026) — defensible claims, prices unchanged:
+- [x] "SOC2-ready processes" → **"Security aligned to SOC 2 principles"** (no SOC 2 report exists).
+- [x] "SLA 99.5%" → **"Availability target agreed per engagement"**; badge "Agreed service levels".
+- [x] "Dedicated TAM" → **"Named technical lead"** (tier feature and add-on).
+- [x] "Talk to sales" → **"Talk to us"** (there is no sales team).
+- [x] Each comparison now states its basis (market salaries / typical day rates) and stays labelled *illustrative*.
+- [x] No "live ROI calculator" promise (none is rendered): hero, meta description and footnote offer a 30-minute ROI review instead.
+- [ ] Sam to confirm the comparison bases are still representative each year.
+- [x] Currency: AUD on the Australian site, EUR on the French site.
+
+The build enforces these: `npm run i18n:check` fails on SOC 2 "ready", TAM, live-calculator, SLA/uptime-guarantee and "talk to sales" wording.
 
 ## 2. Case study — Administrative Burden (`/case-studies/admin-burden-evidence`)
 
@@ -86,16 +96,21 @@ approach is designed to deliver, not audited client results" (EN/FR). The homepa
   are Algorythmos's own delivery approach, not client results.
 - [x] Reviewed for consistency with the sources on 26 Sep 2026.
 
-## 4. Homepage + global positioning (`/`, footer, meta)
+## 4. Homepage, voice and positioning (`/`, footer, meta, contact, careers)
 
-- [ ] **"AI consultancy for SMEs in Sydney & Paris"** — accurate descriptor?
-- [x] **"Senior engineering, no hand-offs — you work directly with the people building your system."** (reworded 25 Sep 2026)
-- [ ] **"Compliance-first / GDPR-aligned"** — do you want to assert GDPR *alignment*? (We avoided
-      "compliant/certified" — confirm "aligned" is the right strength.)
-- [ ] **"Outcome-based delivery — scoped to measurable business outcomes."** Reflects how you actually contract?
-- [ ] **"Bilingual (EN/FR)"** — confirmed.
-- [x] **Locations = Sydney (registered office published) + Paris (city-level)**; no phone published (none exists).
-- [ ] Footer copyright year shows **2026** — correct.
+Decisions (Sam Kalaliya, 26 Sep 2026):
+- [x] **Honest boutique voice.** "We" and senior-led wording; no staffed-team, office-staffing, follow-the-sun or 24h claims (trust line, services, blueprint, journey, contact map, blog, press boilerplate).
+- [x] **Careers → "Work with us"** for independent specialists: engagement facts replace the employer perks (equity, off-sites, health insurance, time zones).
+- [x] **Compliance wording is alignment, not compliance**: "aligned with GDPR / the EU AI Act / the Australian Privacy Principles" in EN and FR; no "GDPR-compliant", "guaranteed data residency" or "never leaves your infrastructure".
+- [x] **Case studies:** index and meta describe evidence reports and representative engagements, with a visible illustrative-figures note; representative studies say "The approach:" rather than "We delivered".
+- [x] **Paris presence and Head Office labels unchanged** (Algorythmos is registered in both countries); no French identifiers until the French registration is recorded.
+- [x] Locations = Sydney (registered office published) + Paris (city-level); no phone published (none exists).
+- [x] "Senior engineering, no hand-offs — you work directly with the people building your system." (reworded 25 Sep 2026)
+- [ ] **"Outcome-based delivery — scoped to measurable business outcomes."** Reflects how engagements are actually contracted?
+- [x] **"Bilingual (EN/FR)"** — French copy reviewed for sentence case and franglais (26 Sep 2026).
+- [x] Footer copyright year interpolates the current year.
+
+The build enforces the voice and compliance wording: `npm run i18n:check` fails on staffed-team phrases, follow-the-sun/24h, employee perks, GDPR "compliant" and delivered-client framing (blog posts and case-study FAQs are out of scope).
 
 ## 5. Services pages (`/services/*`)
 
@@ -111,13 +126,13 @@ approach is designed to deliver, not audited client results" (EN/FR). The homepa
 
 ## FR localisation QA
 
-- [ ] French reads idiomatically (not machine-stiff) on: home, pricing, contact, one service, one case study.
-- [ ] Numbers/currency/units render correctly in FR locale.
-- [ ] No EN string leaked into the FR build (and vice-versa) — `npm run i18n:check` + the new `keys:check`.
+- [x] French reads idiomatically: 278 Title Case strings rewritten to sentence case and franglais replaced (26 Sep 2026); `i18n:check` now flags any regression as an advisory warning.
+- [x] Currency stated on FR pages for Australian figures (M$ AU, Md$ AU); blog dates use French abbreviations.
+- [x] No EN string leaked into the FR build — `npm run i18n:check` (parity, placeholders, duplicates) and `keys:check` (every namespace, text and attributes).
 
 ---
 
 ### How to action a change
-Tell me the claim + the correction; I'll update the EN + FR i18n strings (or the inline case-study content
-in `src/data/caseStudies.ts`), rebuild, and redeploy. The biggest single risk to clear first is the
-**pricing comparison (€24,500 "traditional agency")** — substantiate or soften.
+Change the EN and FR strings together in `src/i18n/ui/*.json` (or the case-study content keys), then run the
+full gate. If a claim the build rejects is genuinely true and evidenced, allowlist that single key under
+`claimOk` in `scripts/i18n-allowlist.json` and record the evidence in this register.
