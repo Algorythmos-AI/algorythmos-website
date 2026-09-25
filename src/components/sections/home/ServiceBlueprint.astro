@@ -114,9 +114,13 @@ const services = [
     const root = document.querySelector('[data-blueprint]');
     if (!(root instanceof HTMLElement) || root.dataset.bpInit) return;
     root.dataset.bpInit = '1';
-    const tabs = Array.from(root.querySelectorAll('[data-bp-tab]'));
+    const tabs = Array.from(root.querySelectorAll<HTMLElement>('[data-bp-tab]'));
     const show = (idx: string) => {
-      tabs.forEach((t) => t.setAttribute('aria-selected', t.getAttribute('data-bp-tab') === idx ? 'true' : 'false'));
+      tabs.forEach((t) => {
+        const on = t.getAttribute('data-bp-tab') === idx;
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+        t.setAttribute('tabindex', on ? '0' : '-1');
+      });
       root.querySelectorAll<HTMLElement>('[data-bp-panel]').forEach((p) => {
         p.hidden = p.getAttribute('data-bp-panel') !== idx;
       });
@@ -124,7 +128,19 @@ const services = [
         p.hidden = p.getAttribute('data-bp-caps') !== idx;
       });
     };
-    tabs.forEach((t) => t.addEventListener('click', () => show(t.getAttribute('data-bp-tab') || '0')));
+    tabs.forEach((t, i) => {
+      t.setAttribute('tabindex', t.getAttribute('aria-selected') === 'true' ? '0' : '-1');
+      t.addEventListener('click', () => show(t.getAttribute('data-bp-tab') || '0'));
+      /* WAI-ARIA tabs: arrows / Home / End move focus and select */
+      t.addEventListener('keydown', (e: KeyboardEvent) => {
+        const keys: Record<string, number> = { ArrowRight: i + 1, ArrowDown: i + 1, ArrowLeft: i - 1, ArrowUp: i - 1, Home: 0, End: tabs.length - 1 };
+        if (!(e.key in keys)) return;
+        e.preventDefault();
+        const next = tabs[(keys[e.key] + tabs.length) % tabs.length] as HTMLElement;
+        next.focus();
+        show(next.getAttribute('data-bp-tab') || '0');
+      });
+    });
   }
   document.addEventListener('astro:page-load', setupBlueprint);
   /* Initialize immediately if astro:page-load already fired before this module ran */

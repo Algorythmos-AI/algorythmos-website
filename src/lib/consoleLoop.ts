@@ -1,3 +1,4 @@
+import { motionOff } from '@/lib/motion';
 /**
  * consoleLoop — shared client harness for the "living console" mockups
  * (HeroConsole + the service consoles).
@@ -125,7 +126,7 @@ const STAGGER_MS = 60;
 export function initConsole(root: HTMLElement, opts: ConsoleOptions = {}): void {
   if (root.dataset.hcInit) return; // idempotent across page-load + readyState paths
   root.dataset.hcInit = '1';
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (motionOff()) return;
 
   const ac = new AbortController();
   const { signal } = ac;

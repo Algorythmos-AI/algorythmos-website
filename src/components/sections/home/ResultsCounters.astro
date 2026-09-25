@@ -50,13 +50,14 @@ const stats = [
 </section>
 
 <script>
+  import { motionOff } from '@/lib/motion';
   /* Count-up on first view. Final values are in the HTML; we only animate
      from 0 when motion is allowed, so no-JS and reduced-motion stay correct. */
   function setupCounters() {
     const els = Array.from(document.querySelectorAll<HTMLElement>('[data-count-to]'));
     if (!els.length || els[0].dataset.countInit) return;
     els.forEach((el) => (el.dataset.countInit = '1'));
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (motionOff()) return;
 
     const animate = (el: HTMLElement) => {
       const target = Number(el.dataset.countTo || '0');

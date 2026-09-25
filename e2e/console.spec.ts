@@ -18,7 +18,7 @@ test.describe('mobile (phone viewport)', () => {
   test('hero console fits the phone (no clip) and does not cause horizontal scroll', async ({ page }) => {
     await page.goto('/');
     const console_ = page.locator(HERO);
-    await console_.scrollIntoViewIfNeeded();
+    await console_.evaluate((el) => el.scrollIntoView({ block: 'center' }));
     await page.waitForTimeout(600);
     const r = await page.evaluate(() => {
       const root = document.querySelector('[data-console="hero-console"]')!;
@@ -57,7 +57,7 @@ test.describe('mobile (phone viewport)', () => {
     for (const slug of SERVICE_SLUGS) {
       await page.goto(`/services/${slug}`);
       const console_ = page.locator(`[data-console="svc-${slug}"]`);
-      await console_.scrollIntoViewIfNeeded();
+      await console_.evaluate((el) => el.scrollIntoView({ block: 'center' }));
       await page.waitForTimeout(300);
       const w = await console_.locator('.hc-screen').evaluate((el) => Math.round(el.getBoundingClientRect().width));
       expect(w, slug).toBeLessThanOrEqual(page.viewportSize()!.width + 1);
@@ -69,7 +69,7 @@ test.describe('hero console', () => {
   test('renders with a localized label and SSR values (EN)', async ({ page }) => {
     await page.goto('/');
     const console_ = page.locator(HERO);
-    await console_.scrollIntoViewIfNeeded();
+    await console_.evaluate((el) => el.scrollIntoView({ block: 'center' }));
     await expect(console_).toHaveAttribute('aria-label', /Algorythmos AI console/);
     await expect(console_.locator('[data-hc-count]').first()).toHaveText('1,284');
     // inert: nothing focusable inside the screen
@@ -79,7 +79,7 @@ test.describe('hero console', () => {
   test('is fully French on /fr-fr (incl. Intl number formatting)', async ({ page }) => {
     await page.goto('/fr-fr');
     const console_ = page.locator(HERO);
-    await console_.scrollIntoViewIfNeeded();
+    await console_.evaluate((el) => el.scrollIntoView({ block: 'center' }));
     await expect(console_.locator('.hc-title')).toHaveText("Exécutions d'agents");
     await expect(console_.locator('[data-hc-count]').first()).toHaveText(/^1[\s  ]284$/);
   });
@@ -88,7 +88,7 @@ test.describe('hero console', () => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto('/');
     const console_ = page.locator(HERO);
-    await console_.scrollIntoViewIfNeeded();
+    await console_.evaluate((el) => el.scrollIntoView({ block: 'center' }));
     await page.waitForTimeout(3000);
     await expect(console_.locator('[data-run="contract"] [data-slot="sub"]')).toHaveText('3/5 steps · awaiting approval');
     await expect(console_).not.toHaveClass(/hc-live/);
@@ -98,7 +98,7 @@ test.describe('hero console', () => {
     test.slow();
     await page.goto('/');
     const console_ = page.locator(HERO);
-    await console_.scrollIntoViewIfNeeded();
+    await console_.evaluate((el) => el.scrollIntoView({ block: 'center' }));
     await expect(console_).toHaveClass(/hc-live/, { timeout: 8000 });
     // t=8s approve beat: contract row updates + stepper advances (loose window, anti-flake)
     await expect(console_.locator('[data-run="contract"] [data-slot="sub"]')).toHaveText('4/5 steps · approved', { timeout: 15000 });
@@ -114,7 +114,7 @@ test.describe('hero console', () => {
     await page.waitForURL(/pricing/);
     await page.goBack();
     const console_ = page.locator(HERO);
-    await console_.scrollIntoViewIfNeeded();
+    await console_.evaluate((el) => el.scrollIntoView({ block: 'center' }));
     await expect(console_).toHaveAttribute('data-hc-init', '1', { timeout: 8000 });
     const errors: string[] = [];
     page.on('pageerror', (e) => errors.push(String(e)));
@@ -127,7 +127,7 @@ test.describe('service consoles', () => {
   test('agentic console renders and goes live', async ({ page }) => {
     await page.goto('/services/agentic-automation');
     const console_ = page.locator('[data-console="svc-agentic-automation"]');
-    await console_.scrollIntoViewIfNeeded();
+    await console_.evaluate((el) => el.scrollIntoView({ block: 'center' }));
     await expect(console_).toHaveClass(/hc-live/, { timeout: 8000 });
     await expect(console_.locator('.ac-title')).toContainText('Contract review');
   });

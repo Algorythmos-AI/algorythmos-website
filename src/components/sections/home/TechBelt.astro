@@ -92,7 +92,7 @@ const t = useTranslations(locale);
       animation-play-state: paused;
     }
   }
-  /* Reduced motion: static wrapped grid instead of a moving belt */
+  /* Reduced motion (OS preference or on-page toggle): static wrapped grid instead of a moving belt */
   @media (prefers-reduced-motion: reduce) {
     .tech-belt {
       mask-image: none;
@@ -107,6 +107,20 @@ const t = useTranslations(locale);
     .tech-track[aria-hidden='true'] {
       display: none;
     }
+  }
+  :global(html[data-motion='off']) .tech-belt {
+    mask-image: none;
+    -webkit-mask-image: none;
+    justify-content: center;
+  }
+  :global(html[data-motion='off']) .tech-track {
+    flex-wrap: wrap;
+    justify-content: center;
+    min-width: 0;
+    animation: none;
+  }
+  :global(html[data-motion='off']) .tech-track[aria-hidden='true'] {
+    display: none;
   }
   @keyframes belt-scroll {
     from { transform: translateX(0); }

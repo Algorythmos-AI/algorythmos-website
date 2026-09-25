@@ -1,0 +1,58 @@
+---
+/**
+ * Pause/resume all decorative motion (WCAG 2.2.2 Pause, Stop, Hide). Vanilla, no
+ * React. Sets `data-motion` on <html>; CSS mirrors the reduced-motion kill switch
+ * and scripts consult `motionOff()` from @/lib/motion. Persisted in localStorage.
+ */
+import { asLocale, useTranslations } from '@/i18n';
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+---
+
+<button
+  type="button"
+  id="motion-toggle"
+  class="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-line text-ink-muted transition-colors duration-200 hover:border-brand hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+  aria-label={t('ui.motionToggle')}
+  title={t('ui.motionToggle')}
+  aria-pressed="false"
+  data-label-on={t('ui.motionOn')}
+  data-label-off={t('ui.motionOff')}
+>
+  {/* Pause glyph — shown while motion is on (click → pause) */}
+  <svg class="mt-icon-pause h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M9 5v14M15 5v14"></path>
+  </svg>
+  {/* Play glyph — shown while paused (click → resume) */}
+  <svg class="mt-icon-play hidden h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M7 4l12 8-12 8z"></path>
+  </svg>
+</button>
+
+<style>
+  html[data-motion='off'] .mt-icon-pause { display: none; }
+  html[data-motion='off'] .mt-icon-play { display: block; }
+</style>
+
+<script>
+  function syncMotionToggle() {
+    const btn = document.getElementById('motion-toggle');
+    if (!btn) return;
+    const off = document.documentElement.dataset.motion === 'off';
+    btn.setAttribute('aria-pressed', String(off));
+  }
+  document.addEventListener('click', (e) => {
+    const t = e.target as Element | null;
+    const btn = t && t.closest ? t.closest('#motion-toggle') : null;
+    if (!btn) return;
+    const off = document.documentElement.dataset.motion === 'off';
+    if (off) delete document.documentElement.dataset.motion;
+    else document.documentElement.dataset.motion = 'off';
+    try { localStorage.setItem('motion', off ? 'on' : 'off'); } catch {}
+    syncMotionToggle();
+    /* Resuming needs a fresh page to re-arm canvases and console loops cleanly */
+    if (off) location.reload();
+  });
+  document.addEventListener('astro:after-swap', syncMotionToggle);
+  syncMotionToggle();
+</script>

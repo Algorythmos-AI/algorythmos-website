@@ -25,6 +25,7 @@ const { class: klass = '' } = Astro.props;
   aria-hidden="true"></canvas>
 
 <script>
+  import { motionOff } from '@/lib/motion';
   interface Node {
     x: number;
     y: number;
@@ -37,7 +38,7 @@ const { class: klass = '' } = Astro.props;
     const canvas = document.querySelector('[data-neural-field]');
     if (!(canvas instanceof HTMLCanvasElement)) return;
     if (canvas.dataset.neuralInit) return; // idempotent across page-load + readyState paths
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (motionOff()) return;
     /* Skip small viewports (battery) — but only when the viewport is actually measurable,
        so a transient 0-width layout (background tab, pre-layout eval) doesn't disable us. */
     const vw = Math.max(window.innerWidth, document.documentElement.clientWidth);
