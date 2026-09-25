@@ -12,7 +12,8 @@
  *     metrics, dates, technical terms that are legitimately the same in French).
  *
  * Tier 3 — hardcoded copy in source (FATAL, allowlisted):
- *   - Bare text nodes in .astro templates (3+ words) — every user-facing string
+ *   - Bare text nodes in .astro templates (2+ words, so a heading split by an
+ *     inline <span> is still caught) — every user-facing string
  *     must go through t(). Product-mockup chrome (consoles) and other
  *     intentional strings live in the allowlist → "sourceOk".
  *   - String literals in copy-free data modules (services, case studies,
@@ -274,7 +275,7 @@ function scanSource(allowlist) {
             const rel = relative(ROOT, file);
             const src = readFileSync(file, 'utf-8');
             for (const node of astroTextNodes(src)) {
-                if (copyWordCount(node) >= 3 && !allowed(rel, node)) {
+                if (copyWordCount(node) >= 2 && !allowed(rel, node)) {
                     findings.push({ file: rel, kind: 'text-node', text: node });
                 }
             }

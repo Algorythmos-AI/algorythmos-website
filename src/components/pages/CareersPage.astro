@@ -131,7 +131,7 @@ const locations = (['sydney', 'paris', 'remote'] as const).map((k) => ({
     <div data-reveal class="relative overflow-hidden rounded-[2rem] border border-line glass px-6 py-20 text-center shadow-e2 sm:px-12">
       <Aurora class="opacity-70" />
       <h2 class="mx-auto max-w-3xl text-display font-extrabold tracking-tight text-ink">
-        Let's <span class="text-gradient-brand">build together</span>
+        {t('careers.cta.title')} <span class="text-gradient-brand">{t('careers.cta.titleHighlight')}</span>
       </h2>
       <p class="mx-auto mt-5 max-w-xl text-lead text-ink-muted">{t('careers.hero.description')}</p>
       <div class="mt-10 flex flex-wrap justify-center gap-4">
