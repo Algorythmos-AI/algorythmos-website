@@ -14,10 +14,10 @@ const path = '/contact';
 const abs = (p: string) => SITE + localizePath(locale, p);
 
 import { BUSINESS, regionAddressLine } from '@/data/business';
-const EMAIL = BUSINESS.email;
-
 /* Per-region contacts, ordered so the visitor's own region shows first. */
 const primaryRegion = locale === 'fr-fr' ? 'FR' : 'AU';
+/* The form's "please email us" fallback points at the visitor's own region mailbox. */
+const EMAIL = BUSINESS.regions[primaryRegion].email;
 const regionOrder: ('AU' | 'FR')[] = primaryRegion === 'FR' ? ['FR', 'AU'] : ['AU', 'FR'];
 const contacts = regionOrder.map((k) => ({ city: BUSINESS.regions[k].city, email: BUSINESS.regions[k].email }));
 

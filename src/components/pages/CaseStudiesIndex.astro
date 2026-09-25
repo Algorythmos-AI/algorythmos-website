@@ -54,6 +54,7 @@ const crumbs = breadcrumb([
   <PageHeader eyebrow={t('nav.caseStudies')} title={t('caseStudies.hero.title')} lead={t('caseStudies.hero.subtitle')} />
 
   <section class="container-page py-20">
+    <p data-reveal class="mb-8 max-w-3xl text-sm text-ink-subtle">{t('caseStudies.note')}</p>
     <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
       {cards.map((c, i) => (
         <a
