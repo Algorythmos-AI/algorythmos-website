@@ -9,9 +9,29 @@
  *   ZOHO_SMTP_USER   a real mailbox, e.g. noreply@algorythmos.com  (the SMTP login)
  *   ZOHO_SMTP_PASS   a Zoho *app-specific password* for that mailbox (Security → App Passwords)
  *   CONTACT_TO       where enquiries land, e.g. contact@algorythmos.com (defaults to ZOHO_SMTP_USER)
- * Until configured, submissions are accepted (202) and logged so the UX works.
+ * Until configured, submissions are REJECTED (503) so the visitor sees an error and
+ * emails directly — an enquiry must never be silently dropped.
+ *
+ * Spam defences (no third-party service): a hidden honeypot field, a minimum
+ * fill-time check, and a best-effort per-IP rate limit. The rate limit is held in
+ * instance memory, so on Fluid Compute it is shared only within one instance —
+ * it blunts bursts but is not a guarantee.
  */
 import nodemailer from 'nodemailer';
+
+const RATE_WINDOW_MS = 10 * 60 * 1000;
+const RATE_MAX = 5;
+const MIN_FILL_MS = 3000;
+/** @type {Map<string, number[]>} */
+const hits = new Map();
+function rateLimited(ip) {
+  const now = Date.now();
+  const recent = (hits.get(ip) || []).filter((t) => now - t < RATE_WINDOW_MS);
+  recent.push(now);
+  hits.set(ip, recent);
+  if (hits.size > 5000) hits.clear(); // crude memory cap
+  return recent.length > RATE_MAX;
+}
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const esc = (s) => String(s).replace(/[<>&]/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' })[c]);
@@ -30,6 +50,19 @@ export default async function handler(req, res) {
     // Attribution context (optional, first-party only) — capped so it can't bloat the email.
     const locale = String(body.locale || '').trim().slice(0, 10);
     const utm = String(body.utm || '').trim().slice(0, 300);
+    const honeypot = String(body.website || '').trim();
+    const startedAt = Number(body.ts || 0);
+
+    // Bots fill every field and submit instantly; humans do neither. Pretend success
+    // so the bot learns nothing, but deliver nothing.
+    if (honeypot || (startedAt > 0 && Date.now() - startedAt < MIN_FILL_MS)) {
+      return res.status(200).json({ ok: true, delivered: false });
+    }
+
+    const ip = String(req.headers['x-forwarded-for'] || req.socket?.remoteAddress || '').split(',')[0].trim();
+    if (ip && rateLimited(ip)) {
+      return res.status(429).json({ ok: false, error: 'Too many requests' });
+    }
 
     if (name.length < 2 || !EMAIL_RE.test(email) || message.length < 10) {
       return res.status(400).json({ ok: false, error: 'Invalid input' });
@@ -44,8 +77,8 @@ export default async function handler(req, res) {
     } = process.env;
 
     if (!ZOHO_SMTP_USER || !ZOHO_SMTP_PASS) {
-      console.warn('[contact] Zoho SMTP not configured — message not delivered:', { name, email, company });
-      return res.status(202).json({ ok: true, delivered: false });
+      console.error('[contact] SMTP not configured — enquiry rejected so the visitor can email directly:', { name, email, company });
+      return res.status(503).json({ ok: false, error: 'Contact form not configured' });
     }
 
     const port = Number(ZOHO_SMTP_PORT);
