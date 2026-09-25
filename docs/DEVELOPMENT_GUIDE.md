@@ -1,4 +1,4 @@
-# Development guide — Algorythmos website (Astro 6)
+# Development guide — Algorythmos website (Astro 7)
 
 Canonical contributor rules live in [`CONTRIBUTING.md`](CONTRIBUTING.md). This guide is
 the practical companion: where things are, how to add content, and what the gates check.
@@ -7,7 +7,7 @@ the practical companion: where things are, how to add content, and what the gate
 
 | Layer | Technology |
 |---|---|
-| Framework | Astro 6, static output (`astro build` → `dist/`) |
+| Framework | Astro 7, static output (`astro build` → `dist/`) |
 | Styling | Tailwind CSS 3 over semantic CSS custom properties (`src/styles/tokens.css`, `themes.css`) |
 | Islands | React 18, only `src/components/islands/Chart.tsx` (`client:visible`) |
 | i18n | Build-time dictionaries: `src/i18n/ui/en.global.json`, `en.au.json` (AU overrides), `fr.fr.json` |

@@ -1,6 +1,6 @@
 # Change Policy
 
-> 🟢 **MIGRATED TO ASTRO 6.** This project is now an Astro 6 static site (the old
+> 🟢 **MIGRATED TO ASTRO 6.** This project is now an Astro 7 static site (the old
 > Vite + React SPA is archived under `legacy/` and must not be touched). The
 > prior Vite/JSX-specific prohibitions are **superseded** by the canonical
 > workflow in **[/docs/CONTRIBUTING.md](../docs/CONTRIBUTING.md)**.

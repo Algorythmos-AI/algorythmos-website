@@ -1,15 +1,15 @@
-# Contributing — Algorythmos website (Astro 6)
+# Contributing — Algorythmos website (Astro 7)
 
 > **Canonical workflow for every contributor.**
 > This document supersedes the prior Vite + React SPA rules. The project has
-> migrated to **Astro 6**; the old SPA is archived under `legacy/` and must not
+> migrated to **Astro 7**; the old SPA is archived under `legacy/` and must not
 > be touched. Read this file before changing anything.
 
 ---
 
 ## 1. Stack overview
 
-- **Astro 6**, static-first (`astro build` → `dist/`). The site is real, static
+- **Astro 7**, static-first (`astro build` → `dist/`). The site is real, static
   HTML — there is no client-side router for content pages.
 - **Dual-theme design tokens.** Light + dark are driven entirely by CSS custom
   properties in `src/styles/tokens.css` (theme-agnostic) and

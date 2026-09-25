@@ -1,4 +1,4 @@
-> Historical record. Entries before the Astro 6 migration describe the retired Vite + React SPA;
+> Historical record. Entries before the Astro 7 migration describe the retired Vite + React SPA;
 > see `DEVELOPMENT_GUIDE.md` for the current architecture.
 
 # Algorythmos Audit History

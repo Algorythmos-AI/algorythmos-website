@@ -20,7 +20,7 @@ const URLS = [
   { label: 'case study (au-en)', path: '/au-en/case-studies/port-botany-ai-ml' },
 ];
 
-const preview = spawn('npx', ['astro', 'preview', '--port', String(PORT)], { stdio: 'ignore' });
+const preview = spawn('npx', ['astro', 'preview', '--port', String(PORT), '--ignore-lock'], { stdio: 'ignore' });
 const base = `http://localhost:${PORT}`;
 
 async function waitForServer(timeoutMs = 20000) {

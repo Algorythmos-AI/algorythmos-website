@@ -34,8 +34,12 @@ export default defineConfig({
     },
   ],
   webServer: {
-    /* CI has already run `npm run build`; locally we build first so the preview is fresh. */
-    command: process.env.CI ? 'npx astro preview --port 4331' : 'npm run build && npx astro preview --port 4331',
+    /* CI has already run `npm run build`; locally we build first so the preview is fresh.
+       `--ignore-lock`: Astro 7's preview keeps a lock file and refuses to start (exits 0)
+       when a stale one exists, which Playwright reports as "exited early". */
+    command: process.env.CI
+      ? 'npx astro preview --port 4331 --ignore-lock'
+      : 'npm run build && npx astro preview --port 4331 --ignore-lock',
     url: E2E_ORIGIN,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

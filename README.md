@@ -8,7 +8,7 @@ intelligence, SQL dashboards and MLOps for SMEs in Australia and France.
 
 | Layer | Technology |
 |---|---|
-| Framework | Astro 6, static output |
+| Framework | Astro 7, static output |
 | Styling | Tailwind CSS 3 + semantic CSS custom properties (light/dark) |
 | Islands | React 18 (charts only) |
 | i18n | Build-time dictionaries in `src/i18n/ui/*.json` via `useTranslations()` |

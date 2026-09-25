@@ -1,6 +1,6 @@
 # Engineering governance — read before changing anything
 
-This project is an Astro 6 static site. The old Vite + React SPA is archived under
+This project is an Astro 7 static site. The old Vite + React SPA is archived under
 `legacy/` and must not be modified. The canonical rules are in
 `/docs/CONTRIBUTING.md`; the files in this folder are supporting guides.
 
