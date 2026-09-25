@@ -91,7 +91,7 @@ test.describe('trust & PR surfaces', () => {
     await page.goto('/au-en/ai-consultancy-sydney');
     await expect(page.getByText('Australian Privacy Principles').first()).toBeVisible();
     await page.goto('/fr-fr/conseil-en-ia-paris');
-    await expect(page.getByText('EU AI Act').first()).toBeVisible();
+    await expect(page.getByText('AI Act européen').first()).toBeVisible();
   });
 
   test('case study shows headline stat band (EN + FR)', async ({ page }) => {
