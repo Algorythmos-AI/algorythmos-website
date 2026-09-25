@@ -24,16 +24,10 @@ const values = (['impact', 'rigor', 'partnership', 'remote'] as const).map((k) =
   body: t(`careers.values.${k}.body`),
 }));
 
-const benefits = [
-  'compensation',
-  'remote',
-  'learning',
-  'hardware',
-  'health',
-  'pto',
-  'research',
-  'mentorship',
-].map((k) => t(`careers.benefits.${k}`));
+/* What an engagement with Algorythmos looks like for an independent specialist. */
+const benefits = ['scoped', 'rates', 'direct', 'remoteWork', 'standards', 'privacy'].map((k) =>
+  t(`careers.benefits.${k}`),
+);
 
 const locations = (['sydney', 'paris', 'remote'] as const).map((k) => ({
   city: t(`careers.locations.${k}.city`),
