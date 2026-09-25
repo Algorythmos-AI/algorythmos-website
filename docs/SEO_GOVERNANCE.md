@@ -141,13 +141,12 @@
 - OG/Twitter URLs
 
 ### Do not modify without review
-- React components
-- JSX files
-- Routing logic
-- i18n/region logic
-- UI structure, styles, animations
-- Tailwind configuration
-- Vite configs
+- The canonical domain and locale prefixes (`/au-en`, `/fr-fr`)
+- Canonical consolidation (root pages → `/au-en`) and the hreflang set
+- `src/i18n/index.ts` locale/region logic
+- `src/seo/schema.ts` identity graph (`#organization`, `#website`, `#founder`)
+- `vercel.json` redirects and headers
+- `astro.config.mjs` sitemap configuration
 
 ---
 

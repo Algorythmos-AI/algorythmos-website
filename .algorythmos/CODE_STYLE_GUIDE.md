@@ -2,7 +2,7 @@
 
 ## React Components
 - Use functional components with hooks
-- Use `const { t } = useI18n()` for all text
+- Use `const t = useTranslations(locale)` (from `@/i18n`) for all text, including attribute copy
 - Props should be destructured
 - Component names use PascalCase
 
