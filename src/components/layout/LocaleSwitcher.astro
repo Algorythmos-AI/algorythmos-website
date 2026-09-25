@@ -35,7 +35,7 @@ const options = PREFIXED_LOCALES.map((loc) => ({
 }));
 ---
 
-<nav class:list={['flex flex-wrap items-center', compact ? 'gap-1' : 'gap-1.5']} aria-label={compact ? t('localeSwitcher.compactLabel') : t('localeSwitcher.label')}>
+<nav class:list={['flex items-center', compact ? 'flex-nowrap gap-1' : 'flex-wrap gap-1.5']} aria-label={compact ? t('localeSwitcher.compactLabel') : t('localeSwitcher.label')}>
   {options.map((o) => (
     <a
       href={o.href}

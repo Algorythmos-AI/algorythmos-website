@@ -745,6 +745,55 @@ function validateSeoFeatures() {
 }
 
 // ---------------------------------------------------------------------------
+// Build-output guards: defects that no source check can see
+//   - CSS: Lightning CSS keeps only the -webkit- line when a rule lists
+//     `backdrop-filter` then `-webkit-backdrop-filter`, silently dropping the
+//     blur in Chromium and Firefox. Every rule block that has the prefixed
+//     property must also carry the unprefixed one.
+//   - HTML: JSX drops the space between a closing inline tag and the next
+//     expression on a new line ("Enterprise-grade</mark>rigour").
+// ---------------------------------------------------------------------------
+function* walkExt(dir, ext) {
+  for (const entry of readdirSync(dir)) {
+    const p = join(dir, entry);
+    if (statSync(p).isDirectory()) yield* walkExt(p, ext);
+    else if (entry.endsWith(ext)) yield p;
+  }
+}
+
+function validateBuildOutput() {
+  log.section('🧱 Build-output guards (CSS + HTML)');
+  const before = errors;
+
+  let blocks = 0;
+  for (const file of walkExt(DIST, '.css')) {
+    const css = readFileSync(file, 'utf8');
+    for (const m of css.matchAll(/([^{}]*)\{([^{}]*)\}/g)) {
+      const body = m[2];
+      if (!body.includes('-webkit-backdrop-filter')) continue;
+      blocks++;
+      if (!/(^|;|\s)backdrop-filter\s*:/.test(body)) {
+        log.error(`${relative(ROOT, file)}: "${m[1].trim().slice(0, 60)}" has -webkit-backdrop-filter without backdrop-filter`);
+        errors++;
+      }
+    }
+  }
+  if (errors === before) log.success(`backdrop-filter pairing holds (${blocks} prefixed rule block(s))`);
+
+  const joinBefore = errors;
+  const JOIN = /<\/(mark|strong|em|a|b|i|code)>(?=[A-Za-zÀ-ÖØ-öø-ÿ])/g;
+  for (const file of walkHtml(DIST)) {
+    const html = readFileSync(file, 'utf8');
+    for (const m of html.matchAll(JOIN)) {
+      const ctx = html.slice(Math.max(0, m.index - 30), m.index + 20).replace(/\s+/g, ' ');
+      log.error(`${relative(DIST, file)}: word joined after </${m[1]}> … ${ctx}`);
+      errors++;
+    }
+  }
+  if (errors === joinBefore) log.success('No words joined after closing inline tags');
+}
+
+// ---------------------------------------------------------------------------
 // Main
 // ---------------------------------------------------------------------------
 function main() {
@@ -768,6 +817,7 @@ ${colors.cyan}╔═════════════════════
   validateStructuredData();
   validateStaticFiles();
   validateSeoFeatures();
+  validateBuildOutput();
 
   log.section('📊 VALIDATION SUMMARY');
   console.log(`

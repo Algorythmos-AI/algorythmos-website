@@ -31,12 +31,31 @@
   :lang(fr) {
     hyphens: auto;
   }
-  /* Headlines and leads must not break mid-word ("spéciali-sé") */
+  /* Headlines, leads and UI chrome must not break mid-word ("spéciali-sé", "Algo-rythmos") */
   :lang(fr) h1,
   :lang(fr) h2,
   :lang(fr) .text-lead,
-  :lang(fr) .text-mega {
+  :lang(fr) .text-mega,
+  :lang(fr) header,
+  :lang(fr) nav,
+  :lang(fr) button,
+  :lang(fr) a {
     hyphens: manual;
+  }
+  /* While the consent strip is showing, reserve its height so it never covers
+     the page's last content or a focused field (WCAG 2.4.11). --consent-h is
+     measured by ConsentBanner's ResizeObserver. */
+  body:has(#consent:not([hidden])) {
+    padding-bottom: var(--consent-h, 0px);
+  }
+  html:has(#consent:not([hidden])) {
+    scroll-padding-bottom: var(--consent-h, 0px);
+  }
+  /* Users who ask for less transparency get solid translucent surfaces. */
+  @media (prefers-reduced-transparency: reduce) {
+    .glass {
+      background: rgb(var(--surface-1));
+    }
   }
   @media (prefers-reduced-motion: reduce) {
     *,
@@ -81,12 +100,19 @@
     color: transparent;
   }
 
-  /* Frosted glass surface (theme-aware) */
+  /* Translucent surface (theme-aware). Deliberately no backdrop-filter: blurring
+     ~20 in-flow surfaces over the animated aurora costs paint on mobile, and
+     overlays (menu, consent, region banner) must be opaque, never glass. */
   .glass {
     background: var(--glass-bg);
-    backdrop-filter: blur(14px) saturate(140%);
-    -webkit-backdrop-filter: blur(14px) saturate(140%);
     border: 1px solid var(--glass-border);
+  }
+
+  /* Opt-in blur for a surface that has been measured not to regress Lighthouse.
+     Write only the unprefixed property: Lightning CSS adds -webkit- for Safari,
+     but drops the unprefixed line if both are written in that order. */
+  .glass-blur {
+    backdrop-filter: blur(14px) saturate(140%);
   }
 
   /* Gradient hairline border via mask (works both themes) */
@@ -223,12 +249,12 @@
     }
   }
 
+  /* Region suggestion sits above the consent strip, whatever height it wraps to */
+  body:has(#consent:not([hidden])) .region-banner {
+    bottom: calc(var(--consent-h, 7.5rem) + 1rem);
+  }
   /* Below-fold section wrapper: skip layout/paint until near the viewport.
      `auto 800px` keeps the real size once rendered (stable scrollbar). */
-  /* Region suggestion never hides behind the consent strip */
-  body:has(#consent:not([hidden])) .region-banner {
-    bottom: 7.5rem;
-  }
   .cv-auto {
     content-visibility: auto;
     contain-intrinsic-size: auto 800px;

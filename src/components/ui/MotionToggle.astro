@@ -7,12 +7,18 @@
 import { asLocale, useTranslations } from '@/i18n';
 const locale = asLocale(Astro.currentLocale);
 const t = useTranslations(locale);
+/* More than one instance can render (header + mobile menu), so the buttons are
+   found by data attribute, never by id. */
+const { class: extra = '' } = Astro.props as { class?: string };
 ---
 
 <button
   type="button"
-  id="motion-toggle"
-  class="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-line text-ink-muted transition-colors duration-200 hover:border-brand hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+  data-motion-toggle
+  class:list={[
+    'inline-flex h-11 w-11 items-center justify-center rounded-lg border border-line text-ink-muted transition-colors duration-200 hover:border-brand hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-bg',
+    extra,
+  ]}
   aria-label={t('ui.motionToggle')}
   title={t('ui.motionToggle')}
   aria-pressed="false"
@@ -36,14 +42,12 @@ const t = useTranslations(locale);
 
 <script>
   function syncMotionToggle() {
-    const btn = document.getElementById('motion-toggle');
-    if (!btn) return;
     const off = document.documentElement.dataset.motion === 'off';
-    btn.setAttribute('aria-pressed', String(off));
+    document.querySelectorAll('[data-motion-toggle]').forEach((btn) => btn.setAttribute('aria-pressed', String(off)));
   }
   document.addEventListener('click', (e) => {
     const t = e.target as Element | null;
-    const btn = t && t.closest ? t.closest('#motion-toggle') : null;
+    const btn = t && t.closest ? t.closest('[data-motion-toggle]') : null;
     if (!btn) return;
     const off = document.documentElement.dataset.motion === 'off';
     if (off) delete document.documentElement.dataset.motion;
