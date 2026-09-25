@@ -21,6 +21,21 @@ export const founderPerson = {
 };
 
 /**
+ * A content date (YYYY-MM-DD) as a full ISO 8601 datetime at 09:00 Sydney time,
+ * with the correct offset for that day (AEST +10:00 or AEDT +11:00). Google flags
+ * date-only Article dates as "missing a timezone".
+ */
+export function isoDateTime(date: string): string {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return date; // already a datetime, or unexpected: leave as is
+  const offset =
+    new Intl.DateTimeFormat('en-AU', { timeZone: 'Australia/Sydney', timeZoneName: 'longOffset' })
+      .formatToParts(new Date(`${date}T00:00:00Z`))
+      .find((p) => p.type === 'timeZoneName')
+      ?.value.replace('GMT', '') || '+10:00';
+  return `${date}T09:00:00${offset}`;
+}
+
+/**
  * Per-page Open Graph cards (generated at build by `src/pages/og/[...route].ts`).
  * Pass an already region-localized path (e.g. '/fr-fr/blog/x'); the key/URL must
  * match a `pages` entry in the OG route, so both sides call these helpers.

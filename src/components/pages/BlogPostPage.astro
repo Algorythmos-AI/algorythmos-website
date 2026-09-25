@@ -7,7 +7,7 @@ import { getPost } from '@/data/blog';
 import { getBlogCharts } from '@/data/blogCharts';
 import { localizeChart } from '@/lib/localizeChart';
 import Chart from '@/components/islands/Chart';
-import { breadcrumb, SITE, ORG_ID, FOUNDER_ID, ogImageUrl } from '@/seo/schema';
+import { breadcrumb, SITE, ORG_ID, FOUNDER_ID, ogImageUrl, isoDateTime } from '@/seo/schema';
 import { bookingUrl } from '@/lib/links';
 import Breadcrumbs from '@/components/ui/Breadcrumbs.astro';
 import RelatedLinks from '@/components/ui/RelatedLinks.astro';
@@ -60,8 +60,8 @@ const articleLd = {
   '@type': 'BlogPosting',
   headline: title,
   description,
-  datePublished: post.date,
-  dateModified: post.updatedAt ?? post.date,
+  datePublished: isoDateTime(post.date),
+  dateModified: isoDateTime(post.updatedAt ?? post.date),
   image: ogImg,
   author: { '@id': FOUNDER_ID },
   publisher: { '@id': ORG_ID },

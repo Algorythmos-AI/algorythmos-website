@@ -7,7 +7,7 @@ import { asLocale, useTranslations, localizePath, getDict } from '@/i18n';
 import { getCaseStudy } from '@/data/caseStudies';
 import { caseStudyCharts } from '@/data/caseStudyCharts';
 import { localizeChart } from '@/lib/localizeChart';
-import { breadcrumb, SITE, ORG_ID, ogImageUrl } from '@/seo/schema';
+import { breadcrumb, SITE, ORG_ID, ogImageUrl, isoDateTime } from '@/seo/schema';
 import { bookingUrl } from '@/lib/links';
 import Breadcrumbs from '@/components/ui/Breadcrumbs.astro';
 import RelatedLinks from '@/components/ui/RelatedLinks.astro';
@@ -68,8 +68,8 @@ const articleLd = {
   ...(study.keywords && study.keywords.length ? { keywords: study.keywords.join(', ') } : {}),
   author: { '@id': ORG_ID },
   publisher: { '@id': ORG_ID },
-  datePublished: cs.date,
-  dateModified: cs.updatedAt ?? cs.date,
+  datePublished: isoDateTime(cs.date),
+  dateModified: isoDateTime(cs.updatedAt ?? cs.date),
   inLanguage: locale === 'fr-fr' ? 'fr' : 'en',
   image: ogImg,
   url: abs(path),
