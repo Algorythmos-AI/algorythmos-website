@@ -38,6 +38,7 @@ const publishers: { id: string; heading: string; rows: Row[] }[] = [
       { label: t('legalNotice.label.legalForm'), value: t('legalNotice.publisher.fr.legalForm', { name: FR_PUBLISHER.tradingName }) },
       { label: 'SIREN', value: FR_PUBLISHER.siren },
       { label: t('legalNotice.label.register'), value: t('legalNotice.publisher.fr.register') },
+      ...(FR_PUBLISHER.vatExempt ? [{ label: t('legalNotice.label.vat'), value: t('legalNotice.publisher.fr.vatExempt') }] : []),
       { label: t('legalNotice.label.address'), value: FR_PUBLISHER.address },
       { label: t('legalNotice.label.phone'), value: FR_PUBLISHER.phone, href: `tel:${FR_PUBLISHER.phone.replace(/\s+/g, '')}` },
       { label: t('legalNotice.label.email'), value: FR_PUBLISHER.email, href: `mailto:${FR_PUBLISHER.email}` },

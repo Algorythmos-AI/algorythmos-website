@@ -10,10 +10,13 @@ const t = useTranslations(locale);
 const path = '/privacy';
 const abs = (p: string) => SITE + localizePath(locale, p);
 
-import { BUSINESS, regionAddressLine } from '@/data/business';
-const EMAIL = BUSINESS.email;
+import { BUSINESS, FR_PUBLISHER, regionAddressLine } from '@/data/business';
+/* The French pages are published by the French sole-trader business (see the legal notice). */
+const isFr = locale === 'fr-fr';
+const EMAIL = isFr ? FR_PUBLISHER.email : BUSINESS.email;
+const ADDRESS = isFr ? FR_PUBLISHER.address : regionAddressLine('AU');
 /* Placeholders filled from business.ts, never retyped: every occurrence. */
-const fill = (s: string) => s.replaceAll('{email}', EMAIL).replaceAll('{address}', regionAddressLine('AU'));
+const fill = (s: string) => s.replaceAll('{email}', EMAIL).replaceAll('{address}', ADDRESS);
 
 const crumbs = breadcrumb([
   { name: t('nav.home'), url: abs('/') },

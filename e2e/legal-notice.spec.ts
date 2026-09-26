@@ -3,8 +3,10 @@
  *
  * Both publishers, the publication director and the host must render in both
  * locales, straight from src/data/business.ts, and every page's footer must link
- * to the notice. The French publisher's phone must never reach the schema, which
- * describes ALGORYTHMOS PTY LTD., not the French sole-trader business.
+ * to the notice. The French privacy policy and terms name the French publisher
+ * (and French law); the Australian ones name the company. The French publisher's
+ * phone must never reach the schema, which describes ALGORYTHMOS PTY LTD., not
+ * the French sole-trader business.
  */
 import { test, expect } from '@playwright/test';
 import { BUSINESS, FR_PUBLISHER, HOST, PUBLICATION_DIRECTOR } from '../src/data/business';
@@ -32,6 +34,7 @@ for (const { prefix, lang, h1 } of LOCALES) {
     // The "EI" marker French law requires beside a sole trader's name (EN and FR wording differ).
     await expect(fr).toContainText(/\bEI\b/);
     await expect(fr.locator(`a[href="tel:${FR_PUBLISHER.phone.replace(/\s+/g, '')}"]`)).toHaveCount(1);
+    await expect(fr).toContainText('293 B');
 
     const main = page.locator('main');
     await expect(main).toContainText(PUBLICATION_DIRECTOR);
@@ -51,4 +54,26 @@ test('the French publisher phone stays out of the structured data', async ({ pag
   const jsonLd = (await page.locator('script[type="application/ld+json"]').allTextContents()).join('\n');
   expect(jsonLd).not.toContain(FR_PUBLISHER.phone.replace(/\s+/g, ''));
   expect(jsonLd).not.toContain(FR_PUBLISHER.phone);
+});
+
+test('the French privacy policy and terms name the French publisher and French law', async ({ page }) => {
+  for (const path of ['/fr-fr/privacy', '/fr-fr/terms']) {
+    await page.goto(path);
+    const main = page.locator('main');
+    for (const v of [FR_PUBLISHER.holder, FR_PUBLISHER.siren, FR_PUBLISHER.email]) await expect(main, path).toContainText(v);
+    for (const gone of ['Pty Ltd', 'ABN', BUSINESS.email, 'Nouvelle-Galles', 'Australian Consumer Law', 'Office of the Australian']) {
+      await expect(main, `${path} still mentions ${gone}`).not.toContainText(gone);
+    }
+  }
+  await expect(page.locator('main')).toContainText('droit français');
+});
+
+test('the Australian privacy policy and terms still name the company', async ({ page }) => {
+  for (const path of ['/au-en/privacy', '/au-en/terms']) {
+    await page.goto(path);
+    const main = page.locator('main');
+    for (const v of ['Algorythmos Pty Ltd', BUSINESS.abn, BUSINESS.email]) await expect(main, path).toContainText(v);
+    await expect(main, path).not.toContainText(FR_PUBLISHER.siren);
+  }
+  await expect(page.locator('main')).toContainText('New South Wales');
 });

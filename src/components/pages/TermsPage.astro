@@ -10,8 +10,9 @@ const t = useTranslations(locale);
 const path = '/terms';
 const abs = (p: string) => SITE + localizePath(locale, p);
 
-import { BUSINESS } from '@/data/business';
-const EMAIL = BUSINESS.email;
+import { BUSINESS, FR_PUBLISHER } from '@/data/business';
+/* The French pages are published by the French sole-trader business (see the legal notice). */
+const EMAIL = locale === 'fr-fr' ? FR_PUBLISHER.email : BUSINESS.email;
 
 const crumbs = breadcrumb([
   { name: t('nav.home'), url: abs('/') },

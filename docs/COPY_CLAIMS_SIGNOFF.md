@@ -90,14 +90,18 @@ approach is designed to deliver, not audited client results" (EN/FR). The homepa
         as Algorythmos. SIREN 991 562 497, registered in the RNE on 18 Sep 2025.
       - Address shown: "La Défense, France". Phone: +33 7 49 73 74 84.
       - Owner decision, 26 Sep 2026.
-- [ ] Counsel: is "La Défense, France" enough for LCEN art. 6, or does it need a full street
-      (or domiciliation) address?
-- [ ] Counsel: Vercel publishes no phone number. Is its address plus website enough for the host entry?
-- [ ] Counsel: the Privacy Policy and Terms name ALGORYTHMOS PTY LTD. on both locales. Should the
-      French pages name the EI instead, as data controller for French enquiries and as the
-      contracting party for French clients?
-- [ ] VAT: the register shows no intra-EU VAT number, so the notice states none. Confirm
-      *franchise en base* (art. 293 B du CGI) before any page or invoice says so.
+- [x] **Owner decisions, 26 Sep 2026:**
+      - "La Défense, France" is precise enough for the publisher address.
+      - Vercel's address plus website is enough for the host entry; Vercel publishes no phone.
+      - The French Privacy Policy and Terms name the EI (data controller and contracting
+        party). The Australian ones keep ALGORYTHMOS PTY LTD.
+      - The French Terms are governed by French law and the French courts, with French
+        consumers' mandatory rights (Code de la consommation) preserved. The Australian Terms
+        stay under NSW law with the ACL carve-out.
+      - No VAT is charged (*franchise en base*), so the notice shows "TVA non applicable,
+        art. 293 B du CGI".
+- [ ] If the EI sells to consumers, the Code de la consommation (L612-1) requires naming a free
+      consumer mediator. None is named yet, so the Terms make no mediator claim.
 
 ## 3d. Port Botany FAQ block and the freight-forwarder post (26 Sep 2026)
 
