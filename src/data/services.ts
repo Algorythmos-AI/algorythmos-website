@@ -87,8 +87,7 @@ export const services: Service[] = [
     console: 'LlmopsConsole',
     blueprint: { kind: 'llmops', fig: '10' },
     stack: ['genai', 'mlops', 'cloud'],
-    // Until the client engagement studies land, the closest delivered-style proof.
-    proof: 'healthcare-mlops',
+    proof: 'clinical-document-ai',
     icon: 'M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2zM8 9h8M8 13h5',
   },
   {
@@ -108,7 +107,7 @@ export const services: Service[] = [
     console: 'PlatformConsole',
     blueprint: { kind: 'platform', fig: '07' },
     stack: ['cloud', 'containers', 'iac'],
-    proof: 'healthcare-mlops',
+    proof: 'ml-deployment-platform',
     icon: 'm12 2 10 5-10 5L2 7zM2 17l10 5 10-5M2 12l10 5 10-5',
   },
   {
@@ -118,7 +117,7 @@ export const services: Service[] = [
     console: 'MonitoringConsole',
     blueprint: { kind: 'monitoring', fig: '08' },
     stack: ['mlops', 'data', 'languages'],
-    proof: 'healthcare-mlops',
+    proof: 'model-monitoring-logistics',
     icon: 'M22 12h-4l-3 9L9 3l-3 9H2',
   },
   {
@@ -128,7 +127,7 @@ export const services: Service[] = [
     console: 'FeaturesConsole',
     blueprint: { kind: 'features', fig: '09' },
     stack: ['data', 'mlops', 'languages'],
-    proof: 'healthcare-mlops',
+    proof: 'retail-data-foundation',
     icon: 'M12 2c5 0 9 1.3 9 3s-4 3-9 3-9-1.3-9-3 4-3 9-3zM3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5M3 12c0 1.7 4 3 9 3s9-1.3 9-3',
   },
   {

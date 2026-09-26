@@ -39,25 +39,25 @@ export const serviceRelated: Record<string, RelatedRef[]> = {
     { type: 'blog', slug: 'llmops-in-production' },
     { type: 'blog', slug: 'llmsecops' },
     { type: 'blog', slug: 'agentic-ai' },
-    { type: 'case-study', slug: 'healthcare-mlops' },
+    { type: 'case-study', slug: 'clinical-document-ai' },
     { type: 'service', slug: 'agentic-automation' },
     { type: 'service', slug: 'model-monitoring' },
   ],
   'ai-platform-engineering': [
     { type: 'blog', slug: 'ai-platform-kubernetes' },
-    { type: 'case-study', slug: 'healthcare-mlops' },
+    { type: 'case-study', slug: 'ml-deployment-platform' },
     { type: 'service', slug: 'mlops-cicd' },
     { type: 'service', slug: 'model-monitoring' },
   ],
   'model-monitoring': [
     { type: 'blog', slug: 'model-monitoring-drift' },
-    { type: 'case-study', slug: 'healthcare-mlops' },
+    { type: 'case-study', slug: 'model-monitoring-logistics' },
     { type: 'service', slug: 'mlops-cicd' },
     { type: 'service', slug: 'llmops' },
   ],
   'data-feature-management': [
     { type: 'blog', slug: 'feature-stores-lineage' },
-    { type: 'case-study', slug: 'retail-sql' },
+    { type: 'case-study', slug: 'retail-data-foundation' },
     { type: 'service', slug: 'sql-dashboards' },
     { type: 'service', slug: 'model-monitoring' },
   ],
@@ -129,6 +129,22 @@ export const blogRelated: Record<string, RelatedRef[]> = {
 
 /** Case study → the service that delivered it + a sibling study. */
 export const caseStudyRelated: Record<string, RelatedRef[]> = {
+  'clinical-document-ai': [
+    { type: 'service', slug: 'llmops' },
+    { type: 'blog', slug: 'llmops-in-production' },
+  ],
+  'ml-deployment-platform': [
+    { type: 'service', slug: 'ai-platform-engineering' },
+    { type: 'blog', slug: 'ai-platform-kubernetes' },
+  ],
+  'model-monitoring-logistics': [
+    { type: 'service', slug: 'model-monitoring' },
+    { type: 'blog', slug: 'model-monitoring-drift' },
+  ],
+  'retail-data-foundation': [
+    { type: 'service', slug: 'data-feature-management' },
+    { type: 'blog', slug: 'feature-stores-lineage' },
+  ],
   'port-botany-ai-ml': [
     { type: 'service', slug: 'document-intelligence' },
     { type: 'blog', slug: 'port-botany-document-flows' },

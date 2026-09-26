@@ -97,6 +97,15 @@ const proof = proofStudy
       challenge: t(`caseStudies.items.${proofStudy.i18nIndex}.challenge`),
       // Evidence label shown with the card: the study's badge, else its note.
       label: tOr(`caseStudyDetail.studies.${proofStudy.slug}.badge`, tOr(`caseStudyDetail.studies.${proofStudy.slug}.note`, '')),
+      // Headline result — only for real client engagements (measured figures),
+      // never for representative or evidence studies.
+      stat:
+        proofStudy.kind === 'client'
+          ? {
+              value: tOr(`caseStudyDetail.studies.${proofStudy.slug}.stats.0.value`, ''),
+              label: tOr(`caseStudyDetail.studies.${proofStudy.slug}.stats.0.label`, ''),
+            }
+          : null,
     }
   : null;
 
@@ -210,6 +219,12 @@ const faqLd = faqs.length
         <span class="inline-flex rounded-full border border-line px-3 py-1 font-mono text-xs uppercase tracking-[0.14em] text-ink-subtle">{proof.industry}</span>
         <h3 class="mt-4 text-h3 font-semibold text-ink">{proof.title}</h3>
         <p class="mt-3 max-w-3xl text-ink-muted">{proof.challenge}</p>
+        {proof.stat?.value && (
+          <p class="mt-5 flex flex-wrap items-baseline gap-x-3 gap-y-1" data-proof-stat>
+            <span class="text-h2 font-bold tracking-tight text-gradient-brand">{proof.stat.value}</span>
+            <span class="text-sm text-ink-muted">{proof.stat.label}</span>
+          </p>
+        )}
         {proof.label && <p class="mt-4 max-w-3xl text-sm text-ink-subtle">{proof.label}</p>}
         <span class="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-brand">
           {t('services.detail.proofCta')}

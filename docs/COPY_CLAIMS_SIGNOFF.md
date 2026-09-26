@@ -122,6 +122,18 @@ approach is designed to deliver, not audited client results" (EN/FR). The homepa
   are Algorythmos's own delivery approach, not client results.
 - [x] Reviewed for consistency with the sources on 26 Sep 2026.
 
+## 3e. Client engagements (27 Sep 2026)
+
+Four real, delivered engagements, published anonymised with each client's permission (owner confirmed,
+27 Sep 2026). Source of every fact and figure: the git-ignored `Clients/case-study-fact-sheets.md`.
+Figures are shown "as measured on the engagement" (owner confirmed they are measured).
+
+- [x] `clinical-document-ai`: healthcare, Australia, 5–20 staff · LLMOps · ~70% less document review time · 8 weeks
+- [x] `ml-deployment-platform`: professional services, France, 10–50 staff · AI platform engineering · deployments days → minutes · 6 weeks
+- [x] `model-monitoring-logistics`: logistics, Australia, 100–200 staff · model monitoring · real-time visibility, faster detection, less downtime · 4 weeks
+- [x] `retail-data-foundation`: retail, Australia, 50–150 staff · data & feature management · 80% less reporting time · 10 weeks
+- [ ] Keep the evidence behind each figure on file (before/after dashboard, client report).
+
 ## 4. Homepage, voice and positioning (`/`, footer, meta, contact, careers)
 
 Decisions (Sam Kalaliya, 26 Sep 2026):
