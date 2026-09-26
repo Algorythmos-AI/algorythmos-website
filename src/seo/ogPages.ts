@@ -36,6 +36,7 @@ const BRAND_PAGES: { path: string; titleKey: string; descKey: string }[] = [
   { path: '/careers', titleKey: 'careers.hero.title', descKey: 'careers.hero.description' },
   { path: '/privacy', titleKey: 'privacy.meta.title', descKey: 'privacy.meta.description' },
   { path: '/terms', titleKey: 'terms.meta.title', descKey: 'terms.meta.description' },
+  { path: '/legal-notice', titleKey: 'legalNotice.meta.title', descKey: 'legalNotice.meta.description' },
 ];
 
 function buildPages(): Record<string, OGPage> {
