@@ -36,6 +36,7 @@ export const serviceRelated: Record<string, RelatedRef[]> = {
     { type: 'service', slug: 'model-monitoring' },
   ],
   llmops: [
+    { type: 'blog', slug: 'llmops-in-production' },
     { type: 'blog', slug: 'llmsecops' },
     { type: 'blog', slug: 'agentic-ai' },
     { type: 'case-study', slug: 'healthcare-mlops' },
@@ -43,19 +44,19 @@ export const serviceRelated: Record<string, RelatedRef[]> = {
     { type: 'service', slug: 'model-monitoring' },
   ],
   'ai-platform-engineering': [
-    { type: 'blog', slug: 'mlops-production' },
+    { type: 'blog', slug: 'ai-platform-kubernetes' },
     { type: 'case-study', slug: 'healthcare-mlops' },
     { type: 'service', slug: 'mlops-cicd' },
     { type: 'service', slug: 'model-monitoring' },
   ],
   'model-monitoring': [
-    { type: 'blog', slug: 'mlops-production' },
+    { type: 'blog', slug: 'model-monitoring-drift' },
     { type: 'case-study', slug: 'healthcare-mlops' },
     { type: 'service', slug: 'mlops-cicd' },
     { type: 'service', slug: 'llmops' },
   ],
   'data-feature-management': [
-    { type: 'blog', slug: 'mlops-production' },
+    { type: 'blog', slug: 'feature-stores-lineage' },
     { type: 'case-study', slug: 'retail-sql' },
     { type: 'service', slug: 'sql-dashboards' },
     { type: 'service', slug: 'model-monitoring' },
@@ -68,6 +69,22 @@ export const serviceRelated: Record<string, RelatedRef[]> = {
 
 /** Blog post → the service it supports + sibling posts. */
 export const blogRelated: Record<string, RelatedRef[]> = {
+  'llmops-in-production': [
+    { type: 'service', slug: 'llmops' },
+    { type: 'blog', slug: 'llmsecops' },
+  ],
+  'ai-platform-kubernetes': [
+    { type: 'service', slug: 'ai-platform-engineering' },
+    { type: 'blog', slug: 'mlops-production' },
+  ],
+  'model-monitoring-drift': [
+    { type: 'service', slug: 'model-monitoring' },
+    { type: 'blog', slug: 'feature-stores-lineage' },
+  ],
+  'feature-stores-lineage': [
+    { type: 'service', slug: 'data-feature-management' },
+    { type: 'blog', slug: 'model-monitoring-drift' },
+  ],
   'agentic-ai': [
     { type: 'service', slug: 'agentic-automation' },
     { type: 'blog', slug: 'mlops-production' },
