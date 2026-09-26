@@ -122,6 +122,36 @@ const { kind, class: klass = 'mx-auto block h-full w-full max-w-[560px] p-8' } =
   )
 }
 {
+  kind === 'web' && (
+    /* AI websites — browser wireframe, a speed gauge and crawler links */
+    <svg viewBox="0 0 480 360" fill="none" aria-hidden="true" class={klass}>
+      <rect x="92" y="60" width="296" height="220" rx="14" fill="rgb(var(--surface-2) / 0.9)" stroke="rgb(var(--brand))" stroke-width="1.5" />
+      <path d="M92 92h296" stroke="rgb(var(--border-strong))" stroke-width="1.2" />
+      <circle cx="112" cy="76" r="4" fill="rgb(var(--text-muted) / 0.6)" />
+      <circle cx="126" cy="76" r="4" fill="rgb(var(--text-muted) / 0.6)" />
+      <circle cx="140" cy="76" r="4" fill="rgb(var(--text-muted) / 0.6)" />
+      <rect x="164" y="69" width="150" height="14" rx="7" fill="rgb(var(--surface-3) / 0.9)" />
+      <rect x="116" y="112" width="148" height="14" rx="4" fill="rgb(var(--text) / 0.75)" />
+      <rect x="116" y="134" width="118" height="9" rx="4" fill="rgb(var(--text-muted) / 0.5)" />
+      <rect x="116" y="150" width="132" height="9" rx="4" fill="rgb(var(--text-muted) / 0.5)" />
+      <rect x="116" y="172" width="74" height="22" rx="11" fill="rgb(var(--brand))" />
+      <g class="bp-scan">
+        <rect x="116" y="214" width="76" height="46" rx="8" fill="rgb(var(--surface-3) / 0.9)" stroke="rgb(var(--border-strong))" />
+        <rect x="202" y="214" width="76" height="46" rx="8" fill="rgb(var(--surface-3) / 0.9)" stroke="rgb(var(--border-strong))" />
+      </g>
+      <circle cx="330" cy="160" r="38" stroke="rgb(var(--border-strong))" stroke-width="9" opacity="0.5" />
+      <circle cx="330" cy="160" r="38" stroke="rgb(var(--success))" stroke-width="9" stroke-linecap="round" pathLength="1" stroke-dasharray="0.94 1" transform="rotate(-90 330 160)" />
+      <path d="M318 162l8 8 16-18" stroke="rgb(var(--success))" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <g class="bp-flow" stroke="rgb(var(--accent))" stroke-width="1.2" stroke-dasharray="5 6" opacity="0.85">
+        <path d="M240 280v34M150 280l-40 36M330 280l40 36" />
+      </g>
+      <circle class="bp-pulse" cx="240" cy="318" r="6" fill="rgb(var(--accent))" />
+      <circle class="bp-pulse" cx="108" cy="320" r="5" fill="rgb(var(--brand))" style="animation-delay: 0.6s" />
+      <circle class="bp-pulse" cx="372" cy="320" r="5" fill="rgb(var(--brand))" style="animation-delay: 1.2s" />
+    </svg>
+  )
+}
+{
   kind === 'vault' && (
     /* Security — isometric layered vault with glowing core and orbit ring */
     <svg viewBox="0 0 480 360" fill="none" aria-hidden="true" class={klass}>

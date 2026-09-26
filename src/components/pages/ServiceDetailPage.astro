@@ -13,6 +13,8 @@ import RelatedLinks from '@/components/ui/RelatedLinks.astro';
 import { consoles } from '@/components/ui/consoles';
 import { serviceVisuals } from '@/data/visuals';
 import { serviceRelated } from '@/data/related';
+import { getCaseStudy } from '@/data/caseStudies';
+import StackGrid from '@/components/ui/StackGrid.astro';
 
 interface Props {
   slug: string;
@@ -75,6 +77,29 @@ const metaTitle = ns ? tOr(`${ns}.meta.title`, loc.name) : loc.name;
 const metaDescription = ns ? tOr(`${ns}.meta.description`, loc.summary) : loc.summary;
 const heroLead = ns ? tOr(`${ns}.hero.subtitle`, loc.tagline) : loc.tagline;
 const faqsTitle = ns ? tOr(`${ns}.faqs.title`, t('services.detail.faqTitle')) : t('services.detail.faqTitle');
+/** "How it works" — sequential `${ns}.steps.N.{title,desc}` (up to 6). */
+const steps: { title: string; desc: string }[] = [];
+for (let i = 0; i < 6; i++) {
+  const title = t(`${ns}.steps.${i}.title`);
+  const desc = t(`${ns}.steps.${i}.desc`);
+  if (title === `${ns}.steps.${i}.title` || desc === `${ns}.steps.${i}.desc`) break;
+  steps.push({ title, desc });
+}
+
+/** "In practice" — the registry's explicitly chosen case study (hidden when null). */
+const proofStudy = svc.proof ? getCaseStudy(svc.proof) : undefined;
+if (svc.proof && !proofStudy) throw new Error(`Unknown proof case study for ${svc.slug}: ${svc.proof}`);
+const proof = proofStudy
+  ? {
+      href: localizePath(locale, `/case-studies/${proofStudy.slug}`),
+      title: t(`caseStudyDetail.studies.${proofStudy.slug}.title`),
+      industry: t(`caseStudyDetail.studies.${proofStudy.slug}.industry`),
+      challenge: t(`caseStudies.items.${proofStudy.i18nIndex}.challenge`),
+      // Evidence label shown with the card: the study's badge, else its note.
+      label: tOr(`caseStudyDetail.studies.${proofStudy.slug}.badge`, tOr(`caseStudyDetail.studies.${proofStudy.slug}.note`, '')),
+    }
+  : null;
+
 const faqNs = ns;
 const faqs: { q: string; a: string }[] = [];
 if (faqNs) {
@@ -126,11 +151,9 @@ const faqLd = faqs.length
       </div>
 
       <aside data-reveal style="--reveal-delay: 80ms" class="h-fit space-y-6">
-        {bpArt && (
-          <BlueprintFigure fig={bpArt.fig} class="aspect-[4/3]">
-            <BlueprintArt kind={bpArt.kind} class="mx-auto block h-full w-full p-5" />
-          </BlueprintFigure>
-        )}
+        <BlueprintFigure fig={bpArt.fig} class="aspect-[4/3]">
+          <BlueprintArt kind={bpArt.kind} class="mx-auto block h-full w-full p-5" />
+        </BlueprintFigure>
         <div class="rounded-2xl border border-line glass p-6">
         <h2 class="text-h3 font-semibold text-ink">{tOr('services.detail.outcomes', 'Outcomes')}</h2>
         <ul class="mt-4 space-y-3">
@@ -146,6 +169,55 @@ const faqLd = faqs.length
       </aside>
     </div>
   </section>
+
+  {steps.length > 0 && (
+    <section class="container-page pb-20" aria-labelledby="how-it-works" data-steps>
+      <div data-reveal class="max-w-2xl">
+        <h2 id="how-it-works" class="text-h2 font-bold tracking-tight text-ink">{t('services.detail.howItWorks')}</h2>
+        <p class="mt-3 text-ink-muted">{t('services.detail.howItWorksLead')}</p>
+      </div>
+      <ol class="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+        {steps.map((s, i) => (
+          <li data-reveal style={`--reveal-delay: ${i * 60}ms`} class="relative rounded-2xl border border-line glass p-6">
+            <span class="font-mono text-xs tracking-[0.16em] text-brand" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <span class="sr-only">{t('services.detail.stepLabel')} {i + 1}:</span>
+            <h3 class="mt-3 text-lg font-semibold text-ink">{s.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-ink-muted">{s.desc}</p>
+          </li>
+        ))}
+      </ol>
+    </section>
+  )}
+
+  {svc.stack.length > 0 && (
+    <section class="container-page pb-20" aria-labelledby="stack">
+      <div data-reveal class="max-w-2xl">
+        <h2 id="stack" class="text-h2 font-bold tracking-tight text-ink">{t('services.detail.stack')}</h2>
+        <p class="mt-3 text-ink-muted">{t('services.detail.stackLead')}</p>
+      </div>
+      <StackGrid only={svc.stack} class="mt-8" />
+    </section>
+  )}
+
+  {proof && (
+    <section class="container-page pb-20" aria-labelledby="in-practice" data-proof>
+      <h2 id="in-practice" data-reveal class="text-h2 font-bold tracking-tight text-ink">{t('services.detail.proof')}</h2>
+      <a
+        href={proof.href}
+        data-reveal
+        class="group ring-gradient mt-8 block rounded-2xl border border-line glass p-6 transition-[transform,box-shadow] duration-300 ease-smooth hover:-translate-y-1 hover:shadow-glow sm:p-8"
+      >
+        <span class="inline-flex rounded-full border border-line px-3 py-1 font-mono text-xs uppercase tracking-[0.14em] text-ink-subtle">{proof.industry}</span>
+        <h3 class="mt-4 text-h3 font-semibold text-ink">{proof.title}</h3>
+        <p class="mt-3 max-w-3xl text-ink-muted">{proof.challenge}</p>
+        {proof.label && <p class="mt-4 max-w-3xl text-sm text-ink-subtle">{proof.label}</p>}
+        <span class="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-brand">
+          {t('services.detail.proofCta')}
+          <svg class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+        </span>
+      </a>
+    </section>
+  )}
 
   {faqs.length > 0 && (
     <section class="container-page pb-24">
