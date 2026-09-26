@@ -77,3 +77,18 @@ test('the Australian privacy policy and terms still name the company', async ({ 
   }
   await expect(page.locator('main')).toContainText('New South Wales');
 });
+
+test('each locale footer names its own publisher', async ({ page }) => {
+  await page.goto('/fr-fr');
+  const frFooter = page.locator('footer');
+  await expect(frFooter).toContainText(`${FR_PUBLISHER.holder} EI`);
+  await expect(frFooter).toContainText(`SIREN ${FR_PUBLISHER.siren}`);
+  await expect(frFooter).toContainText(FR_PUBLISHER.address);
+  await expect(frFooter).not.toContainText(`ABN ${BUSINESS.abn}`);
+
+  await page.goto('/au-en');
+  const auFooter = page.locator('footer');
+  await expect(auFooter).toContainText(`ABN ${BUSINESS.abn}`);
+  await expect(auFooter).toContainText('Surry Hills');
+  await expect(auFooter).not.toContainText(FR_PUBLISHER.siren);
+});
