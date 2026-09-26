@@ -88,6 +88,8 @@ export const FR_PUBLISHER = {
   address: 'La Défense, France',
   phone: '+33 7 49 73 74 84',
   email: BUSINESS.regions.FR.email,
+  /** No VAT charged: franchise en base (art. 293 B du CGI), confirmed by Sam on 26 Sep 2026. */
+  vatExempt: true,
 } as const;
 
 /** Director of publication, named in the legal notice. */
