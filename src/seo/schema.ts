@@ -88,7 +88,7 @@ export const orgGraph = {
       logo: OG_IMAGE,
       image: OG_IMAGE,
       description:
-        'Boutique AI consultancy delivering agentic automation, document intelligence, SQL dashboards, and MLOps for SMEs in Australia and France.',
+        'Boutique AI consultancy delivering agentic automation, document intelligence, generative AI and LLMOps, MLOps and AI platforms, and data for SMEs in Australia and France.',
       foundingDate: '2026',
       areaServed: [
         { '@type': 'Country', name: 'Australia' },
@@ -148,7 +148,18 @@ export function professionalService(region: 'AU' | 'FR') {
       { '@type': 'AdministrativeArea', name: map.adminArea },
       { '@type': 'Country', name: map.countryName },
     ],
-    serviceType: ['AI Consulting', 'Agentic Automation', 'Document Intelligence', 'SQL Dashboards', 'MLOps', 'AI-Powered Websites'],
+    serviceType: [
+      'AI Consulting',
+      'Agentic Automation',
+      'Document Intelligence',
+      'Generative AI & LLMOps',
+      'MLOps & Model Deployment',
+      'AI Platform Engineering',
+      'Model Monitoring & Observability',
+      'Data & Feature Management',
+      'SQL Dashboards',
+      'AI-Powered Websites',
+    ],
     knowsLanguage: ['en-AU', 'fr-FR', 'en'],
     priceRange: map.priceRange,
     openingHoursSpecification: [

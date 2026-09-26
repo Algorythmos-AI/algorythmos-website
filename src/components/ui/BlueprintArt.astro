@@ -152,6 +152,111 @@ const { kind, class: klass = 'mx-auto block h-full w-full max-w-[560px] p-8' } =
   )
 }
 {
+  kind === 'platform' && (
+    /* AI platform — isometric cluster: three node-pool slabs on a base, GPU cores glowing */
+    <svg viewBox="0 0 480 360" fill="none" aria-hidden="true" class={klass}>
+      <path d="M240 250 380 320 240 390 100 320Z" transform="translate(0 -70)" fill="rgb(var(--surface-3) / 0.9)" stroke="rgb(var(--brand))" stroke-width="1.5" />
+      {[0, 1, 2].map((i) => (
+        <g transform={`translate(0 ${-i * 46})`}>
+          <path d="M240 196 330 241 240 286 150 241Z" fill={i === 1 ? 'rgb(var(--accent) / 0.14)' : 'rgb(var(--surface-2) / 0.95)'} stroke={i === 1 ? 'rgb(var(--accent))' : 'rgb(var(--brand))'} stroke-width="1.5" />
+          <path d="M150 241v10l90 45v-10M330 241v10l-90 45v-10" fill="rgb(var(--surface-3) / 0.9)" stroke="rgb(var(--brand) / 0.7)" stroke-width="1.2" />
+          {[-40, 0, 40].map((dx) => (
+            <rect x={228 + dx} y={233 - Math.abs(dx) * 0.05} width="24" height="10" rx="3" fill={i === 1 ? 'rgb(var(--accent) / 0.6)' : 'rgb(var(--brand) / 0.45)'} />
+          ))}
+        </g>
+      ))}
+      <circle class="bp-pulse" cx="240" cy="192" r="5" fill="rgb(var(--accent))" />
+      <g class="bp-flow" stroke="rgb(var(--brand))" stroke-width="1.2" stroke-dasharray="5 6" opacity="0.8">
+        <path d="M96 140h60M324 140h60M96 140v110M384 140v110" />
+      </g>
+      <rect x="60" y="120" width="72" height="40" rx="8" fill="rgb(var(--surface-2) / 0.95)" stroke="rgb(var(--border-strong))" />
+      <path d="M72 134h48M72 146h30" stroke="rgb(var(--text-muted))" stroke-width="1.5" stroke-linecap="round" />
+      <rect x="348" y="120" width="72" height="40" rx="8" fill="rgb(var(--surface-2) / 0.95)" stroke="rgb(var(--border-strong))" />
+      <path d="M360 134h48M360 146h30" stroke="rgb(var(--text-muted))" stroke-width="1.5" stroke-linecap="round" />
+    </svg>
+  )
+}
+{
+  kind === 'monitoring' && (
+    /* Model monitoring — a live chart crossing an alert threshold, with an alert beacon */
+    <svg viewBox="0 0 480 360" fill="none" aria-hidden="true" class={klass}>
+      <rect x="70" y="70" width="340" height="220" rx="14" fill="rgb(var(--surface-2) / 0.9)" stroke="rgb(var(--brand))" stroke-width="1.5" />
+      <g stroke="rgb(var(--border-strong))" stroke-width="1" opacity="0.6">
+        <path d="M96 130h288M96 180h288M96 230h288" />
+      </g>
+      <path d="M96 150h288" stroke="rgb(var(--warning))" stroke-width="1.5" stroke-dasharray="6 6" />
+      <path class="bp-draw" d="M96 240 C 140 236, 170 232, 210 226 S 270 214, 300 188 S 350 128, 384 112" stroke="rgb(var(--accent))" stroke-width="2.5" stroke-linecap="round" />
+      <circle class="bp-pulse" cx="330" cy="150" r="6" fill="rgb(var(--warning))" />
+      <g class="bp-float">
+        <rect x="300" y="36" width="130" height="40" rx="10" fill="rgb(var(--surface-3) / 0.95)" stroke="rgb(var(--warning))" stroke-width="1.5" />
+        <circle cx="320" cy="56" r="5" fill="rgb(var(--warning))" />
+        <path d="M334 52h78M334 62h50" stroke="rgb(var(--text-muted))" stroke-width="1.5" stroke-linecap="round" />
+      </g>
+      <g>
+        {[0, 1, 2, 3].map((i) => (
+          <rect x={96 + i * 76} y="306" width="60" height="22" rx="6" fill="rgb(var(--surface-3) / 0.9)" stroke={i === 2 ? 'rgb(var(--success))' : 'rgb(var(--border-strong))'} />
+        ))}
+      </g>
+    </svg>
+  )
+}
+{
+  kind === 'features' && (
+    /* Data & features — lineage graph from sources to a model, one path traced */
+    <svg viewBox="0 0 480 360" fill="none" aria-hidden="true" class={klass}>
+      <g stroke="rgb(var(--border-strong))" stroke-width="1.4" opacity="0.8">
+        <path d="M124 110 C 170 110, 170 180, 214 180M124 250 C 170 250, 170 180, 214 180M266 180 C 300 180, 300 110, 336 110M266 180 C 300 180, 300 250, 336 250" />
+        <path d="M384 110 C 410 110, 410 180, 424 180M384 250 C 410 250, 410 180, 424 180" />
+      </g>
+      <path class="bp-flow" d="M124 110 C 170 110, 170 180, 214 180M266 180 C 300 180, 300 110, 336 110M384 110 C 410 110, 410 180, 424 180" stroke="rgb(var(--accent))" stroke-width="2.5" stroke-dasharray="6 6" />
+      {[
+        { x: 76, y: 110, c: 'brand' },
+        { x: 76, y: 250, c: 'brand' },
+        { x: 240, y: 180, c: 'accent' },
+        { x: 360, y: 110, c: 'accent' },
+        { x: 360, y: 250, c: 'brand' },
+      ].map((n) => (
+        <g>
+          <rect x={n.x - 48} y={n.y - 18} width="96" height="36" rx="9" fill="rgb(var(--surface-2) / 0.95)" stroke={`rgb(var(--${n.c}))`} stroke-width="1.5" />
+          <path d={`M${n.x - 30} ${n.y - 4}h60M${n.x - 30} ${n.y + 6}h36`} stroke="rgb(var(--text-muted))" stroke-width="1.5" stroke-linecap="round" />
+        </g>
+      ))}
+      <circle class="bp-pulse" cx="436" cy="180" r="14" fill="rgb(var(--accent) / 0.18)" stroke="rgb(var(--accent))" stroke-width="1.5" />
+      <circle cx="436" cy="180" r="5" fill="rgb(var(--accent))" />
+      <g stroke="rgb(var(--success))" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M200 300l8 8 16-16M264 300l8 8 16-16" />
+      </g>
+    </svg>
+  )
+}
+{
+  kind === 'llmops' && (
+    /* LLMOps — prompt → evaluate → release loop around a gated core */
+    <svg viewBox="0 0 480 360" fill="none" aria-hidden="true" class={klass}>
+      <g class="bp-flow" stroke="rgb(var(--brand))" stroke-width="1.4" stroke-dasharray="5 6" opacity="0.85">
+        <ellipse cx="240" cy="180" rx="150" ry="110" />
+      </g>
+      {[
+        { x: 240, y: 70, c: 'brand' },
+        { x: 380, y: 200, c: 'accent' },
+        { x: 100, y: 200, c: 'success' },
+      ].map((n, j) => (
+        <g>
+          <rect x={n.x - 52} y={n.y - 20} width="104" height="40" rx="10" fill="rgb(var(--surface-2) / 0.95)" stroke={`rgb(var(--${n.c}))`} stroke-width="1.5" />
+          <path d={`M${n.x - 34} ${n.y - 4}h68M${n.x - 34} ${n.y + 7}h40`} stroke="rgb(var(--text-muted))" stroke-width="1.5" stroke-linecap="round" />
+          <circle class="bp-pulse" cx={n.x + 40} cy={n.y - 20} r="4" fill={`rgb(var(--${n.c}))`} style={`animation-delay: ${j * 0.6}s`} />
+        </g>
+      ))}
+      <path d="M240 150 282 172 282 214 240 236 198 214 198 172Z" fill="rgb(var(--accent) / 0.12)" stroke="rgb(var(--accent))" stroke-width="1.5" />
+      <path d="M224 194l12 12 22-24" stroke="rgb(var(--success))" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <g stroke="rgb(var(--text-muted))" stroke-width="1.2" opacity="0.7">
+        <rect x="176" y="300" width="128" height="30" rx="6" stroke="rgb(var(--accent))" />
+        <path d="M192 312h60M192 320h96" />
+      </g>
+    </svg>
+  )
+}
+{
   kind === 'vault' && (
     /* Security — isometric layered vault with glowing core and orbit ring */
     <svg viewBox="0 0 480 360" fill="none" aria-hidden="true" class={klass}>

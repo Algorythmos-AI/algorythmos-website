@@ -20,7 +20,16 @@ import type { StackCategory } from './techStack.ts';
 export type ServiceFamily = 'applications' | 'mlops' | 'data';
 
 /** Living-console component per service — resolved in `src/components/ui/consoles/index.ts`. */
-export type ConsoleName = 'AgenticConsole' | 'DocumentConsole' | 'SqlConsole' | 'MlopsConsole' | 'AiWebsitesConsole';
+export type ConsoleName =
+  | 'AgenticConsole'
+  | 'DocumentConsole'
+  | 'LlmopsConsole'
+  | 'MlopsConsole'
+  | 'PlatformConsole'
+  | 'MonitoringConsole'
+  | 'FeaturesConsole'
+  | 'SqlConsole'
+  | 'AiWebsitesConsole';
 
 export interface Service {
   slug: string;
@@ -72,14 +81,15 @@ export const services: Service[] = [
     icon: 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M8 13h8M8 17h6',
   },
   {
-    slug: 'sql-dashboards',
-    ns: 'serviceSqlDashboards',
-    family: 'data',
-    console: 'SqlConsole',
-    blueprint: { kind: 'sql', fig: '03' },
-    stack: ['data', 'languages', 'cloud'],
-    proof: 'retail-sql',
-    icon: 'M4 20V10M10 20V4M16 20v-8M22 20H2',
+    slug: 'llmops',
+    ns: 'serviceLlmops',
+    family: 'applications',
+    console: 'LlmopsConsole',
+    blueprint: { kind: 'llmops', fig: '10' },
+    stack: ['genai', 'mlops', 'cloud'],
+    // Until the client engagement studies land, the closest delivered-style proof.
+    proof: 'healthcare-mlops',
+    icon: 'M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2zM8 9h8M8 13h5',
   },
   {
     slug: 'mlops-cicd',
@@ -90,6 +100,46 @@ export const services: Service[] = [
     stack: ['mlops', 'cicd', 'containers'],
     proof: 'healthcare-mlops',
     icon: 'M6 3v12M18 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM6 15a9 9 0 0 0 9-9',
+  },
+  {
+    slug: 'ai-platform-engineering',
+    ns: 'servicePlatform',
+    family: 'mlops',
+    console: 'PlatformConsole',
+    blueprint: { kind: 'platform', fig: '07' },
+    stack: ['cloud', 'containers', 'iac'],
+    proof: 'healthcare-mlops',
+    icon: 'm12 2 10 5-10 5L2 7zM2 17l10 5 10-5M2 12l10 5 10-5',
+  },
+  {
+    slug: 'model-monitoring',
+    ns: 'serviceMonitoring',
+    family: 'mlops',
+    console: 'MonitoringConsole',
+    blueprint: { kind: 'monitoring', fig: '08' },
+    stack: ['mlops', 'data', 'languages'],
+    proof: 'healthcare-mlops',
+    icon: 'M22 12h-4l-3 9L9 3l-3 9H2',
+  },
+  {
+    slug: 'data-feature-management',
+    ns: 'serviceDataFeatures',
+    family: 'data',
+    console: 'FeaturesConsole',
+    blueprint: { kind: 'features', fig: '09' },
+    stack: ['data', 'mlops', 'languages'],
+    proof: 'healthcare-mlops',
+    icon: 'M12 2c5 0 9 1.3 9 3s-4 3-9 3-9-1.3-9-3 4-3 9-3zM3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5M3 12c0 1.7 4 3 9 3s9-1.3 9-3',
+  },
+  {
+    slug: 'sql-dashboards',
+    ns: 'serviceSqlDashboards',
+    family: 'data',
+    console: 'SqlConsole',
+    blueprint: { kind: 'sql', fig: '03' },
+    stack: ['data', 'languages', 'cloud'],
+    proof: 'retail-sql',
+    icon: 'M4 20V10M10 20V4M16 20v-8M22 20H2',
   },
   {
     slug: 'ai-websites',

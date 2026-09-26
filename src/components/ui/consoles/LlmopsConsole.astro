@@ -1,0 +1,242 @@
+---
+/**
+ * LlmopsConsole — living twin of service-llmops.svg (1120×760).
+ * Signature loop (~28s): prompt v15 is evaluated (faithfulness, relevance and
+ * safety bars fill against their minimums), the release gate passes, and the
+ * canary widens 10% → 50% → 100% before v15 joins the release history.
+ */
+import ConsoleShell from '@/components/ui/ConsoleShell.astro';
+import { asLocale, useTranslations } from '@/i18n';
+import { serviceVisuals } from '@/data/visuals';
+import { formatValue } from '@/lib/consoleLoop';
+
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const v = serviceVisuals['llmops'];
+const K = 'console.svc.llmops';
+const lang = locale === 'fr-fr' ? 'fr' : 'en';
+
+/** Scores out of 1; `min` is the release gate's threshold for each. */
+const evals = [
+  { label: t(`${K}.faith`), score: 0.94, min: 0.9 },
+  { label: t(`${K}.relevance`), score: 0.91, min: 0.85 },
+  { label: t(`${K}.safety`), score: 0.99, min: 0.98 },
+];
+const fmt2 = (n: number) => n.toLocaleString(lang, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+const tiles = [
+  { label: t(`${K}.halluc`), value: formatValue(1.2, 'pct1', lang), tone: 'success' },
+  { label: t(`${K}.latency`), value: formatValue(1.8, 'sec1', lang), tone: 'accent' },
+  { label: t(`${K}.cost`), value: '$' + fmt2(0.42), tone: 'brand' },
+];
+
+const history = [
+  { label: t(`${K}.h14`), meta: '6d', tone: 'success' },
+  { label: t(`${K}.h13`), meta: '12d', tone: 'warning' },
+  { label: t(`${K}.h12`), meta: '19d', tone: 'idle' },
+];
+
+const strings = {
+  pillPassed: t(`${K}.pillPassed`),
+  pillReleased: t(`${K}.pillReleased`),
+  canary50: t(`${K}.canary50`),
+  canary100: t(`${K}.canary100`),
+  h15: t(`${K}.h15`),
+  h14old: t(`${K}.h14old`),
+  justNow: t('console.time.justNow'),
+};
+---
+
+<ConsoleShell svgFile={v.file} width={v.width} height={v.height} altKey={v.altKey} name="svc-llmops">
+  <div class="hc lo">
+    <script type="application/json" data-hc-strings set:html={JSON.stringify(strings)} />
+    <div class="hc-chrome">
+      <span class="hc-tdot"></span><span class="hc-tdot"></span><span class="hc-tdot"></span>
+      <span class="hc-urlpill">app.algorythmos.com/llm-releases</span>
+    </div>
+
+    <div class="lo-head">
+      <div>
+        <div class="lo-title">{t(`${K}.title`)}</div>
+        <div class="lo-sub">{t(`${K}.sub`)}</div>
+      </div>
+      <span class="hc-livepill hc-livepill--accent" data-hc-stage>
+        <span class="hc-livedot"></span><span data-slot="pill">{t(`${K}.pill`)}</span>
+      </span>
+    </div>
+
+    <div class="lo-cols">
+      <div class="hc-card lo-evals">
+        <div class="lo-card-head">
+          <span class="hc-card-title">{t(`${K}.evals`)}</span>
+          <span class="lo-cases">{t(`${K}.cases`)}</span>
+        </div>
+        <div class="lo-bars">
+          {evals.map((e, i) => (
+            <div class="lo-eval" style={`--i: ${i}`}>
+              <div class="lo-eval-row">
+                <span>{e.label}</span>
+                <span class="lo-eval-val">{fmt2(e.score)}</span>
+              </div>
+              <span class="lo-track">
+                <span class="lo-bar" style={`--w: ${e.score * 100}%`}></span>
+                <span class="lo-min" style={`--m: ${e.min * 100}%`}></span>
+              </span>
+              <span class="lo-min-label">{t(`${K}.min`)} {fmt2(e.min)}</span>
+            </div>
+          ))}
+        </div>
+        <div class="lo-tiles">
+          {tiles.map((x) => (
+            <div class="lo-tile">
+              <span class="lo-tile-label">{x.label}</span>
+              <span class="lo-tile-val" data-tone={x.tone}>{x.value}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="lo-side">
+        <div class="hc-card lo-rollout">
+          <div class="hc-card-title">{t(`${K}.rollout`)}</div>
+          <div class="lo-canary" data-hc-stage>
+            <span class="lo-canary-track"><span class="lo-canary-fill" style="--c: 0.1"></span></span>
+            <span class="lo-canary-label" data-slot="canary">{t(`${K}.canary10`)}</span>
+          </div>
+        </div>
+
+        <div class="hc-card lo-history">
+          <div class="hc-card-title">{t(`${K}.history`)}</div>
+          <ul class="lo-list" data-hc-stage data-hc-list>
+            {history.map((h, i) => (
+              <li class="lo-row" data-row={i === 0 ? 'live' : undefined}>
+                <span class:list={['hc-dot', `hc-dot--${h.tone}`]}></span>
+                <span class="lo-row-label" data-slot="label">{h.label}</span>
+                <span class="lo-row-meta">{h.meta}</span>
+              </li>
+            ))}
+          </ul>
+          <template data-hc-template="release">
+            <li class="lo-row">
+              <span class="hc-dot hc-dot--accent"></span>
+              <span class="lo-row-label" data-slot="label"></span>
+              <span class="lo-row-meta" data-slot="meta"></span>
+            </li>
+          </template>
+        </div>
+      </div>
+    </div>
+  </div>
+</ConsoleShell>
+
+<style>
+  .lo { width: 1120px; height: 760px; }
+  .lo-head { display: flex; align-items: flex-start; justify-content: space-between; padding: 24px 40px 0; }
+  .lo-title { font-size: 18px; font-weight: 600; }
+  .lo-sub { margin-top: 6px; font-size: 12.5px; color: var(--c-muted); }
+
+  .lo-cols { display: grid; grid-template-columns: 600px 1fr; gap: 20px; padding: 24px 40px 40px; flex: 1; min-height: 0; }
+  .lo-evals { background: var(--c-card-2); padding: 24px; display: flex; flex-direction: column; }
+  .lo-card-head { display: flex; align-items: baseline; justify-content: space-between; }
+  .lo-cases { font-size: 11px; color: var(--c-subtle); }
+  .lo-bars { display: flex; flex-direction: column; gap: 26px; margin-top: 26px; }
+  .lo-eval-row { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--c-muted); }
+  .lo-eval-val { color: var(--c-ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .lo-track { position: relative; display: block; margin-top: 10px; height: 8px; border-radius: 4px; background: rgb(255 255 255 / 0.08); }
+  .lo-bar { position: absolute; inset: 0 auto 0 0; width: var(--w); border-radius: 4px; background: linear-gradient(90deg, var(--c-brand), var(--c-accent)); transform-origin: left center; }
+  .lo-min { position: absolute; top: -4px; bottom: -4px; left: var(--m); width: 2px; background: var(--c-warning); border-radius: 1px; }
+  .lo-min-label { display: block; margin-top: 6px; font-size: 10.5px; color: var(--c-subtle); }
+
+  .lo-tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: auto; }
+  .lo-tile { background: var(--c-card); border: 1px solid var(--c-line-soft); border-radius: 10px; padding: 14px 16px; }
+  .lo-tile-label { display: block; font-size: 10.5px; color: var(--c-subtle); }
+  .lo-tile-val { display: block; margin-top: 6px; font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .lo-tile-val[data-tone='success'] { color: var(--c-success); }
+  .lo-tile-val[data-tone='accent'] { color: var(--c-accent); }
+  .lo-tile-val[data-tone='brand'] { color: var(--c-brand); }
+
+  .lo-side { display: flex; flex-direction: column; gap: 20px; min-height: 0; }
+  .lo-rollout, .lo-history { background: var(--c-card-2); padding: 24px; }
+  .lo-history { flex: 1; }
+  .lo-canary { margin-top: 18px; }
+  .lo-canary-track { display: block; height: 10px; border-radius: 5px; background: rgb(255 255 255 / 0.08); overflow: hidden; }
+  .lo-canary-fill { display: block; height: 100%; width: 100%; border-radius: 5px; background: var(--c-accent); transform-origin: left center; transform: scaleX(var(--c, 0.1)); }
+  .lo-canary-label { display: block; margin-top: 10px; font-size: 12px; color: var(--c-accent); }
+
+  .lo-list { list-style: none; margin: 14px 0 0; padding: 0; }
+  .lo-row { display: flex; align-items: center; gap: 14px; height: 48px; border-bottom: 1px solid var(--c-line-soft); font-size: 12px; }
+  .lo-row:last-child { border-bottom: none; }
+  .lo-row-label { flex: 1; min-width: 0; }
+  .lo-row-meta { font-size: 11px; color: var(--c-subtle); white-space: nowrap; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.hc-armed) .lo-bar { transform: scaleX(0); }
+    :global(.hc-armed.hc-live) .lo-bar {
+      transform: scaleX(1);
+      transition: transform 0.8s var(--ease-quint, ease-out) calc(var(--i, 0) * 0.15s + 0.4s);
+    }
+    .lo-canary-fill { transition: transform 0.7s var(--ease-quint, ease-out); }
+    .lo-row { transition: transform 0.45s var(--ease-quint, ease-out), opacity 0.45s ease; }
+  }
+
+  @media (max-width: 767px) {
+    .lo { width: 100%; height: auto; }
+    .lo-head { padding: 20px 16px 0; gap: 12px; }
+    .lo-title { font-size: 16px; }
+    .lo-cols { grid-template-columns: 1fr; gap: 16px; padding: 20px 16px 24px; }
+    .lo-tiles { grid-template-columns: 1fr; margin-top: 24px; }
+  }
+</style>
+
+<script>
+  import { initConsole, scheduleIdle } from '@/lib/consoleLoop';
+  import type { ConsoleContext } from '@/lib/consoleLoop';
+
+  const pill = (root: HTMLElement, text: string) => {
+    const el = root.querySelector('[data-slot="pill"]');
+    if (el) el.textContent = text;
+  };
+  const canary = (root: HTMLElement, v: number, label: string) => {
+    root.querySelector<HTMLElement>('.lo-canary-fill')?.style.setProperty('--c', String(v));
+    const el = root.querySelector('[data-slot="canary"]');
+    if (el) el.textContent = label;
+  };
+
+  function setup() {
+    const root = document.querySelector<HTMLElement>('[data-console="svc-llmops"]');
+    if (!root) return;
+    initConsole(root, {
+      loopMs: 28000,
+      keyframes: [
+        { t: 6000, apply: ({ root, strings }: ConsoleContext) => pill(root, strings['pillPassed']) },
+        { t: 11000, apply: ({ root, strings }: ConsoleContext) => canary(root, 0.5, strings['canary50']) },
+        {
+          t: 17000,
+          apply: ({ root, strings }: ConsoleContext) => {
+            canary(root, 1, strings['canary100']);
+            pill(root, strings['pillReleased']);
+            const live = root.querySelector('[data-row="live"] [data-slot="label"]');
+            if (live) live.textContent = strings['h14old'];
+            const tpl = root.querySelector<HTMLTemplateElement>('template[data-hc-template="release"]');
+            const list = root.querySelector('[data-hc-list]');
+            if (tpl && list) {
+              const row = tpl.content.firstElementChild?.cloneNode(true) as HTMLElement;
+              const label = row.querySelector('[data-slot="label"]');
+              const meta = row.querySelector('[data-slot="meta"]');
+              if (label) label.textContent = strings['h15'];
+              if (meta) meta.textContent = strings['justNow'];
+              row.classList.add('hc-enter');
+              list.prepend(row);
+              requestAnimationFrame(() => requestAnimationFrame(() => row.classList.remove('hc-enter')));
+              const rows = list.querySelectorAll('.lo-row');
+              if (rows.length > 4) rows[rows.length - 1].remove();
+            }
+          },
+        },
+      ],
+    });
+  }
+  const arm = () => scheduleIdle(setup);
+  document.addEventListener('astro:page-load', arm);
+  if (document.readyState !== 'loading') arm();
+</script>

@@ -26,11 +26,39 @@ export const serviceRelated: Record<string, RelatedRef[]> = {
   'sql-dashboards': [
     { type: 'case-study', slug: 'retail-sql' },
     { type: 'blog', slug: 'ai-consultancy-australia' },
+    { type: 'service', slug: 'data-feature-management' },
   ],
   'mlops-cicd': [
     { type: 'blog', slug: 'mlops-production' },
     { type: 'case-study', slug: 'port-botany-ai-ml' },
     { type: 'case-study', slug: 'healthcare-mlops' },
+    { type: 'service', slug: 'ai-platform-engineering' },
+    { type: 'service', slug: 'model-monitoring' },
+  ],
+  llmops: [
+    { type: 'blog', slug: 'llmsecops' },
+    { type: 'blog', slug: 'agentic-ai' },
+    { type: 'case-study', slug: 'healthcare-mlops' },
+    { type: 'service', slug: 'agentic-automation' },
+    { type: 'service', slug: 'model-monitoring' },
+  ],
+  'ai-platform-engineering': [
+    { type: 'blog', slug: 'mlops-production' },
+    { type: 'case-study', slug: 'healthcare-mlops' },
+    { type: 'service', slug: 'mlops-cicd' },
+    { type: 'service', slug: 'model-monitoring' },
+  ],
+  'model-monitoring': [
+    { type: 'blog', slug: 'mlops-production' },
+    { type: 'case-study', slug: 'healthcare-mlops' },
+    { type: 'service', slug: 'mlops-cicd' },
+    { type: 'service', slug: 'llmops' },
+  ],
+  'data-feature-management': [
+    { type: 'blog', slug: 'mlops-production' },
+    { type: 'case-study', slug: 'retail-sql' },
+    { type: 'service', slug: 'sql-dashboards' },
+    { type: 'service', slug: 'model-monitoring' },
   ],
   'ai-websites': [
     { type: 'blog', slug: 'ai-consultancy-australia' },

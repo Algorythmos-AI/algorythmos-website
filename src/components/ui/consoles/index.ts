@@ -9,6 +9,10 @@ import DocumentConsole from './DocumentConsole.astro';
 import SqlConsole from './SqlConsole.astro';
 import MlopsConsole from './MlopsConsole.astro';
 import AiWebsitesConsole from './AiWebsitesConsole.astro';
+import LlmopsConsole from './LlmopsConsole.astro';
+import PlatformConsole from './PlatformConsole.astro';
+import MonitoringConsole from './MonitoringConsole.astro';
+import FeaturesConsole from './FeaturesConsole.astro';
 
 export const consoles = {
   AgenticConsole,
@@ -16,4 +20,8 @@ export const consoles = {
   SqlConsole,
   MlopsConsole,
   AiWebsitesConsole,
+  LlmopsConsole,
+  PlatformConsole,
+  MonitoringConsole,
+  FeaturesConsole,
 } satisfies Record<ConsoleName, unknown>;

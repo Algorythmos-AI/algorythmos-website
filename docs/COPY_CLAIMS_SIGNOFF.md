@@ -144,6 +144,12 @@ The build enforces the voice and compliance wording: `npm run i18n:check` fails 
 - [ ] **Service page depth (Sep 2026):** each page now has a "How it works" section (4 steps), a
       "Technologies we work with" grid and an "In practice" card. The card features an explicitly chosen
       case study and always shows its evidence label ("Representative engagement…"); `ai-websites` has none.
+- [ ] **Four new services (Sep 2026):** Generative AI & LLMOps, AI Platform Engineering, Model Monitoring &
+      Observability, Data & Feature Management — capabilities, steps and FAQs from the owner's scope. No figures in
+      the copy; console numbers are illustrative product interfaces. Until the client case studies land (PR 5),
+      their "In practice" card features the representative healthcare-mlops study with its label.
+- [ ] **Services index:** three families, the ML lifecycle band, "How we work with your team" (the engagement
+      model: discover, design, build, operate, with leadership updates and vendor coordination) and the full stack.
 - [ ] **MLOps refocus:** "MLOps & CI/CD" becomes "MLOps & Model Deployment" (same URL). Its FAQ timeline
       ("2-3 weeks / 1-2 months") was replaced by "scoped in a discovery call"; no unsigned numbers.
 
