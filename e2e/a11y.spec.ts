@@ -23,6 +23,7 @@ const PAGES = [
   '/au-en/services',
   '/fr-fr/services/llmops',
   '/au-en/services/model-monitoring',
+  '/fr-fr/blog/llmops-in-production',
 ];
 const SCHEMES = ['light', 'dark'] as const;
 
