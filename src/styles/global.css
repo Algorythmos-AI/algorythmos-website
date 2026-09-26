@@ -42,6 +42,11 @@
   :lang(fr) a {
     hyphens: manual;
   }
+  /* Card links: their paragraphs get their own :lang(fr) match (hyphens: auto),
+     which split "docu-ments" and "mo-dèles" mid-word in narrow cards. */
+  :lang(fr) a :is(p, span, h2, h3) {
+    hyphens: manual;
+  }
   /* While the consent strip is showing, reserve its height so it never covers
      the page's last content or a focused field (WCAG 2.4.11). --consent-h is
      measured by ConsentBanner's ResizeObserver. */

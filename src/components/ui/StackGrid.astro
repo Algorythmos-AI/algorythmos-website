@@ -1,0 +1,32 @@
+---
+/**
+ * StackGrid — "technologies we work with", grouped by category as uniform text
+ * chips. Tool names come from src/data/techStack.ts (proper nouns, never the
+ * dictionaries); category labels are i18n `stack.categories.<id>`. No partner
+ * or certification framing.
+ */
+import { asLocale, useTranslations } from '@/i18n';
+import { stackByCategory, type StackCategory } from '@/data/techStack';
+
+interface Props {
+  /** Limit to these categories (in display order); omit for the full stack. */
+  only?: readonly StackCategory[];
+  class?: string;
+}
+const { only, class: klass = '' } = Astro.props;
+const t = useTranslations(asLocale(Astro.currentLocale));
+const groups = stackByCategory(only);
+---
+
+<div class:list={['grid gap-4 sm:grid-cols-2 lg:grid-cols-3', klass]} data-stack-grid>
+  {groups.map((g) => (
+    <div class="rounded-2xl border border-line bg-surface-2/40 p-5">
+      <h3 class="font-mono text-xs uppercase tracking-[0.16em] text-ink-subtle">{t(`stack.categories.${g.category}`)}</h3>
+      <ul class="mt-3 flex flex-wrap gap-2">
+        {g.tools.map((name) => (
+          <li class="rounded-full border border-line bg-bg/60 px-3 py-1 text-sm font-medium text-ink">{name}</li>
+        ))}
+      </ul>
+    </div>
+  ))}
+</div>

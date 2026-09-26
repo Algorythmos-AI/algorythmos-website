@@ -4,7 +4,6 @@
     "about.stats.foundedValue",
     "blogDetail.author.name",
     "blogDetail.posts.llmsecops.grid.cards.3.title",
-    "blueprint.s3.name",
     "caseStudyDetail.studies.healthcare-burden.charts.retention.verbalNotes",
     "caseStudyDetail.studies.healthcare-burden.charts.timeDist.documentation",
     "caseStudyDetail.studies.manufacturing-docs.focus",
@@ -20,8 +19,7 @@
     "pricing.tooltip.algorythmos.label",
     "region.fr",
     "region.global",
-    "security.items.1.title",
-    "services.items.mlops-cicd.name"
+    "security.items.1.title"
   ],
   "sourceOk": {
     "src/components/ui/consoles/AiWebsitesConsole.astro": [

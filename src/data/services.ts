@@ -8,6 +8,7 @@
  */
 import type { TFunction } from '@/i18n';
 import type { BlueprintKind } from './blueprints.ts';
+import type { StackCategory } from './techStack.ts';
 
 /**
  * NOTE: `astro.config.mjs` imports this module, and path aliases (`@/…`) do not
@@ -29,8 +30,16 @@ export interface Service {
   ns: string;
   family: ServiceFamily;
   console: ConsoleName;
-  /** Blueprint illustration shown in the detail-page aside (null = none yet). */
-  blueprint: { kind: BlueprintKind; fig: string } | null;
+  /** Blueprint illustration shown in the detail-page aside. */
+  blueprint: { kind: BlueprintKind; fig: string };
+  /** Technology categories shown in the page's "Technologies we work with" grid. */
+  stack: StackCategory[];
+  /**
+   * Case study featured in the page's "In practice" card — chosen explicitly, never
+   * "the first related study" (that would surface industry evidence reports as if
+   * they were delivery results). null = no honest proof yet; the section is hidden.
+   */
+  proof: string | null;
 }
 
 export interface LocalizedService extends Service {
@@ -48,6 +57,8 @@ export const services: Service[] = [
     family: 'applications',
     console: 'AgenticConsole',
     blueprint: { kind: 'agentic', fig: '01' },
+    stack: ['genai', 'cloud', 'languages'],
+    proof: 'financial-compliance',
     icon: 'm12 8 1.9 3.9L18 13.8l-3.2 2.8.8 4.4-3.6-2-3.6 2 .8-4.4L2.9 13.8 8 11.9z',
   },
   {
@@ -56,6 +67,8 @@ export const services: Service[] = [
     family: 'applications',
     console: 'DocumentConsole',
     blueprint: { kind: 'document', fig: '02' },
+    stack: ['genai', 'languages', 'cloud'],
+    proof: 'manufacturing-docs',
     icon: 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M8 13h8M8 17h6',
   },
   {
@@ -64,6 +77,8 @@ export const services: Service[] = [
     family: 'data',
     console: 'SqlConsole',
     blueprint: { kind: 'sql', fig: '03' },
+    stack: ['data', 'languages', 'cloud'],
+    proof: 'retail-sql',
     icon: 'M4 20V10M10 20V4M16 20v-8M22 20H2',
   },
   {
@@ -72,6 +87,8 @@ export const services: Service[] = [
     family: 'mlops',
     console: 'MlopsConsole',
     blueprint: { kind: 'mlops', fig: '04' },
+    stack: ['mlops', 'cicd', 'containers'],
+    proof: 'healthcare-mlops',
     icon: 'M6 3v12M18 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM6 15a9 9 0 0 0 9-9',
   },
   {
@@ -79,7 +96,10 @@ export const services: Service[] = [
     ns: 'serviceAiWebsites',
     family: 'data',
     console: 'AiWebsitesConsole',
-    blueprint: null,
+    blueprint: { kind: 'web', fig: '06' },
+    stack: ['cloud', 'genai'],
+    // No case study exists for websites yet, so no "In practice" card.
+    proof: null,
     icon: 'M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20zM12 2a10 10 0 0 0 0 20',
   },
 ];
