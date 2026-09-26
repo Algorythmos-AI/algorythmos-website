@@ -136,6 +136,16 @@ The build enforces the voice and compliance wording: `npm run i18n:check` fails 
 
 - [ ] Each service's described capabilities, deliverables, and any named tools/frameworks are accurate and
       something you actually offer. *(5 services — skim each for over-promises.)*
+- [x] **Named tools (owner decision, 26 Sep 2026):** every technology on the services pages — Vertex AI, MLflow,
+      Kubeflow, Google Cloud, Microsoft Azure, AWS, GitHub Actions, GitLab CI/CD, Jenkins, Docker, Kubernetes,
+      OpenShift, Terraform, CloudFormation, Ansible, Python, SQL, BigQuery, Snowflake, Spark, Airflow, OpenAI,
+      LangChain, LangGraph, CrewAI, Vertex AI Agents (plus the existing belt) — is hands-on delivery experience.
+      Presented as "technologies we work with": no partner, certification or endorsement claim.
+- [ ] **Service page depth (Sep 2026):** each page now has a "How it works" section (4 steps), a
+      "Technologies we work with" grid and an "In practice" card. The card features an explicitly chosen
+      case study and always shows its evidence label ("Representative engagement…"); `ai-websites` has none.
+- [ ] **MLOps refocus:** "MLOps & CI/CD" becomes "MLOps & Model Deployment" (same URL). Its FAQ timeline
+      ("2-3 weeks / 1-2 months") was replaced by "scoped in a discovery call"; no unsigned numbers.
 
 ## 6. Blog posts (`/blog/*`)
 
