@@ -31,6 +31,10 @@ export const serviceVisuals: Record<string, VisualAsset> = {
   'sql-dashboards': { file: `${V}/service-sql-dashboards.svg`, width: 1120, height: 760, altKey: 'visuals.svc.sql.alt' },
   'mlops-cicd': { file: `${V}/service-mlops-cicd.svg`, width: 1120, height: 760, altKey: 'visuals.svc.mlops.alt' },
   'ai-websites': { file: `${V}/service-ai-websites.svg`, width: 1120, height: 760, altKey: 'visuals.svc.aiWebsites.alt' },
+  llmops: { file: `${V}/service-llmops.svg`, width: 1120, height: 760, altKey: 'visuals.svc.llmops.alt' },
+  'ai-platform-engineering': { file: `${V}/service-ai-platform-engineering.svg`, width: 1120, height: 760, altKey: 'visuals.svc.platform.alt' },
+  'model-monitoring': { file: `${V}/service-model-monitoring.svg`, width: 1120, height: 760, altKey: 'visuals.svc.monitoring.alt' },
+  'data-feature-management': { file: `${V}/service-data-feature-management.svg`, width: 1120, height: 760, altKey: 'visuals.svc.features.alt' },
 };
 
 /**

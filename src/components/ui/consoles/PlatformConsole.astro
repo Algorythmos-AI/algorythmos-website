@@ -1,0 +1,243 @@
+---
+/**
+ * PlatformConsole — living twin of service-ai-platform-engineering.svg (1120×760).
+ * Signature loop (~26s): a Terraform change scales the GPU inference pool from
+ * 6 to 8 nodes — plan, apply, pool bar grows — while GPU utilisation ticks live.
+ */
+import ConsoleShell from '@/components/ui/ConsoleShell.astro';
+import { asLocale, useTranslations } from '@/i18n';
+import { serviceVisuals } from '@/data/visuals';
+import { formatValue } from '@/lib/consoleLoop';
+
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const v = serviceVisuals['ai-platform-engineering'];
+const K = 'console.svc.platform';
+const lang = locale === 'fr-fr' ? 'fr' : 'en';
+
+const pools = [
+  { name: 'cpu-general', label: t(`${K}.cpu`), spec: `12 ${t(`${K}.nodes`)}`, w: 64, tone: 'brand' },
+  { name: 'gpu-train', label: t(`${K}.gpuTrain`), spec: '4 × A100', w: 88, tone: 'accent' },
+  { name: 'gpu-infer', label: t(`${K}.gpuInfer`), spec: '6 × L4', w: 52, tone: 'success', key: 'infer' },
+];
+
+const teams = [
+  { ns: 'fraud-ml', pods: 14 },
+  { ns: 'forecasting', pods: 9 },
+  { ns: 'search-llm', pods: 11 },
+  { ns: 'vision', pods: 8 },
+];
+
+/** Terraform CLI output — product chrome, identical in every locale. */
+const planLines = [
+  { kind: 'cmd', text: '$ terraform plan' },
+  { kind: 'mod', text: '~ google_container_node_pool.gpu_infer' },
+  { kind: 'dim', text: '    node_count: 6 → 8' },
+  { kind: 'mod', text: '~ kubernetes_manifest.cluster_autoscaler' },
+  { kind: 'dim', text: 'Plan: 0 to add, 2 to change, 0 to destroy.' },
+];
+
+const tiles = [
+  { label: t(`${K}.gpuUtil`), value: formatValue(78, 'pct1', lang), count: 78, tone: 'accent' },
+  { label: t(`${K}.pending`), value: '0', tone: 'success' },
+  { label: t(`${K}.budget`), value: formatValue(84, 'pct1', lang), tone: 'brand' },
+];
+
+const strings = {
+  applying: t(`${K}.applying`),
+  applied: t(`${K}.applied`),
+  scaled: t(`${K}.scaled`),
+  apply: '$ terraform apply -auto-approve',
+  done: 'Apply complete! Resources: 0 added, 2 changed, 0 destroyed.',
+};
+---
+
+<ConsoleShell svgFile={v.file} width={v.width} height={v.height} altKey={v.altKey} name="svc-ai-platform-engineering">
+  <div class="hc pe">
+    <script type="application/json" data-hc-strings set:html={JSON.stringify(strings)} />
+    <div class="hc-chrome">
+      <span class="hc-tdot"></span><span class="hc-tdot"></span><span class="hc-tdot"></span>
+      <span class="hc-urlpill">app.algorythmos.com/platform</span>
+    </div>
+
+    <div class="pe-head">
+      <div>
+        <div class="pe-title">{t(`${K}.title`)}</div>
+        <div class="pe-sub">{t(`${K}.sub`)}</div>
+      </div>
+      <span class="hc-livepill" data-hc-stage>
+        <span class="hc-livedot"></span><span data-slot="pill">{t(`${K}.pill`)}</span>
+      </span>
+    </div>
+
+    <div class="pe-cols">
+      <div class="pe-left">
+        <div class="hc-card pe-pools">
+          <div class="hc-card-title">{t(`${K}.pools`)}</div>
+          <div class="pe-bars" data-hc-stage>
+            {pools.map((p, i) => (
+              <div class="pe-pool" style={`--i: ${i}`} data-pool={p.key}>
+                <div class="pe-pool-row">
+                  <span>
+                    <span class="pe-pool-name">{p.name}</span>
+                    <span class="pe-pool-label">{p.label}</span>
+                  </span>
+                  <span class="pe-pool-spec" data-slot="spec">{p.spec}</span>
+                </div>
+                <span class="pe-track"><span class="pe-bar" data-tone={p.tone} style={`--w: ${p.w}%`}></span></span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div class="hc-card pe-teams">
+          <div class="hc-card-title">{t(`${K}.namespaces`)}</div>
+          <ul class="pe-team-list">
+            {teams.map((n) => (
+              <li class="pe-team">
+                <span class="hc-dot hc-dot--success"></span>
+                <span class="pe-team-ns">{n.ns}</span>
+                <span class="pe-team-pods">{n.pods} {t(`${K}.pods`)}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <div class="pe-right">
+        <div class="hc-card pe-iac">
+          <div class="hc-card-title">{t(`${K}.iac`)}</div>
+          <pre class="pe-log" data-hc-stage data-log>{planLines.map((l) => <span class="pe-line" data-kind={l.kind}>{l.text}</span>)}</pre>
+        </div>
+        <div class="pe-tiles">
+          {tiles.map((x) => (
+            <div class="pe-tile">
+              <span class="pe-tile-label">{x.label}</span>
+              {x.count ? (
+                <span class="pe-tile-val" data-tone={x.tone} data-hc-count={x.count} data-hc-format="pct1">{x.value}</span>
+              ) : (
+                <span class="pe-tile-val" data-tone={x.tone}>{x.value}</span>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</ConsoleShell>
+
+<style>
+  .pe { width: 1120px; height: 760px; }
+  .pe-head { display: flex; align-items: flex-start; justify-content: space-between; padding: 24px 40px 0; }
+  .pe-title { font-size: 18px; font-weight: 600; }
+  .pe-sub { margin-top: 6px; font-size: 12.5px; color: var(--c-muted); }
+
+  .pe-cols { display: grid; grid-template-columns: 520px 1fr; gap: 20px; padding: 24px 40px 40px; flex: 1; min-height: 0; }
+  .pe-left, .pe-right { display: flex; flex-direction: column; gap: 20px; min-height: 0; }
+  .pe-pools, .pe-teams, .pe-iac { background: var(--c-card-2); padding: 24px; }
+  .pe-bars { display: flex; flex-direction: column; gap: 22px; margin-top: 20px; }
+  .pe-pool-row { display: flex; justify-content: space-between; align-items: baseline; font-size: 12px; }
+  .pe-pool-name { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 12px; color: var(--c-ink); }
+  .pe-pool-label { margin-left: 10px; font-size: 11px; color: var(--c-subtle); }
+  .pe-pool-spec { font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .pe-track { display: block; margin-top: 10px; height: 6px; border-radius: 3px; background: rgb(255 255 255 / 0.08); overflow: hidden; }
+  .pe-bar { display: block; height: 100%; width: var(--w); border-radius: 3px; transform-origin: left center; }
+  .pe-bar[data-tone='brand'] { background: var(--c-brand); }
+  .pe-bar[data-tone='accent'] { background: var(--c-accent); }
+  .pe-bar[data-tone='success'] { background: var(--c-success); }
+
+  .pe-teams { flex: 1; }
+  .pe-team-list { list-style: none; margin: 12px 0 0; padding: 0; }
+  .pe-team { display: flex; align-items: center; gap: 12px; height: 42px; border-bottom: 1px solid var(--c-line-soft); font-size: 12px; }
+  .pe-team:last-child { border-bottom: none; }
+  .pe-team-ns { flex: 1; font-family: ui-monospace, 'SF Mono', Menlo, monospace; }
+  .pe-team-pods { font-size: 11px; color: var(--c-subtle); }
+
+  .pe-iac { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+  .pe-log {
+    margin: 14px 0 0; padding: 16px; flex: 1; overflow: hidden;
+    background: #0a0a10; border: 1px solid var(--c-line-soft); border-radius: 10px;
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 12px; line-height: 1.9;
+    display: flex; flex-direction: column; white-space: pre;
+  }
+  .pe-line[data-kind='cmd'] { color: var(--c-ink); }
+  .pe-line[data-kind='mod'] { color: var(--c-warning); }
+  .pe-line[data-kind='dim'] { color: var(--c-muted); }
+  .pe-line[data-kind='ok'] { color: var(--c-success); }
+
+  .pe-tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .pe-tile { background: var(--c-card-2); border: 1px solid var(--c-line-soft); border-radius: 10px; padding: 14px 16px; }
+  .pe-tile-label { display: block; font-size: 10.5px; color: var(--c-subtle); }
+  .pe-tile-val { display: block; margin-top: 6px; font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .pe-tile-val[data-tone='success'] { color: var(--c-success); }
+  .pe-tile-val[data-tone='accent'] { color: var(--c-accent); }
+  .pe-tile-val[data-tone='brand'] { color: var(--c-brand); }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.hc-armed) .pe-bar { transform: scaleX(0); }
+    :global(.hc-armed.hc-live) .pe-bar {
+      transform: scaleX(1);
+      transition: transform 0.7s var(--ease-quint, ease-out) calc(var(--i, 0) * 0.12s + 0.4s), width 0.7s var(--ease-quint, ease-out);
+    }
+  }
+
+  @media (max-width: 767px) {
+    .pe { width: 100%; height: auto; }
+    .pe-head { padding: 20px 16px 0; gap: 12px; }
+    .pe-title { font-size: 16px; }
+    .pe-cols { grid-template-columns: 1fr; gap: 16px; padding: 20px 16px 24px; }
+    .pe-log { white-space: pre-wrap; word-break: break-word; font-size: 11px; }
+    .pe-tiles { grid-template-columns: 1fr; }
+  }
+</style>
+
+<script>
+  import { initConsole, scheduleIdle } from '@/lib/consoleLoop';
+  import type { ConsoleContext } from '@/lib/consoleLoop';
+
+  const pill = (root: HTMLElement, text: string) => {
+    const el = root.querySelector('[data-slot="pill"]');
+    if (el) el.textContent = text;
+  };
+  const logLine = (root: HTMLElement, text: string, kind: string) => {
+    const log = root.querySelector('[data-log]');
+    if (!log) return;
+    const line = document.createElement('span');
+    line.className = 'pe-line hc-flash';
+    line.dataset.kind = kind;
+    line.textContent = text;
+    log.append(line);
+  };
+
+  function setup() {
+    const root = document.querySelector<HTMLElement>('[data-console="svc-ai-platform-engineering"]');
+    if (!root) return;
+    initConsole(root, {
+      loopMs: 26000,
+      keyframes: [
+        {
+          t: 6000,
+          apply: ({ root, strings }: ConsoleContext) => {
+            pill(root, strings['applying']);
+            logLine(root, strings['apply'], 'cmd');
+          },
+        },
+        {
+          // The apply lands: the inference pool grows 6 → 8 nodes.
+          t: 12000,
+          apply: ({ root, strings }: ConsoleContext) => {
+            logLine(root, strings['done'], 'ok');
+            const pool = root.querySelector<HTMLElement>('[data-pool="infer"]');
+            const spec = pool?.querySelector('[data-slot="spec"]');
+            if (spec) spec.textContent = '8 × L4 · ' + strings['scaled'];
+            pool?.querySelector<HTMLElement>('.pe-bar')?.style.setProperty('--w', '70%');
+            pill(root, strings['applied']);
+          },
+        },
+      ],
+    });
+  }
+  const arm = () => scheduleIdle(setup);
+  document.addEventListener('astro:page-load', arm);
+  if (document.readyState !== 'loading') arm();
+</script>
