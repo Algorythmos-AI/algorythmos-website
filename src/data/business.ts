@@ -75,6 +75,32 @@ export const BUSINESS = {
   },
 } as const;
 
+/**
+ * Publisher of the French pages (/fr-fr), for the legal notice (LCEN art. 6): Sam's
+ * French sole-trader business (entreprise individuelle), trading as Algorythmos. It is
+ * a separate business from ALGORYTHMOS PTY LTD., so it lives here, not in
+ * BUSINESS.phone, which feeds the company's schema. Only the legal notice reads it.
+ */
+export const FR_PUBLISHER = {
+  holder: 'Sameer Raj Kalaliya',
+  tradingName: BUSINESS.tradingName,
+  siren: '991 562 497',
+  address: 'La Défense, France',
+  phone: '+33 7 49 73 74 84',
+  email: BUSINESS.regions.FR.email,
+} as const;
+
+/** Director of publication, named in the legal notice. */
+export const PUBLICATION_DIRECTOR = 'Sameer Raj Kalaliya';
+
+/** Host of the whole site, as Vercel publishes it (vercel.com/legal/privacy-notice). */
+export const HOST = {
+  name: 'Vercel Inc.',
+  /** Street address; the country name is translated on the page. */
+  address: '440 N Barranca Avenue #4133, Covina, CA 91723',
+  url: 'https://vercel.com',
+} as const;
+
 /** Schema.org sameAs — derived from the labeled profile list above. */
 export const SAME_AS: readonly string[] = BUSINESS.profiles.map((p) => p.url);
 

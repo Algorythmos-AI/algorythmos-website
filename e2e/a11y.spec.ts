@@ -19,6 +19,7 @@ const PAGES = [
   '/fr-fr',
   '/fr-fr/services/document-intelligence',
   '/fr-fr/contact',
+  '/fr-fr/legal-notice',
 ];
 const SCHEMES = ['light', 'dark'] as const;
 

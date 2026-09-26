@@ -85,6 +85,19 @@ approach is designed to deliver, not audited client results" (EN/FR). The homepa
 - [x] Registered office published in the Level 1 form (Level 1, 457–459 Elizabeth Street, Surry Hills NSW 2010),
       "by appointment" — approved 25 Sep 2026. Paris wording left unchanged by owner decision.
 - [x] Founding year on site = 2026 (registration 3 Aug 2026).
+- [x] **Legal notice (`/legal-notice`, EN and FR):**
+      - Publisher of the French pages: Sameer Raj Kalaliya, entrepreneur individuel (EI), trading
+        as Algorythmos. SIREN 991 562 497, registered in the RNE on 18 Sep 2025.
+      - Address shown: "La Défense, France". Phone: +33 7 49 73 74 84.
+      - Owner decision, 26 Sep 2026.
+- [ ] Counsel: is "La Défense, France" enough for LCEN art. 6, or does it need a full street
+      (or domiciliation) address?
+- [ ] Counsel: Vercel publishes no phone number. Is its address plus website enough for the host entry?
+- [ ] Counsel: the Privacy Policy and Terms name ALGORYTHMOS PTY LTD. on both locales. Should the
+      French pages name the EI instead, as data controller for French enquiries and as the
+      contracting party for French clients?
+- [ ] VAT: the register shows no intra-EU VAT number, so the notice states none. Confirm
+      *franchise en base* (art. 293 B du CGI) before any page or invoice says so.
 
 ## 3d. Port Botany FAQ block and the freight-forwarder post (26 Sep 2026)
 

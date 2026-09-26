@@ -1,0 +1,115 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeader from '@/components/sections/PageHeader.astro';
+import { asLocale, useTranslations, localizePath } from '@/i18n';
+import { breadcrumb, SITE } from '@/seo/schema';
+import { BUSINESS, FR_PUBLISHER, HOST, PUBLICATION_DIRECTOR, regionAddressLine } from '@/data/business';
+
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const path = '/legal-notice';
+const abs = (p: string) => SITE + localizePath(locale, p);
+
+const crumbs = breadcrumb([
+  { name: t('nav.home'), url: abs('/') },
+  { name: t('nav.legalNotice'), url: abs(path) },
+]);
+
+/** Every identifier comes from src/data/business.ts; only the labels are translated. */
+type Row = { label: string; value: string; href?: string };
+const publishers: { id: string; heading: string; rows: Row[] }[] = [
+  {
+    id: 'publisher-au',
+    heading: t('legalNotice.publisher.au.heading'),
+    rows: [
+      { label: t('legalNotice.label.company'), value: BUSINESS.legalName },
+      { label: t('legalNotice.label.legalForm'), value: t('legalNotice.publisher.au.legalForm') },
+      { label: 'ACN', value: BUSINESS.acn },
+      { label: 'ABN', value: BUSINESS.abn },
+      { label: t('legalNotice.label.registeredOffice'), value: `${regionAddressLine('AU')}, ${t('footer.legalCountry')}` },
+      { label: t('legalNotice.label.email'), value: BUSINESS.email, href: `mailto:${BUSINESS.email}` },
+    ],
+  },
+  {
+    id: 'publisher-fr',
+    heading: t('legalNotice.publisher.fr.heading'),
+    rows: [
+      { label: t('legalNotice.label.name'), value: FR_PUBLISHER.holder },
+      { label: t('legalNotice.label.legalForm'), value: t('legalNotice.publisher.fr.legalForm', { name: FR_PUBLISHER.tradingName }) },
+      { label: 'SIREN', value: FR_PUBLISHER.siren },
+      { label: t('legalNotice.label.register'), value: t('legalNotice.publisher.fr.register') },
+      { label: t('legalNotice.label.address'), value: FR_PUBLISHER.address },
+      { label: t('legalNotice.label.phone'), value: FR_PUBLISHER.phone, href: `tel:${FR_PUBLISHER.phone.replace(/\s+/g, '')}` },
+      { label: t('legalNotice.label.email'), value: FR_PUBLISHER.email, href: `mailto:${FR_PUBLISHER.email}` },
+    ],
+  },
+];
+
+const host: Row[] = [
+  { label: t('legalNotice.label.company'), value: HOST.name },
+  { label: t('legalNotice.label.address'), value: `${HOST.address}, ${t('legalNotice.host.country')}` },
+  { label: t('legalNotice.label.website'), value: HOST.url.replace(/^https:\/\//, ''), href: HOST.url },
+];
+
+const link = 'font-medium text-brand underline underline-offset-2';
+---
+
+<BaseLayout title={t('legalNotice.meta.title')} description={t('legalNotice.meta.description')} path={path} jsonLd={[crumbs]}>
+  <PageHeader eyebrow={t('legalNotice.hero.badge')} title={t('legalNotice.hero.title')} lead={t('legalNotice.hero.subtitle')} />
+
+  <section class="container-page py-20">
+    <div class="mx-auto max-w-measure">
+      <p class="text-sm text-ink-subtle">
+        {t('legalNotice.hero.lastUpdated')} <time datetime="2026-09-26">{t('legalNotice.hero.lastUpdatedDate')}</time>
+      </p>
+      <p class="mt-8 leading-relaxed text-ink-muted">{t('legalNotice.intro', { name: PUBLICATION_DIRECTOR })}</p>
+
+      <div class="mt-12 space-y-12">
+        <section aria-labelledby="publisher" data-reveal>
+          <h2 id="publisher" class="text-h3 font-semibold text-ink">{t('legalNotice.publisher.title')}</h2>
+          <div class="mt-6 space-y-6">
+            {publishers.map((p) => (
+              <article aria-labelledby={p.id} class="rounded-2xl border border-line p-6">
+                <h3 id={p.id} class="font-semibold text-ink">{p.heading}</h3>
+                <dl class="mt-4 space-y-3 text-sm">
+                  {p.rows.map((r) => (
+                    <div>
+                      <dt class="text-ink-subtle">{r.label}</dt>
+                      <dd class="text-ink">{r.href ? <a href={r.href} class={link}>{r.value}</a> : r.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section aria-labelledby="director" data-reveal>
+          <h2 id="director" class="text-h3 font-semibold text-ink">{t('legalNotice.director.title')}</h2>
+          <p class="mt-3 leading-relaxed text-ink-muted">{PUBLICATION_DIRECTOR}</p>
+        </section>
+
+        <section aria-labelledby="host" data-reveal>
+          <h2 id="host" class="text-h3 font-semibold text-ink">{t('legalNotice.host.title')}</h2>
+          <p class="mt-3 leading-relaxed text-ink-muted">{t('legalNotice.host.intro')}</p>
+          <dl class="mt-4 space-y-3 text-sm">
+            {host.map((r) => (
+              <div>
+                <dt class="text-ink-subtle">{r.label}</dt>
+                <dd class="text-ink">{r.href ? <a href={r.href} rel="noopener" class={link}>{r.value}</a> : r.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+
+        <section aria-labelledby="data" data-reveal>
+          <h2 id="data" class="text-h3 font-semibold text-ink">{t('legalNotice.data.title')}</h2>
+          <p class="mt-3 leading-relaxed text-ink-muted">
+            {t('legalNotice.data.privacy')}{' '}<a href={localizePath(locale, '/privacy')} class={link}>{t('nav.privacy')}</a>.{' '}
+            {t('legalNotice.data.terms')}{' '}<a href={localizePath(locale, '/terms')} class={link}>{t('nav.terms')}</a>.
+          </p>
+        </section>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

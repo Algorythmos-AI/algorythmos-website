@@ -63,6 +63,7 @@ export const GET: APIRoute = () => {
   L.push(`- [Careers](${AU}/careers)`);
   L.push(`- [Privacy Policy](${AU}/privacy)`);
   L.push(`- [Terms of Service](${AU}/terms)`);
+  L.push(`- [Legal Notice](${AU}/legal-notice) · [Mentions légales](${FR}/legal-notice)`);
   L.push('');
   L.push('## Key visuals');
   L.push('> Branded product-UI illustrations (not photographs). Theme-neutral SVG.');
