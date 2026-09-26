@@ -5,9 +5,9 @@
  * console spot-check.
  */
 import { test, expect } from '@playwright/test';
+import { serviceSlugs as SERVICE_SLUGS } from '../src/data/services';
 
 const HERO = '[data-console="hero-console"]';
-const SERVICE_SLUGS = ['agentic-automation', 'document-intelligence', 'sql-dashboards', 'mlops-cicd', 'ai-websites'];
 
 // Regression guard for the iOS-Safari clip bug: at phone width the console must
 // scale/reflow to fit, never render at its 1280/1120 canvas width, and no page
@@ -105,6 +105,19 @@ test.describe('hero console', () => {
     await expect(console_.locator('[data-hc-stepper]')).toHaveClass(/hc-step-4/);
   });
 
+  test('pausing motion mid-session freezes a running console', async ({ page }) => {
+    test.slow();
+    await page.goto('/au-en');
+    const console_ = page.locator(HERO);
+    await console_.evaluate((el) => el.scrollIntoView({ block: 'center' }));
+    await expect(console_).toHaveClass(/hc-live/, { timeout: 8000 });
+    await page.locator('[data-motion-toggle]:visible').first().click();
+    await expect(page.locator('html')).toHaveAttribute('data-motion', 'off');
+    // The story's approve beat fires at t≈8s; with motion paused it must never land.
+    await page.waitForTimeout(12000);
+    await expect(console_.locator('[data-run="contract"] [data-slot="sub"]')).toHaveText('3/5 steps · awaiting approval');
+  });
+
   test('re-initializes cleanly after client-side navigation', async ({ page }) => {
     await page.goto('/au-en');
     await page.locator(HERO).scrollIntoViewIfNeeded();
@@ -132,10 +145,35 @@ test.describe('service consoles', () => {
     await expect(console_.locator('.ac-title')).toContainText('Contract review');
   });
 
-  test('all five service consoles render their fallback-safe markup', async ({ page }) => {
-    for (const slug of ['agentic-automation', 'document-intelligence', 'sql-dashboards', 'mlops-cicd', 'ai-websites']) {
+  test('every service console renders its fallback-safe markup', async ({ page }) => {
+    for (const slug of SERVICE_SLUGS) {
       await page.goto(`/au-en/services/${slug}`);
       await expect(page.locator(`[data-console="svc-${slug}"]`)).toHaveCount(1);
     }
   });
+});
+
+// Without JS the scaled canvas must get out of the way so each console's
+// <noscript> SVG fills its frame. toBeVisible() ignores overflow clipping, so
+// assert geometry: the fallback sits inside the viewport box.
+test.describe('consoles without JavaScript', () => {
+  test.use({ javaScriptEnabled: false });
+
+  for (const [path, name] of [
+    ['/au-en', 'hero-console'],
+    ['/au-en/services/mlops-cicd', 'svc-mlops-cicd'],
+  ] as const) {
+    test(`${path} shows the static fallback inside the console frame`, async ({ page }) => {
+      await page.goto(path);
+      const viewport = page.locator(`[data-console="${name}"]`);
+      await expect(viewport.locator('.hc-screen')).toHaveCSS('display', 'none');
+      const img = viewport.locator('img.hc-fallback');
+      await expect(img).toHaveCount(1);
+      const [v, i] = await Promise.all([viewport.boundingBox(), img.boundingBox()]);
+      expect(v && i).toBeTruthy();
+      expect(i!.y).toBeGreaterThanOrEqual(v!.y - 1);
+      expect(i!.y + i!.height).toBeLessThanOrEqual(v!.y + v!.height + 1);
+      expect(i!.height).toBeGreaterThan(100);
+    });
+  }
 });

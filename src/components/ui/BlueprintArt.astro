@@ -4,8 +4,10 @@
  * `kind`. Decorative (aria-hidden), micro-animations gated behind
  * prefers-reduced-motion. Render inside a <BlueprintFigure>.
  */
+import type { BlueprintKind } from '@/data/blueprints';
+
 interface Props {
-  kind: 'agentic' | 'document' | 'sql' | 'mlops' | 'vault';
+  kind: BlueprintKind;
   class?: string;
 }
 const { kind, class: klass = 'mx-auto block h-full w-full max-w-[560px] p-8' } = Astro.props;

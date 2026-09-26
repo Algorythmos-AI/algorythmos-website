@@ -5,6 +5,7 @@ import sitemap from '@astrojs/sitemap';
 import llmsFull from './scripts/llms-full-integration.mjs';
 import { blog } from './src/data/blog.ts';
 import { caseStudies } from './src/data/caseStudies.ts';
+import { serviceVisuals } from './src/data/visuals.ts';
 
 // slug → last-meaningful date (updatedAt ?? published) for sitemap <lastmod>.
 /** @type {Record<string, string>} */
@@ -13,16 +14,9 @@ const BLOG_LASTMOD = Object.fromEntries(blog.map((p) => [p.slug, p.updatedAt ?? 
 const CASE_LASTMOD = Object.fromEntries(caseStudies.map((c) => [c.slug, c.updatedAt ?? c.date]));
 
 // Page-path → on-page content visuals, for <image:image> sitemap entries.
-const VIS = 'https://algorythmos.com/assets/visuals';
-const PHOTOS = 'https://algorythmos.com/assets/photos';
-/** @type {Record<string, string>} */
-const SERVICE_VISUAL = {
-  'agentic-automation': 'service-agentic-automation.svg',
-  'document-intelligence': 'service-document-intelligence.svg',
-  'sql-dashboards': 'service-sql-dashboards.svg',
-  'mlops-cicd': 'service-mlops-cicd.svg',
-  'ai-websites': 'service-ai-websites.svg',
-};
+const ORIGIN = 'https://algorythmos.com';
+const VIS = `${ORIGIN}/assets/visuals`;
+const PHOTOS = `${ORIGIN}/assets/photos`;
 /**
  * @param {string} pathname
  * @returns {{ url: string, caption: string }[]}
@@ -36,8 +30,9 @@ function pageImages(pathname) {
     imgs.push({ url: `${PHOTOS}/team-collaboration-1600.webp`, caption: 'Collaboration during an AI delivery sprint' });
   }
   const svc = p.match(/\/services\/([a-z-]+)$/);
-  if (svc && SERVICE_VISUAL[svc[1]]) {
-    imgs.push({ url: `${VIS}/${SERVICE_VISUAL[svc[1]]}`, caption: `Algorythmos ${svc[1].replace(/-/g, ' ')} product interface` });
+  if (svc && serviceVisuals[svc[1]]) {
+    // `file` is already site-absolute (/assets/visuals/…): prefix the origin only.
+    imgs.push({ url: `${ORIGIN}${serviceVisuals[svc[1]].file}`, caption: `Algorythmos ${svc[1].replace(/-/g, ' ')} product interface` });
   }
   if (p.endsWith('/ai-consultancy-sydney')) {
     imgs.push({ url: `${VIS}/city-sydney.svg`, caption: 'AI consultancy in Sydney, Australia' });

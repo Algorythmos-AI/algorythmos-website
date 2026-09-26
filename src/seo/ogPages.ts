@@ -16,14 +16,6 @@ export interface OGPage {
   description: string;
 }
 
-const SERVICE_NS: Record<string, string> = {
-  'agentic-automation': 'serviceAgentic',
-  'document-intelligence': 'serviceDocument',
-  'mlops-cicd': 'serviceMlops',
-  'sql-dashboards': 'serviceSqlDashboards',
-  'ai-websites': 'serviceAiWebsites',
-};
-
 /** Brand pages: path + the i18n keys their <head> already uses. */
 const BRAND_PAGES: { path: string; titleKey: string; descKey: string }[] = [
   { path: '/about', titleKey: 'about.meta.title', descKey: 'about.meta.description' },
@@ -71,7 +63,7 @@ function buildPages(): Record<string, OGPage> {
     // Service cards use the localized meta copy (falls back to catalogue EN when
     // a dictionary key is missing — t() returns the key string on a miss).
     for (const s of services) {
-      const ns = SERVICE_NS[s.slug];
+      const ns = s.ns;
       const metaTitle = ns ? t(`${ns}.meta.title`) : '';
       const heroSubtitle = ns ? t(`${ns}.hero.subtitle`) : '';
       pages[ogKey(localizePath(loc, `/services/${s.slug}`))] = {
@@ -84,7 +76,7 @@ function buildPages(): Record<string, OGPage> {
   // Single-locale local landing pages (one card each, matching their standalone routes).
   pages[ogKey(localizePath('au-en', '/ai-consultancy-sydney'))] = {
     title: 'AI Consultancy in Sydney',
-    description: 'Production-grade AI for Sydney businesses — senior engineers, outcomes in weeks.',
+    description: 'Production-grade AI for Sydney businesses — senior-led delivery, one accountable engineer.',
   };
   pages[ogKey(localizePath('fr-fr', '/conseil-en-ia-paris'))] = {
     title: 'Conseil en IA à Paris',

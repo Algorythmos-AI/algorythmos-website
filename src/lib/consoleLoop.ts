@@ -123,6 +123,15 @@ const FREEZE_POLL_MS = 2000;
 const COUNT_MS = 1400;
 const STAGGER_MS = 60;
 
+/**
+ * Whether a console may advance right now: on screen, tab visible, and motion
+ * allowed. Motion is read on every tick, so pausing motion mid-session freezes
+ * a running console instead of letting it keep changing text.
+ */
+export function consoleMayAdvance(onScreen: boolean, tabHidden: boolean, motionIsOff: boolean): boolean {
+  return onScreen && !tabHidden && !motionIsOff;
+}
+
 export function initConsole(root: HTMLElement, opts: ConsoleOptions = {}): void {
   if (root.dataset.hcInit) return; // idempotent across page-load + readyState paths
   root.dataset.hcInit = '1';
@@ -141,7 +150,7 @@ export function initConsole(root: HTMLElement, opts: ConsoleOptions = {}): void 
 
   let onScreen = false;
   let seen = false;
-  const active = () => onScreen && !document.hidden;
+  const active = () => consoleMayAdvance(onScreen, document.hidden, motionOff());
 
   // Localized dynamic strings (SSR'd through t(); the script stays locale-blind).
   let strings: Record<string, string> = {};
@@ -213,6 +222,12 @@ export function initConsole(root: HTMLElement, opts: ConsoleOptions = {}): void 
     const isReset = i === kfs.length;
     const targetT = isReset ? loopMs : kfs[i].t;
     wait(Math.max(0, targetT - prevT), function fire() {
+      // Motion paused mid-session: settle on the baseline frame and stop.
+      // (Turning motion back on reloads the page — see MotionToggle.)
+      if (motionOff()) {
+        resetStages();
+        return;
+      }
       if (!active()) {
         wait(FREEZE_POLL_MS, fire);
         return;
@@ -237,7 +252,7 @@ export function initConsole(root: HTMLElement, opts: ConsoleOptions = {}): void 
   const io = new IntersectionObserver(
     (entries) => {
       onScreen = entries[0]?.isIntersecting ?? false;
-      if (onScreen && !seen) {
+      if (onScreen && !seen && !motionOff()) {
         seen = true;
         root.classList.add('hc-live'); // triggers CSS draw-on transitions
         runCountUps();

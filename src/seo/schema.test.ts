@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { orgGraph, professionalService, breadcrumb, ogImageUrl, isoDateTime } from './schema';
 import { BUSINESS, SAME_AS, regionPostalAddress, regionAddressLine } from '@/data/business';
+import { services } from '@/data/services';
 
 describe('orgGraph', () => {
   const nodes = orgGraph['@graph'];
@@ -65,6 +66,11 @@ describe('professionalService', () => {
     expect(fr.address.streetAddress).toBeUndefined();
     expect(fr.address.postalCode).toBeUndefined();
     expect(fr.address.addressLocality).toBe(BUSINESS.regions.FR.city);
+  });
+
+  it('lists every service in serviceType (plus the umbrella "AI Consulting")', () => {
+    const au = professionalService('AU') as Record<string, any>;
+    expect(au.serviceType).toHaveLength(services.length + 1);
   });
 
   it('matches the snapshot graph for both regions', () => {
