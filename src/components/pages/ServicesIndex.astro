@@ -2,12 +2,23 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHeader from '@/components/sections/PageHeader.astro';
 import { asLocale, useTranslations, localizePath } from '@/i18n';
-import { services, localizeService } from '@/data/services';
+import { services, localizeService, type ServiceFamily } from '@/data/services';
 import { breadcrumb, SITE } from '@/seo/schema';
+import { bookingUrl } from '@/lib/links';
+import Button from '@/components/ui/Button.astro';
+import LifecycleMap from '@/components/ui/LifecycleMap.astro';
+import StackGrid from '@/components/ui/StackGrid.astro';
 
 const locale = asLocale(Astro.currentLocale);
 const t = useTranslations(locale);
 const localized = services.map((s) => localizeService(t, s));
+/** Family rows, in registry order (applications → MLOps & platforms → data). */
+const FAMILIES: ServiceFamily[] = ['applications', 'mlops', 'data'];
+const families = FAMILIES.map((id) => ({ id, items: localized.filter((s) => s.family === id) })).filter((f) => f.items.length);
+const engagement = [0, 1, 2, 3].map((i) => ({
+  title: t(`services.engagement.steps.${i}.title`),
+  desc: t(`services.engagement.steps.${i}.desc`),
+}));
 const abs = (p: string) => SITE + localizePath(locale, p);
 const crumbs = breadcrumb([
   { name: t('nav.home'), url: abs('/') },
@@ -30,27 +41,74 @@ const collection = {
 >
   <PageHeader eyebrow={t('nav.services')} title={t('services.hero.title')} lead={t('services.hero.subtitle')} />
 
-  <section class="container-page py-20">
-    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      {localized.map((s, i) => (
-        <a
-          href={localizePath(locale, `/services/${s.slug}`)}
-          data-reveal
-          style={`--reveal-delay: ${i * 70}ms`}
-          class="group ring-gradient relative flex flex-col rounded-2xl border border-line glass p-6 transition-[transform,box-shadow] duration-300 ease-smooth hover:-translate-y-1 hover:shadow-glow"
-        >
-          <span class="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-grad-cta text-white shadow-e1">
-            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={s.icon} /></svg>
-          </span>
-          <h2 class="mt-5 text-h3 font-semibold text-ink">{s.name}</h2>
-          <p class="mt-1 text-sm font-medium text-brand">{s.tagline}</p>
-          <p class="mt-3 flex-1 text-sm leading-relaxed text-ink-muted text-pretty">{s.summary}</p>
-          <span class="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-brand">
-            {t('ui.serviceCard.learnMore')}
-            <svg class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
-          </span>
-        </a>
+  {families.map((f, fi) => (
+    <section class:list={['container-page', fi === 0 ? 'pt-20 pb-10' : 'py-10']} aria-labelledby={`family-${f.id}`} data-family={f.id}>
+      <div data-reveal class="max-w-2xl">
+        <h2 id={`family-${f.id}`} class="text-h2 font-bold tracking-tight text-ink">{t(`services.families.${f.id}.title`)}</h2>
+        <p class="mt-2 text-ink-muted">{t(`services.families.${f.id}.intro`)}</p>
+      </div>
+      <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {f.items.map((s, i) => (
+          <a
+            href={localizePath(locale, `/services/${s.slug}`)}
+            data-reveal
+            style={`--reveal-delay: ${i * 70}ms`}
+            class="group ring-gradient relative flex flex-col rounded-2xl border border-line glass p-6 transition-[transform,box-shadow] duration-300 ease-smooth hover:-translate-y-1 hover:shadow-glow"
+          >
+            <span class="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-grad-cta text-white shadow-e1">
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={s.icon} /></svg>
+            </span>
+            <h3 class="mt-5 text-h3 font-semibold text-ink">{s.name}</h3>
+            <p class="mt-1 text-sm font-medium text-brand">{s.tagline}</p>
+            <p class="mt-3 flex-1 text-sm leading-relaxed text-ink-muted text-pretty">{s.summary}</p>
+            <span class="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-brand">
+              {t('ui.serviceCard.learnMore')}
+              <svg class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+            </span>
+          </a>
+        ))}
+      </div>
+    </section>
+  ))}
+
+  <section class="container-page py-16" aria-labelledby="lifecycle">
+    <div data-reveal class="max-w-2xl">
+      <h2 id="lifecycle" class="text-h2 font-bold tracking-tight text-ink">{t('services.lifecycle.title')}</h2>
+      <p class="mt-2 text-ink-muted">{t('services.lifecycle.lead')}</p>
+    </div>
+    <div data-reveal class="mt-8"><LifecycleMap /></div>
+  </section>
+
+  <section class="container-page py-16" aria-labelledby="engagement" data-engagement>
+    <div data-reveal class="max-w-2xl">
+      <h2 id="engagement" class="text-h2 font-bold tracking-tight text-ink">{t('services.engagement.title')}</h2>
+      <p class="mt-2 text-ink-muted">{t('services.engagement.lead')}</p>
+    </div>
+    <ol class="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+      {engagement.map((s, i) => (
+        <li data-reveal style={`--reveal-delay: ${i * 60}ms`} class="rounded-2xl border border-line glass p-6">
+          <span class="font-mono text-xs tracking-[0.16em] text-brand" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+          <h3 class="mt-3 text-lg font-semibold text-ink">{s.title}</h3>
+          <p class="mt-2 text-sm leading-relaxed text-ink-muted">{s.desc}</p>
+        </li>
       ))}
+    </ol>
+    <p data-reveal class="mt-6 max-w-3xl text-sm text-ink-subtle">{t('services.engagement.note')}</p>
+  </section>
+
+  <section class="container-page py-16" aria-labelledby="stack">
+    <div data-reveal class="max-w-2xl">
+      <h2 id="stack" class="text-h2 font-bold tracking-tight text-ink">{t('services.detail.stack')}</h2>
+      <p class="mt-2 text-ink-muted">{t('services.detail.stackLead')}</p>
+    </div>
+    <StackGrid class="mt-8" />
+  </section>
+
+  <section class="container-page pb-24 pt-8">
+    <div data-reveal class="rounded-2xl border border-line glass p-8 text-center sm:p-12">
+      <h2 class="text-h2 font-bold tracking-tight text-ink">{t('services.cta.title')}</h2>
+      <p class="mx-auto mt-3 max-w-2xl text-ink-muted">{t('services.cta.subtitle')}</p>
+      <Button href={bookingUrl(locale)} target="_blank" rel="noopener" size="lg" class="mt-8">{t('hero.cta.primary')}</Button>
     </div>
   </section>
 </BaseLayout>

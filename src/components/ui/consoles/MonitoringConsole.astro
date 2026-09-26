@@ -1,0 +1,254 @@
+---
+/**
+ * MonitoringConsole — living twin of service-model-monitoring.svg (1120×760).
+ * Signature loop (~30s): one feature's drift (PSI) climbs through the alert
+ * threshold, the owner is notified, a retraining job runs behind an approval,
+ * and v5.2 is promoted — while the health tiles tick live.
+ */
+import ConsoleShell from '@/components/ui/ConsoleShell.astro';
+import { asLocale, useTranslations } from '@/i18n';
+import { serviceVisuals } from '@/data/visuals';
+import { formatValue } from '@/lib/consoleLoop';
+
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const v = serviceVisuals['model-monitoring'];
+const K = 'console.svc.monitoring';
+const lang = locale === 'fr-fr' ? 'fr' : 'en';
+
+const tiles = [
+  { label: t(`${K}.accuracy`), value: formatValue(91.8, 'pct1', lang), tone: 'success' },
+  { label: t(`${K}.latency`), value: '142 ms', tone: 'accent' },
+  { label: t(`${K}.requests`), value: formatValue(1284, 'int', lang), count: 1284, tone: 'brand' },
+  { label: t(`${K}.bias`), value: lang === 'fr' ? '0,8 pt' : '0.8 pts', tone: 'success' },
+];
+
+const alerts = [
+  { label: t(`${K}.a1`), meta: '2m', tone: 'success' },
+  { label: t(`${K}.a2`), meta: '9m', tone: 'success' },
+  { label: t(`${K}.a3`), meta: '1d', tone: 'idle' },
+];
+
+const segments = [
+  { label: t(`${K}.seg1`), value: formatValue(89.4, 'pct1', lang), w: 89 },
+  { label: t(`${K}.seg2`), value: formatValue(93.1, 'pct1', lang), w: 93 },
+  { label: t(`${K}.seg3`), value: formatValue(92.2, 'pct1', lang), w: 92 },
+];
+
+/** Drift chart geometry (viewBox 0 0 560 200): threshold sits at y = 70. */
+const baseline = 'M0 150 C 60 146, 110 152, 170 144 S 280 140, 330 146 S 450 138, 560 142';
+const spike = 'M0 150 C 60 146, 110 152, 170 144 S 280 132, 340 112 S 450 64, 560 44';
+
+const strings = {
+  pillAlert: t(`${K}.pillAlert`),
+  pillRetrain: t(`${K}.pillRetrain`),
+  pillResolved: t(`${K}.pillResolved`),
+  alertDrift: t(`${K}.alertDrift`),
+  alertRetrain: t(`${K}.alertRetrain`),
+  alertPromoted: t(`${K}.alertPromoted`),
+  justNow: t('console.time.justNow'),
+};
+---
+
+<ConsoleShell svgFile={v.file} width={v.width} height={v.height} altKey={v.altKey} name="svc-model-monitoring">
+  <div class="hc mm">
+    <script type="application/json" data-hc-strings set:html={JSON.stringify(strings)} />
+    <div class="hc-chrome">
+      <span class="hc-tdot"></span><span class="hc-tdot"></span><span class="hc-tdot"></span>
+      <span class="hc-urlpill">app.algorythmos.com/monitoring</span>
+    </div>
+
+    <div class="mm-head">
+      <div>
+        <div class="mm-title">{t(`${K}.title`)}</div>
+        <div class="mm-sub">{t(`${K}.sub`)}</div>
+      </div>
+      <span class="hc-livepill" data-hc-stage>
+        <span class="hc-livedot"></span><span data-slot="pill">{t(`${K}.pill`)}</span>
+      </span>
+    </div>
+
+    <div class="mm-tiles">
+      {tiles.map((x) => (
+        <div class="mm-tile">
+          <span class="mm-tile-label">{x.label}</span>
+          {x.count ? (
+            <span class="mm-tile-val" data-tone={x.tone} data-hc-count={x.count} data-hc-format="int" data-hc-tick>{x.value}</span>
+          ) : (
+            <span class="mm-tile-val" data-tone={x.tone}>{x.value}</span>
+          )}
+        </div>
+      ))}
+    </div>
+
+    <div class="mm-cols">
+      <div class="hc-card mm-chart">
+        <div class="hc-card-title">{t(`${K}.drift`)}</div>
+        <div class="mm-plot" data-hc-stage>
+          <svg viewBox="0 0 560 200" preserveAspectRatio="none" aria-hidden="true">
+            <line x1="0" y1="70" x2="560" y2="70" class="mm-threshold" />
+            <path d={baseline} class="mm-line mm-line--base hc-draw" pathLength="1" />
+            <path d={spike} class="mm-line mm-line--spike" pathLength="1" data-spike />
+            <circle cx="452" cy="70" r="6" class="mm-cross" data-cross />
+          </svg>
+          <span class="mm-threshold-label">{t(`${K}.threshold`)} · 0.20</span>
+        </div>
+        <div class="mm-segments">
+          <div class="mm-seg-title">{t(`${K}.segments`)}</div>
+          {segments.map((s, i) => (
+            <div class="mm-seg" style={`--i: ${i}`}>
+              <span class="mm-seg-label">{s.label}</span>
+              <span class="mm-seg-track"><span class="mm-seg-bar" style={`--w: ${s.w}%`}></span></span>
+              <span class="mm-seg-val">{s.value}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="hc-card mm-alerts">
+        <div class="hc-card-title">{t(`${K}.alerts`)}</div>
+        <ul class="mm-list" data-hc-stage data-hc-list>
+          {alerts.map((a) => (
+            <li class="mm-row">
+              <span class:list={['hc-dot', `hc-dot--${a.tone}`]}></span>
+              <span class="mm-row-label">{a.label}</span>
+              <span class="mm-row-meta">{a.meta}</span>
+            </li>
+          ))}
+        </ul>
+        <template data-hc-template="event">
+          <li class="mm-row">
+            <span class="hc-dot" data-slot="dot"></span>
+            <span class="mm-row-label" data-slot="label"></span>
+            <span class="mm-row-meta" data-slot="meta"></span>
+          </li>
+        </template>
+      </div>
+    </div>
+  </div>
+</ConsoleShell>
+
+<style>
+  .mm { width: 1120px; height: 760px; }
+  .mm-head { display: flex; align-items: flex-start; justify-content: space-between; padding: 24px 40px 0; }
+  .mm-title { font-size: 18px; font-weight: 600; }
+  .mm-sub { margin-top: 6px; font-size: 12.5px; color: var(--c-muted); }
+
+  .mm-tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; padding: 22px 40px 0; }
+  .mm-tile { background: var(--c-card-2); border: 1px solid var(--c-line-soft); border-radius: 10px; padding: 16px 18px; }
+  .mm-tile-label { display: block; font-size: 11px; color: var(--c-subtle); }
+  .mm-tile-val { display: block; margin-top: 6px; font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .mm-tile-val[data-tone='success'] { color: var(--c-success); }
+  .mm-tile-val[data-tone='accent'] { color: var(--c-accent); }
+  .mm-tile-val[data-tone='brand'] { color: var(--c-brand); }
+
+  .mm-cols { display: grid; grid-template-columns: 620px 1fr; gap: 20px; padding: 20px 40px 40px; flex: 1; min-height: 0; }
+  .mm-chart, .mm-alerts { background: var(--c-card-2); padding: 22px 24px; display: flex; flex-direction: column; }
+  .mm-plot { position: relative; margin-top: 14px; height: 200px; }
+  .mm-plot svg { width: 100%; height: 100%; overflow: visible; }
+  .mm-threshold { stroke: var(--c-warning); stroke-width: 1.5; stroke-dasharray: 6 6; }
+  .mm-threshold-label { position: absolute; right: 0; top: 46px; font-size: 10.5px; color: var(--c-warning); }
+  .mm-line { fill: none; stroke-width: 2.5; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+  .mm-line--base { stroke: var(--c-accent); }
+  .mm-line--spike { stroke: var(--c-warning); opacity: 0; }
+  .mm-cross { fill: var(--c-warning); opacity: 0; }
+  :global(.mm-drifting) .mm-line--spike, :global(.mm-drifting) .mm-cross { opacity: 1; }
+  :global(.mm-drifting) .mm-line--base { opacity: 0.25; }
+
+  .mm-segments { margin-top: auto; padding-top: 18px; border-top: 1px solid var(--c-line-soft); display: flex; flex-direction: column; gap: 10px; }
+  .mm-seg-title { font-size: 11.5px; color: var(--c-muted); }
+  .mm-seg { display: grid; grid-template-columns: 150px 1fr 60px; align-items: center; gap: 14px; font-size: 12px; }
+  .mm-seg-label { color: var(--c-muted); }
+  .mm-seg-track { display: block; height: 6px; border-radius: 3px; background: rgb(255 255 255 / 0.08); overflow: hidden; }
+  .mm-seg-bar { display: block; height: 100%; width: var(--w); background: var(--c-brand); border-radius: 3px; transform-origin: left center; }
+  .mm-seg-val { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+  .mm-list { list-style: none; margin: 12px 0 0; padding: 0; }
+  .mm-row { display: flex; align-items: center; gap: 12px; min-height: 48px; padding: 6px 0; border-bottom: 1px solid var(--c-line-soft); font-size: 12px; }
+  .mm-row:last-child { border-bottom: none; }
+  .mm-row-label { flex: 1; min-width: 0; line-height: 1.4; }
+  .mm-row-meta { font-size: 11px; color: var(--c-subtle); white-space: nowrap; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.hc-armed) .mm-seg-bar { transform: scaleX(0); }
+    :global(.hc-armed.hc-live) .mm-seg-bar {
+      transform: scaleX(1);
+      transition: transform 0.7s var(--ease-quint, ease-out) calc(var(--i, 0) * 0.12s + 0.5s);
+    }
+    .mm-line--spike, .mm-cross, .mm-line--base { transition: opacity 0.6s ease; }
+    .mm-row { transition: transform 0.45s var(--ease-quint, ease-out), opacity 0.45s ease; }
+  }
+
+  @media (max-width: 767px) {
+    .mm { width: 100%; height: auto; }
+    .mm-head { padding: 20px 16px 0; gap: 12px; }
+    .mm-title { font-size: 16px; }
+    .mm-tiles { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 16px 16px 0; }
+    .mm-cols { grid-template-columns: 1fr; gap: 16px; padding: 16px 16px 24px; }
+    .mm-plot { height: 150px; }
+    .mm-seg { grid-template-columns: 1fr 1fr 52px; }
+  }
+</style>
+
+<script>
+  import { initConsole, scheduleIdle } from '@/lib/consoleLoop';
+  import type { ConsoleContext } from '@/lib/consoleLoop';
+
+  const pill = (root: HTMLElement, text: string) => {
+    const el = root.querySelector('[data-slot="pill"]');
+    if (el) el.textContent = text;
+  };
+  const event = (root: HTMLElement, label: string, meta: string, tone: string) => {
+    const tpl = root.querySelector<HTMLTemplateElement>('template[data-hc-template="event"]');
+    const list = root.querySelector('[data-hc-list]');
+    if (!tpl || !list) return;
+    const row = tpl.content.firstElementChild?.cloneNode(true) as HTMLElement;
+    row.querySelector('[data-slot="dot"]')?.classList.add(`hc-dot--${tone}`);
+    const l = row.querySelector('[data-slot="label"]');
+    const m = row.querySelector('[data-slot="meta"]');
+    if (l) l.textContent = label;
+    if (m) m.textContent = meta;
+    row.classList.add('hc-enter');
+    list.prepend(row);
+    requestAnimationFrame(() => requestAnimationFrame(() => row.classList.remove('hc-enter')));
+    const rows = list.querySelectorAll('.mm-row');
+    if (rows.length > 5) rows[rows.length - 1].remove();
+  };
+
+  function setup() {
+    const root = document.querySelector<HTMLElement>('[data-console="svc-model-monitoring"]');
+    if (!root) return;
+    initConsole(root, {
+      loopMs: 30000,
+      keyframes: [
+        {
+          // Drift crosses the threshold: the chart flips to the spike, owner notified.
+          t: 6000,
+          apply: ({ root, strings }: ConsoleContext) => {
+            root.querySelector('.mm-plot')?.classList.add('mm-drifting');
+            pill(root, strings['pillAlert']);
+            event(root, strings['alertDrift'], strings['justNow'], 'warning');
+          },
+        },
+        {
+          t: 12000,
+          apply: ({ root, strings }: ConsoleContext) => {
+            pill(root, strings['pillRetrain']);
+            event(root, strings['alertRetrain'], strings['justNow'], 'accent');
+          },
+        },
+        {
+          t: 19000,
+          apply: ({ root, strings }: ConsoleContext) => {
+            root.querySelector('.mm-plot')?.classList.remove('mm-drifting');
+            pill(root, strings['pillResolved']);
+            event(root, strings['alertPromoted'], strings['justNow'], 'success');
+          },
+        },
+      ],
+    });
+  }
+  const arm = () => scheduleIdle(setup);
+  document.addEventListener('astro:page-load', arm);
+  if (document.readyState !== 'loading') arm();
+</script>

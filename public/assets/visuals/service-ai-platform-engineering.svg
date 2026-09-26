@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 760" width="1120" height="760" role="img" aria-label="AI platform console">
+  <defs><style>text{font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;}.h{fill:#f3f3f8;}.m{fill:#9a9cb4;}.s{fill:#6c6e86;}.mono{font-family:ui-monospace,Menlo,monospace;}</style></defs>
+  <rect width="1120" height="760" fill="#0c0c13"/>
+  <rect width="1120" height="48" fill="#14141e"/>
+  <line x1="0" y1="48" x2="1120" y2="48" stroke="#ffffff" stroke-opacity="0.07"/>
+  <circle cx="24" cy="24" r="5" fill="#ffffff" fill-opacity="0.18"/><circle cx="42" cy="24" r="5" fill="#ffffff" fill-opacity="0.18"/><circle cx="60" cy="24" r="5" fill="#ffffff" fill-opacity="0.18"/>
+  <rect x="392" y="12" width="336" height="24" rx="12" fill="#222232"/>
+  <text x="560" y="29" font-size="12" text-anchor="middle" class="m">app.algorythmos.com/platform</text>
+  <text x="40" y="92" font-size="18" font-weight="600" class="h">AI platform</text>
+  <text x="40" y="114" font-size="12.5" class="m">prod · 3 clusters · 42 workloads</text>
+  <rect x="994" y="76" width="86" height="28" rx="14" fill="#34d399" fill-opacity="0.12"/>
+  <circle cx="1008" cy="90" r="4" fill="#34d399"/><text x="1020" y="94" font-size="11.5" fill="#34d399">Healthy</text>
+  <rect x="40" y="140" width="520" height="250" rx="13" fill="#15151f" stroke="#ffffff" stroke-opacity="0.07"/>
+  <text x="64" y="174" font-size="13" font-weight="600" class="h">Node pools</text>
+  <text x="64" y="206" font-size="12" class="h mono">cpu-general</text><text x="170" y="206" font-size="11" class="s">CPU general</text><text x="536" y="206" font-size="12" font-weight="600" text-anchor="end" class="h">12 nodes</text>
+  <rect x="64" y="216" width="472" height="6" rx="3" fill="#ffffff" fill-opacity="0.08"/><rect x="64" y="216" width="302" height="6" rx="3" fill="#a78bfa"/>
+  <text x="64" y="264" font-size="12" class="h mono">gpu-train</text><text x="170" y="264" font-size="11" class="s">GPU training</text><text x="536" y="264" font-size="12" font-weight="600" text-anchor="end" class="h">4 × A100</text>
+  <rect x="64" y="274" width="472" height="6" rx="3" fill="#ffffff" fill-opacity="0.08"/><rect x="64" y="274" width="415" height="6" rx="3" fill="#22d3ee"/>
+  <text x="64" y="322" font-size="12" class="h mono">gpu-infer</text><text x="170" y="322" font-size="11" class="s">GPU inference</text><text x="536" y="322" font-size="12" font-weight="600" text-anchor="end" class="h">8 × L4</text>
+  <rect x="64" y="332" width="472" height="6" rx="3" fill="#ffffff" fill-opacity="0.08"/><rect x="64" y="332" width="330" height="6" rx="3" fill="#34d399"/>
+  <rect x="40" y="410" width="520" height="310" rx="13" fill="#15151f" stroke="#ffffff" stroke-opacity="0.07"/>
+  <text x="64" y="444" font-size="13" font-weight="600" class="h">Team namespaces</text>
+  <circle cx="70" cy="470" r="4" fill="#34d399"/><text x="86" y="474" font-size="12" class="h">fraud-ml</text><text x="536" y="474" font-size="11" text-anchor="end" class="s">14 pods</text>
+  <line x1="64" y1="494" x2="536" y2="494" stroke="#ffffff" stroke-opacity="0.06"/>
+  <circle cx="70" cy="518" r="4" fill="#34d399"/><text x="86" y="522" font-size="12" class="h">forecasting</text><text x="536" y="522" font-size="11" text-anchor="end" class="s">9 pods</text>
+  <line x1="64" y1="542" x2="536" y2="542" stroke="#ffffff" stroke-opacity="0.06"/>
+  <circle cx="70" cy="566" r="4" fill="#34d399"/><text x="86" y="570" font-size="12" class="h">search-llm</text><text x="536" y="570" font-size="11" text-anchor="end" class="s">11 pods</text>
+  <line x1="64" y1="590" x2="536" y2="590" stroke="#ffffff" stroke-opacity="0.06"/>
+  <circle cx="70" cy="614" r="4" fill="#34d399"/><text x="86" y="618" font-size="12" class="h">vision</text><text x="536" y="618" font-size="11" text-anchor="end" class="s">8 pods</text>
+  <line x1="64" y1="638" x2="536" y2="638" stroke="#ffffff" stroke-opacity="0.06"/>
+  <rect x="580" y="140" width="500" height="470" rx="13" fill="#15151f" stroke="#ffffff" stroke-opacity="0.07"/>
+  <text x="604" y="174" font-size="13" font-weight="600" class="h">Infrastructure as code</text>
+  <rect x="604" y="190" width="452" height="396" rx="10" fill="#0a0a10" stroke="#ffffff" stroke-opacity="0.06"/>
+  <text x="624" y="222" font-size="12" fill="#f3f3f8" class="mono" xml:space="preserve">$ terraform plan</text>
+  <text x="624" y="246" font-size="12" fill="#fbbf24" class="mono" xml:space="preserve">~ google_container_node_pool.gpu_infer</text>
+  <text x="624" y="270" font-size="12" fill="#9a9cb4" class="mono" xml:space="preserve">    node_count: 6 → 8</text>
+  <text x="624" y="294" font-size="12" fill="#fbbf24" class="mono" xml:space="preserve">~ kubernetes_manifest.cluster_autoscaler</text>
+  <text x="624" y="318" font-size="12" fill="#9a9cb4" class="mono" xml:space="preserve">Plan: 0 to add, 2 to change, 0 to destroy.</text>
+  <text x="624" y="342" font-size="12" fill="#f3f3f8" class="mono" xml:space="preserve">$ terraform apply -auto-approve</text>
+  <text x="624" y="366" font-size="12" fill="#34d399" class="mono" xml:space="preserve">Apply complete! Resources: 0 added, 2 changed.</text>
+  <rect x="580" y="630" width="160" height="70" rx="10" fill="#15151f" stroke="#ffffff" stroke-opacity="0.07"/>
+  <text x="596" y="656" font-size="10.5" class="s">GPU utilisation</text><text x="596" y="684" font-size="20" font-weight="700" fill="#22d3ee">78.0%</text>
+  <rect x="750" y="630" width="160" height="70" rx="10" fill="#15151f" stroke="#ffffff" stroke-opacity="0.07"/>
+  <text x="766" y="656" font-size="10.5" class="s">Pending pods</text><text x="766" y="684" font-size="20" font-weight="700" fill="#34d399">0</text>
+  <rect x="920" y="630" width="160" height="70" rx="10" fill="#15151f" stroke="#ffffff" stroke-opacity="0.07"/>
+  <text x="936" y="656" font-size="10.5" class="s">Spend vs budget</text><text x="936" y="684" font-size="20" font-weight="700" fill="#a78bfa">84.0%</text>
+</svg>

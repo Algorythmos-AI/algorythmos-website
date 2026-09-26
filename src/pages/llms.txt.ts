@@ -18,7 +18,7 @@ export const GET: APIRoute = () => {
   const L: string[] = [];
   L.push('# Algorythmos', '');
   L.push(
-    '> Boutique AI consultancy delivering agentic automation, document intelligence, SQL dashboards, and MLOps engineering for SMEs in Sydney (Australia) and Paris (France). Bilingual EN/FR. Single canonical domain: https://algorythmos.com.',
+    '> Boutique AI consultancy for SMEs in Sydney (Australia) and Paris (France), with nine services in three families: AI applications (agentic automation, document intelligence, generative AI and LLMOps), MLOps and AI platforms (model deployment, platform engineering, model monitoring) and data, analytics and web. Bilingual EN/FR. Single canonical domain: https://algorythmos.com.',
     '',
     `> Full page-by-page content for ingestion: ${SITE}/llms-full.txt`,
     '',

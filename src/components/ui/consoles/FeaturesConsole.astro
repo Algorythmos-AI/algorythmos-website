@@ -1,0 +1,241 @@
+---
+/**
+ * FeaturesConsole — living twin of service-data-feature-management.svg (1120×760).
+ * Signature loop (~26s): a prediction is traced back through the lineage graph
+ * (model → features → transform → sources), a stale feature is refreshed, and
+ * every data-quality check turns green.
+ */
+import ConsoleShell from '@/components/ui/ConsoleShell.astro';
+import { asLocale, useTranslations } from '@/i18n';
+import { serviceVisuals } from '@/data/visuals';
+import { formatValue } from '@/lib/consoleLoop';
+
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const v = serviceVisuals['data-feature-management'];
+const K = 'console.svc.features';
+const lang = locale === 'fr-fr' ? 'fr' : 'en';
+
+/** Lineage columns (x in the 556×300 graph) and nodes (identifiers, same in every locale). */
+const cols = [
+  { x: 62, label: t(`${K}.colSources`), nodes: ['crm.accounts', 'events.stream'] },
+  { x: 208, label: t(`${K}.colTransform`), nodes: ['customer_daily'] },
+  { x: 354, label: t(`${K}.colFeatures`), nodes: ['tenure_days', 'spend_30d', 'visits_7d'] },
+  { x: 492, label: t(`${K}.colModel`), nodes: ['churn v5.1'] },
+];
+const yFor = (n: number, i: number) => (n === 1 ? 150 : n === 2 ? 100 + i * 100 : 70 + i * 80);
+const nodes = cols.flatMap((c, ci) => c.nodes.map((name, i) => ({ id: `${ci}-${i}`, ci, name, x: c.x, y: yFor(c.nodes.length, i) })));
+const byCol = (ci: number) => nodes.filter((n) => n.ci === ci);
+/** The path highlighted when a prediction is traced back to its sources. */
+const TRACE = new Set(['crm.accounts', 'customer_daily', 'tenure_days', 'churn v5.1']);
+const edges = [0, 1, 2].flatMap((ci) =>
+  byCol(ci).flatMap((a) =>
+    byCol(ci + 1).map((b) => ({
+      d: `M${a.x + 54} ${a.y} C ${a.x + 84} ${a.y}, ${b.x - 84} ${b.y}, ${b.x - 54} ${b.y}`,
+      trace: TRACE.has(a.name) && TRACE.has(b.name),
+    })),
+  ),
+);
+
+const features = [
+  { name: 'tenure_days', fresh: '2m', tone: 'success' },
+  { name: 'spend_30d', fresh: '5m', tone: 'success' },
+  { name: 'visits_7d', fresh: '1m', tone: 'success' },
+  { name: 'region_code', fresh: t(`${K}.stale`), tone: 'warning', key: 'stale' },
+];
+
+const checks = [
+  { label: t(`${K}.q1`), value: '✓' },
+  { label: t(`${K}.q2`), value: '3 / 4', key: 'fresh' },
+  { label: t(`${K}.q3`), value: formatValue(99.7, 'pct1', lang) },
+  { label: t(`${K}.q4`), value: '✓' },
+];
+
+const strings = {
+  pillTrace: t(`${K}.pillTrace`),
+  pillOk: t(`${K}.pillOk`),
+  refreshed: t(`${K}.refreshed`),
+  traced: t(`${K}.traced`),
+};
+---
+
+<ConsoleShell svgFile={v.file} width={v.width} height={v.height} altKey={v.altKey} name="svc-data-feature-management">
+  <div class="hc df">
+    <script type="application/json" data-hc-strings set:html={JSON.stringify(strings)} />
+    <div class="hc-chrome">
+      <span class="hc-tdot"></span><span class="hc-tdot"></span><span class="hc-tdot"></span>
+      <span class="hc-urlpill">app.algorythmos.com/features</span>
+    </div>
+
+    <div class="df-head">
+      <div>
+        <div class="df-title">{t(`${K}.title`)}</div>
+        <div class="df-sub">{t(`${K}.sub`)}</div>
+      </div>
+      <span class="hc-livepill hc-livepill--accent" data-hc-stage>
+        <span class="hc-livedot"></span><span data-slot="pill">{t(`${K}.pill`)}</span>
+      </span>
+    </div>
+
+    <div class="df-cols">
+      <div class="hc-card df-lineage">
+        <div class="hc-card-title">{t(`${K}.lineage`)}</div>
+        <div class="df-graph" data-hc-stage>
+          <svg viewBox="0 0 556 300" aria-hidden="true">
+            {edges.map((e) => <path d={e.d} class:list={['df-edge hc-draw', { 'df-edge--trace': e.trace }]} pathLength="1" />)}
+            {nodes.map((n) => (
+              <g class:list={['df-node', { 'df-node--trace': TRACE.has(n.name) }]}>
+                <rect x={n.x - 54} y={n.y - 15} width="108" height="30" rx="7" />
+                <text x={n.x} y={n.y + 4} text-anchor="middle">{n.name}</text>
+              </g>
+            ))}
+          </svg>
+          <div class="df-col-labels">
+            {cols.map((c) => <span style={`left: ${(c.x / 556) * 100}%`}>{c.label}</span>)}
+          </div>
+          <div class="df-traced" data-slot="traced"></div>
+        </div>
+      </div>
+
+      <div class="df-side">
+        <div class="hc-card df-table">
+          <div class="hc-card-title">{t(`${K}.table`)}</div>
+          <ul class="df-list" data-hc-stage>
+            {features.map((f) => (
+              <li class="df-row" data-feature={f.key}>
+                <span class:list={['hc-dot', `hc-dot--${f.tone}`]} data-slot="dot"></span>
+                <span class="df-feat">{f.name}</span>
+                <span class="df-fresh" data-slot="fresh">{f.fresh}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div class="hc-card df-quality">
+          <div class="hc-card-title">{t(`${K}.quality`)}</div>
+          <div class="df-checks" data-hc-stage>
+            {checks.map((c) => (
+              <div class="df-check" data-check={c.key}>
+                <span class="df-check-label">{c.label}</span>
+                <span class="df-check-val" data-slot="val">{c.value}</span>
+              </div>
+            ))}
+          </div>
+          <div class="df-dataset">
+            <span>{t(`${K}.dataset`)}</span>
+            <code>sha256:9f2c…a41e</code>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ConsoleShell>
+
+<style>
+  .df { width: 1120px; height: 760px; }
+  .df-head { display: flex; align-items: flex-start; justify-content: space-between; padding: 24px 40px 0; }
+  .df-title { font-size: 18px; font-weight: 600; }
+  .df-sub { margin-top: 6px; font-size: 12.5px; color: var(--c-muted); font-family: ui-monospace, 'SF Mono', Menlo, monospace; }
+
+  .df-cols { display: grid; grid-template-columns: 600px 1fr; gap: 20px; padding: 24px 40px 40px; flex: 1; min-height: 0; }
+  .df-lineage, .df-table, .df-quality { background: var(--c-card-2); padding: 22px 24px; }
+  .df-lineage { display: flex; flex-direction: column; }
+  .df-graph { position: relative; margin-top: 20px; flex: 1; }
+  .df-graph svg { width: 100%; height: auto; overflow: visible; }
+  .df-edge { fill: none; stroke: rgb(255 255 255 / 0.18); stroke-width: 1.5; }
+  .df-node rect { fill: var(--c-card); stroke: var(--c-line); }
+  .df-node text { fill: var(--c-ink); font-size: 10.5px; font-family: ui-monospace, 'SF Mono', Menlo, monospace; }
+  :global(.df-tracing) .df-edge--trace { stroke: var(--c-accent); stroke-width: 2.5; }
+  :global(.df-tracing) .df-node--trace rect { stroke: var(--c-accent); fill: rgb(34 211 238 / 0.12); }
+  .df-col-labels { position: relative; height: 18px; margin-top: 8px; }
+  .df-col-labels span { position: absolute; transform: translateX(-50%); font-size: 10.5px; color: var(--c-subtle); white-space: nowrap; }
+  .df-traced { margin-top: 18px; min-height: 18px; font-size: 12px; color: var(--c-accent); }
+
+  .df-side { display: flex; flex-direction: column; gap: 20px; min-height: 0; }
+  .df-list { list-style: none; margin: 12px 0 0; padding: 0; }
+  .df-row { display: flex; align-items: center; gap: 12px; height: 42px; border-bottom: 1px solid var(--c-line-soft); font-size: 12px; }
+  .df-row:last-child { border-bottom: none; }
+  .df-feat { flex: 1; font-family: ui-monospace, 'SF Mono', Menlo, monospace; }
+  .df-fresh { font-size: 11px; color: var(--c-subtle); white-space: nowrap; }
+  .df-row[data-feature='stale'] .df-fresh { color: var(--c-warning); }
+
+  .df-quality { flex: 1; display: flex; flex-direction: column; }
+  .df-checks { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 14px; }
+  .df-check { background: var(--c-card); border: 1px solid var(--c-line-soft); border-radius: 10px; padding: 12px 14px; }
+  .df-check-label { display: block; font-size: 10.5px; color: var(--c-subtle); }
+  .df-check-val { display: block; margin-top: 4px; font-size: 16px; font-weight: 700; color: var(--c-success); font-variant-numeric: tabular-nums; }
+  .df-check[data-check='fresh'] .df-check-val { color: var(--c-warning); }
+  .df-dataset { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: auto; padding-top: 14px; font-size: 11px; color: var(--c-subtle); }
+  .df-dataset code { font-family: ui-monospace, 'SF Mono', Menlo, monospace; color: var(--c-muted); }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .df-edge, .df-node rect { transition: stroke 0.5s ease, fill 0.5s ease, stroke-width 0.5s ease; }
+  }
+
+  @media (max-width: 767px) {
+    .df { width: 100%; height: auto; }
+    .df-head { padding: 20px 16px 0; gap: 12px; }
+    .df-title { font-size: 16px; }
+    .df-cols { grid-template-columns: 1fr; gap: 16px; padding: 20px 16px 24px; }
+    .df-col-labels span { font-size: 9px; }
+  }
+</style>
+
+<script>
+  import { initConsole, scheduleIdle } from '@/lib/consoleLoop';
+  import type { ConsoleContext } from '@/lib/consoleLoop';
+
+  const pill = (root: HTMLElement, text: string) => {
+    const el = root.querySelector('[data-slot="pill"]');
+    if (el) el.textContent = text;
+  };
+
+  function setup() {
+    const root = document.querySelector<HTMLElement>('[data-console="svc-data-feature-management"]');
+    if (!root) return;
+    initConsole(root, {
+      loopMs: 26000,
+      keyframes: [
+        {
+          // Trace a prediction back to its sources through the lineage graph.
+          t: 5000,
+          apply: ({ root, strings }: ConsoleContext) => {
+            root.querySelector('.df-graph')?.classList.add('df-tracing');
+            pill(root, strings['pillTrace']);
+            const traced = root.querySelector('[data-slot="traced"]');
+            if (traced) traced.textContent = strings['traced'];
+          },
+        },
+        {
+          // The stale feature refreshes; every check turns green.
+          t: 12000,
+          apply: ({ root, strings }: ConsoleContext) => {
+            const row = root.querySelector<HTMLElement>('[data-feature="stale"]');
+            if (row) {
+              row.dataset.feature = 'fresh';
+              const dot = row.querySelector('[data-slot="dot"]');
+              dot?.classList.replace('hc-dot--warning', 'hc-dot--success');
+              const fresh = row.querySelector('[data-slot="fresh"]');
+              if (fresh) fresh.textContent = strings['refreshed'];
+              row.classList.add('hc-flash');
+            }
+            const check = root.querySelector<HTMLElement>('[data-check="fresh"]');
+            if (check) {
+              check.dataset.check = 'ok';
+              const val = check.querySelector('[data-slot="val"]');
+              if (val) val.textContent = '4 / 4';
+            }
+            pill(root, strings['pillOk']);
+          },
+        },
+        {
+          t: 19000,
+          apply: ({ root }: ConsoleContext) => root.querySelector('.df-graph')?.classList.remove('df-tracing'),
+        },
+      ],
+    });
+  }
+  const arm = () => scheduleIdle(setup);
+  document.addEventListener('astro:page-load', arm);
+  if (document.readyState !== 'loading') arm();
+</script>
