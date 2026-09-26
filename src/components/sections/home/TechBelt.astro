@@ -8,7 +8,7 @@
  * prefers-reduced-motion. Duplicate copy is aria-hidden.
  */
 import { asLocale, useTranslations } from '@/i18n';
-import { techStack } from '@/data/techStack';
+import { beltStack } from '@/data/techStack';
 
 const locale = asLocale(Astro.currentLocale);
 const t = useTranslations(locale);
@@ -22,7 +22,7 @@ const t = useTranslations(locale);
 
   <div data-reveal style="--reveal-delay: 100ms" class="tech-belt mt-8" aria-label={t('stack.title')}>
     <ul class="tech-track">
-      {techStack.map((tech) => (
+      {beltStack.map((tech) => (
         <li class="tech-chip">
           <svg class="tech-logo" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d={tech.d} /></svg>
           {tech.name}
@@ -30,7 +30,7 @@ const t = useTranslations(locale);
       ))}
     </ul>
     <ul class="tech-track" aria-hidden="true">
-      {techStack.map((tech) => (
+      {beltStack.map((tech) => (
         <li class="tech-chip">
           <svg class="tech-logo" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d={tech.d} /></svg>
           {tech.name}
