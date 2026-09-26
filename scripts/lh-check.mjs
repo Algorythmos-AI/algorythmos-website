@@ -27,6 +27,8 @@ const URLS = [
   { label: 'home (au-en)', path: '/au-en' },
   { label: 'service (fr-fr)', path: '/fr-fr/services/agentic-automation' },
   { label: 'case study (au-en)', path: '/au-en/case-studies/port-botany-ai-ml' },
+  { label: 'services (au-en)', path: '/au-en/services' },
+  { label: 'llmops (fr-fr)', path: '/fr-fr/services/llmops' },
 ];
 
 const preview = spawn('npx', ['astro', 'preview', '--port', String(PORT), '--ignore-lock'], { stdio: 'ignore' });

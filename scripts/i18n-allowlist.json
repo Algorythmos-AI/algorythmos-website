@@ -37,6 +37,18 @@
     ],
     "src/components/ui/consoles/SqlConsole.astro": [
       "app.algorythmos.com/dashboards"
+    ],
+    "src/components/ui/consoles/FeaturesConsole.astro": [
+      "app.algorythmos.com/features"
+    ],
+    "src/components/ui/consoles/LlmopsConsole.astro": [
+      "app.algorythmos.com/llm-releases"
+    ],
+    "src/components/ui/consoles/MonitoringConsole.astro": [
+      "app.algorythmos.com/monitoring"
+    ],
+    "src/components/ui/consoles/PlatformConsole.astro": [
+      "app.algorythmos.com/platform"
     ]
   },
   "titleCaseOk": [
@@ -127,6 +139,7 @@
     "Power BI",
     "Privacy Act",
     "AI Act",
-    "Union européenne"
+    "Union européenne",
+    "Vertex AI Agents"
   ]
 }

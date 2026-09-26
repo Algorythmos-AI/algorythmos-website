@@ -29,6 +29,23 @@ for (const prefix of ['/au-en', '/fr-fr'] as const) {
   }
 }
 
+for (const prefix of ['/au-en', '/fr-fr'] as const) {
+  test(`${prefix}/services groups every service into its family`, async ({ page }) => {
+    await page.goto(`${prefix}/services`);
+    const families = [...new Set(services.map((s) => s.family))];
+    await expect(page.locator('[data-family]')).toHaveCount(families.length);
+    for (const f of families) {
+      const expected = services.filter((s) => s.family === f).map((s) => `${prefix}/services/${s.slug}`);
+      const hrefs = await page.locator(`[data-family="${f}"] a.ring-gradient`).evaluateAll((els) => els.map((e) => e.getAttribute('href')));
+      expect(hrefs).toEqual(expected);
+    }
+    await expect(page.locator('[data-lifecycle] ol > li')).toHaveCount(7);
+    await expect(page.locator('[data-engagement] ol > li')).toHaveCount(4);
+    await expect(page.locator('[data-stack-grid]')).toHaveCount(1);
+    await expect(page.locator('h1')).toHaveCount(1);
+  });
+}
+
 // body { overflow-x: clip } hides overflow from document scrollWidth, so check
 // each card text element's own box at phone widths.
 test.describe('FR cards fit narrow phones without mid-word breaks overflowing', () => {
