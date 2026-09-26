@@ -65,6 +65,7 @@ exports[`professionalService > matches the snapshot graph for both regions 1`] =
     "Document Intelligence",
     "SQL Dashboards",
     "MLOps",
+    "AI-Powered Websites",
   ],
   "url": "https://algorythmos.com/au-en",
 }
@@ -133,6 +134,7 @@ exports[`professionalService > matches the snapshot graph for both regions 2`] =
     "Document Intelligence",
     "SQL Dashboards",
     "MLOps",
+    "AI-Powered Websites",
   ],
   "url": "https://algorythmos.com/fr-fr",
 }

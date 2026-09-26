@@ -152,12 +152,46 @@ function cutElements(src, tag) {
         while (start !== -1 && isNameChar(lower[start + open.length])) start = lower.indexOf(open, start + 1);
         if (start === -1) return out + src.slice(i);
         out += src.slice(i, start);
-        const end = lower.indexOf(close, start + open.length);
+        // A self-closing opener (<script type="application/json" … />) has no
+        // body: drop just the tag, or everything up to the file's last </script>
+        // would be skipped along with it.
+        const tagEnd = openerEnd(src, start + open.length);
+        if (tagEnd === -1) return out;
+        if (src[tagEnd - 1] === '/') {
+            i = tagEnd + 1;
+            continue;
+        }
+        const end = lower.indexOf(close, tagEnd + 1);
         if (end === -1) return out;
         const gt = lower.indexOf('>', end + close.length);
         if (gt === -1) return out;
         i = gt + 1;
     }
+}
+
+/**
+ * Index of the '>' that ends an opening tag starting at `from`, skipping quoted
+ * attribute values and {expressions} (Astro attributes may contain '>' or '=>').
+ * -1 when the tag never ends.
+ */
+function openerEnd(src, from) {
+    let quote = null;
+    let depth = 0;
+    for (let k = from; k < src.length; k++) {
+        const c = src[k];
+        if (quote) {
+            if (c === quote) quote = null;
+        } else if (c === '"' || c === "'" || (depth > 0 && c === '`')) {
+            quote = c;
+        } else if (c === '{') {
+            depth++;
+        } else if (c === '}') {
+            depth = Math.max(0, depth - 1);
+        } else if (c === '>' && depth === 0) {
+            return k;
+        }
+    }
+    return -1;
 }
 
 /** Remove <script>/<style> elements and HTML comments: none of them holds visible copy. */
@@ -371,20 +405,29 @@ const BANNED_CLAIMS = [
     { re: /has helped (enterprises|businesses|companies)|a aidé des entreprises|real ai outcomes|résultats ia concrets/i, why: 'representative studies are illustrative, not delivered client results' },
     { re: /teams? in (paris|sydney)|équipes? algorythmos|our team in|notre équipe à|one senior team|une équipe senior|senior engineers|ingénieurs seniors|from the algorythmos team|de l.équipe algorythmos|team size|taille de l.équipe/i, why: 'implies a staffed team — use the senior-led boutique voice' },
     { re: /trusted by (smes|\d)|approuvé par les pme|AI Act[- ]ready|GDPR[- ]ready|^We delivered|^Nous avons livré/i, why: 'unsubstantiated trust, readiness or delivery claim' },
+    { re: /expert engineers|ingénieurs experts/i, why: 'implies a staffed team — use the senior-led boutique voice' },
+    { re: /certified (partner|expert)s?|partenaires? (certifiés?|officiels?)|official partners?/i, why: 'no vendor partnership or certification is held — tools are "technologies we work with"' },
 ];
 
 /**
  * Single-locale pages that keep their copy in the page file rather than the
  * dictionaries; their string literals get the same claim check.
  */
-const LANDING_COPY_FILES = ['src/pages/[locale]/ai-consultancy-sydney.astro', 'src/pages/[locale]/conseil-en-ia-paris.astro'];
+const LANDING_COPY_FILES = [
+    'src/pages/[locale]/ai-consultancy-sydney.astro',
+    'src/pages/[locale]/conseil-en-ia-paris.astro',
+    // Public copy written as literals outside the dictionaries.
+    'src/seo/ogPages.ts',
+    'src/pages/llms.txt.ts',
+];
 
 function landingClaimFindings() {
     const out = [];
     for (const rel of LANDING_COPY_FILES) {
         const src = readFileSync(join(ROOT, rel), 'utf-8');
-        for (const m of src.matchAll(/(['"])((?:(?!\1)[^\\]|\\.)*)\1/g)) {
-            const text = m[2];
+        // '…', "…" and `…` literals (template ${…} parts removed before matching).
+        for (const m of src.matchAll(/(['"`])((?:(?!\1)[^\\]|\\.)*)\1/g)) {
+            const text = m[1] === '`' ? m[2].replace(/\$\{[^}]*\}/g, ' ') : m[2];
             for (const { re, why } of BANNED_CLAIMS) {
                 if (re.test(text)) out.push(`[page] ${rel} — ${why}\n       "${text.slice(0, 100)}${text.length > 100 ? '…' : ''}"`);
             }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { easeOutQuart, formatValue, scaleFor } from './consoleLoop';
+import { consoleMayAdvance, easeOutQuart, formatValue, scaleFor } from './consoleLoop';
 
 describe('scaleFor', () => {
   it('returns the fit ratio', () => {
@@ -54,5 +54,16 @@ describe('formatValue', () => {
 
   it('falls back gracefully on an invalid locale tag', () => {
     expect(() => formatValue(5, 'int', '!!bad!!')).not.toThrow();
+  });
+});
+
+describe('consoleMayAdvance', () => {
+  it('advances only on screen, in a visible tab, with motion allowed', () => {
+    expect(consoleMayAdvance(true, false, false)).toBe(true);
+    expect(consoleMayAdvance(false, false, false)).toBe(false);
+    expect(consoleMayAdvance(true, true, false)).toBe(false);
+  });
+  it('stops as soon as motion is turned off mid-session', () => {
+    expect(consoleMayAdvance(true, false, true)).toBe(false);
   });
 });

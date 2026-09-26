@@ -320,6 +320,16 @@ function businessProfiles() {
   return [...block[1].matchAll(/url:\s*'([^']+)'/g)].map((m) => m[1]);
 }
 
+/**
+ * Slugs from a registry module's source (read as text, like businessProfiles):
+ * the source of truth, so a page that failed to build shows up as missing
+ * instead of silently dropping out of the check.
+ */
+function registrySlugs(file) {
+  const src = readFileSync(join(ROOT, 'src', 'data', file), 'utf-8');
+  return [...src.matchAll(/\bslug:\s*'([^']+)'/g)].map((m) => m[1]);
+}
+
 function collectLdNodes(html) {
   const nodes = [];
   for (const block of extractJsonLd(html)) {
@@ -631,7 +641,8 @@ function validateStaticFiles() {
 
 // ---------------------------------------------------------------------------
 // SEO feature guardrails — regression tests for the hardening work:
-//   - FAQPage on every service page (5 × 3 locales) + both local landings
+//   - FAQPage on every service page (both locales), both local landings, and
+//     every case study that carries an FAQ
 //   - Organization sameAs === business.ts profiles, each surfaced as a footer href
 //   - per-locale RSS feeds exist, well-formed, ≥1 item
 //   - every /blog/<slug> sitemap URL carries a parseable <lastmod>
@@ -641,7 +652,11 @@ function validateSeoFeatures() {
   const before = errors;
 
   // 1. FAQPage coverage
-  const SERVICE_SLUGS = ['agentic-automation', 'document-intelligence', 'sql-dashboards', 'mlops-cicd', 'ai-websites'];
+  const SERVICE_SLUGS = registrySlugs('services.ts');
+  if (SERVICE_SLUGS.length === 0) {
+    log.error('Could not read service slugs from src/data/services.ts');
+    errors++;
+  }
   const PREFIXES = ['au-en', 'fr-fr'];
   const faqPages = [];
   for (const slug of SERVICE_SLUGS) {
@@ -649,8 +664,12 @@ function validateSeoFeatures() {
   }
   faqPages.push(join('au-en', 'ai-consultancy-sydney', 'index.html'));
   faqPages.push(join('fr-fr', 'conseil-en-ia-paris', 'index.html'));
-  // Evidence reports with an FAQ block
-  for (const pre of PREFIXES) faqPages.push(join(pre, 'case-studies', 'port-botany-ai-ml', 'index.html'));
+  // Every case study whose dictionary carries an FAQ must emit FAQPage.
+  const enDict = JSON.parse(readFileSync(join(ROOT, 'src', 'i18n', 'ui', 'en.global.json'), 'utf-8'));
+  for (const slug of registrySlugs('caseStudies.ts')) {
+    if (!enDict[`caseStudyDetail.studies.${slug}.faqs.0.question`]) continue;
+    for (const pre of PREFIXES) faqPages.push(join(pre, 'case-studies', slug, 'index.html'));
+  }
 
   let faqOk = 0;
   for (const rel of faqPages) {
@@ -668,7 +687,7 @@ function validateSeoFeatures() {
       faqOk++;
     }
   }
-  if (faqOk === faqPages.length) log.success(`FAQPage present on all ${faqOk} service + landing pages`);
+  if (faqOk === faqPages.length) log.success(`FAQPage present on all ${faqOk} service, landing and case-study pages`);
 
   // 2. sameAs ⇄ business.ts profiles, and footer reciprocity
   const profiles = businessProfiles();

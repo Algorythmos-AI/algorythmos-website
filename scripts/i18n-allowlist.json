@@ -18,17 +18,27 @@
     "footer.localSydney",
     "press.founder.name",
     "pricing.tooltip.algorythmos.label",
-    "privacy.sections.intro.title",
     "region.fr",
     "region.global",
     "security.items.1.title",
-    "services.items.mlops-cicd.name",
-    "services.mlops"
+    "services.items.mlops-cicd.name"
   ],
   "sourceOk": {
     "src/components/ui/consoles/AiWebsitesConsole.astro": [
       "algorythmos.com · audit",
       "Core Web Vitals"
+    ],
+    "src/components/ui/consoles/AgenticConsole.astro": [
+      "app.algorythmos.com/agents/contract-review"
+    ],
+    "src/components/ui/consoles/DocumentConsole.astro": [
+      "app.algorythmos.com/documents"
+    ],
+    "src/components/ui/consoles/MlopsConsole.astro": [
+      "app.algorythmos.com/pipelines"
+    ],
+    "src/components/ui/consoles/SqlConsole.astro": [
+      "app.algorythmos.com/dashboards"
     ]
   },
   "titleCaseOk": [

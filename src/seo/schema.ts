@@ -148,7 +148,7 @@ export function professionalService(region: 'AU' | 'FR') {
       { '@type': 'AdministrativeArea', name: map.adminArea },
       { '@type': 'Country', name: map.countryName },
     ],
-    serviceType: ['AI Consulting', 'Agentic Automation', 'Document Intelligence', 'SQL Dashboards', 'MLOps'],
+    serviceType: ['AI Consulting', 'Agentic Automation', 'Document Intelligence', 'SQL Dashboards', 'MLOps', 'AI-Powered Websites'],
     knowsLanguage: ['en-AU', 'fr-FR', 'en'],
     priceRange: map.priceRange,
     openingHoursSpecification: [

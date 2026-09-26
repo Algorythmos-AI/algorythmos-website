@@ -18,7 +18,8 @@ const services = catalogue.map((s) => ({
   slug: s.slug,
   icon: s.icon,
   name: t(`services.items.${s.slug}.name`),
-  desc: t(DESC_KEYS[s.slug]),
+  // Services without a hand-picked blurb fall back to their catalogue tagline.
+  desc: t(DESC_KEYS[s.slug] ?? `services.items.${s.slug}.tagline`),
 }));
 ---
 

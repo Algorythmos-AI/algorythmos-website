@@ -28,11 +28,21 @@ const ogImg = ogImageUrl(localizePath(locale, path));
 
 /**
  * All studies are i18n-backed — flat dot keys under `caseStudyDetail.studies.<slug>.*`
- * (approach.0-3, results.0-4). Exposes: challenge, approach[], solution, results[],
+ * (approach.N, results.N — read sequentially, so a study states only what it can
+ * evidence). Exposes: challenge, approach[], solution, results[],
  * plus the context band (industry/region/focus) and SEO keywords[].
  */
-const idx = (key: string, n: number): string[] =>
-  Array.from({ length: n }, (_, i) => t(`caseStudyDetail.studies.${slug}.${key}.${i}`));
+/** Sequential `<key>.0`, `.1`, … until the first missing key (t() returns the key on a miss). */
+const idx = (key: string, max = 8): string[] => {
+  const out: string[] = [];
+  for (let i = 0; i < max; i++) {
+    const k = `caseStudyDetail.studies.${slug}.${key}.${i}`;
+    const v = t(k);
+    if (v === k) break;
+    out.push(v);
+  }
+  return out;
+};
 
 const study = {
   title: t(`caseStudyDetail.studies.${slug}.title`),
@@ -41,9 +51,9 @@ const study = {
   region: t(`caseStudyDetail.studies.${slug}.region`),
   focus: t(`caseStudyDetail.studies.${slug}.focus`),
   challenge: t(`caseStudyDetail.studies.${slug}.challenge`),
-  approach: idx('approach', 4),
+  approach: idx('approach'),
   solution: t(`caseStudyDetail.studies.${slug}.solution`),
-  results: idx('results', 5),
+  results: idx('results'),
   cta: t(`caseStudyDetail.studies.${slug}.cta`),
   keywords: t(`caseStudyDetail.studies.${slug}.keywords`)
     .split(',')
