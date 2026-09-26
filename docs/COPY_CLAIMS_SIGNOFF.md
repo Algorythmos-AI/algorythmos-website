@@ -100,6 +100,12 @@ approach is designed to deliver, not audited client results" (EN/FR). The homepa
         stay under NSW law with the ACL carve-out.
       - No VAT is charged (*franchise en base*), so the notice shows "TVA non applicable,
         art. 293 B du CGI".
+      - **Presentation (27 Sep 2026, owner request):** the French publisher appears as "Algorythmos France"
+        (the site's regional brand), trading name Algorythmos, operated by Sameer Raj Kalaliya (EI), at
+        "Paris La Défense" (the district's official name). The VAT line was removed from the notice: the
+        "TVA non applicable, art. 293 B du CGI" mention is required on invoices, not on the website. The
+        legally required elements stay: the name with "EI", the SIREN, the RNE registration, the address,
+        phone and email.
       - The footer's legal line follows the same split. French pages show "Sameer Raj
         Kalaliya EI · Algorythmos · SIREN · La Défense, France"; all other pages show the
         company, its ABN and the Surry Hills office.
