@@ -11,7 +11,7 @@ import fr from '../i18n/ui/fr.fr.json';
 import { services } from './services';
 import { serviceVisuals } from './visuals';
 import { serviceRelated } from './related';
-import { caseStudySlugs } from './caseStudies';
+import { caseStudies, caseStudySlugs } from './caseStudies';
 import { STACK_CATEGORIES } from './techStack';
 
 const ROOT = join(__dirname, '..', '..');
@@ -103,5 +103,11 @@ describe('registry', () => {
   });
   it('gives every service except ai-websites a proof case study', () => {
     for (const s of services) if (s.slug !== 'ai-websites') expect(s.proof, s.slug).not.toBeNull();
+  });
+  it('features a real client engagement on each of the four MLOps & AI platform services', () => {
+    for (const slug of ['llmops', 'ai-platform-engineering', 'model-monitoring', 'data-feature-management']) {
+      const proof = services.find((s) => s.slug === slug)?.proof;
+      expect(caseStudies.find((c) => c.slug === proof)?.kind, slug).toBe('client');
+    }
   });
 });

@@ -24,6 +24,7 @@ const PAGES = [
   '/fr-fr/services/llmops',
   '/au-en/services/model-monitoring',
   '/fr-fr/blog/llmops-in-production',
+  '/au-en/case-studies/clinical-document-ai',
 ];
 const SCHEMES = ['light', 'dark'] as const;
 
