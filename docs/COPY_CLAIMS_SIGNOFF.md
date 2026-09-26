@@ -100,6 +100,9 @@ approach is designed to deliver, not audited client results" (EN/FR). The homepa
         stay under NSW law with the ACL carve-out.
       - No VAT is charged (*franchise en base*), so the notice shows "TVA non applicable,
         art. 293 B du CGI".
+      - The footer's legal line follows the same split. French pages show "Sameer Raj
+        Kalaliya EI · Algorythmos · SIREN · La Défense, France"; all other pages show the
+        company, its ABN and the Surry Hills office.
 - [ ] If the EI sells to consumers, the Code de la consommation (L612-1) requires naming a free
       consumer mediator. None is named yet, so the Terms make no mediator claim.
 

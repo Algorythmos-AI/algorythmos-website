@@ -1,6 +1,6 @@
 ---
 import { asLocale, useTranslations, localizePath } from '@/i18n';
-import { BUSINESS, regionAddressLine } from '@/data/business';
+import { BUSINESS, FR_PUBLISHER, regionAddressLine } from '@/data/business';
 import { services } from '@/data/services';
 import LocaleSwitcher from '@/components/layout/LocaleSwitcher.astro';
 
@@ -39,6 +39,13 @@ const resources = [
 
 // Social profiles surfaced for entity reciprocity (schema sameAs ⇄ visible links).
 const social = ['LinkedIn', 'X', 'YouTube', 'Medium'].map((label) => ({ label, url: profile(label) }));
+
+/* Legal line: the French pages are published by the French sole-trader business
+   (see the legal notice); every other page by the Australian company. */
+const legalLine =
+  locale === 'fr-fr'
+    ? `${FR_PUBLISHER.holder} EI · ${FR_PUBLISHER.tradingName} · SIREN ${FR_PUBLISHER.siren} · ${FR_PUBLISHER.address}`
+    : `${BUSINESS.legalName.replace(/\.$/, '')} · ABN ${BUSINESS.abn} · ${regionAddressLine('AU')}, ${t('footer.legalCountry')}`;
 
 const legal = [
   { label: t('nav.privacy'), path: '/privacy' },
@@ -111,7 +118,7 @@ const legal = [
       <div class="space-y-1 text-center sm:text-left">
         <p>{t('footer.copyright', { year })}</p>
         <p class="text-xs">
-          {BUSINESS.legalName.replace(/\.$/, '')} · ABN {BUSINESS.abn} · {regionAddressLine('AU')}, {t('footer.legalCountry')}
+          {legalLine}
         </p>
       </div>
       <div class="flex items-center gap-4">
