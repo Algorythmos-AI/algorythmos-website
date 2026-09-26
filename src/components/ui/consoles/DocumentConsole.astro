@@ -16,7 +16,7 @@ const v = serviceVisuals['document-intelligence'];
 const fields = [
   { label: t('console.svc.doc.f1'), value: 'INV-2048', conf: 99, tone: 'success' },
   { label: t('console.svc.doc.f2'), value: '2026-05-12', conf: 98, tone: 'success' },
-  { label: t('console.svc.doc.f3'), value: 'Acme Pty Ltd', conf: 97, tone: 'success' },
+  { label: t('console.svc.doc.f3'), value: t('console.svc.doc.vendor'), conf: 97, tone: 'success' },
   { label: t('console.svc.doc.f4'), value: '$12,480.00', conf: 95, tone: 'warning' },
   { label: t('console.svc.doc.f5'), value: '$1,134.55', conf: 96, tone: 'success' },
 ];
@@ -49,7 +49,7 @@ const strings = {
       <div class="hc-card dc-docpanel">
         <div class="dc-paper">
           <span class="dc-scan" aria-hidden="true"></span>
-          <div class="dc-vendor">Acme Pty Ltd</div>
+          <div class="dc-vendor">{t('console.svc.doc.vendor')}</div>
           <div class="dc-doclabel">INVOICE</div>
           <div class="dc-hl dc-hl--brand" style="top: 24px; right: 24px;">
             <span class="dc-hl-label">Invoice #</span><span class="dc-hl-value">INV-2048</span>

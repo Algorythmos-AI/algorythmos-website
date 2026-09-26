@@ -6,12 +6,16 @@
 ```
 
 Examples:
-- `services.cards.0.title`
+- `services.items.{slug}.name`
 - `serviceAiWebsites.hero.subtitle`
 - `blogDetail.posts.{slug}.content.0.heading`
 
 ## Service Pages
-Keys: `service{Name}.meta.*`, `service{Name}.hero.*`, `service{Name}.faqs.*`
+Catalogue: `services.items.{slug}.{name,tagline,summary,capabilities.N,outcomes.N}`.
+Detail page: `service{Name}.meta.*`, `service{Name}.hero.subtitle`, `service{Name}.faqs.*` — the
+namespace is the registry's `ns` field in `src/data/services.ts`. Adding a service: register it
+there (slug, icon, ns, family, console, blueprint), add its console (see `docs/CONSOLES.md`), its
+SVG in `serviceVisuals`, and EN + FR copy; `src/data/services.test.ts` fails until every part exists.
 
 ## Blog Posts
 Keys: `blog.posts.{index}.*`, `blogDetail.posts.{slug}.*`

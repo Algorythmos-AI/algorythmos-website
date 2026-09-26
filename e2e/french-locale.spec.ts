@@ -10,17 +10,8 @@
  *  - the {year} interpolation in the footer actually resolved
  */
 import { test, expect } from '@playwright/test';
-
-const SERVICE_SLUGS = ['agentic-automation', 'document-intelligence', 'sql-dashboards', 'mlops-cicd', 'ai-websites'];
-const CASE_STUDY_SLUGS = [
-  'port-botany-ai-ml',
-  'admin-burden-evidence',
-  'healthcare-burden',
-  'financial-compliance',
-  'manufacturing-docs',
-  'healthcare-mlops',
-  'retail-sql',
-];
+import { serviceSlugs as SERVICE_SLUGS } from '../src/data/services';
+import { caseStudySlugs as CASE_STUDY_SLUGS } from '../src/data/caseStudies';
 
 const FR_ROUTES = [
   '/fr-fr',

@@ -121,6 +121,8 @@ const t = useTranslations(locale);
     {import.meta.env.PUBLIC_YANDEX_VERIFICATION && (
       <meta name="yandex-verification" content={import.meta.env.PUBLIC_YANDEX_VERIFICATION} />
     )}
+    {/* No JS: hide the living-console canvas so each console's <noscript> SVG shows in its frame. */}
+    <noscript><style is:inline>.hc-screen{display:none!important}</style></noscript>
     <ClientRouter />
   </head>
   <body>
