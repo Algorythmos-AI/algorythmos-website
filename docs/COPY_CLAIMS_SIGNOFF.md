@@ -157,6 +157,9 @@ The build enforces the voice and compliance wording: `npm run i18n:check` fails 
 
 - [ ] Author/credentials/dates shown are accurate (E-E-A-T).
 - [ ] Any statistics inside posts (charts included) trace to a real, citable source.
+- [ ] **Four service guides (27 Sep 2026):** `llmops-in-production`, `ai-platform-kubernetes`,
+      `model-monitoring-drift`, `feature-stores-lineage` (EN + FR). Practice guidance only: no statistics, no
+      client claims, no charts. PSI is named as "a common measure", with no thresholds asserted as fact.
 
 ---
 

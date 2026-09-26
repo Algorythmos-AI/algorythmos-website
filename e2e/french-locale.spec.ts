@@ -22,6 +22,8 @@ const FR_ROUTES = [
   '/fr-fr/pricing',
   '/fr-fr/blog',
   '/fr-fr/blog/port-botany-document-flows',
+  '/fr-fr/blog/llmops-in-production',
+  '/fr-fr/blog/feature-stores-lineage',
   '/fr-fr/about',
   '/fr-fr/contact',
 ];
