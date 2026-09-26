@@ -82,14 +82,17 @@ export const BUSINESS = {
  * BUSINESS.phone, which feeds the company's schema. Only the legal notice reads it.
  */
 export const FR_PUBLISHER = {
+  /** How the French operation presents itself (the regional brand used across the site). */
+  brand: BUSINESS.regions.FR.name,
   holder: 'Sameer Raj Kalaliya',
   tradingName: BUSINESS.tradingName,
   siren: '991 562 497',
-  address: 'La Défense, France',
+  // "Paris La Défense" is the business district's official name.
+  address: 'Paris La Défense, France',
   phone: '+33 7 49 73 74 84',
   email: BUSINESS.regions.FR.email,
-  /** No VAT charged: franchise en base (art. 293 B du CGI), confirmed by Sam on 26 Sep 2026. */
-  vatExempt: true,
+  // No VAT charged (franchise en base, art. 293 B du CGI — Sam, 26 Sep 2026). The
+  // "TVA non applicable" mention belongs on invoices, not the website's legal notice.
 } as const;
 
 /** Director of publication, named in the legal notice. */

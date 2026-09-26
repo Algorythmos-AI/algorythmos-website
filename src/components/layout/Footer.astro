@@ -44,7 +44,7 @@ const social = ['LinkedIn', 'X', 'YouTube', 'Medium'].map((label) => ({ label, u
    (see the legal notice); every other page by the Australian company. */
 const legalLine =
   locale === 'fr-fr'
-    ? `${FR_PUBLISHER.holder} EI · ${FR_PUBLISHER.tradingName} · SIREN ${FR_PUBLISHER.siren} · ${FR_PUBLISHER.address}`
+    ? `${FR_PUBLISHER.brand} · ${FR_PUBLISHER.holder} EI · SIREN ${FR_PUBLISHER.siren} · ${FR_PUBLISHER.address}`
     : `${BUSINESS.legalName.replace(/\.$/, '')} · ABN ${BUSINESS.abn} · ${regionAddressLine('AU')}, ${t('footer.legalCountry')}`;
 
 const legal = [

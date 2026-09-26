@@ -34,7 +34,7 @@ for (const { prefix, lang, h1 } of LOCALES) {
     // The "EI" marker French law requires beside a sole trader's name (EN and FR wording differ).
     await expect(fr).toContainText(/\bEI\b/);
     await expect(fr.locator(`a[href="tel:${FR_PUBLISHER.phone.replace(/\s+/g, '')}"]`)).toHaveCount(1);
-    await expect(fr).toContainText('293 B');
+    await expect(fr).toContainText(FR_PUBLISHER.brand);
 
     const main = page.locator('main');
     await expect(main).toContainText(PUBLICATION_DIRECTOR);

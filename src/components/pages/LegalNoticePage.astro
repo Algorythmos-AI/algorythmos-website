@@ -17,10 +17,11 @@ const crumbs = breadcrumb([
 
 /** Every identifier comes from src/data/business.ts; only the labels are translated. */
 type Row = { label: string; value: string; href?: string };
-const publishers: { id: string; heading: string; rows: Row[] }[] = [
+const publishers: { id: string; heading: string; caption: string; rows: Row[] }[] = [
   {
     id: 'publisher-au',
-    heading: t('legalNotice.publisher.au.heading'),
+    heading: BUSINESS.regions.AU.name,
+    caption: t('legalNotice.publisher.au.caption'),
     rows: [
       { label: t('legalNotice.label.company'), value: BUSINESS.legalName },
       { label: t('legalNotice.label.legalForm'), value: t('legalNotice.publisher.au.legalForm') },
@@ -32,14 +33,16 @@ const publishers: { id: string; heading: string; rows: Row[] }[] = [
   },
   {
     id: 'publisher-fr',
-    heading: t('legalNotice.publisher.fr.heading'),
+    heading: FR_PUBLISHER.brand,
+    caption: t('legalNotice.publisher.fr.caption'),
     rows: [
-      { label: t('legalNotice.label.name'), value: FR_PUBLISHER.holder },
-      { label: t('legalNotice.label.legalForm'), value: t('legalNotice.publisher.fr.legalForm', { name: FR_PUBLISHER.tradingName }) },
+      { label: t('legalNotice.label.tradingName'), value: FR_PUBLISHER.tradingName },
+      // French law: the owner's name followed by "EI" on every publication.
+      { label: t('legalNotice.label.operator'), value: `${FR_PUBLISHER.holder} (EI)` },
+      { label: t('legalNotice.label.legalForm'), value: t('legalNotice.publisher.fr.legalForm') },
       { label: 'SIREN', value: FR_PUBLISHER.siren },
       { label: t('legalNotice.label.register'), value: t('legalNotice.publisher.fr.register') },
-      ...(FR_PUBLISHER.vatExempt ? [{ label: t('legalNotice.label.vat'), value: t('legalNotice.publisher.fr.vatExempt') }] : []),
-      { label: t('legalNotice.label.address'), value: FR_PUBLISHER.address },
+      { label: t('legalNotice.label.businessAddress'), value: FR_PUBLISHER.address },
       { label: t('legalNotice.label.phone'), value: FR_PUBLISHER.phone, href: `tel:${FR_PUBLISHER.phone.replace(/\s+/g, '')}` },
       { label: t('legalNotice.label.email'), value: FR_PUBLISHER.email, href: `mailto:${FR_PUBLISHER.email}` },
     ],
@@ -63,7 +66,7 @@ const link = 'font-medium text-brand underline underline-offset-2';
       <p class="text-sm text-ink-subtle">
         {t('legalNotice.hero.lastUpdated')} <time datetime="2026-09-26">{t('legalNotice.hero.lastUpdatedDate')}</time>
       </p>
-      <p class="mt-8 leading-relaxed text-ink-muted">{t('legalNotice.intro', { name: PUBLICATION_DIRECTOR })}</p>
+      <p class="mt-8 leading-relaxed text-ink-muted">{t('legalNotice.intro', { au: BUSINESS.regions.AU.name, fr: FR_PUBLISHER.brand, name: PUBLICATION_DIRECTOR })}</p>
 
       <div class="mt-12 space-y-12">
         <section aria-labelledby="publisher" data-reveal>
@@ -72,6 +75,7 @@ const link = 'font-medium text-brand underline underline-offset-2';
             {publishers.map((p) => (
               <article aria-labelledby={p.id} class="rounded-2xl border border-line p-6">
                 <h3 id={p.id} class="font-semibold text-ink">{p.heading}</h3>
+                <p class="mt-1 text-sm text-ink-subtle">{p.caption}</p>
                 <dl class="mt-4 space-y-3 text-sm">
                   {p.rows.map((r) => (
                     <div>
