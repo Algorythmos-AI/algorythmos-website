@@ -67,6 +67,9 @@ const articleLd = {
   publisher: { '@id': ORG_ID },
   inLanguage: locale === 'fr-fr' ? 'fr' : 'en',
   mainEntityOfPage: { '@type': 'WebPage', '@id': abs(path) },
+  ...(post.mentions?.length
+    ? { mentions: post.mentions.map((m) => ({ '@type': 'Organization', name: m.name, url: m.url })) }
+    : {}),
 };
 const crumbItems = [
   { name: t('nav.home'), url: abs('/') },

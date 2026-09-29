@@ -10,6 +10,7 @@ import { getService } from '@/data/services';
 import { blog } from '@/data/blog';
 import { caseStudies } from '@/data/caseStudies';
 import type { RelatedRef } from '@/data/related';
+import { getPartnerLink } from '@/data/partners';
 
 interface Props {
   items: RelatedRef[];
@@ -25,9 +26,16 @@ interface Card {
   kind: string;
   label: string;
   href: string;
+  /** External partner sites open in a new tab. */
+  external?: boolean;
 }
 
 function resolve(ref: RelatedRef): Card | null {
+  if (ref.type === 'partner') {
+    const partner = getPartnerLink(ref.slug);
+    if (!partner) return null;
+    return { kind: t('related.kind.partner'), label: t(partner.labelKey), href: partner.href[locale], external: true };
+  }
   if (ref.type === 'service') {
     const svc = getService(ref.slug);
     if (!svc) return null;
@@ -65,10 +73,16 @@ if (landing) {
         <li>
           <a
             href={c.href}
+            target={c.external ? '_blank' : undefined}
+            rel={c.external ? 'noopener' : undefined}
             class="group flex h-full flex-col justify-between gap-3 rounded-2xl border border-line glass p-5 transition-colors hover:border-brand/50"
           >
             <span class="text-xs font-semibold uppercase tracking-wide text-brand">{c.kind}</span>
-            <span class="text-base font-semibold text-ink transition-colors group-hover:text-brand">{c.label}</span>
+            <span class="text-base font-semibold text-ink transition-colors group-hover:text-brand">
+              {c.label}
+              {c.external && <span class="sr-only"> {t('ui.opensNewTab')}</span>}
+              {c.external && <span aria-hidden="true"> ↗</span>}
+            </span>
           </a>
         </li>
       ))}

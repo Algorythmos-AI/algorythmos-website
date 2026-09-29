@@ -7,11 +7,13 @@ import { serviceRelated, blogRelated, caseStudyRelated, type RelatedRef } from '
 import { serviceSlugs } from './services';
 import { blogSlugs } from './blog';
 import { caseStudySlugs } from './caseStudies';
+import { partnerSlugs } from './partners';
 
 const known: Record<RelatedRef['type'], string[]> = {
   service: serviceSlugs,
   blog: blogSlugs,
   'case-study': caseStudySlugs,
+  partner: partnerSlugs,
 };
 
 describe.each([

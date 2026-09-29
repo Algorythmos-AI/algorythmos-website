@@ -134,6 +134,15 @@ Figures are shown "as measured on the engagement" (owner confirmed they are meas
 - [x] `retail-data-foundation`: retail, Australia, 50–150 staff · data & feature management · 80% less reporting time · 10 weeks
 - [ ] Keep the evidence behind each figure on file (before/after dashboard, client report).
 
+## 3f. Partner — MBSC Australia (29 Sep 2026)
+
+Named on `/blog/mbsc-australia-partnership` (EN/FR), in its related links, and in the home mining chip's label.
+
+- [x] **MBSC Australia is named as a client and AI technology partner.** Approved by MBSC Australia (confirmed by Sam Kalaliya, 29 Sep 2026). MBSC Australia shows the partnership on its own site (www.mbscaustralia.com.au, home / AI page / About / announcement).
+- [x] **Scope:** Algorythmos engineers and operates the AI and ML systems behind MBSC Australia's AI services for mining and energy clients (data platforms, MLOps, document intelligence, agentic automation with human approval). No metrics, outcomes or quotes are claimed.
+- [x] **Start date:** September 2026.
+- [x] **Independence:** separate companies; MBSC Australia is an Algorythmos client.
+
 ## 4. Homepage, voice and positioning (`/`, footer, meta, contact, careers)
 
 Decisions (Sam Kalaliya, 26 Sep 2026):

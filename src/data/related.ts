@@ -7,7 +7,8 @@
  * landing page automatically.
  */
 export interface RelatedRef {
-  type: 'service' | 'blog' | 'case-study';
+  /** 'partner' = an approved external organisation link (src/data/partners.ts). */
+  type: 'service' | 'blog' | 'case-study' | 'partner';
   slug: string;
 }
 
@@ -69,6 +70,11 @@ export const serviceRelated: Record<string, RelatedRef[]> = {
 
 /** Blog post → the service it supports + sibling posts. */
 export const blogRelated: Record<string, RelatedRef[]> = {
+  'mbsc-australia-partnership': [
+    { type: 'partner', slug: 'mbsc-australia-ai' },
+    { type: 'partner', slug: 'mbsc-australia-announcement' },
+    { type: 'service', slug: 'mlops-cicd' },
+  ],
   'llmops-in-production': [
     { type: 'service', slug: 'llmops' },
     { type: 'blog', slug: 'llmsecops' },

@@ -1,6 +1,7 @@
 ---
 /**
- * Honest social proof — sectors Algorythmos actually serves (no client names).
+ * Honest social proof — sectors Algorythmos actually serves. No client names, except an
+ * approved partner in a link label (see docs/COPY_CLAIMS_SIGNOFF.md §3f).
  * Grounded in the case studies + stated industry focus; labels are i18n (EN/FR).
  */
 import { asLocale, useTranslations, localizePath } from '@/i18n';
@@ -14,6 +15,10 @@ const PROOF: Partial<Record<(typeof sectors)[number], string>> = {
   manufacturing: 'manufacturing-docs',
   retail: 'retail-sql',
   logistics: 'port-botany-ai-ml',
+};
+/** Sector → a blog post that shows our work there (no case study yet). */
+const POST: Partial<Record<(typeof sectors)[number], string>> = {
+  mining: 'mbsc-australia-partnership',
 };
 const chipClass = 'inline-flex items-center gap-2.5 rounded-full border border-line glass px-4 py-2 text-sm font-medium text-ink';
 ---
@@ -34,6 +39,16 @@ const chipClass = 'inline-flex items-center gap-2.5 rounded-full border border-l
               href={localizePath(locale, `/case-studies/${PROOF[s]}`)}
               class={`${chipClass} transition-colors hover:border-brand hover:text-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-bg`}
               aria-label={t('home.industries.proofLabel', { sector: t(`industries.${s}`) })}
+            >
+              <span class="h-1.5 w-1.5 rounded-full bg-grad-cta" aria-hidden="true"></span>
+              {t(`industries.${s}`)}
+              <span aria-hidden="true">→</span>
+            </a>
+          ) : POST[s] ? (
+            <a
+              href={localizePath(locale, `/blog/${POST[s]}`)}
+              class={`${chipClass} transition-colors hover:border-brand hover:text-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-bg`}
+              aria-label={t('home.industries.partnerLabel', { sector: t(`industries.${s}`) })}
             >
               <span class="h-1.5 w-1.5 rounded-full bg-grad-cta" aria-hidden="true"></span>
               {t(`industries.${s}`)}

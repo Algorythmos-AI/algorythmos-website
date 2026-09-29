@@ -45,9 +45,23 @@ export interface BlogPost {
   updatedAt?: string;
   /** Ordered body blocks resolved from `blogDetail.posts.<slug>.*` keys. */
   body: BlogBlock[];
+  /** Organisations the post is about (schema.org `mentions` on the BlogPosting). */
+  mentions?: { name: string; url: string }[];
 }
 
 export const blog: BlogPost[] = [
+  {
+    slug: 'mbsc-australia-partnership',
+    postIndex: 20,
+    date: '2026-09-29',
+    mentions: [{ name: 'MBSC Australia', url: 'https://www.mbscaustralia.com.au' }],
+    body: [
+      { kind: 'prose', base: 'content.0', paragraphs: [0, 1] },
+      { kind: 'prose', base: 'content.1', paragraphs: [0], list: [0, 1, 2, 3] },
+      { kind: 'prose', base: 'content.2', paragraphs: [0, 1] },
+      { kind: 'prose', base: 'content.3', paragraphs: [0] },
+    ],
+  },
   {
     slug: 'llmops-in-production',
     postIndex: 16,
