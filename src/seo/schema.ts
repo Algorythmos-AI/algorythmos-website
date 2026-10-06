@@ -180,3 +180,35 @@ export function breadcrumb(items: { name: string; url: string }[]) {
     itemListElement: items.map((it, i) => ({ '@type': 'ListItem', position: i + 1, name: it.name, item: it.url })),
   };
 }
+
+/**
+ * An app Algorythmos publishes. No `offers` or ratings: the price lives in the
+ * App Store, and structured data must describe what the page shows.
+ */
+export function softwareApplication(app: { name: string; url: string; description: string; image: string; operatingSystem: string }) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    '@id': `${app.url}#app`,
+    name: app.name,
+    url: app.url,
+    description: app.description,
+    image: app.image,
+    operatingSystem: app.operatingSystem,
+    applicationCategory: 'BusinessApplication',
+    publisher: { '@id': ORG_ID },
+  };
+}
+
+/** FAQPage for questions and answers that are visible on the page. */
+export function faqPage(items: { question: string; answer: string }[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: items.map((it) => ({
+      '@type': 'Question',
+      name: it.question,
+      acceptedAnswer: { '@type': 'Answer', text: it.answer },
+    })),
+  };
+}

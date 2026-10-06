@@ -151,6 +151,26 @@
       "source": "/terms",
       "destination": "/au-en/terms",
       "permanent": true
+    },
+    {
+      "source": "/pdf-algo-pro",
+      "destination": "/au-en/pdf-algo-pro",
+      "permanent": true
+    },
+    {
+      "source": "/pdf-algo-pro/privacy",
+      "destination": "/au-en/pdf-algo-pro/privacy",
+      "permanent": true
+    },
+    {
+      "source": "/pdf-algo-pro/terms",
+      "destination": "/au-en/pdf-algo-pro/terms",
+      "permanent": true
+    },
+    {
+      "source": "/pdf-algo-pro/support",
+      "destination": "/au-en/pdf-algo-pro/support",
+      "permanent": true
     }
   ],
   "headers": [

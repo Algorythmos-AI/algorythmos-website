@@ -1,0 +1,127 @@
+---
+/**
+ * PDF Algo Pro product page.
+ *
+ * Says only what the shipped app does (the App Store record links here, and
+ * marketing that promises more than the app is grounds for rejection). Feature
+ * and requirement lists are driven by `src/data/products.ts`.
+ */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Aurora from '@/components/ui/Aurora.astro';
+import Button from '@/components/ui/Button.astro';
+import Breadcrumbs from '@/components/ui/Breadcrumbs.astro';
+import ProductLinks from '@/components/pages/pdf-algo-pro/ProductLinks.astro';
+import { asLocale, useTranslations, localizePath } from '@/i18n';
+import { breadcrumb, softwareApplication, SITE } from '@/seo/schema';
+import { PDF_ALGO_PRO } from '@/data/products';
+
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const { paths, icon } = PDF_ALGO_PRO;
+const path = paths.product;
+const abs = (p: string) => SITE + localizePath(locale, p);
+
+const crumbItems = [
+  { name: t('nav.home'), url: abs('/') },
+  { name: PDF_ALGO_PRO.name, url: abs(path) },
+];
+
+const isLive = PDF_ALGO_PRO.storeStatus === 'live' && PDF_ALGO_PRO.appStoreId !== '';
+const storeUrl = `https://apps.apple.com/app/id${PDF_ALGO_PRO.appStoreId}`;
+
+const range = (n: number) => Array.from({ length: n }, (_, i) => i);
+const features = PDF_ALGO_PRO.features.map((id) => ({
+  id,
+  title: t(`pdfAlgoPro.features.${id}.title`),
+  body: t(`pdfAlgoPro.features.${id}.body`),
+}));
+const privacyPoints = range(PDF_ALGO_PRO.privacyPoints).map((i) => t(`pdfAlgoPro.private.items.${i}`));
+const requirements = range(PDF_ALGO_PRO.requirements).map((i) => t(`pdfAlgoPro.requirements.items.${i}`, { os: PDF_ALGO_PRO.minimumOS }));
+
+const app = softwareApplication({
+  name: PDF_ALGO_PRO.name,
+  url: abs(path),
+  description: t('pdfAlgoPro.meta.description'),
+  image: SITE + icon.src,
+  operatingSystem: `iOS ${PDF_ALGO_PRO.minimumOS}, iPadOS ${PDF_ALGO_PRO.minimumOS}`,
+});
+---
+
+<BaseLayout title={t('pdfAlgoPro.meta.title')} description={t('pdfAlgoPro.meta.description')} path={path} jsonLd={[breadcrumb(crumbItems), app]}>
+  <Breadcrumbs items={crumbItems} />
+
+  {/* Hero */}
+  <section class="relative overflow-hidden border-b border-line">
+    <Aurora class="opacity-60" />
+    <div class="container-page grid items-center gap-10 py-16 sm:py-24 lg:grid-cols-[auto_1fr] lg:gap-16">
+      <img src={icon.src} alt="" width={icon.size} height={icon.size} fetchpriority="high" decoding="async" class="h-28 w-28 rounded-[22.5%] shadow-e3 sm:h-40 sm:w-40 lg:h-48 lg:w-48" />
+      <div>
+        <p class="text-sm font-semibold uppercase tracking-widest text-accent">{t('pdfAlgoPro.hero.eyebrow')}</p>
+        <h1 class="mt-3 text-h1 font-extrabold tracking-tight text-ink">{PDF_ALGO_PRO.name}</h1>
+        <p class="mt-4 max-w-2xl text-h3 font-semibold text-ink">{t('pdfAlgoPro.hero.tagline')}</p>
+        <p class="mt-4 max-w-2xl text-lead text-ink-muted">{t('pdfAlgoPro.hero.lead')}</p>
+        <div class="mt-8 flex flex-wrap items-center gap-4">
+          {isLive ? (
+            <Button href={storeUrl} size="lg" rel="noopener">{t('pdfAlgoPro.hero.store')}</Button>
+          ) : (
+            <p class="rounded-full border border-line bg-surface-2 px-4 py-2 text-sm font-medium text-ink-muted" data-store-status="testflight">{t('pdfAlgoPro.hero.comingSoon')}</p>
+          )}
+          <Button href={localizePath(locale, paths.support)} size="lg" variant="secondary">{t('pdfAlgoPro.nav.support')}</Button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* What it does */}
+  <section class="container-page py-20" aria-labelledby="features">
+    <h2 id="features" class="max-w-2xl text-h2 font-bold tracking-tight text-ink">{t('pdfAlgoPro.features.title')}</h2>
+    <div class="mt-12 grid gap-6 sm:grid-cols-2">
+      {features.map((f, i) => (
+        <article data-reveal style={`--reveal-delay: ${i * 70}ms`} class="ring-gradient relative rounded-2xl border border-line glass p-7 shadow-e1">
+          <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-grad-cta text-sm font-bold text-white shadow-e1" aria-hidden="true">
+            {String(i + 1).padStart(2, '0')}
+          </span>
+          <h3 class="mt-5 text-h3 font-semibold text-ink">{f.title}</h3>
+          <p class="mt-3 text-ink-muted">{f.body}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  {/* Privacy */}
+  <section class="border-y border-line bg-surface-2/40" aria-labelledby="private">
+    <div class="container-page grid gap-10 py-20 lg:grid-cols-2 lg:gap-16">
+      <div>
+        <h2 id="private" class="text-h2 font-bold tracking-tight text-ink">{t('pdfAlgoPro.private.title')}</h2>
+        <p class="mt-4 max-w-xl text-lead text-ink-muted">{t('pdfAlgoPro.private.lead')}</p>
+        <Button href={localizePath(locale, paths.privacy)} variant="secondary" class="mt-8">{t('pdfAlgoPro.private.cta')}</Button>
+      </div>
+      <ul class="space-y-4">
+        {privacyPoints.map((item) => (
+          <li class="flex items-start gap-3 rounded-2xl border border-line glass p-5 text-ink">
+            <span class="mt-2 h-2 w-2 shrink-0 rounded-full bg-accent" aria-hidden="true"></span>
+            <span>{item}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  {/* Requirements */}
+  <section class="container-page py-20" aria-labelledby="requirements">
+    <div class="max-w-measure">
+      <h2 id="requirements" class="text-h2 font-bold tracking-tight text-ink">{t('pdfAlgoPro.requirements.title')}</h2>
+      <ul class="mt-6 space-y-3">
+        {requirements.map((item) => (
+          <li class="flex items-start gap-3 text-ink-muted">
+            <span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" aria-hidden="true"></span>
+            <span>{item}</span>
+          </li>
+        ))}
+      </ul>
+      <p class="mt-10 text-sm font-semibold text-ink">{t('pdfAlgoPro.builtBy')}</p>
+      <p class="mt-2 text-xs text-ink-subtle">{t('pdfAlgoPro.trademarks')}</p>
+      <ProductLinks current={path} class="mt-10" />
+    </div>
+  </section>
+</BaseLayout>
