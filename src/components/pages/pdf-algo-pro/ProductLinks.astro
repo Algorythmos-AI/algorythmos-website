@@ -1,0 +1,37 @@
+---
+/** The product's four pages, as a small nav shown at the foot of each one. */
+import { asLocale, useTranslations, localizePath } from '@/i18n';
+import { PDF_ALGO_PRO } from '@/data/products';
+
+interface Props {
+  /** Region-relative path of the page this sits on. */
+  current: string;
+  class?: string;
+}
+const { current, class: klass = '' } = Astro.props;
+
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const { paths } = PDF_ALGO_PRO;
+
+const pages = [
+  { label: PDF_ALGO_PRO.name, path: paths.product },
+  { label: t('pdfAlgoPro.nav.privacy'), path: paths.privacy },
+  { label: t('pdfAlgoPro.nav.terms'), path: paths.terms },
+  { label: t('pdfAlgoPro.nav.support'), path: paths.support },
+];
+---
+
+<nav aria-label={t('pdfAlgoPro.nav.label')} class:list={['border-t border-line pt-8', klass]}>
+  <ul class="flex flex-wrap gap-x-6 gap-y-3 text-sm">
+    {pages.map((p) => (
+      <li>
+        {p.path === current ? (
+          <span aria-current="page" class="font-semibold text-ink">{p.label}</span>
+        ) : (
+          <a href={localizePath(locale, p.path)} class="text-ink-muted underline-offset-2 hover:text-ink hover:underline">{p.label}</a>
+        )}
+      </li>
+    ))}
+  </ul>
+</nav>

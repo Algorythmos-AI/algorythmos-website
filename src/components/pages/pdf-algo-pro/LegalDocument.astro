@@ -1,0 +1,146 @@
+---
+/**
+ * A versioned legal document for a product (privacy policy, terms of use).
+ *
+ * Sections, versions and links come from `src/data/products.ts`; the wording from
+ * the dictionaries. No scroll-reveal here: a policy must be fully readable with
+ * JavaScript off, in print, and by a reviewer who never scrolls.
+ */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeader from '@/components/sections/PageHeader.astro';
+import Breadcrumbs from '@/components/ui/Breadcrumbs.astro';
+import ProductLinks from '@/components/pages/pdf-algo-pro/ProductLinks.astro';
+import { asLocale, useTranslations, localizePath, REGIONS } from '@/i18n';
+import { breadcrumb, SITE } from '@/seo/schema';
+import { BUSINESS, regionAddressLine } from '@/data/business';
+import { PDF_ALGO_PRO, type LegalDocumentSpec } from '@/data/products';
+
+interface Props {
+  spec: LegalDocumentSpec;
+  /** Region-relative path of this document. */
+  path: string;
+  /** Dictionary key of this document's short name (breadcrumb, current page). */
+  nameKey: string;
+}
+const { spec, path, nameKey } = Astro.props;
+
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const abs = (p: string) => SITE + localizePath(locale, p);
+
+/* The app is published by the Australian company in every language, so both
+   locales name it. Facts are filled from business.ts, never retyped. */
+const facts: Record<string, string> = {
+  email: PDF_ALGO_PRO.supportEmail,
+  address: `${regionAddressLine('AU')}, ${t('footer.legalCountry')}`,
+  abn: BUSINESS.abn,
+  app: PDF_ALGO_PRO.name,
+};
+const fill = (s: string) => Object.entries(facts).reduce((out, [k, v]) => out.replaceAll(`{${k}}`, v), s);
+
+/** Collect indexed list items (`<base>.items.0`, `.1`, …) for a section. */
+function listItems(base: string): string[] {
+  const out: string[] = [];
+  for (let i = 0; i < 12; i++) {
+    const key = `${base}.items.${i}`;
+    const val = t(key);
+    if (val === key) break;
+    out.push(fill(val));
+  }
+  return out;
+}
+
+const sections = spec.sections.map((id) => {
+  const base = `${spec.ns}.sections.${id}`;
+  return {
+    id,
+    title: t(`${base}.title`),
+    content: fill(t(`${base}.content`)),
+    items: listItems(base),
+    links: (spec.links[id] ?? []).map((l) => ({
+      label: t(l.labelKey),
+      href: l.href.startsWith('/') ? localizePath(locale, l.href) : l.href,
+      external: !l.href.startsWith('/'),
+    })),
+  };
+});
+
+const longDate = (iso: string) =>
+  new Intl.DateTimeFormat(REGIONS[locale].lang, { dateStyle: 'long', timeZone: 'UTC' }).format(new Date(`${iso}T00:00:00Z`));
+const current = spec.versions[0];
+
+const crumbItems = [
+  { name: t('nav.home'), url: abs('/') },
+  { name: PDF_ALGO_PRO.name, url: abs(PDF_ALGO_PRO.paths.product) },
+  { name: t(nameKey), url: abs(path) },
+];
+const link = 'font-medium text-brand underline underline-offset-2';
+---
+
+<BaseLayout title={t(`${spec.ns}.meta.title`)} description={t(`${spec.ns}.meta.description`)} path={path} jsonLd={[breadcrumb(crumbItems)]}>
+  <Breadcrumbs items={crumbItems} />
+  <PageHeader eyebrow={t(`${spec.ns}.hero.badge`)} title={t(`${spec.ns}.hero.title`)} lead={t(`${spec.ns}.hero.subtitle`)} />
+
+  <section class="container-page py-16">
+    <div class="mx-auto max-w-measure">
+      <p class="text-sm text-ink-subtle" data-legal-version={current.version}>
+        {t('pdfAlgoPro.legal.versionLabel')} {current.version} · {t('pdfAlgoPro.legal.effectiveLabel')}{' '}
+        <time datetime={current.date}>{longDate(current.date)}</time>
+      </p>
+
+      <nav aria-labelledby="legal-toc" class="mt-8 rounded-2xl border border-line p-6 print:hidden">
+        <h2 id="legal-toc" class="text-sm font-semibold text-ink">{t('pdfAlgoPro.legal.contents')}</h2>
+        <ol class="mt-3 grid gap-x-8 gap-y-2 text-sm sm:grid-cols-2">
+          {sections.map((sec) => (
+            <li>
+              <a href={`#${sec.id}`} class="text-ink-muted underline-offset-2 hover:text-ink hover:underline">{sec.title}</a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+
+      <div class="mt-12 space-y-12">
+        {sections.map((sec) => (
+          <section aria-labelledby={sec.id}>
+            <h2 id={sec.id} class="scroll-mt-28 text-h3 font-semibold text-ink">{sec.title}</h2>
+            <p class="mt-3 leading-relaxed text-ink-muted">{sec.content}</p>
+            {sec.items.length > 0 && (
+              <ul class="mt-4 space-y-2.5">
+                {sec.items.map((item) => (
+                  <li class="flex items-start gap-3 text-ink-muted">
+                    <span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" aria-hidden="true"></span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {sec.links.length > 0 && (
+              <ul class="mt-4 space-y-2 text-sm">
+                {sec.links.map((l) => (
+                  <li>
+                    <a href={l.href} class={link} {...(l.external ? { rel: 'noopener' } : {})}>{l.label}</a>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+        ))}
+
+        <section aria-labelledby="history">
+          <h2 id="history" class="scroll-mt-28 text-h3 font-semibold text-ink">{t('pdfAlgoPro.legal.history')}</h2>
+          <ul class="mt-4 space-y-3 text-ink-muted">
+            {spec.versions.map((v) => (
+              <li>
+                <span class="font-semibold text-ink">{v.version}</span>{' · '}
+                <time datetime={v.date}>{longDate(v.date)}</time>{' · '}
+                {t(`${spec.ns}.changes.${v.key}`)}
+              </li>
+            ))}
+          </ul>
+        </section>
+      </div>
+
+      <ProductLinks current={path} class="mt-16 print:hidden" />
+    </div>
+  </section>
+</BaseLayout>

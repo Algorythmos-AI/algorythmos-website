@@ -1,0 +1,87 @@
+---
+/**
+ * PDF Algo Pro support page: the Support URL in the App Store record.
+ * It must give a real way to reach the developer, so the email link is plain
+ * HTML and nothing here depends on JavaScript.
+ */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeader from '@/components/sections/PageHeader.astro';
+import Button from '@/components/ui/Button.astro';
+import Breadcrumbs from '@/components/ui/Breadcrumbs.astro';
+import ProductLinks from '@/components/pages/pdf-algo-pro/ProductLinks.astro';
+import { asLocale, useTranslations, localizePath } from '@/i18n';
+import { breadcrumb, faqPage, SITE } from '@/seo/schema';
+import { PDF_ALGO_PRO } from '@/data/products';
+
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const { paths, supportEmail } = PDF_ALGO_PRO;
+const path = paths.support;
+const abs = (p: string) => SITE + localizePath(locale, p);
+
+const crumbItems = [
+  { name: t('nav.home'), url: abs('/') },
+  { name: PDF_ALGO_PRO.name, url: abs(paths.product) },
+  { name: t('pdfAlgoPro.nav.support'), url: abs(path) },
+];
+
+const facts = { email: supportEmail, securityEmail: PDF_ALGO_PRO.securityEmail, securitySubject: PDF_ALGO_PRO.securitySubject };
+const mailto = `mailto:${supportEmail}?subject=${encodeURIComponent(t('pdfAlgoPro.support.subject'))}`;
+
+const checklist = Array.from({ length: PDF_ALGO_PRO.supportChecklist }, (_, i) => t(`pdfAlgoPro.support.include.items.${i}`));
+const faqs = PDF_ALGO_PRO.faqs.map((id) => ({
+  id,
+  question: t(`pdfAlgoPro.support.faq.${id}.q`),
+  answer: t(`pdfAlgoPro.support.faq.${id}.a`, facts),
+}));
+const link = 'font-medium text-brand underline underline-offset-2';
+---
+
+<BaseLayout
+  title={t('pdfAlgoPro.support.meta.title')}
+  description={t('pdfAlgoPro.support.meta.description')}
+  path={path}
+  jsonLd={[breadcrumb(crumbItems), faqPage(faqs)]}
+>
+  <Breadcrumbs items={crumbItems} />
+  <PageHeader eyebrow={t('pdfAlgoPro.support.hero.badge')} title={t('pdfAlgoPro.support.hero.title')} lead={t('pdfAlgoPro.support.hero.subtitle')} />
+
+  <section class="container-page py-16">
+    <div class="mx-auto max-w-measure space-y-14">
+      <section aria-labelledby="contact" class="rounded-2xl border border-line glass p-8">
+        <h2 id="contact" class="text-h3 font-semibold text-ink">{t('pdfAlgoPro.support.contact.title')}</h2>
+        <p class="mt-3 leading-relaxed text-ink-muted">{t('pdfAlgoPro.support.contact.body')}</p>
+        <p class="mt-4"><a href={mailto} class={link} data-support-email>{supportEmail}</a></p>
+        <Button href={mailto} size="lg" class="mt-6">{t('pdfAlgoPro.support.contact.cta')}</Button>
+      </section>
+
+      <section aria-labelledby="include">
+        <h2 id="include" class="text-h3 font-semibold text-ink">{t('pdfAlgoPro.support.include.title')}</h2>
+        <ul class="mt-4 space-y-2.5">
+          {checklist.map((item) => (
+            <li class="flex items-start gap-3 text-ink-muted">
+              <span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" aria-hidden="true"></span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+        <p class="mt-4 leading-relaxed text-ink-muted">{t('pdfAlgoPro.support.include.tip')}</p>
+        <p class="mt-4 rounded-xl border border-line bg-surface-2 p-4 font-medium text-ink">{t('pdfAlgoPro.support.include.never')}</p>
+      </section>
+
+      <section aria-labelledby="faq">
+        <h2 id="faq" class="text-h3 font-semibold text-ink">{t('pdfAlgoPro.support.faq.title')}</h2>
+        <div class="mt-6 space-y-8">
+          {faqs.map((f) => (
+            <article id={`faq-${f.id}`} class="scroll-mt-28">
+              <h3 class="font-semibold text-ink">{f.question}</h3>
+              <p class="mt-2 leading-relaxed text-ink-muted">{f.answer}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <ProductLinks current={path} />
+    </div>
+  </section>
+</BaseLayout>

@@ -29,6 +29,10 @@ const BRAND_PAGES: { path: string; titleKey: string; descKey: string }[] = [
   { path: '/privacy', titleKey: 'privacy.meta.title', descKey: 'privacy.meta.description' },
   { path: '/terms', titleKey: 'terms.meta.title', descKey: 'terms.meta.description' },
   { path: '/legal-notice', titleKey: 'legalNotice.meta.title', descKey: 'legalNotice.meta.description' },
+  { path: '/pdf-algo-pro', titleKey: 'pdfAlgoPro.meta.title', descKey: 'pdfAlgoPro.meta.description' },
+  { path: '/pdf-algo-pro/privacy', titleKey: 'pdfAlgoPro.privacy.meta.title', descKey: 'pdfAlgoPro.privacy.meta.description' },
+  { path: '/pdf-algo-pro/terms', titleKey: 'pdfAlgoPro.terms.meta.title', descKey: 'pdfAlgoPro.terms.meta.description' },
+  { path: '/pdf-algo-pro/support', titleKey: 'pdfAlgoPro.support.meta.title', descKey: 'pdfAlgoPro.support.meta.description' },
 ];
 
 function buildPages(): Record<string, OGPage> {

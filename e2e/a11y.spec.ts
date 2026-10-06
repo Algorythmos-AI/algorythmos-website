@@ -25,6 +25,9 @@ const PAGES = [
   '/au-en/services/model-monitoring',
   '/fr-fr/blog/llmops-in-production',
   '/au-en/case-studies/clinical-document-ai',
+  '/au-en/pdf-algo-pro',
+  '/fr-fr/pdf-algo-pro/privacy',
+  '/au-en/pdf-algo-pro/support',
 ];
 const SCHEMES = ['light', 'dark'] as const;
 

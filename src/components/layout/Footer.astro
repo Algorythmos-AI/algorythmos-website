@@ -2,6 +2,7 @@
 import { asLocale, useTranslations, localizePath } from '@/i18n';
 import { BUSINESS, FR_PUBLISHER, regionAddressLine } from '@/data/business';
 import { services } from '@/data/services';
+import { PDF_ALGO_PRO } from '@/data/products';
 import LocaleSwitcher from '@/components/layout/LocaleSwitcher.astro';
 
 const locale = asLocale(Astro.currentLocale);
@@ -35,6 +36,7 @@ const cols = [
 const resources = [
   { label: t('nav.blog'), href: localizePath(locale, '/blog'), external: false },
   { label: t('footer.rss'), href: rssHref, external: false },
+  { label: PDF_ALGO_PRO.name, href: localizePath(locale, PDF_ALGO_PRO.paths.product), external: false },
 ];
 
 // Social profiles surfaced for entity reciprocity (schema sameAs ⇄ visible links).
