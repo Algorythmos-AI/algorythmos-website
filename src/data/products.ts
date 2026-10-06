@@ -45,7 +45,7 @@ export const PDF_ALGO_PRO = {
     support: '/pdf-algo-pro/support',
   },
   /** Support and privacy requests for the app. */
-  supportEmail: 'pdfalgopro@algorythmos.com.au',
+  supportEmail: 'pdfalgopro@algorythmos.com',
   /** Security reports go to the company address, as the app's security policy says. */
   securityEmail: BUSINESS.email,
   securitySubject: 'SECURITY: pdf-algo-pro',
