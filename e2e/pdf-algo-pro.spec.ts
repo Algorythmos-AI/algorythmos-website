@@ -78,6 +78,8 @@ for (const { prefix, lang } of LOCALES) {
     }
     const icon = main.locator('img[src*="pdf-algo-pro/icon"]');
     await expect.poll(() => icon.evaluate((el) => (el as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
+    // Checked from the locale home: on the product page itself the footer's locale switcher links here too.
+    await page.goto(prefix);
     await expect(page.locator(`footer a[href="${prefix}${PDF_ALGO_PRO.paths.product}"]`)).toHaveCount(1);
   });
 }
