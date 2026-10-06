@@ -90,9 +90,10 @@ const link = 'font-medium text-brand underline underline-offset-2';
 
       <nav aria-labelledby="legal-toc" class="mt-8 rounded-2xl border border-line p-6 print:hidden">
         <h2 id="legal-toc" class="text-sm font-semibold text-ink">{t('pdfAlgoPro.legal.contents')}</h2>
-        <ol class="mt-3 grid gap-x-8 gap-y-2 text-sm sm:grid-cols-2">
+        {/* CSS columns, not a grid: the list reads down the first column, then the second. */}
+        <ol class="mt-3 gap-x-8 text-sm sm:columns-2">
           {sections.map((sec) => (
-            <li>
+            <li class="mb-2 break-inside-avoid">
               <a href={`#${sec.id}`} class="text-ink-muted underline-offset-2 hover:text-ink hover:underline">{sec.title}</a>
             </li>
           ))}
