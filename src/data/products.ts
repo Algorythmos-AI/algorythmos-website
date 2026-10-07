@@ -85,7 +85,10 @@ export const PDF_ALGO_PRO = {
       'changes',
       'contact',
     ],
-    versions: [{ version: '1.0', date: '2026-10-06', key: 'v1_0' }],
+    versions: [
+      { version: '1.1', date: '2026-10-07', key: 'v1_1' },
+      { version: '1.0', date: '2026-10-06', key: 'v1_0' },
+    ],
     links: {
       scope: [{ labelKey: 'pdfAlgoPro.privacy.links.site', href: '/privacy' }],
       apple: [{ labelKey: 'pdfAlgoPro.privacy.links.apple', href: APPLE_PRIVACY }],
