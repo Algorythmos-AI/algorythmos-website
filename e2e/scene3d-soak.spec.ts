@@ -11,6 +11,17 @@ const LIVE_TIMEOUT = 90_000;
 test.describe.configure({ mode: 'default', timeout: 240_000 });
 
 const mount = (page: Page) => page.locator(MOUNT).first();
+
+/**
+ * Leave, through the client router, for a page that carries no scene (the legal
+ * pages never do). Since every other page has one, this is the only kind of page
+ * where "no canvas" means the engine stayed out, rather than not having arrived yet.
+ */
+async function leaveForScenelessPage(page: Page) {
+  await page.locator('footer a[href$="/privacy"]').first().click();
+  await page.waitForURL(/\/privacy$/);
+  await expect(page.locator(MOUNT)).toHaveCount(0);
+}
 const goLive = async (page: Page, path = HOME) => {
   await page.goto(path);
   await expect(mount(page)).toHaveAttribute('data-scene-state', 'live', { timeout: LIVE_TIMEOUT });
@@ -167,8 +178,7 @@ test.describe('timing races', () => {
     await slowEngine(page, 2500);
     await page.goto(HOME);
     await expect(mount(page)).toHaveAttribute('data-scene-state', 'loading', { timeout: 10_000 });
-    await page.getByRole('link', { name: 'Pricing', exact: false }).first().click();
-    await page.waitForURL(/\/pricing$/);
+    await leaveForScenelessPage(page);
     await page.waitForTimeout(4500);
     await expect(page.locator(STAGE)).toHaveCount(0);
     // …and the engine it left behind still serves the next page that wants it.
@@ -186,8 +196,7 @@ test.describe('timing races', () => {
     await goLive(page);
     const first = (await stats(page))!;
     for (let i = 0; i < 5; i++) {
-      await page.getByRole('link', { name: 'Pricing', exact: false }).first().click();
-      await page.waitForURL(/\/pricing$/);
+      await leaveForScenelessPage(page);
       await expect(page.locator(STAGE)).toHaveCount(0);
       expect((await stats(page))!.geometries, 'the scene was freed on leaving').toBe(0);
       await page.goBack();
@@ -236,8 +245,7 @@ test.describe('timing races', () => {
     await page.goto(HOME);
     await arrived;
     await expect(mount(page)).toHaveAttribute('data-scene-state', 'loading');
-    await page.getByRole('link', { name: 'Pricing', exact: false }).first().click();
-    await page.waitForURL(/\/pricing$/);
+    await leaveForScenelessPage(page);
     await page.waitForTimeout(5000);
     await expect(page.locator(STAGE)).toHaveCount(0);
     expect((await stats(page))!.geometries, 'the abandoned scene was freed').toBe(0);
@@ -258,8 +266,7 @@ test.describe('timing races', () => {
     await page.evaluate(() => {
       (window as unknown as { __parked: Element | null }).__parked = document.querySelector('canvas.scene3d-stage');
     });
-    await page.getByRole('link', { name: 'Pricing', exact: false }).first().click();
-    await page.waitForURL(/\/pricing$/);
+    await leaveForScenelessPage(page);
     await expect(page.locator(STAGE)).toHaveCount(0);
     // No scene is on stage to notice this.
     await page.evaluate(() => {
