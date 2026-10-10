@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHeader from '@/components/sections/PageHeader.astro';
+import { sceneFor } from '@/data/sceneMap';
 import Button from '@/components/ui/Button.astro';
 import { asLocale, useTranslations, localizePath } from '@/i18n';
 import { getService, localizeService } from '@/data/services';
@@ -135,7 +136,7 @@ const faqLd = faqs.length
 
 <BaseLayout title={metaTitle} description={metaDescription} path={path} image={ogImg} jsonLd={[serviceLd, crumbs, ...(faqLd ? [faqLd] : [])]}>
   <Breadcrumbs items={crumbItems} />
-  <PageHeader eyebrow={t('nav.services')} title={loc.name} lead={heroLead} />
+  <PageHeader eyebrow={t('nav.services')} title={loc.name} lead={heroLead} scene={sceneFor('service', svc.slug)} />
 
   {svcVisual && (
     <section class="container-page pt-12">

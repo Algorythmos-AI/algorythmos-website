@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHeader from '@/components/sections/PageHeader.astro';
+import { sceneFor } from '@/data/sceneMap';
 import { asLocale, useTranslations, localizePath } from '@/i18n';
 import { services, localizeService, type ServiceFamily } from '@/data/services';
 import { breadcrumb, SITE } from '@/seo/schema';
@@ -39,7 +40,7 @@ const collection = {
   path="/services"
   jsonLd={[collection, crumbs]}
 >
-  <PageHeader eyebrow={t('nav.services')} title={t('services.hero.title')} lead={t('services.hero.subtitle')} />
+  <PageHeader eyebrow={t('nav.services')} title={t('services.hero.title')} lead={t('services.hero.subtitle')} scene={sceneFor('services')} />
 
   {families.map((f, fi) => (
     <section class:list={['container-page', fi === 0 ? 'pt-20 pb-10' : 'py-10']} aria-labelledby={`family-${f.id}`} data-family={f.id}>

@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHeader from '@/components/sections/PageHeader.astro';
+import { sceneFor } from '@/data/sceneMap';
 import { asLocale, useTranslations, localizePath } from '@/i18n';
 import { caseStudies, getCaseStudy } from '@/data/caseStudies';
 import { breadcrumb, SITE } from '@/seo/schema';
@@ -51,7 +52,7 @@ const crumbs = breadcrumb([
   path="/case-studies"
   jsonLd={[collection, crumbs]}
 >
-  <PageHeader eyebrow={t('nav.caseStudies')} title={t('caseStudies.hero.title')} lead={t('caseStudies.hero.subtitle')} />
+  <PageHeader eyebrow={t('nav.caseStudies')} title={t('caseStudies.hero.title')} lead={t('caseStudies.hero.subtitle')} scene={sceneFor('case-studies')} />
 
   <section class="container-page py-20">
     <p data-reveal class="mb-8 max-w-3xl text-sm text-ink-subtle">{t('caseStudies.note')}</p>

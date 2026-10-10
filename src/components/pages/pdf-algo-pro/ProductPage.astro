@@ -11,6 +11,8 @@ import Aurora from '@/components/ui/Aurora.astro';
 import Button from '@/components/ui/Button.astro';
 import Breadcrumbs from '@/components/ui/Breadcrumbs.astro';
 import ProductLinks from '@/components/pages/pdf-algo-pro/ProductLinks.astro';
+import HeroScene from '@/components/sections/HeroScene.astro';
+import { sceneFor } from '@/data/sceneMap';
 import { asLocale, useTranslations, localizePath } from '@/i18n';
 import { breadcrumb, softwareApplication, SITE } from '@/seo/schema';
 import { PDF_ALGO_PRO } from '@/data/products';
@@ -51,9 +53,12 @@ const app = softwareApplication({
   <Breadcrumbs items={crumbItems} />
 
   {/* Hero */}
-  <section class="relative overflow-hidden border-b border-line">
+  <section class="hero-scene-host relative overflow-hidden border-b border-line">
     <Aurora class="opacity-60" />
-    <div class="container-page grid items-center gap-10 py-16 sm:py-24 lg:grid-cols-[auto_1fr] lg:gap-16">
+    {/* Pages doing what the app does: scan, answer, sign, organise. The icon stays the LCP image. */}
+    <HeroScene scene={sceneFor('product')} />
+    <div class="container-page relative py-16 sm:py-24">
+      <div class="hero-scene-copy grid items-center gap-10 lg:grid-cols-[auto_1fr] lg:gap-16">
       <img src={icon.src} alt="" width={icon.size} height={icon.size} fetchpriority="high" decoding="async" class="h-28 w-28 rounded-[22.5%] shadow-e3 sm:h-40 sm:w-40 lg:h-48 lg:w-48" />
       <div>
         <p class="text-sm font-semibold uppercase tracking-widest text-accent">{t('pdfAlgoPro.hero.eyebrow')}</p>
@@ -69,6 +74,7 @@ const app = softwareApplication({
           <Button href={localizePath(locale, paths.support)} size="lg" variant="secondary">{t('pdfAlgoPro.nav.support')}</Button>
         </div>
       </div>
+    </div>
     </div>
   </section>
 

@@ -33,14 +33,27 @@ const BASE = `http://localhost:${PORT}`;
 const WIDTHS = [960, 480];
 const THEMES = ['dark', 'light'];
 
-/* Scene id → a page that mounts it. The still is captured from the real mount, so
-   it has the real proportions. */
+/* Still key (`id` or `id@variant`, see stillKey in src/data/scenes.ts) → a page that
+   mounts that scene and variant. The still is captured from the real mount, so it
+   has the real proportions. */
 const HOSTS = {
   'neural-core': '/au-en',
+  constellation: '/au-en/services',
+  globe: '/au-en/about',
+  'globe@sydney': '/au-en/ai-consultancy-sydney',
+  'globe@paris': '/fr-fr/conseil-en-ia-paris',
+  'ledger@aud': '/au-en/pricing',
+  'ledger@eur': '/fr-fr/pricing',
+  'ledger@audit': '/au-en/case-studies/financial-compliance',
+  pages: '/au-en/pdf-algo-pro',
+  scan: '/au-en/services/document-intelligence',
+  'lost-satellite': '/404',
 };
+const sceneOf = (key) => key.split('@')[0];
 
+/* `npm run scenes:posters globe ledger` re-captures every still of those scenes. */
 const only = process.argv.slice(2);
-const ids = Object.keys(HOSTS).filter((id) => only.length === 0 || only.includes(id));
+const keys = Object.keys(HOSTS).filter((key) => only.length === 0 || only.includes(sceneOf(key)) || only.includes(key));
 
 async function waitForServer(timeoutMs = 20000) {
   const start = Date.now();
@@ -56,7 +69,8 @@ async function waitForServer(timeoutMs = 20000) {
   throw new Error('preview server did not start (run "npm run build" first)');
 }
 
-async function capture(browser, id, theme) {
+async function capture(browser, key, theme) {
+  const id = sceneOf(key);
   const context = await browser.newContext({
     viewport: { width: 1440, height: 1000 },
     deviceScaleFactor: 2,
@@ -72,7 +86,7 @@ async function capture(browser, id, theme) {
       /* storage unavailable */
     }
   }, theme);
-  await page.goto(BASE + HOSTS[id], { waitUntil: 'load' });
+  await page.goto(BASE + HOSTS[key], { waitUntil: 'load' });
   const mount = page.locator(`[data-scene="${id}"]`).first();
   await mount.waitFor({ state: 'attached', timeout: 10000 });
   await page.waitForFunction(
@@ -89,6 +103,13 @@ async function capture(browser, id, theme) {
     canvas.style.visibility = 'visible';
     canvas.style.transition = 'none';
     canvas.style.opacity = '1';
+    /* The hero dims and masks the scene's wrapper on small screens and behind copy;
+       the still is the scene itself, at full strength. */
+    for (let el = canvas.parentElement; el && el !== document.body; el = el.parentElement) {
+      el.style.opacity = '1';
+      el.style.maskImage = 'none';
+      el.style.webkitMaskImage = 'none';
+    }
     canvas.scrollIntoView({ block: 'center', behavior: 'instant' }); // the site scrolls smoothly by default
     const r = canvas.getBoundingClientRect();
     return { x: r.left, y: r.top, width: r.width, height: r.height };
@@ -99,7 +120,7 @@ async function capture(browser, id, theme) {
 
   const written = [];
   for (const width of WIDTHS) {
-    const file = path.join(OUT_DIR, `${id}-${theme}-${width}.avif`);
+    const file = path.join(OUT_DIR, `${key}-${theme}-${width}.avif`);
     await sharp(png).resize({ width }).avif({ quality: 45, effort: 6 }).toFile(file);
     written.push(`${path.basename(file)} ${(fs.statSync(file).size / 1024).toFixed(1)} kB`);
   }
@@ -116,16 +137,16 @@ try {
   const browser = await chromium.launch({ args });
   const manifestFile = path.join(OUT_DIR, 'manifest.json');
   const manifest = fs.existsSync(manifestFile) ? JSON.parse(fs.readFileSync(manifestFile, 'utf-8')) : {};
-  for (const id of ids) {
+  for (const key of keys) {
     for (const theme of THEMES) {
-      for (const line of await capture(browser, id, theme)) console.log(`  ${line}`);
+      for (const line of await capture(browser, key, theme)) console.log(`  ${line}`);
     }
-    manifest[id] = sceneHash(ROOT, id);
+    manifest[sceneOf(key)] = sceneHash(ROOT, sceneOf(key));
   }
   await browser.close();
   const sorted = Object.fromEntries(Object.entries(manifest).sort(([a], [b]) => a.localeCompare(b)));
   fs.writeFileSync(manifestFile, JSON.stringify(sorted, null, 2) + '\n');
-  console.log(`Captured ${ids.length} scene(s) × ${THEMES.length} themes → ${path.relative(ROOT, OUT_DIR)}`);
+  console.log(`Captured ${keys.length} still(s) × ${THEMES.length} themes → ${path.relative(ROOT, OUT_DIR)}`);
 } catch (error) {
   console.error(error);
   exitCode = 1;

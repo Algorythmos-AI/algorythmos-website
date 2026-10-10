@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHeader from '@/components/sections/PageHeader.astro';
+import { sceneFor } from '@/data/sceneMap';
 import Button from '@/components/ui/Button.astro';
 import Aurora from '@/components/ui/Aurora.astro';
 import Photo from '@/components/ui/Photo.astro';
@@ -42,7 +43,7 @@ const stats = [
 ---
 
 <BaseLayout title={t('about.meta.title')} description={t('about.meta.description')} path={path} jsonLd={[crumbs, photoLd]}>
-  <PageHeader eyebrow={t('about.hero.badge')} title={`${t('about.hero.title1')} ${t('about.hero.title2')}`} />
+  <PageHeader eyebrow={t('about.hero.badge')} title={`${t('about.hero.title1')} ${t('about.hero.title2')}`} scene={sceneFor('about')} />
 
   {/* Hero subtitle carries inline <highlight> markup → render rich */}
   <section class="container-page pt-8">

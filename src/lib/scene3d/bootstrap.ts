@@ -180,6 +180,63 @@ function holdReleased(mount: HTMLElement, signal: AbortSignal): Promise<void> {
   });
 }
 
+/**
+ * Paint the captured still into the mount's poster canvas, for whoever is not
+ * getting the live scene (or not yet). Waits for the page to finish loading so
+ * the image never competes with it, picks the size for this mount and the theme
+ * in force, and repaints when either changes.
+ */
+function paintStill(mount: HTMLElement, signal: AbortSignal): void {
+  const canvas = mount.querySelector<HTMLCanvasElement>('canvas.scene3d-poster');
+  if (!canvas || canvas.dataset.painting) return;
+  canvas.dataset.painting = '1';
+  let job = 0;
+  const paint = async () => {
+    const mine = ++job;
+    const theme = document.documentElement.dataset.theme === 'light' ? 'light' : 'dark';
+    const [small, large] = (theme === 'light' ? canvas.dataset.stillLight : canvas.dataset.stillDark)?.split(' ') ?? [];
+    const rect = canvas.getBoundingClientRect();
+    if (!small || !rect.width || !rect.height) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const image = new Image();
+    image.decoding = 'async';
+    image.src = rect.width * dpr > 560 && large ? large : small;
+    try {
+      await image.decode();
+    } catch {
+      return; // offline, or a browser without AVIF: the page simply has no picture here
+    }
+    if (mine !== job || signal.aborted) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    canvas.width = Math.round(rect.width * dpr);
+    canvas.height = Math.round(rect.height * dpr);
+    const scale = Math.min(canvas.width / image.naturalWidth, canvas.height / image.naturalHeight);
+    const w = image.naturalWidth * scale;
+    const h = image.naturalHeight * scale;
+    ctx.drawImage(image, (canvas.width - w) / 2, (canvas.height - h) / 2, w, h);
+    canvas.dataset.painted = theme;
+  };
+  void pageLoaded(signal).then(() => scheduleIdle(() => void paint()));
+
+  let timer = 0;
+  const later = () => {
+    window.clearTimeout(timer);
+    timer = window.setTimeout(() => void paint(), 160);
+  };
+  const themes = new MutationObserver(later);
+  themes.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  const sizes = new ResizeObserver(() => {
+    if (canvas.dataset.painted) later();
+  });
+  sizes.observe(canvas);
+  signal.addEventListener('abort', () => {
+    window.clearTimeout(timer);
+    themes.disconnect();
+    sizes.disconnect();
+  });
+}
+
 function initPage(): void {
   const mount = document.querySelector<HTMLElement>('[data-scene]');
   if (!mount || mount.dataset.sceneInit) return;
@@ -220,6 +277,10 @@ function initPage(): void {
     { once: true },
   );
 
+  /* Whoever is certain to keep the still, or will wait for a touch before anything
+     else arrives, gets it painted now. A desktop about to load the live scene does
+     not download a picture it would show for a second — unless that scene fails. */
+  if (plan.trigger !== 'idle') paintStill(mount, signal);
   if (plan.trigger === 'never') return;
 
   const onFail = (reason: FailReason, error?: unknown) => {
@@ -229,6 +290,7 @@ function initPage(): void {
     if (reason === 'error') console.warn('[scene3d] showing the still instead:', error);
     current = null;
     setState('static');
+    paintStill(mount, signal);
   };
 
   let started = false;
@@ -236,14 +298,17 @@ function initPage(): void {
     if (started || !alive() || motionOff()) return;
     started = true;
     const s = acquireStage();
-    if (!s) return; // no usable WebGL2: the still stands, and three is never requested
+    if (!s) return paintStill(mount, signal); // no usable WebGL2: the still stands, and three is never requested
     setState('loading');
     performance.mark('scene3d:start');
     try {
       const e = await loadEngine(s);
       performance.mark('scene3d:engine');
       await holdReleased(mount, signal);
-      if (!alive() || motionOff()) return setState('static');
+      if (!alive() || motionOff()) {
+        paintStill(mount, signal);
+        return setState('static');
+      }
       current = e;
       const shown = await e.show(mount, {
         id,
@@ -264,6 +329,7 @@ function initPage(): void {
       if (motionOff()) {
         /* Paused while the scene was compiling: it never takes the stage. */
         e.hide();
+        paintStill(mount, signal);
         return setState('static');
       }
       setState('live');
@@ -273,6 +339,7 @@ function initPage(): void {
       engine = null;
       console.warn('[scene3d] engine unavailable, showing the still instead:', error);
       setState('static');
+      paintStill(mount, signal);
     }
   };
 

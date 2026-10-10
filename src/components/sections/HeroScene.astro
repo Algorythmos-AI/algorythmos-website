@@ -1,0 +1,81 @@
+---
+/**
+ * HeroScene — a page hero's 3D scene.
+ *
+ * Its box is sized in CSS alone, so the hero is the same height before and after
+ * the scene arrives (no layout shift), and the copy stays the page's LCP.
+ *
+ * Below `lg` it is a band of its own under the copy: nothing is ever drawn behind
+ * text there, so the words keep their contrast whatever the scene shows.
+ * From `lg`:
+ *   `side` (default)  a column to the right of the copy. Give the copy
+ *                     `hero-scene-copy` so it keeps to its own column.
+ *   `behind`          the whole hero, behind centred copy (the 404 page). The
+ *                     scene must then keep its subject clear of the centre;
+ *                     e2e/scene-contrast.spec.ts measures that it does.
+ *
+ * The parent section needs `hero-scene-host` (and `relative overflow-hidden`).
+ */
+import Scene3D from '@/components/ui/Scene3D.astro';
+import type { SceneRef } from '@/data/scenes';
+
+interface Props {
+  scene: SceneRef;
+  placement?: 'side' | 'behind';
+}
+const { scene, placement = 'side' } = Astro.props;
+---
+
+<div class:list={['hero-scene', `hero-scene--${placement}`]} aria-hidden="true">
+  <Scene3D id={scene.id} variant={scene.variant} class="absolute inset-0" />
+</div>
+
+<style is:global>
+  /* Global: `hero-scene-host` and `hero-scene-copy` are applied by the page that owns the hero. */
+  .hero-scene-host {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  /* Small screens: a band under the copy, pulled up into the copy's bottom padding. */
+  .hero-scene {
+    position: relative;
+    order: 2;
+    width: 100%;
+    height: clamp(11rem, 50vw, 17rem);
+    margin-top: -2.5rem;
+    margin-bottom: 1.25rem;
+    pointer-events: none;
+  }
+  @media (min-width: 1024px) {
+    .hero-scene {
+      position: absolute;
+      order: 0;
+      height: auto;
+      margin: 0;
+    }
+    /* A column of its own to the right of the copy. */
+    .hero-scene--side {
+      inset-block: 0;
+      inset-inline-end: max(var(--gutter), calc((100% - var(--container)) / 2));
+      width: min(44%, 34rem);
+    }
+    .hero-scene-copy {
+      max-width: 54%;
+    }
+    .hero-scene--behind {
+      inset: 0;
+      width: auto;
+      opacity: 0.7;
+    }
+    /* Room for the scene to be worth looking at; the copy is centred in it. */
+    .hero-scene-host {
+      min-height: 28rem;
+    }
+  }
+  @media print, (forced-colors: active) {
+    .hero-scene {
+      display: none;
+    }
+  }
+</style>

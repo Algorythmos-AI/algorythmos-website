@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHeader from '@/components/sections/PageHeader.astro';
+import { sceneFor } from '@/data/sceneMap';
 import Button from '@/components/ui/Button.astro';
 import Aurora from '@/components/ui/Aurora.astro';
 import { bookingUrl } from '@/lib/links';
@@ -80,7 +81,7 @@ const jsonLd = faqLd ? [crumbs, faqLd] : [crumbs];
 ---
 
 <BaseLayout title={t('pricing.meta.title')} description={t('pricing.meta.description')} path={path} jsonLd={jsonLd}>
-  <PageHeader eyebrow={t('nav.pricing')} title={t('pricing.hero.title')} lead={t('pricing.hero.subtitle')} />
+  <PageHeader eyebrow={t('nav.pricing')} title={t('pricing.hero.title')} lead={t('pricing.hero.subtitle')} scene={sceneFor('pricing', undefined, locale)} />
 
   {/* Trust badges */}
   <section class="container-page pt-8">

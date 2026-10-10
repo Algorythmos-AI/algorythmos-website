@@ -1,21 +1,28 @@
 ---
 import Aurora from '@/components/ui/Aurora.astro';
+import HeroScene from '@/components/sections/HeroScene.astro';
+import type { SceneRef } from '@/data/scenes';
 
 interface Props {
   eyebrow?: string;
   title: string;
   lead?: string;
+  /** The page's 3D scene (src/data/sceneMap.ts). Out of flow: the header is as tall with it as without. */
+  scene?: SceneRef;
 }
-const { eyebrow, title, lead } = Astro.props;
+const { eyebrow, title, lead, scene } = Astro.props;
 ---
 
-<section class="relative overflow-hidden border-b border-line">
+<section class:list={['relative overflow-hidden border-b border-line', scene && 'hero-scene-host']}>
   <Aurora class="opacity-60" />
-  <div class="container-page py-16 sm:py-24">
-    {eyebrow && <p data-reveal class="text-sm font-semibold uppercase tracking-widest text-accent">{eyebrow}</p>}
-    <h1 data-reveal style="--reveal-delay: 60ms" class="mt-3 max-w-4xl text-h1 font-extrabold tracking-tight text-ink">
-      {title}
-    </h1>
-    {lead && <p data-reveal style="--reveal-delay: 120ms" class="mt-5 max-w-2xl text-lead text-ink-muted">{lead}</p>}
+  {scene && <HeroScene scene={scene} />}
+  <div class="container-page relative py-16 sm:py-24">
+    <div class:list={[scene && 'hero-scene-copy']}>
+      {eyebrow && <p data-reveal class="text-sm font-semibold uppercase tracking-widest text-accent">{eyebrow}</p>}
+      <h1 data-reveal style="--reveal-delay: 60ms" class="mt-3 max-w-4xl text-h1 font-extrabold tracking-tight text-ink">
+        {title}
+      </h1>
+      {lead && <p data-reveal style="--reveal-delay: 120ms" class="mt-5 max-w-2xl text-lead text-ink-muted">{lead}</p>}
+    </div>
   </div>
 </section>

@@ -7,6 +7,7 @@
  */
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHeader from '@/components/sections/PageHeader.astro';
+import { sceneFor } from '@/data/sceneMap';
 import { asLocale, useTranslations, localizePath } from '@/i18n';
 import { breadcrumb, SITE, FOUNDER_ID } from '@/seo/schema';
 import { BUSINESS } from '@/data/business';
@@ -36,7 +37,7 @@ const assets = [
 ---
 
 <BaseLayout title={t('press.meta.title')} description={t('press.meta.description')} path={path} jsonLd={[pageLd, crumbs]}>
-  <PageHeader eyebrow={t('press.hero.eyebrow')} title={t('press.hero.title')} lead={t('press.hero.lead')} />
+  <PageHeader eyebrow={t('press.hero.eyebrow')} title={t('press.hero.title')} lead={t('press.hero.lead')} scene={sceneFor('press')} />
 
   <section class="container-page py-16">
     <div class="grid gap-12 lg:grid-cols-[1.5fr_1fr]">

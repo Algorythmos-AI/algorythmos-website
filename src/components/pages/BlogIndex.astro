@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHeader from '@/components/sections/PageHeader.astro';
+import { sceneFor } from '@/data/sceneMap';
 import { asLocale, useTranslations, localizePath } from '@/i18n';
 import { blog } from '@/data/blog';
 import { breadcrumb, SITE } from '@/seo/schema';
@@ -46,7 +47,7 @@ const crumbs = breadcrumb([
   path="/blog"
   jsonLd={[collection, crumbs]}
 >
-  <PageHeader eyebrow={t('blog.hero.title')} title={t('blog.hero.title')} lead={t('blog.hero.subtitle')} />
+  <PageHeader eyebrow={t('blog.hero.title')} title={t('blog.hero.title')} lead={t('blog.hero.subtitle')} scene={sceneFor('blog')} />
 
   <section class="container-page py-20">
     <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

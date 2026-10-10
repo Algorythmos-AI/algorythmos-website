@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHeader from '@/components/sections/PageHeader.astro';
+import { sceneFor } from '@/data/sceneMap';
 import Button from '@/components/ui/Button.astro';
 import { asLocale, useTranslations, localizePath } from '@/i18n';
 import { breadcrumb, SITE, ORG_ID, WEBSITE_ID, imageObject } from '@/seo/schema';
@@ -95,7 +96,7 @@ const offices = [
   ogType="website"
   jsonLd={[contactLd, crumbs]}
 >
-  <PageHeader eyebrow={t('contactPage.globalMap.badge')} title={t('contactPage.hero.title')} lead={t('contactPage.hero.subtitle')} />
+  <PageHeader eyebrow={t('contactPage.globalMap.badge')} title={t('contactPage.hero.title')} lead={t('contactPage.hero.subtitle')} scene={sceneFor('contact')} />
 
   <section class="container-page py-20">
     <div class="grid gap-12 lg:grid-cols-[1.4fr_1fr]">
