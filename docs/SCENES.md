@@ -19,7 +19,7 @@ that true.
 | Engine: renderer, loop, fallbacks (imports three) | `src/lib/scene3d/engine.ts` |
 | Scene contract | `src/lib/scene3d/types.ts` |
 | Registry of scenes, one lazy chunk each | `src/lib/scene3d/registry.ts` |
-| Shared parts: palette, environment light, lens and tone curve, soft points, rim-lit shells, orbits, satellites, paper sheets, holograms, camera framing, the globe's land mask, dispose | `src/lib/scene3d/kit/` |
+| Shared parts: palette, environment light, lens and tone curve, soft points, drifting motes, rim-lit shells, orbits, satellites, paper sheets, holograms, camera framing, the globe's land mask, dispose | `src/lib/scene3d/kit/` |
 | One file per scene | `src/lib/scene3d/scenes/<id>.ts` |
 | Stills and their fingerprints | `src/assets/scenes/` (`manifest.json`) |
 | Still capture | `scripts/capture-scene-posters.mjs` (`npm run scenes:posters`) |
@@ -56,8 +56,31 @@ line of hero copy, in both themes at three widths, against WCAG AA.
 `sceneFor(page, slug, locale)` in `src/data/sceneMap.ts`. The rule
 (`docs/COPY_CLAIMS_SIGNOFF.md` §3g): a theme appears only where it matches what the
 page sells. `sceneMap.test.ts` pins the ones that matter — the ledger only on pricing
-and compliance pages, the scanning overlay only on document-led pages, PDF Algo Pro
-showing only what the app does.
+and compliance pages, the scanning overlay and the sorting arm only on document-led
+pages, the port yard only on the port and freight pages, PDF Algo Pro showing only
+what the app does.
+
+| Page | Scene |
+|---|---|
+| Home | `neural-core` |
+| Services index | `constellation` |
+| Agentic Automation | `agent-swarm` |
+| Document Intelligence | `robot-sorter` |
+| Generative AI & LLMOps | `llm-lattice` |
+| MLOps & Model Deployment | `model-pipeline` |
+| AI Platform Engineering | `platform-station` |
+| Model Monitoring | `monitor-radar` |
+| Data & Feature Management | `feature-vault` |
+| SQL Dashboards | `dash-terrain` |
+| AI-Powered Websites | `holo-site` |
+| Pricing | `ledger` (`aud` / `eur`) |
+| About, Contact, Careers, Press, the city pages, the case-study and blog indexes | `globe` |
+| PDF Algo Pro | `pages` |
+| 404 | `lost-satellite` |
+| A case study or post | The scene of the first service in its entry in `src/data/related.ts`; `scan` when that service is Document Intelligence. Explicit exceptions (`ledger@audit`, `port-yard`, `globe@sydney`) are listed at the top of `sceneMap.ts` |
+
+A service added to `src/data/services.ts` before it has a scene of its own falls back
+to the constellation, turned to that service's satellite.
 
 A variant (`data-scene-variant`) turns a scene or highlights part of it. Only variants
 listed in `STILL_VARIANTS` have a still of their own; the rest share the scene's.
@@ -113,7 +136,7 @@ re-captured. Engine and loader changes do not.
 ## Budgets
 
 - The three.js chunk is capped at 620 kB raw (`scripts/lib/perf-gate.mjs`). It measures
-  about 537 kB (132 kB gzip): the renderer alone is 510 kB and does not tree-shake, so
+  about 553 kB (136 kB gzip): the renderer alone is 510 kB and does not tree-shake, so
   new imports from three cost little. Post-processing passes and loaders are the things
   that would move it.
 - Homepage first-load JavaScript is capped at 46 kB. The bootstrap is about 4.5 kB of that.
