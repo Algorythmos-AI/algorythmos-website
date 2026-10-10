@@ -8,6 +8,8 @@
  * those are left exactly as written. The last frame always restores the original
  * string, so whatever formatting the copy used is what the reader ends on.
  */
+import { motionOff } from './motion';
+
 export interface Countable {
   prefix: string;
   value: number;
@@ -24,6 +26,8 @@ export function parseCountable(text: string): Countable | null {
   const m = SHAPE.exec(text.trim());
   if (!m) return null;
   const [, prefix, digits, suffix] = m;
+  /* "0.125" and "1.284" could be a decimal or a grouped thousand: not ours to guess. */
+  if (/^\d{1,3}\.\d{3}$/.test(digits) || /^0[\s  ,.]\d{3}/.test(digits)) return null;
   /* A trailing ",dd" or ".dd" is a decimal part; any other separator groups thousands. */
   const dec = /[.,](\d{1,2})$/.exec(digits);
   const decimals = dec ? dec[1].length : 0;
@@ -45,8 +49,9 @@ const easeOutQuart = (p: number) => 1 - Math.pow(1 - p, 4);
 
 /**
  * Arm every `[data-countup]` under `root`: when one scrolls into view it counts up
- * to the figure it already shows. Returns a teardown. Call with motion allowed;
- * the caller checks `motionOff()`.
+ * to the figure it already shows. Returns a teardown. Motion is checked when a
+ * figure comes into view and on every frame, so a pause pressed at any moment
+ * leaves the figures as written.
  */
 export function armCountUps(root: ParentNode = document): () => void {
   const els = [...root.querySelectorAll<HTMLElement>('[data-countup]:not([data-countup-armed])')];
@@ -59,14 +64,14 @@ export function armCountUps(root: ParentNode = document): () => void {
         const el = entry.target as HTMLElement;
         const final = el.textContent ?? '';
         const parsed = parseCountable(final);
-        if (!parsed) continue;
+        if (!parsed || motionOff()) continue;
         /* Hold the width of the final figure so the row does not jitter while it counts. */
         el.style.minWidth = `${el.getBoundingClientRect().width}px`;
         let start = 0;
         const step = (now: number) => {
           if (!start) start = now;
           const p = Math.min((now - start) / DURATION, 1);
-          if (p < 1) {
+          if (p < 1 && !motionOff()) {
             el.textContent = formatCountable(parsed, easeOutQuart(p));
             frames.add(requestAnimationFrame(step));
           } else {
@@ -77,7 +82,9 @@ export function armCountUps(root: ParentNode = document): () => void {
         frames.add(requestAnimationFrame(step));
       }
     },
-    { threshold: 0.4 },
+    /* The card's own reveal waits for it to clear the bottom tenth of the window;
+       counting must not start, and finish, before that. */
+    { rootMargin: '0px 0px -12% 0px', threshold: 0.4 },
   );
   for (const el of els) {
     el.dataset.countupArmed = '1';

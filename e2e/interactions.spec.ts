@@ -5,6 +5,14 @@ import { test, expect, type Page } from '@playwright/test';
 
 const below = (page: Page) => page.locator('main [data-reveal]').last(); // far down the page
 const opacity = (page: Page) => below(page).evaluate((el) => getComputedStyle(el).opacity);
+const waiting = (page: Page) => page.locator('main [data-reveal]:not(.is-visible)').count();
+/** Scroll a little, as a visitor would, until the reveals are armed. A busy WebKit can swallow one synthetic wheel. */
+async function startScrolling(page: Page, by = 120) {
+  await expect(async () => {
+    await page.mouse.wheel(0, by);
+    await expect.poll(() => waiting(page), { timeout: 1500 }).toBeGreaterThan(0);
+  }).toPass({ timeout: 10_000 });
+}
 
 test.describe('scroll reveals', () => {
   test('a renderer that never scrolls finds the whole page visible', async ({ page }) => {
@@ -20,9 +28,9 @@ test.describe('scroll reveals', () => {
     await page.waitForTimeout(600);
     await expect(below(page)).toHaveClass(/is-visible/);
 
-    await page.mouse.wheel(0, 120); // the first sign of scrolling
+    await startScrolling(page); // the first sign of scrolling
     await expect(below(page)).not.toHaveClass(/is-visible/);
-    expect(await opacity(page), 'hidden again, out of sight').toBe('0');
+    await expect.poll(() => opacity(page), { message: 'hidden again, out of sight' }).toBe('0');
 
     await below(page).scrollIntoViewIfNeeded();
     await expect(below(page)).toHaveClass(/is-visible/, { timeout: 5000 });
@@ -32,21 +40,38 @@ test.describe('scroll reveals', () => {
   test('what is already on screen when scrolling starts is not hidden under the visitor', async ({ page }) => {
     await page.goto('/au-en/services');
     await page.waitForTimeout(600);
-    const onScreen = await page.evaluate(() =>
-      [...document.querySelectorAll('main [data-reveal]')].filter((el) => {
-        const r = el.getBoundingClientRect();
-        return r.top < innerHeight && r.bottom > 0;
-      }).length,
+    await startScrolling(page, 60);
+    const hiddenOnScreen = await page.evaluate(
+      () =>
+        [...document.querySelectorAll('main [data-reveal]:not(.is-visible)')].filter((el) => {
+          const r = el.getBoundingClientRect();
+          return r.top < innerHeight && r.bottom > 0;
+        }).length,
     );
-    await page.mouse.wheel(0, 60);
-    await page.waitForTimeout(150);
-    const stillShown = await page.evaluate(() =>
-      [...document.querySelectorAll('main [data-reveal].is-visible')].filter((el) => {
-        const r = el.getBoundingClientRect();
-        return r.top < innerHeight && r.bottom > 0;
-      }).length,
-    );
-    expect(stillShown).toBeGreaterThanOrEqual(onScreen);
+    expect(hiddenOnScreen).toBe(0);
+  });
+
+  test('a shortcut key is not scrolling, and a printed page has everything on it', async ({ page }) => {
+    const hidden = () => page.locator('main [data-reveal]:not(.is-visible)').count();
+    await page.goto('/au-en/services');
+    await page.waitForTimeout(600);
+    await page.keyboard.press('Meta');
+    await page.keyboard.press('Control');
+    await page.waitForTimeout(200);
+    expect(await hidden(), 'a modifier key alone hides nothing').toBe(0);
+
+    await startScrolling(page);
+    await page.emulateMedia({ media: 'print' });
+    await expect.poll(() => opacity(page), { message: 'still waiting on screen, but printed' }).toBe('1');
+  });
+
+  test('arriving from a scrolled page does not hide the new one', async ({ page }) => {
+    await page.goto('/au-en');
+    await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' }));
+    await page.locator('footer a[href$="/services"]').first().click();
+    await page.waitForURL(/\/services$/);
+    await page.waitForTimeout(800);
+    expect(await page.locator('main [data-reveal]:not(.is-visible)').count()).toBe(0);
   });
 
   test('reduced motion: nothing is ever hidden', async ({ page }) => {
@@ -62,7 +87,7 @@ test.describe('scroll reveals', () => {
     await page.getByRole('link', { name: 'Services', exact: false }).first().click();
     await page.waitForURL(/\/services$/);
     await page.waitForTimeout(600);
-    await page.mouse.wheel(0, 120);
+    await startScrolling(page);
     await expect(below(page)).not.toHaveClass(/is-visible/);
     await below(page).scrollIntoViewIfNeeded();
     await expect(below(page)).toHaveClass(/is-visible/, { timeout: 5000 });
@@ -96,7 +121,7 @@ test.describe('count-up on case-study figures', () => {
     await page.goto(STUDY);
     const written = await figures(page).allTextContents();
     expect(written.length).toBeGreaterThan(0);
-    await figures(page).first().scrollIntoViewIfNeeded();
+    await figures(page).first().evaluate((el) => el.scrollIntoView({ block: 'center', behavior: 'instant' }));
     // The counting starts: at least one figure is, for a moment, not what was written…
     await expect
       .poll(async () => JSON.stringify(await figures(page).allTextContents()) !== JSON.stringify(written), { timeout: 4000 })
@@ -111,7 +136,7 @@ test.describe('count-up on case-study figures', () => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto(STUDY);
     const written = await figures(page).allTextContents();
-    await figures(page).first().scrollIntoViewIfNeeded();
+    await figures(page).first().evaluate((el) => el.scrollIntoView({ block: 'center', behavior: 'instant' }));
     for (let i = 0; i < 6; i++) {
       expect(await figures(page).allTextContents()).toEqual(written);
       await page.waitForTimeout(120);

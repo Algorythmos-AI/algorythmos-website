@@ -216,11 +216,27 @@ const t = useTranslations(locale);
               io.observe(e);
             }
           });
+          /* Settle the hidden state while the transition is still switched off, or the
+             last one hidden would fade out instead of vanishing. */
+          void document.documentElement.offsetHeight;
           requestAnimationFrame(() => below.forEach((e) => e.classList.remove('reveal-instant')));
         };
-        ['scroll', 'wheel', 'touchmove', 'keydown'].forEach((type) =>
-          window.addEventListener(type, arm, { passive: true, once: true, signal: listeners.signal }),
-        );
+        /* Only real scrolling arms the reveals. A modifier key (Cmd+P, a screenshot
+           shortcut) is not scrolling, and neither is the router returning a new page
+           to the top. */
+        const SCROLL_KEYS = ['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'End', 'Home', ' '];
+        const on = <K extends keyof WindowEventMap>(type: K, wants: (ev: WindowEventMap[K]) => boolean) =>
+          window.addEventListener(
+            type,
+            (ev) => {
+              if (wants(ev)) arm();
+            },
+            { passive: true, signal: listeners.signal },
+          );
+        on('wheel', () => true);
+        on('touchmove', () => true);
+        on('scroll', () => window.scrollY > 4);
+        on('keydown', (ev) => !ev.metaKey && !ev.ctrlKey && !ev.altKey && SCROLL_KEYS.includes(ev.key));
         stopReveal = () => {
           listeners.abort();
           io.disconnect();
