@@ -88,8 +88,11 @@ npm run check && npm run i18n:check && npm run health:check && npm run build && 
 - `npm run link:check` — crawls `dist/` and verifies every internal link
   resolves to a built file.
 
-`npm test` (vitest) and `npm run perf` (bundle report, advisory) round out the
-optional local checks.
+`npm test` (vitest) and `npm run perf` round out the local checks. `perf` is a
+gate, not a report: CI fails on any client chunk over 200 kB (the lazily loaded 3D
+engine has its own 620 kB cap), on any page that would load that engine up front,
+and on homepage first-load JavaScript over 46 kB. The full CI sequence is in
+`docs/DEVELOPMENT_GUIDE.md`.
 
 ---
 
