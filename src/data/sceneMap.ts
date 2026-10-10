@@ -7,7 +7,7 @@
  * imagery are never decoration for a page about something else.
  */
 import { blogRelated, caseStudyRelated, type RelatedRef } from './related';
-import type { SceneRef } from './scenes';
+import type { SceneId, SceneRef } from './scenes';
 
 /** The kinds of page that carry a scene. Legal, support and the long-form product documents carry none. */
 export type ScenePage =
@@ -33,6 +33,9 @@ const DOCUMENT_SERVICE = 'document-intelligence';
 const CASE_STUDY_SCENES: Record<string, SceneRef> = {
   // A compliance engagement: records through validation gates into a sealed audit log.
   'financial-compliance': { id: 'ledger', variant: 'audit' },
+  // Ports and freight: the yard itself.
+  'port-botany-ai-ml': { id: 'port-yard' },
+  'model-monitoring-logistics': { id: 'port-yard' },
 };
 const POST_SCENES: Record<string, SceneRef> = {
   // Regulation and record-keeping, not document capture.
@@ -42,12 +45,36 @@ const POST_SCENES: Record<string, SceneRef> = {
   'choosing-ai-consultancy-sydney': { id: 'globe', variant: 'sydney' },
   'ai-consultancy-australia': { id: 'globe', variant: 'sydney' },
   'mbsc-australia-partnership': { id: 'globe', variant: 'sydney' },
+  'port-botany-document-flows': { id: 'port-yard' },
 };
 
+/* A service's own scene. It is shown on the service page and on the studies and
+   posts that service leads. */
+const SERVICE_SCENES: Record<string, SceneId> = {
+  'agentic-automation': 'agent-swarm',
+  llmops: 'llm-lattice',
+  'model-monitoring': 'monitor-radar',
+  'data-feature-management': 'feature-vault',
+  'sql-dashboards': 'dash-terrain',
+  'document-intelligence': 'robot-sorter',
+  'mlops-cicd': 'model-pipeline',
+  'ai-platform-engineering': 'platform-station',
+  'ai-websites': 'holo-site',
+};
+
+/** The scene for a service's own page. */
 function forService(slug: string): SceneRef {
-  if (slug === DOCUMENT_SERVICE) return { id: 'scan' };
-  /* The constellation, turned to the satellite that stands for this service. */
-  return { id: 'constellation', variant: slug };
+  const own = SERVICE_SCENES[slug];
+  /* A service added before its scene exists: the constellation, turned to its satellite. */
+  return own ? { id: own } : { id: 'constellation', variant: slug };
+}
+
+/**
+ * The scene for a study or post that a service leads. Document-led ones get the
+ * scanning overlay — the reading, not the arm that files the pages.
+ */
+function ledBy(service: string): SceneRef {
+  return service === DOCUMENT_SERVICE ? { id: 'scan' } : forService(service);
 }
 
 const firstService = (refs: RelatedRef[] | undefined): string | undefined => refs?.find((r) => r.type === 'service')?.slug;
@@ -66,13 +93,13 @@ export function sceneFor(page: ScenePage, slug?: string, locale?: string): Scene
       const explicit = slug ? CASE_STUDY_SCENES[slug] : undefined;
       if (explicit) return explicit;
       const service = firstService(slug ? caseStudyRelated[slug] : undefined);
-      return service ? forService(service) : { id: 'globe', variant: 'studies' };
+      return service ? ledBy(service) : { id: 'globe', variant: 'studies' };
     }
     case 'post': {
       const explicit = slug ? POST_SCENES[slug] : undefined;
       if (explicit) return explicit;
       const service = firstService(slug ? blogRelated[slug] : undefined);
-      return service ? forService(service) : { id: 'globe', variant: 'blog' };
+      return service ? ledBy(service) : { id: 'globe', variant: 'blog' };
     }
     case 'pricing':
       return { id: 'ledger', variant: locale === 'fr-fr' ? 'eur' : 'aud' };

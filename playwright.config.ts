@@ -43,10 +43,11 @@ export default defineConfig({
     },
     {
       /* The worst historical mobile bug was iOS-only, so WebKit runs the console + FR specs too,
-         and the motion and navigation-state contracts. */
+         the motion and navigation-state contracts, and the scroll reveals (which decide
+         whether content below the fold is visible at all). */
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
-      testMatch: /(console|french-locale|a11y|responsive-header|overlays|motion|navigation-state)\.spec\.ts/,
+      testMatch: /(console|french-locale|a11y|responsive-header|overlays|motion|navigation-state|interactions)\.spec\.ts/,
     },
     {
       name: 'webkit-scenes',
@@ -60,7 +61,7 @@ export default defineConfig({
          state the client router has to restore. */
       name: 'firefox',
       use: { ...devices['Desktop Firefox'] },
-      testMatch: /(motion|navigation-state)\.spec\.ts/,
+      testMatch: /(motion|navigation-state|interactions)\.spec\.ts/,
     },
     {
       name: 'firefox-scenes',

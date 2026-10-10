@@ -1,9 +1,19 @@
 {
-  "constellation": "6cd96915210344a6",
-  "globe": "5f968395929106a2",
-  "ledger": "8bd3ed0ad3de8e84",
-  "lost-satellite": "62d4f9cea2ee5cb1",
-  "neural-core": "bf899bab1d1754c9",
-  "pages": "b43a8456032805cc",
-  "scan": "440b0728650ef276"
+  "agent-swarm": "e8e7d00a794f8048",
+  "constellation": "c5ade4dd78925c30",
+  "dash-terrain": "f61f688d93580b2c",
+  "feature-vault": "2b4c7bfe4c02f07e",
+  "globe": "482ca35a0cc75035",
+  "holo-site": "eb5b8510e0a37341",
+  "ledger": "5461310eb620fc57",
+  "llm-lattice": "71dbe43321fdbe47",
+  "lost-satellite": "2aae58d4f48b557b",
+  "model-pipeline": "930d51d855e0dec3",
+  "monitor-radar": "2cdad65b584d2ba3",
+  "neural-core": "a164bcbb0d10ea64",
+  "pages": "d27eb1cb37517d9a",
+  "platform-station": "530fdf430fa5477a",
+  "port-yard": "7fa3c4561f97346d",
+  "robot-sorter": "e3e8dac8d7288f52",
+  "scan": "bcca50a010f116f3"
 }

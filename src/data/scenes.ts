@@ -15,7 +15,26 @@
  */
 export const SCENE3D_ENABLED = true;
 
-export const SCENE_IDS = ['neural-core', 'constellation', 'globe', 'ledger', 'pages', 'scan', 'lost-satellite'] as const;
+export const SCENE_IDS = [
+  'neural-core',
+  'constellation',
+  'globe',
+  'ledger',
+  'pages',
+  'scan',
+  'lost-satellite',
+  // One per service (stage 3):
+  'agent-swarm',
+  'llm-lattice',
+  'monitor-radar',
+  'feature-vault',
+  'dash-terrain',
+  'robot-sorter',
+  'model-pipeline',
+  'platform-station',
+  'holo-site',
+  'port-yard',
+] as const;
 export type SceneId = (typeof SCENE_IDS)[number];
 
 export interface SceneRef {

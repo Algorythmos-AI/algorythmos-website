@@ -158,6 +158,11 @@ the same rule as the copy.
       does; its scene shows pages being scanned, signed and reordered, nothing more.
 - [x] **Homepage (`neural-core`):** an abstract lattice with orbiting units. It depicts no product and
       makes no measurable claim.
+- [x] **Each service page shows its own subject** (11 Oct 2026): robotics on Document Intelligence
+      (an arm sorting pages) and MLOps (build, test and deploy gantries); space on AI Platform
+      Engineering (a station taking modules) and Model Monitoring (a radar sweep); a holographic
+      page on AI-Powered Websites. The container yard appears only on the Port Botany and logistics
+      study pages and the Port Botany post. `src/data/sceneMap.test.ts` enforces the placement.
 
 ## 4. Homepage, voice and positioning (`/`, footer, meta, contact, careers)
 

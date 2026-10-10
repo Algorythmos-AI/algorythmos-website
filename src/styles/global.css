@@ -42,6 +42,14 @@
       display: none;
     }
   }
+  /* Paper has no scroll position: whatever is still waiting to be revealed prints. */
+  @media print {
+    html.js [data-reveal] {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
+  }
   :focus-visible {
     outline: 2px solid rgb(var(--ring));
     outline-offset: 2px;
@@ -172,6 +180,29 @@
   .ring-gradient:hover::before {
     opacity: 1;
   }
+  /* Cursor spotlight: a soft pool of brand light under the pointer (position set by
+     the delegated listener in BaseLayout). It sits above the card's own background
+     and below its content, so text is never tinted. Frames that carry the shimmer
+     sweep already use ::after and are left alone. */
+  .ring-gradient:not(.shimmer-frame) {
+    isolation: isolate;
+  }
+  .ring-gradient:not(.shimmer-frame)::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: radial-gradient(16rem circle at var(--mx, 50%) var(--my, 0%), rgb(var(--brand) / 0.16), transparent 62%);
+    opacity: 0;
+    transition: opacity var(--dur-slow) var(--ease-smooth);
+    pointer-events: none;
+  }
+  @media (hover: hover) {
+    .ring-gradient:not(.shimmer-frame):hover::after {
+      opacity: 1;
+    }
+  }
 
   /* Spotlight nav — attention follows the cursor: siblings ease back */
   .nav-spotlight .nav-link {
@@ -283,6 +314,41 @@
       filter: none;
       will-change: auto;
     }
+    /* Shown or hidden without playing the transition (BaseLayout: below-the-fold
+       content is visible until the visitor scrolls, then re-armed out of sight). */
+    html.js [data-reveal].reveal-instant {
+      transition: none;
+    }
+  }
+
+  /* Reading progress on long pages: a hairline that fills as the page scrolls.
+     Driven by a scroll timeline, so no script — and declared only where that is
+     supported, motion is welcome and the pause toggle is off: the kill switch
+     above cannot stop a scroll-linked animation, so it is gated at the selector. */
+  .reading-progress {
+    display: none;
+  }
+  @supports (animation-timeline: scroll()) {
+    @media (prefers-reduced-motion: no-preference) {
+      html:not([data-motion='off']) .reading-progress {
+        display: block;
+        position: fixed;
+        inset: 0 0 auto;
+        z-index: calc(var(--z-nav) + 1);
+        height: 2px;
+        background: var(--grad-brand);
+        transform: scaleX(0);
+        transform-origin: 0 50%;
+        animation: reading-progress linear both;
+        pointer-events: none;
+      }
+      /* A rule of its own, with its own selector, on purpose: written next to the
+         shorthand above, the CSS minifier folds the timeline into `animation`, which
+         browsers then reject whole — and the bar never moves. */
+      html:not([data-motion='off']) div.reading-progress {
+        animation-timeline: scroll(root block);
+      }
+    }
   }
 
   /* Region suggestion sits above the consent strip, whatever height it wraps to */
@@ -376,6 +442,11 @@
   details[open] .menu-panel nav > :nth-child(4) { animation-delay: 160ms; }
   details[open] .menu-panel nav > :nth-child(5) { animation-delay: 200ms; }
   details[open] .menu-panel nav > :nth-child(6) { animation-delay: 240ms; }
+}
+@keyframes reading-progress {
+  to {
+    transform: scaleX(1);
+  }
 }
 @keyframes gradient-pan {
   to {
