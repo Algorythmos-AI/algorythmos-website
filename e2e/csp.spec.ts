@@ -71,12 +71,12 @@ test('client-side navigation stays inside the policy', async ({ page }) => {
 });
 
 test('a 3D scene loads, compiles and runs inside the policy', async ({ page }) => {
-  test.setTimeout(120_000);
+  test.setTimeout(180_000);
   test.skip(!(await hasWebgl2(page)), 'this browser build cannot create a WebGL2 context, even in software');
   const violations = await underCsp(page);
   await forceScene(page);
   await page.goto('/au-en');
-  await expect(page.locator(MOUNT).first()).toHaveAttribute('data-scene-state', 'live', { timeout: 60_000 });
+  await expect(page.locator(MOUNT).first()).toHaveAttribute('data-scene-state', 'live', { timeout: 90_000 });
   await page.waitForTimeout(1500);
   expect(await violations()).toEqual([]);
 });

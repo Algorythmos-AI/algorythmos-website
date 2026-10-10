@@ -7,8 +7,8 @@ import { test, expect, type Page } from '@playwright/test';
 import { ENGINE_CHUNK, HOME_SCENE_CHUNK, MOUNT, STAGE, forceScene, stats, watchErrors } from './helpers/scene3d';
 
 const HOME = '/au-en';
-const LIVE_TIMEOUT = 60_000;
-test.describe.configure({ mode: 'default', timeout: 120_000 });
+const LIVE_TIMEOUT = 90_000;
+test.describe.configure({ mode: 'default', timeout: 240_000 });
 
 const mount = (page: Page) => page.locator(MOUNT).first();
 const goLive = async (page: Page, path = HOME) => {
@@ -35,8 +35,10 @@ test.describe('endurance', () => {
     expect(errors).toEqual([]);
   });
 
-  test.describe('on a 2× screen', () => {
-    test.use({ deviceScaleFactor: 2 });
+  test.describe('on a high-density screen', () => {
+    // 1.5× gives the governor two steps to take (1.5 → 1.13 → 1) at about half the
+    // software-rendering cost of 2×.
+    test.use({ deviceScaleFactor: 1.5 });
 
     test('the governor sheds pixels step by step before it gives up', async ({ page }) => {
       const errors = watchErrors(page);
@@ -52,9 +54,9 @@ test.describe('endurance', () => {
       });
       await page.goto(HOME);
       await expect(mount(page)).toHaveAttribute('data-scene-state', 'live', { timeout: LIVE_TIMEOUT });
-      await expect(mount(page)).toHaveAttribute('data-scene-state', 'static', { timeout: 90_000 });
+      await expect(mount(page)).toHaveAttribute('data-scene-state', 'static', { timeout: 150_000 });
       const buffers = await page.evaluate(() => (window as unknown as { __buffers: number[] }).__buffers);
-      // 2 → 1.5 → 1.13 → 1, then the still: the drawing buffer only ever got smaller.
+      // 1.5 → 1.13 → 1, then the still: the drawing buffer only ever got smaller.
       expect(buffers.length).toBeGreaterThanOrEqual(3);
       expect([...buffers].sort((a, b) => b - a)).toEqual(buffers);
       expect(errors).toEqual([]);
@@ -71,7 +73,7 @@ test.describe('endurance', () => {
     });
     await page.goto(HOME);
     await expect(mount(page)).toHaveAttribute('data-scene-state', 'live', { timeout: LIVE_TIMEOUT });
-    await expect(mount(page)).toHaveAttribute('data-scene-state', 'static', { timeout: 60_000 });
+    await expect(mount(page)).toHaveAttribute('data-scene-state', 'static', { timeout: 90_000 });
     await expect(page.locator(STAGE)).toHaveCount(0);
     expect(await page.evaluate(() => sessionStorage.getItem('scene3d-gave-up'))).toBe('1');
     // The rest of the visit does not try again.

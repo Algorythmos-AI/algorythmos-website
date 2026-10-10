@@ -16,8 +16,8 @@ import { ENGINE_CHUNK, MOUNT, STAGE, forceScene, hasWebgl2, noWebgl, stats, watc
 const HOME = '/au-en';
 /* A software-rendered scene takes seconds to start and pegs every core while it
    runs. Give it room, and never run two of these pages at once. */
-const LIVE_TIMEOUT = 60_000;
-test.describe.configure({ mode: 'default', timeout: 120_000 });
+const LIVE_TIMEOUT = 90_000;
+test.describe.configure({ mode: 'default', timeout: 180_000 });
 
 const mount = (page: Page) => page.locator(MOUNT).first();
 const orb = (page: Page) => page.locator('[data-neural-orb]');
@@ -147,6 +147,19 @@ test.describe('a live scene', () => {
   test.beforeEach(async ({ page }) => {
     test.skip(!(await hasWebgl2(page)), 'this browser build cannot create a WebGL2 context, even in software');
   });
+
+  for (const path of [HOME, '/fr-fr']) {
+    test(`${path}: goes live with no errors`, async ({ page }) => {
+      const errors = watchErrors(page);
+      await forceScene(page);
+      await goLive(page, path);
+      await expect(page.locator(STAGE)).toHaveCount(1);
+      const before = (await stats(page))!.frames;
+      await page.waitForTimeout(1000);
+      expect((await stats(page))!.frames).toBeGreaterThan(before);
+      expect(errors).toEqual([]);
+    });
+  }
 
   test('takes the stage from the 2D orb, on one canvas, with no errors', async ({ page }) => {
     const errors = watchErrors(page);
