@@ -11,10 +11,81 @@ const LIVE_TIMEOUT = 90_000;
 test.describe.configure({ mode: 'default', timeout: 240_000 });
 
 const mount = (page: Page) => page.locator(MOUNT).first();
+
+/**
+ * Leave, through the client router, for a page that carries no scene (the legal
+ * pages never do). Since every other page has one, this is the only kind of page
+ * where "no canvas" means the engine stayed out, rather than not having arrived yet.
+ */
+async function leaveForScenelessPage(page: Page) {
+  await page.locator('footer a[href$="/privacy"]').first().click();
+  await page.waitForURL(/\/privacy$/);
+  await expect(page.locator(MOUNT)).toHaveCount(0);
+}
 const goLive = async (page: Page, path = HOME) => {
   await page.goto(path);
   await expect(mount(page)).toHaveAttribute('data-scene-state', 'live', { timeout: LIVE_TIMEOUT });
 };
+
+/* A page that mounts each scene (and each variant that changes the picture), per locale. */
+const SCENE_PAGES: [scene: string, path: string][] = [
+  ['neural-core', ''],
+  ['constellation', '/services'],
+  ['constellation', '/services/llmops'],
+  ['scan', '/services/document-intelligence'],
+  ['globe', '/about'],
+  ['globe', '/contact'],
+  ['ledger', '/pricing'],
+  ['ledger', '/case-studies/financial-compliance'],
+  ['pages', '/pdf-algo-pro'],
+];
+
+test.describe('every scene runs live', () => {
+  for (const locale of ['/au-en', '/fr-fr']) {
+    for (const [scene, path] of SCENE_PAGES) {
+      test(`${scene} on ${locale}${path}`, async ({ page }) => {
+        const errors = watchErrors(page);
+        await forceScene(page);
+        await goLive(page, locale + path);
+        await expect(mount(page)).toHaveAttribute('data-scene', scene);
+        await expect(page.locator(STAGE)).toHaveCount(1);
+        const before = (await stats(page))!.frames;
+        await page.waitForTimeout(1500);
+        expect((await stats(page))!.frames, 'the loop is drawing').toBeGreaterThan(before);
+        // Scenes with a looping story (scan, pages, ledger) must survive a full cycle's worth of time.
+        await page.waitForTimeout(2500);
+        await expect(mount(page)).toHaveAttribute('data-scene-state', 'live');
+        expect(errors).toEqual([]);
+      });
+    }
+  }
+
+  test('lost-satellite on the 404 page', async ({ page }) => {
+    const errors: string[] = [];
+    page.on('pageerror', (e) => errors.push(String(e)));
+    await forceScene(page);
+    await page.goto('/au-en/this-page-does-not-exist');
+    await expect(mount(page)).toHaveAttribute('data-scene', 'lost-satellite');
+    await expect(mount(page)).toHaveAttribute('data-scene-state', 'live', { timeout: LIVE_TIMEOUT });
+    expect(errors).toEqual([]);
+  });
+
+  test('moving between pages with different scenes swaps the scene on the one canvas', async ({ page }) => {
+    const errors = watchErrors(page);
+    await forceScene(page);
+    await goLive(page, '/au-en/services');
+    await page.getByRole('link', { name: 'Pricing', exact: false }).first().click();
+    await page.waitForURL(/\/pricing$/);
+    await expect(mount(page)).toHaveAttribute('data-scene', 'ledger');
+    await expect(mount(page)).toHaveAttribute('data-scene-state', 'live', { timeout: LIVE_TIMEOUT });
+    await page.getByRole('link', { name: 'About', exact: false }).first().click();
+    await page.waitForURL(/\/about$/);
+    await expect(mount(page)).toHaveAttribute('data-scene', 'globe');
+    await expect(mount(page)).toHaveAttribute('data-scene-state', 'live', { timeout: LIVE_TIMEOUT });
+    await expect(page.locator(STAGE)).toHaveCount(1);
+    expect(errors).toEqual([]);
+  });
+});
 
 test.describe('endurance', () => {
   test('holds steady over a long run', async ({ page }) => {
@@ -107,8 +178,7 @@ test.describe('timing races', () => {
     await slowEngine(page, 2500);
     await page.goto(HOME);
     await expect(mount(page)).toHaveAttribute('data-scene-state', 'loading', { timeout: 10_000 });
-    await page.getByRole('link', { name: 'Pricing', exact: false }).first().click();
-    await page.waitForURL(/\/pricing$/);
+    await leaveForScenelessPage(page);
     await page.waitForTimeout(4500);
     await expect(page.locator(STAGE)).toHaveCount(0);
     // …and the engine it left behind still serves the next page that wants it.
@@ -126,8 +196,7 @@ test.describe('timing races', () => {
     await goLive(page);
     const first = (await stats(page))!;
     for (let i = 0; i < 5; i++) {
-      await page.getByRole('link', { name: 'Pricing', exact: false }).first().click();
-      await page.waitForURL(/\/pricing$/);
+      await leaveForScenelessPage(page);
       await expect(page.locator(STAGE)).toHaveCount(0);
       expect((await stats(page))!.geometries, 'the scene was freed on leaving').toBe(0);
       await page.goBack();
@@ -176,8 +245,7 @@ test.describe('timing races', () => {
     await page.goto(HOME);
     await arrived;
     await expect(mount(page)).toHaveAttribute('data-scene-state', 'loading');
-    await page.getByRole('link', { name: 'Pricing', exact: false }).first().click();
-    await page.waitForURL(/\/pricing$/);
+    await leaveForScenelessPage(page);
     await page.waitForTimeout(5000);
     await expect(page.locator(STAGE)).toHaveCount(0);
     expect((await stats(page))!.geometries, 'the abandoned scene was freed').toBe(0);
@@ -198,8 +266,7 @@ test.describe('timing races', () => {
     await page.evaluate(() => {
       (window as unknown as { __parked: Element | null }).__parked = document.querySelector('canvas.scene3d-stage');
     });
-    await page.getByRole('link', { name: 'Pricing', exact: false }).first().click();
-    await page.waitForURL(/\/pricing$/);
+    await leaveForScenelessPage(page);
     await expect(page.locator(STAGE)).toHaveCount(0);
     // No scene is on stage to notice this.
     await page.evaluate(() => {
@@ -214,9 +281,10 @@ test.describe('timing races', () => {
       () => document.querySelector('canvas.scene3d-stage') !== (window as unknown as { __parked: Element }).__parked,
     );
     expect(fresh, 'a new canvas and context, not the dead one').toBe(true);
+    // Going back restores the scroll position at the footer link, where the loop rightly rests.
+    await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
     const before = (await stats(page))!.frames;
-    await page.waitForTimeout(1200);
-    expect((await stats(page))!.frames).toBeGreaterThan(before);
+    await expect.poll(async () => (await stats(page))!.frames, { timeout: 10_000 }).toBeGreaterThan(before);
     expect(pageErrors).toEqual([]);
   });
 });

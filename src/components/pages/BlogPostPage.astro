@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHeader from '@/components/sections/PageHeader.astro';
+import { sceneFor } from '@/data/sceneMap';
 import Button from '@/components/ui/Button.astro';
 import { asLocale, useTranslations, localizePath, getDict } from '@/i18n';
 import { getPost } from '@/data/blog';
@@ -103,7 +104,7 @@ const faqLd = faqs.length
 
 <BaseLayout title={seoTitle} description={seoDescription} path={path} ogType="article" image={ogImg} jsonLd={[articleLd, crumbs, ...(faqLd ? [faqLd] : [])]}>
   <Breadcrumbs items={crumbItems} />
-  <PageHeader eyebrow={t(`blog.posts.${post.postIndex}.date`)} title={title} lead={description} />
+  <PageHeader eyebrow={t(`blog.posts.${post.postIndex}.date`)} title={title} lead={description} scene={sceneFor('post', post.slug)} />
 
   <section class="container-page py-20">
     <article class="max-w-measure">

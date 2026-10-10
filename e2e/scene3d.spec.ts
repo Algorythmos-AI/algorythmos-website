@@ -106,6 +106,58 @@ test.describe('who gets the still, and never downloads the engine', () => {
   });
 });
 
+test.describe('the still on an inner page', () => {
+  const POSTER = 'canvas.scene3d-poster';
+
+  test('is painted for a visitor who keeps it, in the theme in force, and repainted on a theme switch', async ({ page }) => {
+    const engine = watchEngine(page);
+    await page.emulateMedia({ reducedMotion: 'reduce', colorScheme: 'dark' });
+    await page.goto('/au-en/services');
+    const poster = page.locator(POSTER);
+    await expect(poster).toHaveAttribute('data-painted', 'dark', { timeout: 15_000 });
+    // Something was really drawn: the canvas is not blank.
+    const inked = await poster.evaluate((c: HTMLCanvasElement) => {
+      const data = c.getContext('2d')!.getImageData(0, 0, c.width, c.height).data;
+      let n = 0;
+      for (let i = 3; i < data.length; i += 4) if (data[i] > 24) n++;
+      return n / (data.length / 4);
+    });
+    expect(inked, 'share of the canvas with something on it').toBeGreaterThan(0.01);
+    await page.locator('#theme-toggle').click();
+    await expect(poster).toHaveAttribute('data-painted', 'light', { timeout: 10_000 });
+    expect(engine, 'a still never costs the engine').toEqual([]);
+  });
+
+  test('is not fetched by a desktop that is about to get the live scene', async ({ page }) => {
+    test.skip(!(await hasWebgl2(page)), 'this browser build cannot create a WebGL2 context, even in software');
+    const stills: string[] = [];
+    page.on('request', (r) => {
+      if (/\/_astro\/[^/]+\.avif/.test(r.url())) stills.push(r.url());
+    });
+    await forceScene(page);
+    await goLive(page, '/au-en/services');
+    expect(stills).toEqual([]);
+  });
+
+  test('is what a no-JavaScript visitor sees', async ({ browser }) => {
+    const context = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 1280, height: 720 } });
+    const page = await context.newPage();
+    await page.goto('/au-en/pricing');
+    await expect(page.locator('main h1')).toBeVisible();
+    await expect(page.locator('img.scene3d-still')).toBeVisible();
+    await context.close();
+  });
+
+  test('never moves the page: the hero is the same height with and without it', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto('/au-en/about');
+    const height = () => page.locator('main section').first().evaluate((el) => el.getBoundingClientRect().height);
+    const before = await height();
+    await expect(page.locator(POSTER)).toHaveAttribute('data-painted', /dark|light/, { timeout: 15_000 });
+    expect(await height()).toBe(before);
+  });
+});
+
 test.describe('phones and tablets wait for a first touch', () => {
   test.use({ viewport: { width: 390, height: 844 }, hasTouch: true });
 

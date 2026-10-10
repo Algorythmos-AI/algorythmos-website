@@ -54,6 +54,6 @@ test('no route throws, logs an error, or leaves a scene loading', async ({ page,
     else if (!(await mount.getAttribute('data-scene-plan'))) problems.push(`${route} — scene mount was never initialised`);
   }
 
-  expect(withScene, 'at least the two home pages mount a scene').toBeGreaterThanOrEqual(2);
+  expect(withScene, 'every page but the legal and support ones mounts a scene').toBeGreaterThanOrEqual(80);
   expect(problems).toEqual([]);
 });

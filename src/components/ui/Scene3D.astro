@@ -16,21 +16,29 @@
  * `after`: a selector whose `data-orb-formed` the scene waits for before it
  * appears (the home hero stacks this over NeuralOrb and cross-fades from it).
  */
-import { SCENE3D_ENABLED, type SceneId } from '@/data/scenes';
+import { SCENE3D_ENABLED, stillKey, type SceneId } from '@/data/scenes';
 
 interface Props {
   id: SceneId;
   variant?: string;
   after?: string;
+  /**
+   * Paint the captured still for visitors who do not get the live scene (default).
+   * `false` where the page already shows something of its own underneath — the home
+   * hero's 2D orb — and only a no-JS image is wanted.
+   */
+  still?: boolean;
   class?: string;
 }
-const { id, variant, after, class: klass = '' } = Astro.props;
+const { id, variant, after, still: paintStill = true, class: klass = '' } = Astro.props;
 
 /* Stills are imported through Vite so their filenames carry a content hash
    (public/assets is cached for a year by filename). Captured by
-   `npm run scenes:posters`; a scene without one simply has no <noscript> image. */
-const stills = import.meta.glob<string>('/src/assets/scenes/*-dark-*.avif', { query: '?url', import: 'default', eager: true });
-const still = (width: 480 | 960) => stills[`/src/assets/scenes/${id}-dark-${width}.avif`];
+   `npm run scenes:posters`; a scene without one simply shows nothing extra. */
+const stills = import.meta.glob<string>('/src/assets/scenes/*.avif', { query: '?url', import: 'default', eager: true });
+const key = stillKey({ id, variant });
+const still = (theme: 'dark' | 'light', width: 480 | 960) => stills[`/src/assets/scenes/${key}-${theme}-${width}.avif`];
+const pair = (theme: 'dark' | 'light') => (still(theme, 480) && still(theme, 960) ? `${still(theme, 480)} ${still(theme, 960)}` : undefined);
 ---
 
 <div
@@ -42,13 +50,19 @@ const still = (width: 480 | 960) => stills[`/src/assets/scenes/${id}-dark-${widt
   data-scene-state="static"
 >
   {
+    /* The still, for every visitor who does not get the live scene. A canvas, drawn by
+       the loader after the page has loaded: an image element or a CSS background here could be
+       picked as the page's LCP element, and a canvas cannot. */
+    paintStill && pair('dark') && <canvas class="scene3d-poster" data-still-dark={pair('dark')} data-still-light={pair('light')} />
+  }
+  {
     /* No JavaScript means no theme script either, so the page is on the dark default. */
-    still(960) && (
+    still('dark', 960) && (
       <noscript>
         <img
           class="scene3d-still"
-          src={still(960)}
-          srcset={`${still(480)} 480w, ${still(960)} 960w`}
+          src={still('dark', 960)}
+          srcset={`${still('dark', 480)} 480w, ${still('dark', 960)} 960w`}
           sizes="(min-width: 1024px) 600px, 320px"
           width="960"
           height="960"
@@ -76,12 +90,25 @@ const still = (width: 480 | 960) => stills[`/src/assets/scenes/${id}-dark-${widt
     -webkit-mask-image: radial-gradient(closest-side, #000 74%, transparent 100%);
     mask-image: radial-gradient(closest-side, #000 74%, transparent 100%);
   }
-  .scene3d-still {
+  .scene3d-still,
+  .scene3d-poster {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     object-fit: contain;
+  }
+  /* The painted still gives way once the live scene has a frame up. */
+  .scene3d-poster {
+    opacity: 0;
+    transition: opacity var(--dur-slow) var(--ease-smooth);
+  }
+  .scene3d-poster[data-painted] {
+    opacity: 1;
+  }
+  [data-scene-state='live'] > .scene3d-poster,
+  [data-scene-state='paused'] > .scene3d-poster {
+    opacity: 0;
   }
   [data-scene-state='live'] > .scene3d-stage,
   [data-scene-state='paused'] > .scene3d-stage {

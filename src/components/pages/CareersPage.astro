@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHeader from '@/components/sections/PageHeader.astro';
+import { sceneFor } from '@/data/sceneMap';
 import Button from '@/components/ui/Button.astro';
 import Aurora from '@/components/ui/Aurora.astro';
 import Photo from '@/components/ui/Photo.astro';
@@ -41,7 +42,7 @@ const locations = (['sydney', 'paris', 'remote'] as const).map((k) => ({
   path={path}
   jsonLd={[crumbs]}
 >
-  <PageHeader eyebrow={t('careers.hero.eyebrow')} title={t('careers.hero.title')} lead={t('careers.hero.description')} />
+  <PageHeader eyebrow={t('careers.hero.eyebrow')} title={t('careers.hero.title')} lead={t('careers.hero.description')} scene={sceneFor('careers')} />
 
   <section class="container-page pt-12">
     <div data-reveal>

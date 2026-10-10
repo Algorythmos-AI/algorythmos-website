@@ -4,6 +4,8 @@ import Button from '@/components/ui/Button.astro';
 import Aurora from '@/components/ui/Aurora.astro';
 import { useTranslations, localizePath } from '@/i18n';
 import { ogImageUrl } from '@/seo/schema';
+import HeroScene from '@/components/sections/HeroScene.astro';
+import { sceneFor } from '@/data/sceneMap';
 
 /**
  * Single static 404 (Vercel serves /404.html for every unknown path, in both
@@ -16,10 +18,11 @@ const tEn = useTranslations('au-en');
 ---
 
 <BaseLayout title={tEn('notFoundPage.meta.title')} description={tEn('notFoundPage.meta.description')} path="/404" noindex={true} image={ogImageUrl('/au-en')}>
-  <section class="relative flex min-h-[70vh] items-center overflow-hidden border-b border-line">
+  <section class="hero-scene-host relative min-h-[70vh] overflow-hidden border-b border-line">
     <Aurora class="opacity-60" />
+    <HeroScene scene={sceneFor('not-found')} placement="behind" />
     {blocks.map(({ loc, t }) => (
-      <div class="container-page py-24 text-center" data-nf={loc} lang={loc === 'fr-fr' ? 'fr-FR' : 'en-AU'} hidden={loc === 'fr-fr'}>
+      <div class="container-page relative py-24 text-center" data-nf={loc} lang={loc === 'fr-fr' ? 'fr-FR' : 'en-AU'} hidden={loc === 'fr-fr'}>
         <p class="text-gradient-brand text-mega font-extrabold leading-none tracking-tight">{t('notFoundPage.errorCode')}</p>
         <h1 class="mt-4 text-h1 font-extrabold tracking-tight text-ink">{t('notFoundPage.title')}</h1>
         <p class="mx-auto mt-5 max-w-xl text-lead text-ink-muted">{t('notFoundPage.subtitle')}</p>

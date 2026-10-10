@@ -49,7 +49,7 @@ const t = useTranslations(locale);
     <div data-reveal style="--reveal-delay: 420ms" class="mx-auto mt-10 w-full max-w-[240px] sm:max-w-[300px] md:max-w-[380px] lg:mt-0 lg:max-w-none">
       <NeuralOrb>
         {/* 3D neural core — cross-fades in over the formed 2D orb where the device allows */}
-        <Scene3D id="neural-core" after="[data-neural-orb]" />
+        <Scene3D id="neural-core" after="[data-neural-orb]" still={false} />
       </NeuralOrb>
     </div>
 

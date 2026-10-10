@@ -6,6 +6,7 @@
  */
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHeader from '@/components/sections/PageHeader.astro';
+import { sceneFor } from '@/data/sceneMap';
 import Button from '@/components/ui/Button.astro';
 import Visual from '@/components/ui/Visual.astro';
 import Photo from '@/components/ui/Photo.astro';
@@ -87,7 +88,7 @@ const crumbs = breadcrumb([
     imageObject({ path: photoFile(cityPhoto, 1600), alt: t(cityPhoto.altKey), width: cityPhoto.width, height: cityPhoto.height }),
   ]}
 >
-  <PageHeader eyebrow={p.eyebrow} title={p.h1} lead={p.lead} />
+  <PageHeader eyebrow={p.eyebrow} title={p.h1} lead={p.lead} scene={sceneFor('local', p.region === 'FR' ? 'paris' : 'sydney')} />
 
   <section class="container-page pb-6">
     <div class="flex flex-wrap gap-4">
