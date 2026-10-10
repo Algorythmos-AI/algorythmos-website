@@ -48,6 +48,10 @@
   --aurora-1: rgb(167 139 250 / 0.30);
   --aurora-2: rgb(34 211 238 / 0.20);
   --aurora-3: rgb(236 72 153 / 0.09);
+  /* Site-wide deep-field backdrop (global.css body::before): two far glows and a dot grid */
+  --ambient-1: rgb(167 139 250 / 0.11);
+  --ambient-2: rgb(34 211 238 / 0.075);
+  --ambient-dot: rgb(255 255 255 / 0.1);
 }
 
 :root[data-theme='light'] {
@@ -90,4 +94,7 @@
   --aurora-1: rgb(124 58 237 / 0.13);
   --aurora-2: rgb(37 99 235 / 0.10);
   --aurora-3: rgb(236 72 153 / 0.06);
+  --ambient-1: rgb(124 58 237 / 0.07);
+  --ambient-2: rgb(14 116 144 / 0.06);
+  --ambient-dot: rgb(17 24 39 / 0.1);
 }

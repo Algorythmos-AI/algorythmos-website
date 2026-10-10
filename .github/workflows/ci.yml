@@ -19,7 +19,9 @@ jobs:
   quality:
     name: Build, validate and test
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    # Three browser engines, and the 3D scene specs render WebGL in software on these
+    # runners (slow by nature, and run one at a time).
+    timeout-minutes: 45
 
     steps:
       - name: Checkout
@@ -63,7 +65,7 @@ jobs:
       - name: No leaked translation keys
         run: npm run keys:check
 
-      - name: Bundle weight report
+      - name: Bundle weight gate
         run: npm run perf
 
       - name: Unit tests
@@ -71,9 +73,9 @@ jobs:
 
       # --- Browser tests against the built output (preview server reuses dist/) ---
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium webkit
+        run: npx playwright install --with-deps chromium webkit firefox
 
-      - name: E2E + accessibility (Chromium, WebKit)
+      - name: E2E + accessibility (Chromium, WebKit, Firefox)
         run: npx playwright test
 
       # Shared runners are ~20% slower than a laptop; LCP budget widened there only.

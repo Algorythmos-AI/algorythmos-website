@@ -4,6 +4,7 @@ import Button from '@/components/ui/Button.astro';
 import Aurora from '@/components/ui/Aurora.astro';
 import NeuralOrb from '@/components/ui/NeuralOrb.astro';
 import NeuralField from '@/components/ui/NeuralField.astro';
+import Scene3D from '@/components/ui/Scene3D.astro';
 import HeroConsole from '@/components/sections/home/HeroConsole.astro';
 import { bookingUrl } from '@/lib/links';
 
@@ -46,7 +47,10 @@ const t = useTranslations(locale);
 
     {/* Neural orb — right column on desktop, compact centerpiece below the copy on mobile */}
     <div data-reveal style="--reveal-delay: 420ms" class="mx-auto mt-10 w-full max-w-[240px] sm:max-w-[300px] md:max-w-[380px] lg:mt-0 lg:max-w-none">
-      <NeuralOrb />
+      <NeuralOrb>
+        {/* 3D neural core — cross-fades in over the formed 2D orb where the device allows */}
+        <Scene3D id="neural-core" after="[data-neural-orb]" />
+      </NeuralOrb>
     </div>
 
     {/* Scroll cue — decorative, sits at the bottom edge of the first viewport */}

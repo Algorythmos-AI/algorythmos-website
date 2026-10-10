@@ -19,6 +19,29 @@
        won't break the sticky header or in-page anchors. */
     overflow-x: clip;
   }
+  /* Deep-field backdrop behind every page: two far glows and a fine dot grid, fixed
+     to the viewport so content drifts over it as you scroll. Gradients only — no
+     image request, nothing the browser could pick as the LCP. It sits under the
+     aurora (-10) and the neural field (-5), and shows through the translucent
+     section fills; opaque overlays (menu, consent, region banner) cover it. */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -20;
+    pointer-events: none;
+    background:
+      radial-gradient(46rem 34rem at 2% 64%, var(--ambient-1), transparent 70%),
+      radial-gradient(50rem 36rem at 100% 20%, var(--ambient-2), transparent 70%),
+      radial-gradient(circle, var(--ambient-dot) 1px, transparent 1.5px) 0 0 / 28px 28px;
+    /* The grid is strongest at the sides and thins out behind the reading column. */
+    mask-image: linear-gradient(to right, #000 0%, rgb(0 0 0 / 0.3) 38%, rgb(0 0 0 / 0.3) 62%, #000 100%);
+  }
+  @media print, (forced-colors: active) {
+    body::before {
+      display: none;
+    }
+  }
   :focus-visible {
     outline: 2px solid rgb(var(--ring));
     outline-offset: 2px;
@@ -85,6 +108,14 @@
     opacity: 1 !important;
     transform: none !important;
     filter: none !important;
+  }
+  /* Page cross-fades are pseudo-elements of the root, which the `*` selectors above
+     never match. The router already drops them for the OS preference; this does the
+     same for the pause toggle. */
+  html[data-motion='off']::view-transition-group(*),
+  html[data-motion='off']::view-transition-old(*),
+  html[data-motion='off']::view-transition-new(*) {
+    animation: none !important;
   }
 }
 

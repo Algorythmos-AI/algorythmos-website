@@ -61,6 +61,25 @@ export default defineConfig({
     locales: ['en', 'au-en', 'fr-fr'],
     routing: { prefixDefaultLocale: false },
   },
+  vite: {
+    environments: {
+      client: {
+        build: {
+          rolldownOptions: {
+            output: {
+              // three.js goes into one predictably named chunk so the bundle gate
+              // (scripts/lib/perf-gate.mjs) can hold it to its own cap and prove no page
+              // loads it up front. Match the package only: a group also captures what
+              // its modules import, and anything broader would drag first-load code in.
+              codeSplitting: {
+                groups: [{ name: 'scene3d-engine', test: /[\\/]node_modules[\\/]three[\\/]/, priority: 10 }],
+              },
+            },
+          },
+        },
+      },
+    },
+  },
   integrations: [
     react(),
     sitemap({

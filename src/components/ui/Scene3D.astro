@@ -1,0 +1,123 @@
+---
+/**
+ * Scene3D — the mount for a live 3D scene (src/lib/scene3d, guide: docs/SCENES.md).
+ *
+ * Sizing is the caller's: the mount needs a positioned box with a fixed aspect
+ * ratio around it and its own size (e.g. `class="absolute inset-0"`), so the
+ * scene arriving can never shift layout. Stacked in NeuralOrb's slot it is sized
+ * for you.
+ *
+ * Decorative: aria-hidden, pointer-events none, nothing focusable. The markup on
+ * its own is the finished picture — whatever the page shows here without the
+ * scene is what reduced-motion, paused, low-power and no-JS visitors keep. The
+ * bootstrap script moves the engine's canvas in and flips `data-scene-state`
+ * only once a frame is actually on it.
+ *
+ * `after`: a selector whose `data-orb-formed` the scene waits for before it
+ * appears (the home hero stacks this over NeuralOrb and cross-fades from it).
+ */
+import { SCENE3D_ENABLED, type SceneId } from '@/data/scenes';
+
+interface Props {
+  id: SceneId;
+  variant?: string;
+  after?: string;
+  class?: string;
+}
+const { id, variant, after, class: klass = '' } = Astro.props;
+
+/* Stills are imported through Vite so their filenames carry a content hash
+   (public/assets is cached for a year by filename). Captured by
+   `npm run scenes:posters`; a scene without one simply has no <noscript> image. */
+const stills = import.meta.glob<string>('/src/assets/scenes/*-dark-*.avif', { query: '?url', import: 'default', eager: true });
+const still = (width: 480 | 960) => stills[`/src/assets/scenes/${id}-dark-${width}.avif`];
+---
+
+<div
+  class:list={['scene3d pointer-events-none', klass]}
+  aria-hidden="true"
+  data-scene={SCENE3D_ENABLED ? id : undefined}
+  data-scene-variant={variant}
+  data-scene-after={after}
+  data-scene-state="static"
+>
+  {
+    /* No JavaScript means no theme script either, so the page is on the dark default. */
+    still(960) && (
+      <noscript>
+        <img
+          class="scene3d-still"
+          src={still(960)}
+          srcset={`${still(480)} 480w, ${still(960)} 960w`}
+          sizes="(min-width: 1024px) 600px, 320px"
+          width="960"
+          height="960"
+          alt=""
+          aria-hidden="true"
+          loading="lazy"
+          decoding="async"
+        />
+      </noscript>
+    )
+  }
+</div>
+
+<style is:global>
+  /* The engine's canvas is created in script, so these cannot be scoped. */
+  .scene3d-stage {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity var(--dur-hero) var(--ease-smooth);
+    /* Motes drifting past the edge fade out instead of meeting a hard crop. */
+    -webkit-mask-image: radial-gradient(closest-side, #000 74%, transparent 100%);
+    mask-image: radial-gradient(closest-side, #000 74%, transparent 100%);
+  }
+  .scene3d-still {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  [data-scene-state='live'] > .scene3d-stage,
+  [data-scene-state='paused'] > .scene3d-stage {
+    opacity: 1;
+  }
+
+  /* Stacked over NeuralOrb: the 2D orb cross-fades out while the scene holds the stage. */
+  [data-orb-stack] > [data-neural-orb] {
+    transition: opacity var(--dur-hero) var(--ease-smooth);
+  }
+  [data-orb-stack]:has(> [data-scene-state='live'], > [data-scene-state='paused']) > [data-neural-orb] {
+    opacity: 0;
+  }
+  /* The scene needs room beyond the orb's square for its rings and dust. */
+  [data-orb-stack] > .scene3d {
+    position: absolute;
+    inset: -14%;
+  }
+
+  /* Print and Windows high-contrast: decoration gets out of the way entirely. */
+  @media print {
+    .scene3d {
+      display: none !important;
+    }
+    /* …which must hand the stage back to the orb, or the hero prints empty. */
+    [data-orb-stack] > [data-neural-orb] {
+      opacity: 1 !important;
+    }
+  }
+  @media (forced-colors: active) {
+    .scene3d {
+      display: none !important;
+    }
+  }
+</style>
+
+<script>
+  import '@/lib/scene3d/bootstrap';
+</script>

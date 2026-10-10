@@ -9,6 +9,14 @@ import { defineConfig, devices } from '@playwright/test';
  */
 const PORT = 4331;
 export const E2E_ORIGIN = `http://localhost:${PORT}`;
+/* Specs that hold a live 3D scene open. Headless browsers render WebGL in software:
+   compiling a scene's shaders blocks its page for seconds and pegs every core, so
+   two such pages at once starve each other past any sensible timeout. Each engine
+   therefore runs them in a project of its own, one test at a time, and the three
+   projects are chained so only one engine is rendering a scene at any moment.
+   (To run one engine's scene specs alone: `--project=firefox-scenes --no-deps`.) */
+const SCENE_SPECS = /(scene3d|scene3d-soak|csp)\.spec\.ts/;
+
 export default defineConfig({
   testDir: './e2e',
   fullyParallel: true,
@@ -25,12 +33,41 @@ export default defineConfig({
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
+      testIgnore: SCENE_SPECS,
     },
     {
-      /* The worst historical mobile bug was iOS-only, so WebKit runs the console + FR specs too. */
+      name: 'chromium-scenes',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: SCENE_SPECS,
+      workers: 1,
+    },
+    {
+      /* The worst historical mobile bug was iOS-only, so WebKit runs the console + FR specs too,
+         and the motion and navigation-state contracts. */
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
-      testMatch: /(console|french-locale|a11y|responsive-header|overlays)\.spec\.ts/,
+      testMatch: /(console|french-locale|a11y|responsive-header|overlays|motion|navigation-state)\.spec\.ts/,
+    },
+    {
+      name: 'webkit-scenes',
+      use: { ...devices['Desktop Safari'] },
+      testMatch: /(scene3d|csp)\.spec\.ts/,
+      workers: 1,
+      dependencies: ['chromium-scenes'],
+    },
+    {
+      /* A third engine for what differs most between browsers: WebGL, and the page
+         state the client router has to restore. */
+      name: 'firefox',
+      use: { ...devices['Desktop Firefox'] },
+      testMatch: /(motion|navigation-state)\.spec\.ts/,
+    },
+    {
+      name: 'firefox-scenes',
+      use: { ...devices['Desktop Firefox'] },
+      testMatch: /(scene3d|csp)\.spec\.ts/,
+      workers: 1,
+      dependencies: ['webkit-scenes'],
     },
     /* Real phone viewports, touch and pixel density. The desktop projects never saw the
        see-through menu or cookie banner, so overlays and a11y also run on a phone of each engine. */

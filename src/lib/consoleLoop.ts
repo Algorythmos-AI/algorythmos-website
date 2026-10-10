@@ -110,14 +110,7 @@ export interface ConsoleOptions {
   onFirstView?: (ctx: ConsoleContext) => void;
 }
 
-/** Defer setup to idle so it never competes with LCP/first input (NeuralOrb pattern). */
-export function scheduleIdle(fn: () => void): void {
-  if ('requestIdleCallback' in window) {
-    requestIdleCallback(() => fn(), { timeout: 1500 });
-  } else {
-    setTimeout(fn, 200);
-  }
-}
+export { scheduleIdle } from '@/lib/idle';
 
 const FREEZE_POLL_MS = 2000;
 const COUNT_MS = 1400;

@@ -17,6 +17,7 @@ import {
   Legend,
 } from 'chart.js';
 import { Chart as ReactChart } from 'react-chartjs-2';
+import { motionOff } from '@/lib/motion';
 
 /* Register only the chart types the site renders (bar, line, doughnut, radar):
    `registerables` pulled every controller/scale into the island bundle. Add a
@@ -77,8 +78,6 @@ export default function Chart({ type, data, options = {}, title, height = 320 }:
     setReady(true);
     const obs = new MutationObserver(() => setTick((t) => t + 1));
     obs.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    void mq;
     return () => obs.disconnect();
   }, []);
 
@@ -86,7 +85,9 @@ export default function Chart({ type, data, options = {}, title, height = 320 }:
     if (!ready) return { themedData: data, themedOptions: options };
     const t = readTheme();
     const circular = type === 'doughnut';
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    /* OS setting or the on-page pause toggle — read when the chart is built, never
+       re-keyed on a later toggle (that would redraw a chart the visitor is reading). */
+    const reduceMotion = motionOff();
 
     const themedData = {
       ...data,
@@ -130,7 +131,13 @@ export default function Chart({ type, data, options = {}, title, height = 320 }:
   }, [ready, tick, type, data, options]);
 
   return (
-    <figure role="img" aria-label={title} className="w-full" style={{ height: `${height}px`, margin: 0 }}>
+    <figure
+      role="img"
+      aria-label={title}
+      className="w-full"
+      style={{ height: `${height}px`, margin: 0 }}
+      data-chart-motion={ready ? (themedOptions.animation === false ? 'off' : 'on') : undefined}
+    >
       {ready ? <ReactChart key={tick} type={type as any} data={themedData} options={themedOptions} /> : null}
     </figure>
   );

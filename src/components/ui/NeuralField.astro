@@ -25,7 +25,8 @@ const { class: klass = '' } = Astro.props;
   aria-hidden="true"></canvas>
 
 <script>
-  import { motionOff } from '@/lib/motion';
+  import { motionOff, onMotionChange } from '@/lib/motion';
+  import { readToken } from '@/lib/tokens';
   interface Node {
     x: number;
     y: number;
@@ -54,6 +55,8 @@ const { class: klass = '' } = Astro.props;
     let raf = 0;
     let running = false;
     let onScreen = true;
+    let halted = false; // the visitor pressed pause mid-session
+    canvas.dataset.fieldState = 'static';
     let w = 0;
     let h = 0;
     let nodes: Node[] = [];
@@ -61,11 +64,7 @@ const { class: klass = '' } = Astro.props;
     let last = performance.now();
 
     const readColor = () => {
-      const v = getComputedStyle(document.documentElement).getPropertyValue('--brand').trim();
-      const parts = v.split(/[\s,]+/).map(Number);
-      if (parts.length >= 3 && parts.every((n) => Number.isFinite(n))) {
-        color = { r: parts[0], g: parts[1], b: parts[2] };
-      }
+      color = readToken('--brand', color);
     };
 
     const seed = () => {
@@ -142,13 +141,15 @@ const { class: klass = '' } = Astro.props;
     };
 
     const start = () => {
-      if (running || !onScreen || document.hidden) return;
+      if (halted || running || !onScreen || document.hidden) return;
       running = true;
+      canvas.dataset.fieldState = 'live';
       last = performance.now();
       raf = requestAnimationFrame(frame);
     };
     const stop = () => {
       running = false;
+      canvas.dataset.fieldState = 'static';
       cancelAnimationFrame(raf);
     };
 
@@ -178,6 +179,13 @@ const { class: klass = '' } = Astro.props;
     const mo = new MutationObserver(readColor);
     mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
+    /* Pause toggle pressed mid-session: freeze the field where it is, now. */
+    const offMotion = onMotionChange((off) => {
+      if (!off) return;
+      halted = true;
+      stop();
+    });
+
     /* Fade in after the entrance choreography — never competes with LCP */
     const fadeTimer = window.setTimeout(() => canvas.classList.add('is-on'), 600);
 
@@ -190,6 +198,7 @@ const { class: klass = '' } = Astro.props;
         io.disconnect();
         ro.disconnect();
         mo.disconnect();
+        offMotion();
         document.removeEventListener('visibilitychange', onVisibility);
         window.clearTimeout(resizeTimer);
         window.clearTimeout(fadeTimer);
