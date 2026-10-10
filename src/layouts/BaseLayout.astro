@@ -138,14 +138,22 @@ const t = useTranslations(locale);
     <Footer />
     <RegionBanner />
     <ConsentBanner />
-    {/* Re-assert theme after View-Transition swaps */}
+    {/* Re-assert theme + motion after View-Transition swaps. The client router replaces
+        every attribute on <html> with the incoming document's, so this mirrors the
+        no-flash script in <head> exactly — including the OS fallback, or a light-mode
+        visitor who never touched the toggle lands on dark after their first click. */}
     <script is:inline>
       document.addEventListener('astro:after-swap', function () {
         try {
           var t = localStorage.getItem('theme');
-          if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+          if (t !== 'light' && t !== 'dark') {
+            t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+          }
+          document.documentElement.dataset.theme = t;
           if (localStorage.getItem('motion') === 'off') document.documentElement.dataset.motion = 'off';
-        } catch (e) {}
+        } catch (e) {
+          document.documentElement.dataset.theme = 'dark';
+        }
       });
     </script>
     <script>
@@ -153,7 +161,12 @@ const t = useTranslations(locale);
          Set HERE, in the module that performs the reveal, so a failed or blocked
          module never leaves the page hidden (the inline scripts still run when a
          module 404s or is blocked by CSP). */
-      document.documentElement.classList.add('js');
+      const markJs = () => document.documentElement.classList.add('js');
+      markJs();
+      /* A view-transition swap wipes <html>'s class along with its other attributes.
+         Restore the marker before the new page paints, or reveals stop after the
+         first in-site navigation. */
+      document.addEventListener('astro:after-swap', markJs);
       function setupReveal() {
         const els = document.querySelectorAll('[data-reveal]:not(.is-visible)');
         if (!('IntersectionObserver' in window)) {
