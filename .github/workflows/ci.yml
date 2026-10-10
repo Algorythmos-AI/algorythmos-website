@@ -19,7 +19,9 @@ jobs:
   quality:
     name: Build, validate and test
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    # Three browser engines, and the 3D scene specs render WebGL in software on these
+    # runners (slow by nature, and run one at a time).
+    timeout-minutes: 45
 
     steps:
       - name: Checkout
