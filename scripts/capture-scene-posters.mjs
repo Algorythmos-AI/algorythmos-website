@@ -46,8 +46,18 @@ const HOSTS = {
   'ledger@eur': '/fr-fr/pricing',
   'ledger@audit': '/au-en/case-studies/financial-compliance',
   pages: '/au-en/pdf-algo-pro',
-  scan: '/au-en/services/document-intelligence',
+  scan: '/au-en/case-studies/manufacturing-docs',
   'lost-satellite': '/404',
+  'agent-swarm': '/au-en/services/agentic-automation',
+  'robot-sorter': '/au-en/services/document-intelligence',
+  'llm-lattice': '/au-en/services/llmops',
+  'model-pipeline': '/au-en/services/mlops-cicd',
+  'platform-station': '/au-en/services/ai-platform-engineering',
+  'monitor-radar': '/au-en/services/model-monitoring',
+  'feature-vault': '/au-en/services/data-feature-management',
+  'dash-terrain': '/au-en/services/sql-dashboards',
+  'holo-site': '/au-en/services/ai-websites',
+  'port-yard': '/au-en/case-studies/port-botany-ai-ml',
 };
 const sceneOf = (key) => key.split('@')[0];
 
