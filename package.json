@@ -26,12 +26,12 @@
     "health:check": "node scripts/healthCheck.mjs"
   },
   "dependencies": {
-    "@astrojs/react": "^7.0.0",
+    "@astrojs/react": "^7.0.1",
     "@astrojs/sitemap": "^3.7.4",
     "@fontsource-variable/inter": "^5.2.8",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
-    "astro": "^7.3.5",
+    "astro": "^7.3.7",
     "chart.js": "^4.5.1",
     "nodemailer": "^10.0.13",
     "react": "^18.3.1",
