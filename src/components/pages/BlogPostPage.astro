@@ -103,6 +103,7 @@ const faqLd = faqs.length
 ---
 
 <BaseLayout title={seoTitle} description={seoDescription} path={path} ogType="article" image={ogImg} jsonLd={[articleLd, crumbs, ...(faqLd ? [faqLd] : [])]}>
+  <div class="reading-progress" aria-hidden="true"></div>
   <Breadcrumbs items={crumbItems} />
   <PageHeader eyebrow={t(`blog.posts.${post.postIndex}.date`)} title={title} lead={description} scene={sceneFor('post', post.slug)} />
 

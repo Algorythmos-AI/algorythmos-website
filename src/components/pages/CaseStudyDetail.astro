@@ -146,6 +146,7 @@ for (let i = 0; i < 20; i++) {
 ---
 
 <BaseLayout title={getDict(locale)[`caseStudyDetail.studies.${slug}.seoTitle`] ?? study.title} description={getDict(locale)[`caseStudyDetail.studies.${slug}.seoDescription`] ?? study.meta} path={path} ogType="article" image={ogImg} jsonLd={[articleLd, crumbs, ...(faqLd ? [faqLd] : [])]}>
+  <div class="reading-progress" aria-hidden="true"></div>
   <Breadcrumbs items={crumbItems} />
   <PageHeader eyebrow={badge} title={study.title} lead={study.meta} scene={sceneFor('case-study', cs.slug)} />
 
@@ -164,13 +165,15 @@ for (let i = 0; i < 20; i++) {
 
   {stats.length > 0 && (
     <section class="container-page pt-10">
-      <div data-reveal class="grid gap-4 sm:grid-cols-3">
+      <div class="grid gap-4 sm:grid-cols-3">
         {stats.map((s, i) => (
           <div
+            data-reveal
             class="rounded-2xl border border-line glass p-6 text-center"
             style={`--reveal-delay: ${i * 70}ms`}
           >
-            <div class="text-gradient-brand text-4xl font-bold tracking-tight">{s.value}</div>
+            {/* Counts up to the figure as written; values that are not plain figures are left alone (src/lib/countUp.ts). */}
+            <div data-countup class="text-gradient-brand text-4xl font-bold tracking-tight tabular-nums">{s.value}</div>
             <div class="mt-2 text-sm text-ink-muted">{s.label}</div>
           </div>
         ))}
@@ -277,3 +280,17 @@ for (let i = 0; i < 20; i++) {
 
   <RelatedLinks items={caseStudyRelated[slug] ?? []} />
 </BaseLayout>
+
+<script>
+  import { armCountUps } from '@/lib/countUp';
+  import { motionOff } from '@/lib/motion';
+
+  function setupStats() {
+    if (motionOff()) return; // the figures stand as written
+    const teardown = armCountUps();
+    document.addEventListener('astro:before-swap', teardown, { once: true });
+  }
+  document.addEventListener('astro:page-load', setupStats);
+  /* Initialize immediately if astro:page-load already fired before this module ran */
+  if (document.readyState !== 'loading') setupStats();
+</script>

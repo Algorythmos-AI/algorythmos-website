@@ -163,17 +163,23 @@ const t = useTranslations(locale);
          module 404s or is blocked by CSP). */
       const markJs = () => document.documentElement.classList.add('js');
       markJs();
+      let stopReveal = () => {};
       function setupReveal() {
-        const els = document.querySelectorAll('[data-reveal]:not(.is-visible)');
+        /* Runs on astro:after-swap, on astro:page-load and once directly: only the
+           first call for a page finds anything new, and a later one must not undo it. */
+        const els = [...document.querySelectorAll<HTMLElement>('[data-reveal]:not([data-reveal-seen])')];
+        const show = (e: Element) => e.classList.add('is-visible');
+        if (!els.length) return;
+        els.forEach((e) => (e.dataset.revealSeen = ''));
         if (!('IntersectionObserver' in window)) {
-          els.forEach((e) => e.classList.add('is-visible'));
+          els.forEach(show);
           return;
         }
         const io = new IntersectionObserver(
           (entries) => {
             entries.forEach((en) => {
               if (en.isIntersecting) {
-                en.target.classList.add('is-visible');
+                show(en.target);
                 io.unobserve(en.target);
               }
             });
@@ -181,20 +187,44 @@ const t = useTranslations(locale);
           { rootMargin: '0px 0px -10% 0px', threshold: 0.05 },
         );
         /* Anything already inside the first viewport is shown synchronously — the
-           opening screen must never wait on an observer callback (or on a
-           screenshot/crawler that never scrolls). Only below-the-fold content animates in. */
+           opening screen must never wait on an observer callback. */
         const vh = window.innerHeight || document.documentElement.clientHeight;
+        const below: Element[] = [];
         els.forEach((e) => {
           const r = e.getBoundingClientRect();
-          if (r.top < vh && r.bottom > 0) e.classList.add('is-visible');
-          else io.observe(e);
+          if (r.top < vh && r.bottom > 0) show(e);
+          else below.push(e);
         });
-        /* Failsafe: never leave content hidden if IO misfires (zoom, exotic viewports) */
-        window.setTimeout(() => {
-          document
-            .querySelectorAll('[data-reveal]:not(.is-visible)')
-            .forEach((e) => e.classList.add('is-visible'));
-        }, 1500);
+        /* Everything below the fold is shown too — until the visitor scrolls. A
+           renderer that never scrolls (a crawler, a full-page screenshot) must find
+           the whole page there. A visitor who does scroll gets the reveals: on the
+           first sign of it, whatever is still out of sight is hidden again, unseen
+           and without a transition, and then revealed as it arrives. (A timer used
+           to reveal everything after 1.5 s, which meant that for anyone who read the
+           first screen before scrolling, nothing below it ever animated in.) */
+        below.forEach((e) => {
+          e.classList.add('reveal-instant');
+          show(e);
+        });
+        const listeners = new AbortController();
+        const arm = () => {
+          listeners.abort();
+          const edge = (window.innerHeight || vh) * 1.05;
+          below.forEach((e) => {
+            if (e.getBoundingClientRect().top > edge) {
+              e.classList.remove('is-visible');
+              io.observe(e);
+            }
+          });
+          requestAnimationFrame(() => below.forEach((e) => e.classList.remove('reveal-instant')));
+        };
+        ['scroll', 'wheel', 'touchmove', 'keydown'].forEach((type) =>
+          window.addEventListener(type, arm, { passive: true, once: true, signal: listeners.signal }),
+        );
+        stopReveal = () => {
+          listeners.abort();
+          io.disconnect();
+        };
       }
       /* A view-transition swap wipes <html>'s class along with its other attributes.
          Restore the marker before the new page paints, or reveals stop after the
@@ -206,8 +236,33 @@ const t = useTranslations(locale);
         setupReveal();
       });
       document.addEventListener('astro:page-load', setupReveal);
+      document.addEventListener('astro:before-swap', () => stopReveal());
       /* Initialize immediately if astro:page-load already fired before this module ran */
       if (document.readyState !== 'loading') setupReveal();
+
+      /* Card spotlight: a soft light follows the cursor across a card (global.css
+         `.ring-gradient::after`). One delegated listener for the whole visit, only
+         where there is a cursor to follow. */
+      if (window.matchMedia('(hover: hover)').matches) {
+        let frame = 0;
+        let last: PointerEvent | null = null;
+        document.addEventListener(
+          'pointermove',
+          (event) => {
+            last = event;
+            if (frame) return;
+            frame = requestAnimationFrame(() => {
+              frame = 0;
+              const card = last?.target instanceof Element ? last.target.closest<HTMLElement>('.ring-gradient') : null;
+              if (!last || !card) return;
+              const r = card.getBoundingClientRect();
+              card.style.setProperty('--mx', `${last.clientX - r.left}px`);
+              card.style.setProperty('--my', `${last.clientY - r.top}px`);
+            });
+          },
+          { passive: true },
+        );
+      }
     </script>
   </body>
 </html>
