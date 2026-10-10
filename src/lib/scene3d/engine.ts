@@ -178,7 +178,9 @@ export function createEngine(canvas: HTMLCanvasElement, gl: WebGL2RenderingConte
     const a = active;
     if (!a || !running) return;
     raf = requestAnimationFrame(frame);
-    const elapsed = now - last;
+    /* The first frame's timestamp can predate the performance.now() the loop started
+       from. Time must never run backwards: a scene may look a position up by it. */
+    const elapsed = Math.max(0, now - last);
     last = now;
     const dt = Math.min(elapsed / 1000, 0.05);
     a.time += dt;
