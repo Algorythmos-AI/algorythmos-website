@@ -4,9 +4,12 @@
  * is pressed (hero orb, particle field) and the ones built afterwards (charts).
  */
 import { test, expect } from '@playwright/test';
+import { noWebgl } from './helpers/scene3d';
 
 test.describe('pause toggle', () => {
   test('stops the hero orb and the particle field at once, and they stay stopped', async ({ page }) => {
+    // Keep the 2D orb on stage whatever GPU this machine has (scene3d.spec.ts covers the 3D core).
+    await noWebgl(page);
     await page.goto('/au-en');
     const orb = page.locator('[data-neural-orb]');
     const field = page.locator('[data-neural-field]');

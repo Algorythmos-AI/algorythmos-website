@@ -27,10 +27,18 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
     {
-      /* The worst historical mobile bug was iOS-only, so WebKit runs the console + FR specs too. */
+      /* The worst historical mobile bug was iOS-only, so WebKit runs the console + FR specs too,
+         and the motion, navigation-state, 3D scene and CSP contracts. */
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
-      testMatch: /(console|french-locale|a11y|responsive-header|overlays)\.spec\.ts/,
+      testMatch: /(console|french-locale|a11y|responsive-header|overlays|motion|navigation-state|scene3d|csp)\.spec\.ts/,
+    },
+    {
+      /* A third engine for what differs most between browsers: WebGL, and the page
+         state the client router has to restore. */
+      name: 'firefox',
+      use: { ...devices['Desktop Firefox'] },
+      testMatch: /(motion|navigation-state|scene3d|csp)\.spec\.ts/,
     },
     /* Real phone viewports, touch and pixel density. The desktop projects never saw the
        see-through menu or cookie banner, so overlays and a11y also run on a phone of each engine. */
