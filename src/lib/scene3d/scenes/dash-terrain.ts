@@ -58,6 +58,7 @@ export function create(ctx: SceneContext): SceneInstance {
 
   const barMat = new MeshStandardMaterial({ metalness: 0.7, roughness: 0.28 });
   const bars = new InstancedMesh(new BoxGeometry(STEP * 0.62, 1, STEP * 0.62), barMat, cols * rows);
+  bars.setColorAt(0, new Color()); // instance colours exist before the first compile
   bars.frustumCulled = false;
   root.add(bars);
   const x0 = (-(cols - 1) * STEP) / 2;

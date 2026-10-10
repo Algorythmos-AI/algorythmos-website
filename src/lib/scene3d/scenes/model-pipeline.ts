@@ -183,8 +183,8 @@ export function create(ctx: SceneContext): SceneInstance {
       }
       heads.forEach((head, i) => {
         head.position.y = BELT_Y + 0.95 - work[i] * 0.55;
-        head.rotation.y = time * (1 + work[i] * 5);
-        sparks.scale.setX(i, work[i] * (0.8 + 0.4 * Math.sin(time * 22 + i)));
+        head.rotation.y = time + work[i] * 2;
+        sparks.scale.setX(i, work[i] * (0.8 + 0.4 * Math.sin(time * 12 + i))); // under two pulses a second
       });
       sparks.scale.needsUpdate = true;
 

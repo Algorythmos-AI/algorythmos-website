@@ -64,6 +64,7 @@ export function create(ctx: SceneContext): SceneInstance {
 
   const cellMat = new MeshPhysicalMaterial({ metalness: 0.35, roughness: 0.14, transparent: true, opacity: 0.62, clearcoat: 1 });
   const cells = new InstancedMesh(new BoxGeometry(STEP * 0.6, STEP * 0.6, STEP * 0.6), cellMat, count);
+  cells.setColorAt(0, new Color()); // instance colours exist before the first compile
   cells.frustumCulled = false;
   block.add(cells);
 

@@ -119,6 +119,7 @@ export function create(ctx: SceneContext): SceneInstance {
   /* ── Tokens: each takes one node per layer, then meets the gate ── */
   const tokenMat = new MeshStandardMaterial({ metalness: 0.6, roughness: 0.3 });
   const tokens = new InstancedMesh(new BoxGeometry(0.085, 0.085, 0.085), tokenMat, budget.tokens);
+  tokens.setColorAt(0, new Color()); // instance colours exist before the first compile
   tokens.frustumCulled = false;
   root.add(tokens);
   const paths = Array.from({ length: budget.tokens }, (_, i) => ({
@@ -167,14 +168,14 @@ export function create(ctx: SceneContext): SceneInstance {
   const to = new Vector3();
 
   return {
-    update(dt: number, time: number, input: SceneInput) {
+    update(_dt: number, time: number, input: SceneInput) {
       const u = exit(input);
       root.rotation.set(0.2 + input.pointerY * 0.08, -0.55 + 0.07 * Math.sin(time * 0.28) + input.pointerX * 0.15, 0);
       root.position.set(-0.15, -u * 0.5, 0);
       gate.rotation.x = time * 0.4;
       pane.set(time, (palette.light ? 0.85 : 0.9) * (1 - 0.5 * u));
 
-      for (let n = 0; n < heat.length; n++) heat[n] = Math.max(0, heat[n] - dt * 1.4);
+      heat.fill(0);
 
       /* A token's journey: entry → layer 0 → … → last layer → gate → out (or down). */
       const legs = LAYERS.length + 2;
@@ -195,6 +196,13 @@ export function create(ctx: SceneContext): SceneInstance {
           from.set(GATE_X, 0, 0);
           if (path.blocked) to.set(GATE_X - 0.5, -1.6, 0.3);
           else to.set(GATE_X + 1.1, 0, 0);
+        }
+        /* The wiring it has just left cools over most of a second. A function of time
+           alone, so the still is a frame a visitor sees. */
+        if (leg >= 2 && leg <= LAYERS.length) {
+          const left = (leg - 2) * per * 2 + path.stops[leg - 2] * 2;
+          const cooling = Math.max(0, 1 - ((t - leg) / (path.speed * legs)) * 1.4);
+          heat[left] = heat[left + 1] = Math.max(heat[left], cooling);
         }
         pos.lerpVectors(from, to, f);
         const out = leg === legs - 1;

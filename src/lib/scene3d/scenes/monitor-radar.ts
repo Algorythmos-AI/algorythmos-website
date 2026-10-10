@@ -189,7 +189,7 @@ export function create(ctx: SceneContext): SceneInstance {
       root.position.y = 0.05 - u * 0.5;
 
       const beam = (time * SWEEP) % TWO_PI;
-      sweepArm.rotation.y = beam;
+      sweepArm.rotation.y = beam - Math.PI / 3.2; // the wedge trails the beam by its own width
       sweep.set(time, (light ? 0.9 : 1) * (1 - 0.5 * u));
 
       /* A blip is brightest as the beam passes and fades until it comes round again. */

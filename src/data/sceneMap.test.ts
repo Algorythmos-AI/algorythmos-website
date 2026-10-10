@@ -61,8 +61,14 @@ describe('sceneFor — themes follow the page (docs/COPY_CLAIMS_SIGNOFF.md §3g)
   });
 
   it('a study or post shows the scene of the service that leads it', () => {
-    const explicit = ARTICLES.filter((a) => ['ledger', 'globe', 'port-yard'].includes(a.scene.id));
-    for (const a of ARTICLES.filter((x) => !explicit.includes(x))) {
+    /* The explicit choices at the top of sceneMap.ts; every other article follows its lead. */
+    const explicit = [
+      'financial-compliance', 'port-botany-ai-ml', 'model-monitoring-logistics',
+      'gdpr-ai', 'eu-ai-act-gdpr-sme-roadmap', 'port-botany-document-flows',
+      'choosing-ai-consultancy-sydney', 'ai-consultancy-australia', 'mbsc-australia-partnership',
+    ];
+    for (const a of ARTICLES.filter((x) => !explicit.includes(x.slug))) {
+      expect(a.lead, `${a.slug} has a service behind it`).toBeDefined();
       const expected = a.lead === 'document-intelligence' ? { id: 'scan' } : sceneFor('service', a.lead);
       expect(a.scene, a.slug).toEqual(expected);
     }

@@ -147,7 +147,7 @@ export function create(ctx: SceneContext): SceneInstance {
         flashes.scale.setX(i, since >= 0 && since < 0.08 ? 1.6 * (1 - since / 0.08) : 0);
       }
       flashes.scale.needsUpdate = true;
-      stars.points.rotation.y = time * 0.006;
+      stars.points.rotation.y = 0.12 * Math.sin(time * 0.05); // a slow sway; the field stays behind the station
     },
     setTheme(next: Palette) {
       palette = next;

@@ -232,12 +232,16 @@ export function create(ctx: SceneContext): SceneInstance {
       if (phase < 0.12) cargo.position.copy(pick);
       else if (carried) cargo.position.set(hook.x, hook.y - BY / 2 - 0.02, hook.z);
       else cargo.position.set(carrierX(phase), drop.y, drop.z);
-      cargo.visible = phase < 0.97;
+      /* Nothing blinks in or out in frame: what leaves shrinks away as it goes, what
+         arrives grows in. */
+      const leave = Math.max(0.0001, 1 - smooth((phase - 0.86) / 0.1));
+      cargo.scale.setScalar(Math.min(leave, Math.max(0.0001, smooth(phase / 0.05))));
 
       /* One carrier waits, takes the box and leaves; the next pulls in behind it. */
       carrier.position.set(carrierX(phase), GROUND, LANE_Z);
       next.position.set(pick.x - 3.4 + smooth((phase - 0.66) / 0.34) * 3.4, GROUND, LANE_Z);
-      next.visible = phase > 0.66;
+      carrier.scale.setScalar(leave);
+      next.scale.setScalar(Math.max(0.0001, smooth((phase - 0.66) / 0.1)));
     },
     setTheme(next_: Palette) {
       palette = next_;

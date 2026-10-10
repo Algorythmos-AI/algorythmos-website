@@ -28,7 +28,7 @@ import {
   Vector3,
 } from 'three';
 import { disposeTree } from '../kit/dispose';
-import { exit, frameSubject } from '../kit/frame';
+import { exit, frameSubject, smooth } from '../kit/frame';
 import { createMotes } from '../kit/motes';
 import { mixColor, toColor } from '../kit/palette';
 import { createSoftPoints, setColorAt } from '../kit/points';
@@ -154,18 +154,21 @@ export function create(ctx: SceneContext): SceneInstance {
   };
 
   return {
-    update(dt: number, time: number, input: SceneInput) {
+    update(_dt: number, time: number, input: SceneInput) {
       const u = exit(input);
       root.rotation.set(0.42 + input.pointerY * 0.08, -0.5 + time * 0.045 + input.pointerX * 0.15, 0);
       root.position.y = 0.1 - u * 0.5;
       ring.rotation.z = time * 0.5;
       inner.rotation.set(time * 0.7, time * 0.4, 0);
 
-      for (let i = 0; i < PILLARS.length; i++) pulse[i] = Math.max(0, pulse[i] - dt * 1.6);
+      pulse.fill(0);
       for (let i = 0; i < routes.length; i++) {
         const route = routes[i];
         const raw = (time * route.speed + route.phase) % 1;
-        if (raw < dt * route.speed * 1.5) pulse[route.to] = 1; // it has just arrived
+        /* A system pulses when a unit arrives: it swells over a fifth of a second and
+           fades over the next. A function of time alone, so the still is a real frame. */
+        const since = raw / route.speed;
+        pulse[route.to] = Math.max(pulse[route.to], smooth(since / 0.2) * Math.max(0, 1 - since * 1.2));
         along(route, raw, p);
         q.setFromAxisAngle(spinAxis, time * 2 + i);
         m4.compose(p, q, one);
