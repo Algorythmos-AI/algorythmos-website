@@ -65,7 +65,8 @@ const { class: klass = '' } = Astro.props;
 </style>
 
 <script>
-  import { motionOff } from '@/lib/motion';
+  import { motionOff, onMotionChange } from '@/lib/motion';
+  import { readToken, type RGB } from '@/lib/tokens';
   interface Vec3 {
     x: number;
     y: number;
@@ -98,12 +99,6 @@ const { class: klass = '' } = Astro.props;
     speed: number;
     hops: number;
   }
-  interface RGB {
-    r: number;
-    g: number;
-    b: number;
-  }
-
   function initNeuralOrb() {
     const canvas = document.querySelector('[data-neural-orb]');
     if (!(canvas instanceof HTMLCanvasElement)) return;
@@ -147,6 +142,10 @@ const { class: klass = '' } = Astro.props;
     let raf = 0;
     let running = false;
     let onScreen = true;
+    /* Stopped for the rest of this page view: the visitor pressed pause, or the
+       3D core has taken over the stage (Scene3D). The formed orb stays painted. */
+    let halted = false;
+    canvas.dataset.orbState = 'static';
     let w = 0;
     let h = 0;
     let brand: RGB = { r: 167, g: 139, b: 250 };
@@ -230,15 +229,6 @@ const { class: klass = '' } = Astro.props;
     for (let i = 0; i < SIGNALS; i++) signals.push(spawnSignal());
 
     /* ── Colors & glow sprites ── */
-    const parseToken = (name: string, fallback: RGB): RGB => {
-      const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-      const parts = v.split(/[\s,]+/).map(Number);
-      if (parts.length >= 3 && parts.every((n) => Number.isFinite(n))) {
-        return { r: parts[0], g: parts[1], b: parts[2] };
-      }
-      return fallback;
-    };
-
     const makeSprite = (c: RGB, coreBoost: number): HTMLCanvasElement => {
       const s = document.createElement('canvas');
       const size = 64;
@@ -260,8 +250,8 @@ const { class: klass = '' } = Astro.props;
     };
 
     const readColors = () => {
-      brand = parseToken('--brand', brand);
-      accent = parseToken('--accent', accent);
+      brand = readToken('--brand', brand);
+      accent = readToken('--accent', accent);
       isLight = document.documentElement.getAttribute('data-theme') === 'light';
       /* depth-blend sprites: far = pure brand … near = 70% toward accent */
       sprites = Array.from({ length: SPRITE_STEPS }, (_, i) => {
@@ -454,6 +444,11 @@ const { class: klass = '' } = Astro.props;
 
     /* ── Animation loop ── */
     let formClock = formed ? FORM_DUR + FORM_STAGGER : 0;
+    /* Read by Scene3D: the 3D core only cross-fades in over a fully formed orb. */
+    const markFormed = () => {
+      canvas.dataset.orbFormed = '1';
+    };
+    if (formed) markFormed();
 
     const frame = (now: number) => {
       raf = requestAnimationFrame(frame);
@@ -472,6 +467,7 @@ const { class: klass = '' } = Astro.props;
         formClock += dt;
         formProgress = Math.min(1, formClock / (FORM_DUR + FORM_STAGGER));
         if (formProgress >= 1) {
+          markFormed();
           try {
             sessionStorage.setItem('neural-orb-formed', '1');
           } catch {
@@ -531,15 +527,29 @@ const { class: klass = '' } = Astro.props;
     };
 
     const start = () => {
-      if (staticMode || running || !onScreen || document.hidden) return;
+      if (staticMode || halted || running || !onScreen || document.hidden) return;
       if (!w || !h) size(); // loaded hidden: observers were silent, measure now
       running = true;
+      canvas.dataset.orbState = 'live';
       last = performance.now();
       raf = requestAnimationFrame(frame);
     };
     const stop = () => {
       running = false;
+      canvas.dataset.orbState = 'static';
       cancelAnimationFrame(raf);
+    };
+    /* Nobody is watching the entrance any more — finish it and paint the formed
+       orb, so the canvas is never left blank or half-assembled. */
+    const completeFormation = () => {
+      formClock = FORM_DUR + FORM_STAGGER;
+      markFormed();
+      drawStatic();
+    };
+    const halt = () => {
+      halted = true;
+      stop();
+      completeFormation();
     };
 
     readColors();
@@ -547,10 +557,7 @@ const { class: klass = '' } = Astro.props;
 
     /* Loaded in a hidden tab: rAF won't fire until the tab is shown, so paint
        one formed frame now (no blank canvas) and skip the unseen entrance. */
-    if (document.hidden && !staticMode) {
-      formClock = FORM_DUR + FORM_STAGGER;
-      drawStatic();
-    }
+    if (document.hidden && !staticMode) completeFormation();
     /* Hidden documents fire neither ResizeObserver nor IntersectionObserver,
        so if layout wasn't ready yet, poll until the canvas is measurable —
        size() then paints the pending static/formed frame itself. */
@@ -575,10 +582,7 @@ const { class: klass = '' } = Astro.props;
         stop();
         /* Hidden mid-entrance: nobody is watching — complete the formation and
            paint the formed orb so the canvas is never blank when shown again. */
-        if (!staticMode && formClock < FORM_DUR + FORM_STAGGER) {
-          formClock = FORM_DUR + FORM_STAGGER;
-          drawStatic();
-        }
+        if (!staticMode && formClock < FORM_DUR + FORM_STAGGER) completeFormation();
       } else {
         start();
       }
@@ -612,6 +616,24 @@ const { class: klass = '' } = Astro.props;
       document.documentElement.addEventListener('pointerleave', onPointerLeave);
     }
 
+    /* The pause toggle (or the OS setting) flipped mid-session: freeze on the formed
+       orb now, not at the next page load. Resuming reloads the page (MotionToggle). */
+    const offMotion = onMotionChange((off) => {
+      if (off) halt();
+    });
+
+    /* Hand the stage to the 3D core when one is stacked over this orb and goes live;
+       take it back if that scene later falls to its still (context loss, slow GPU). */
+    const scene = canvas.closest('[data-orb-stack]')?.querySelector<HTMLElement>('[data-scene]') ?? null;
+    const handover = new MutationObserver(() => {
+      if (scene?.dataset.sceneState === 'live') halt();
+      else if (halted && !motionOff()) {
+        halted = false;
+        start();
+      }
+    });
+    if (scene) handover.observe(scene, { attributes: true, attributeFilter: ['data-scene-state'] });
+
     start();
 
     document.addEventListener(
@@ -621,6 +643,8 @@ const { class: klass = '' } = Astro.props;
         io.disconnect();
         ro.disconnect();
         mo.disconnect();
+        handover.disconnect();
+        offMotion();
         document.removeEventListener('visibilitychange', onVisibility);
         window.removeEventListener('pointermove', onPointerMove);
         document.documentElement.removeEventListener('pointerleave', onPointerLeave);

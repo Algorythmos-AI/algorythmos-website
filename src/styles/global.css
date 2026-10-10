@@ -86,6 +86,14 @@
     transform: none !important;
     filter: none !important;
   }
+  /* Page cross-fades are pseudo-elements of the root, which the `*` selectors above
+     never match. The router already drops them for the OS preference; this does the
+     same for the pause toggle. */
+  html[data-motion='off']::view-transition-group(*),
+  html[data-motion='off']::view-transition-old(*),
+  html[data-motion='off']::view-transition-new(*) {
+    animation: none !important;
+  }
 }
 
 @layer components {
