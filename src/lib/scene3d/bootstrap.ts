@@ -238,8 +238,10 @@ function initPage(): void {
     const s = acquireStage();
     if (!s) return; // no usable WebGL2: the still stands, and three is never requested
     setState('loading');
+    performance.mark('scene3d:start');
     try {
       const e = await loadEngine(s);
+      performance.mark('scene3d:engine');
       await holdReleased(mount, signal);
       if (!alive() || motionOff()) return setState('static');
       current = e;

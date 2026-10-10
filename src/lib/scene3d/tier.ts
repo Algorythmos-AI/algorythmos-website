@@ -99,8 +99,10 @@ export const MIN_PIXEL_RATIO = 1;
 export const GOVERNOR_WARMUP_MS = 600;
 export const GOVERNOR_WINDOW_MS = 2400;
 export const GOVERNOR_MIN_FRAMES = 4;
-/** A single gap this long is a suspension (sleep, a debugger, a long task), not a frame time. */
+/** One gap this long is a suspension (sleep, a debugger, a long task elsewhere), not a frame time… */
 export const GOVERNOR_STALL_MS = 1000;
+/** …but this many in a row is a GPU that cannot draw a frame in a second. */
+export const GOVERNOR_STALL_STRIKES = 3;
 
 export type GovernorVerdict = { action: 'keep' } | { action: 'lower'; pixelRatio: number } | { action: 'give-up' };
 
@@ -110,4 +112,48 @@ export function govern(avgFrameMs: number, pixelRatio: number): GovernorVerdict 
     return { action: 'lower', pixelRatio: Math.max(MIN_PIXEL_RATIO, Math.round(pixelRatio * 0.75 * 100) / 100) };
   }
   return { action: 'give-up' };
+}
+
+/** Sampling state between frames. Create with `newSampler(now)` whenever the loop (re)starts. */
+export interface GovernorSampler {
+  /** Frames before this time are warm-up and are not counted. */
+  windowStart: number;
+  frames: number;
+  /** Consecutive frames that each took longer than GOVERNOR_STALL_MS. */
+  stalls: number;
+}
+
+export function newSampler(now: number): GovernorSampler {
+  return { windowStart: now + GOVERNOR_WARMUP_MS, frames: 0, stalls: 0 };
+}
+
+/**
+ * Feed one frame to the governor: `now` is the frame's timestamp, `elapsed` the
+ * time since the previous frame. Mutates `sampler`; returns what to do.
+ *
+ * A single long gap restarts the sample (the laptop slept, the tab was busy
+ * elsewhere). A run of them is the opposite case — a renderer so slow that no
+ * frame ever lands inside a window — and is judged on the gap itself.
+ */
+export function sampleFrame(sampler: GovernorSampler, now: number, elapsed: number, pixelRatio: number): GovernorVerdict {
+  const restart = (from: number) => {
+    sampler.windowStart = from;
+    sampler.frames = 0;
+  };
+  if (elapsed > GOVERNOR_STALL_MS) {
+    sampler.stalls++;
+    restart(now + GOVERNOR_WARMUP_MS);
+    if (sampler.stalls < GOVERNOR_STALL_STRIKES) return { action: 'keep' };
+    sampler.stalls = 0;
+    return govern(elapsed, pixelRatio);
+  }
+  sampler.stalls = 0;
+  if (now < sampler.windowStart) return { action: 'keep' };
+  sampler.frames++;
+  const span = now - sampler.windowStart;
+  if (span < GOVERNOR_WINDOW_MS || sampler.frames < GOVERNOR_MIN_FRAMES) return { action: 'keep' };
+  const verdict = govern(span / sampler.frames, pixelRatio);
+  /* After shedding pixels the resize itself costs a frame or two: warm up again. */
+  restart(verdict.action === 'lower' ? now + GOVERNOR_WARMUP_MS : now);
+  return verdict;
 }

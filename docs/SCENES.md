@@ -16,7 +16,7 @@ exists to keep that true.
 | Engine: renderer, loop, fallbacks (imports three) | `src/lib/scene3d/engine.ts` |
 | Scene contract | `src/lib/scene3d/types.ts` |
 | Registry of scenes, one lazy chunk each | `src/lib/scene3d/registry.ts` |
-| Shared parts: palette, environment light, soft points, dispose | `src/lib/scene3d/kit/` |
+| Shared parts: palette, environment light, lens and tone curve, soft points, dispose | `src/lib/scene3d/kit/` |
 | One file per scene | `src/lib/scene3d/scenes/<id>.ts` |
 | Stills and their fingerprints | `src/assets/scenes/` (`manifest.json`) |
 | Still capture | `scripts/capture-scene-posters.mjs` (`npm run scenes:posters`) |
@@ -79,8 +79,9 @@ Decided by `pickPlan()` in `tier.ts`; the result is written to `data-scene-plan`
    `npm run build && npm run scenes:posters <id>` and commit the stills with the manifest.
 5. Run the gate. Look at the scene in both themes and at 390 / 768 / 1440 px.
 
-Editing a scene, anything in `kit/`, `engine.ts` or the theme tokens changes its
-fingerprint; the unit tests fail until the stills are re-captured.
+Editing a scene, anything in `kit/` (which holds the lens and tone curve, `kit/look.ts`)
+or the theme tokens changes its fingerprint; the unit tests fail until the stills are
+re-captured. Engine and loader changes do not.
 
 ## Budgets
 

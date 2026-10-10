@@ -15,27 +15,14 @@
  *   motion is allowed.
  * - Everything a scene put on the GPU is freed when the page is swapped.
  */
-import {
-  NeutralToneMapping,
-  PerspectiveCamera,
-  Scene,
-  SRGBColorSpace,
-  WebGLRenderer,
-} from 'three';
+import { PerspectiveCamera, Scene, WebGLRenderer } from 'three';
 import type { SceneId } from '@/data/scenes';
 import { getEnvironment } from './kit/environment';
+import { applyLook, FOV } from './kit/look';
 import { readPalette } from './kit/palette';
 import { seeded, seedFrom } from './kit/rng';
 import { scenes } from './registry';
-import {
-  govern,
-  GOVERNOR_MIN_FRAMES,
-  GOVERNOR_STALL_MS,
-  GOVERNOR_WARMUP_MS,
-  GOVERNOR_WINDOW_MS,
-  TIER_PIXEL_RATIO,
-  type Tier,
-} from './tier';
+import { newSampler, sampleFrame, TIER_PIXEL_RATIO, type Tier } from './tier';
 import type { SceneInput, SceneInstance, Viewport } from './types';
 
 export type FailReason = 'error' | 'context-lost' | 'slow';
@@ -72,7 +59,6 @@ export interface Engine {
   stats(): EngineStats;
 }
 
-const FOV = 37;
 const POINTER_EASE = 3; // 1/s
 const SCROLL_EASE = 6;
 
@@ -94,10 +80,7 @@ export function createEngine(canvas: HTMLCanvasElement, gl: WebGL2RenderingConte
     antialias: gl.getContextAttributes()?.antialias ?? false,
     powerPreference: 'high-performance',
   });
-  renderer.setClearColor(0x000000, 0);
-  renderer.outputColorSpace = SRGBColorSpace;
-  /* Neutral keeps the brand hues where the tokens put them; filmic curves shift them. */
-  renderer.toneMapping = NeutralToneMapping;
+  applyLook(renderer);
 
   let token = 0; // bumped by every show()/hide(); a stale async step sees the mismatch and stops
   let active: Active | null = null;
@@ -107,8 +90,7 @@ export function createEngine(canvas: HTMLCanvasElement, gl: WebGL2RenderingConte
   let onScreen = true;
   let last = 0;
   let pixelRatio = 1;
-  let sampleStart = 0; // governor: when the current sampling window opened (after warm-up)
-  let sampleFrames = 0;
+  let sampler = newSampler(0); // frame-rate governor; renewed whenever the loop (re)starts
   let framesDrawn = 0;
   const input: SceneInput = { pointerX: 0, pointerY: 0, scroll: 0 };
   let pointerTargetX = 0;
@@ -210,24 +192,9 @@ export function createEngine(canvas: HTMLCanvasElement, gl: WebGL2RenderingConte
       return;
     }
 
-    /* Frame-rate governor: shed pixels first, then hand back to the still. Judged on
-       wall-clock windows, so a GPU managing a few frames a second is caught in
-       seconds, not after a fixed number of its slow frames. */
+    /* Frame-rate governor (tier.ts): shed pixels first, then hand back to the still. */
     if (!a.opts.governor) return;
-    if (elapsed > GOVERNOR_STALL_MS) {
-      /* One long gap is the machine sleeping or the main thread busy elsewhere, not
-         a slow GPU. Start the sample again rather than judge on it. */
-      sampleStart = now + GOVERNOR_WARMUP_MS;
-      sampleFrames = 0;
-      return;
-    }
-    if (now < sampleStart) return; // still warming up
-    sampleFrames++;
-    const span = now - sampleStart;
-    if (span < GOVERNOR_WINDOW_MS || sampleFrames < GOVERNOR_MIN_FRAMES) return;
-    const verdict = govern(span / sampleFrames, pixelRatio);
-    sampleStart = now;
-    sampleFrames = 0;
+    const verdict = sampleFrame(sampler, now, elapsed, pixelRatio);
     if (verdict.action === 'give-up') fail('slow');
     else if (verdict.action === 'lower') {
       pixelRatio = verdict.pixelRatio;
@@ -237,10 +204,8 @@ export function createEngine(canvas: HTMLCanvasElement, gl: WebGL2RenderingConte
           renderer.render(a.scene, a.camera);
         } catch (error) {
           fail('error', error);
-          return;
         }
       }
-      sampleStart = now + GOVERNOR_WARMUP_MS; // the resize itself costs a frame or two
     }
   };
 
@@ -248,8 +213,7 @@ export function createEngine(canvas: HTMLCanvasElement, gl: WebGL2RenderingConte
     if (running || frozen || !active || !onScreen || document.hidden) return;
     running = true;
     last = performance.now();
-    sampleStart = last + GOVERNOR_WARMUP_MS;
-    sampleFrames = 0;
+    sampler = newSampler(last);
     raf = requestAnimationFrame(frame);
   };
 
@@ -362,6 +326,7 @@ export function createEngine(canvas: HTMLCanvasElement, gl: WebGL2RenderingConte
       try {
         const mod = await scenes[opts.id]();
         if (mine !== token) return false;
+        performance.mark('scene3d:module');
 
         const scene = new Scene();
         const camera = new PerspectiveCamera(FOV, 1, 0.1, 60);
@@ -380,6 +345,7 @@ export function createEngine(canvas: HTMLCanvasElement, gl: WebGL2RenderingConte
         const a: Active = { mount, opts, instance, scene, camera, abort: new AbortController(), time: opts.still ? mod.stillAt : 0 };
         active = a;
         if (!resize(a)) throw new Error('mount has no size');
+        performance.mark('scene3d:built');
         readScroll();
         input.scroll = opts.still ? 0 : scrollTarget;
 
@@ -387,11 +353,13 @@ export function createEngine(canvas: HTMLCanvasElement, gl: WebGL2RenderingConte
            on the canvas before it is shown — the first can still hitch on upload. */
         await renderer.compileAsync(scene, camera);
         if (mine !== token) return false;
+        performance.mark('scene3d:compiled');
         draw(a, 0);
         mount.append(canvas);
         await new Promise((r) => requestAnimationFrame(r));
         if (mine !== token) return false;
         draw(a, 0);
+        performance.mark('scene3d:drawn');
 
         if (!opts.still) {
           wire(a);

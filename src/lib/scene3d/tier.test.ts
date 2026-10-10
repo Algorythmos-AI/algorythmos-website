@@ -1,5 +1,18 @@
 import { describe, it, expect } from 'vitest';
-import { govern, isSoftwareRenderer, pickPlan, MIN_PIXEL_RATIO, SLOW_FRAME_MS, type Device } from './tier';
+import {
+  govern,
+  isSoftwareRenderer,
+  newSampler,
+  pickPlan,
+  sampleFrame,
+  GOVERNOR_STALL_STRIKES,
+  GOVERNOR_WARMUP_MS,
+  GOVERNOR_WINDOW_MS,
+  MIN_PIXEL_RATIO,
+  SLOW_FRAME_MS,
+  type Device,
+  type GovernorVerdict,
+} from './tier';
 
 const desktop: Device = {
   enabled: true,
@@ -123,5 +136,74 @@ describe('govern — the frame-rate governor', () => {
 
   it('never acts on a broken sample', () => {
     expect(govern(Number.NaN, 2)).toEqual({ action: 'keep' });
+  });
+});
+
+describe('sampleFrame — judging a running scene', () => {
+  /** Run frames `frameMs` apart for `durationMs`; return every verdict that was not "keep". */
+  const run = (frameMs: number, durationMs: number, pixelRatio: number, sampler = newSampler(0)) => {
+    const verdicts: GovernorVerdict[] = [];
+    for (let now = frameMs; now <= durationMs; now += frameMs) {
+      const v = sampleFrame(sampler, now, frameMs, pixelRatio);
+      if (v.action !== 'keep') verdicts.push(v);
+    }
+    return verdicts;
+  };
+
+  it('never judges during warm-up', () => {
+    expect(run(100, GOVERNOR_WARMUP_MS, 2)).toEqual([]);
+  });
+
+  it('leaves 60 fps alone, window after window', () => {
+    expect(run(16.7, 20_000, 2)).toEqual([]);
+  });
+
+  it('sheds pixels within a few seconds at 10 fps', () => {
+    const verdicts = run(100, GOVERNOR_WARMUP_MS + GOVERNOR_WINDOW_MS + 200, 2);
+    expect(verdicts).toEqual([{ action: 'lower', pixelRatio: 1.5 }]);
+  });
+
+  it('gives up at the pixel floor', () => {
+    expect(run(100, GOVERNOR_WARMUP_MS + GOVERNOR_WINDOW_MS + 200, MIN_PIXEL_RATIO)).toEqual([{ action: 'give-up' }]);
+  });
+
+  it('forgives one long gap: the laptop slept, the GPU is fine', () => {
+    const sampler = newSampler(0);
+    run(16.7, 2000, 1, sampler);
+    expect(sampleFrame(sampler, 9000, 7000, 1)).toEqual({ action: 'keep' });
+    // …and the gap does not poison the next window.
+    const verdicts: GovernorVerdict[] = [];
+    for (let now = 9016.7; now < 16_000; now += 16.7) {
+      const v = sampleFrame(sampler, now, 16.7, 1);
+      if (v.action !== 'keep') verdicts.push(v);
+    }
+    expect(verdicts).toEqual([]);
+  });
+
+  it('judges a renderer so slow that no frame ever lands in a window', () => {
+    // 1.5 s per frame: every frame is a "stall". Without the strike rule this scene would run forever.
+    const sampler = newSampler(0);
+    const verdicts: GovernorVerdict[] = [];
+    for (let i = 1; i <= GOVERNOR_STALL_STRIKES; i++) verdicts.push(sampleFrame(sampler, i * 1500, 1500, 1));
+    expect(verdicts.slice(0, -1).every((v) => v.action === 'keep')).toBe(true);
+    expect(verdicts.at(-1)).toEqual({ action: 'give-up' });
+  });
+
+  it('walks a 2× screen down to the floor and then stops', () => {
+    const sampler = newSampler(0);
+    const seen: GovernorVerdict[] = [];
+    let ratio = 2;
+    for (let now = 100; now <= 30_000 && seen.at(-1)?.action !== 'give-up'; now += 100) {
+      const v = sampleFrame(sampler, now, 100, ratio);
+      if (v.action === 'keep') continue;
+      seen.push(v);
+      if (v.action === 'lower') ratio = v.pixelRatio;
+    }
+    expect(seen).toEqual([
+      { action: 'lower', pixelRatio: 1.5 },
+      { action: 'lower', pixelRatio: 1.13 },
+      { action: 'lower', pixelRatio: 1 },
+      { action: 'give-up' },
+    ]);
   });
 });

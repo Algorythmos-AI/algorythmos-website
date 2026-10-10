@@ -1,7 +1,7 @@
 // scripts/lib/scene-hash.mjs
 // Fingerprint of everything that decides what a scene looks like: its own source,
-// the shared kit, the engine (lens, tone mapping) and the theme tokens it is
-// coloured from. Written into src/assets/scenes/manifest.json when stills
+// the shared kit (materials, lighting, lens and tone curve — kit/look.ts) and the
+// theme tokens it is coloured from. The engine's plumbing is deliberately left out. Written into src/assets/scenes/manifest.json when stills
 // are captured, and recomputed by src/data/scenes.test.ts — so editing a scene
 // without re-capturing its still fails the unit tests.
 
@@ -15,7 +15,6 @@ export function sceneHash(root, id) {
   const files = [
     path.join(lib, 'scenes', `${id}.ts`),
     ...fs.readdirSync(kit).filter((f) => f.endsWith('.ts')).sort().map((f) => path.join(kit, f)),
-    path.join(lib, 'engine.ts'),
     path.join(root, 'src', 'styles', 'themes.css'),
   ];
   const hash = createHash('sha256');
