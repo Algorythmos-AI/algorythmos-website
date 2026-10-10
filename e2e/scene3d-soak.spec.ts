@@ -281,9 +281,10 @@ test.describe('timing races', () => {
       () => document.querySelector('canvas.scene3d-stage') !== (window as unknown as { __parked: Element }).__parked,
     );
     expect(fresh, 'a new canvas and context, not the dead one').toBe(true);
+    // Going back restores the scroll position at the footer link, where the loop rightly rests.
+    await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
     const before = (await stats(page))!.frames;
-    await page.waitForTimeout(1200);
-    expect((await stats(page))!.frames).toBeGreaterThan(before);
+    await expect.poll(async () => (await stats(page))!.frames, { timeout: 10_000 }).toBeGreaterThan(before);
     expect(pageErrors).toEqual([]);
   });
 });
