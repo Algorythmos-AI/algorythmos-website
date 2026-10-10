@@ -17,6 +17,9 @@
  * - Recolors + rebuilds glow sprites live on theme toggle.
  * - Zero per-frame O(n²): connection pairs are precomputed once (rigid sphere),
  *   particles render via pre-baked gradient sprites (no shadowBlur).
+ * - The pause toggle freezes it mid-session on the formed orb (onMotionChange).
+ * - A Scene3D passed as a child takes over once it is live; this orb is what
+ *   shows until then, and again if that scene ever falls back.
  */
 interface Props {
   class?: string;
@@ -27,10 +30,13 @@ const { class: klass = '' } = Astro.props;
 <div
   class:list={['neural-orb pointer-events-none relative mx-auto w-full max-w-[480px]', klass]}
   aria-hidden="true"
+  data-orb-stack
 >
   <div class="orb-halo"></div>
   <canvas data-neural-orb class="absolute inset-0 h-full w-full"></canvas>
   <div class="orb-ground"></div>
+  {/* Optional 3D successor (Scene3D) stacked over the orb; the orb stays the fallback. */}
+  <slot />
 </div>
 
 <style>
@@ -626,8 +632,11 @@ const { class: klass = '' } = Astro.props;
        take it back if that scene later falls to its still (context loss, slow GPU). */
     const scene = canvas.closest('[data-orb-stack]')?.querySelector<HTMLElement>('[data-scene]') ?? null;
     const handover = new MutationObserver(() => {
-      if (scene?.dataset.sceneState === 'live') halt();
-      else if (halted && !motionOff()) {
+      const state = scene?.dataset.sceneState;
+      if (state === 'live') halt();
+      /* `paused` keeps its frozen 3D frame on stage; only a fall back to the still
+         (`static`) hands the stage back to this orb. */
+      else if (state === 'static' && halted && !motionOff()) {
         halted = false;
         start();
       }

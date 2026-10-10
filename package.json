@@ -20,6 +20,7 @@
     "link:check": "node scripts/link-check.mjs",
     "keys:check": "node scripts/check-keys.mjs",
     "perf": "node scripts/perf-report.js",
+    "scenes:posters": "node scripts/capture-scene-posters.mjs",
     "lh": "node scripts/lh-check.mjs",
     "i18n:check": "node scripts/i18nCheck.mjs",
     "health:check": "node scripts/healthCheck.mjs"
@@ -35,7 +36,8 @@
     "nodemailer": "^10.0.13",
     "react": "^18.3.1",
     "react-chartjs-2": "^5.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "three": "^0.186.1"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
@@ -47,6 +49,7 @@
     "@types/nodemailer": "^8.0.0",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.1",
+    "@types/three": "^0.186.0",
     "@vitest/coverage-v8": "^5.0.3",
     "astro-og-canvas": "^0.13.2",
     "autoprefixer": "^10.4.21",
