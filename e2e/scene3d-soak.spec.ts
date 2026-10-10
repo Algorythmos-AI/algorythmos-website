@@ -16,6 +16,66 @@ const goLive = async (page: Page, path = HOME) => {
   await expect(mount(page)).toHaveAttribute('data-scene-state', 'live', { timeout: LIVE_TIMEOUT });
 };
 
+/* A page that mounts each scene (and each variant that changes the picture), per locale. */
+const SCENE_PAGES: [scene: string, path: string][] = [
+  ['neural-core', ''],
+  ['constellation', '/services'],
+  ['constellation', '/services/llmops'],
+  ['scan', '/services/document-intelligence'],
+  ['globe', '/about'],
+  ['globe', '/contact'],
+  ['ledger', '/pricing'],
+  ['ledger', '/case-studies/financial-compliance'],
+  ['pages', '/pdf-algo-pro'],
+];
+
+test.describe('every scene runs live', () => {
+  for (const locale of ['/au-en', '/fr-fr']) {
+    for (const [scene, path] of SCENE_PAGES) {
+      test(`${scene} on ${locale}${path}`, async ({ page }) => {
+        const errors = watchErrors(page);
+        await forceScene(page);
+        await goLive(page, locale + path);
+        await expect(mount(page)).toHaveAttribute('data-scene', scene);
+        await expect(page.locator(STAGE)).toHaveCount(1);
+        const before = (await stats(page))!.frames;
+        await page.waitForTimeout(1500);
+        expect((await stats(page))!.frames, 'the loop is drawing').toBeGreaterThan(before);
+        // Scenes with a looping story (scan, pages, ledger) must survive a full cycle's worth of time.
+        await page.waitForTimeout(2500);
+        await expect(mount(page)).toHaveAttribute('data-scene-state', 'live');
+        expect(errors).toEqual([]);
+      });
+    }
+  }
+
+  test('lost-satellite on the 404 page', async ({ page }) => {
+    const errors: string[] = [];
+    page.on('pageerror', (e) => errors.push(String(e)));
+    await forceScene(page);
+    await page.goto('/au-en/this-page-does-not-exist');
+    await expect(mount(page)).toHaveAttribute('data-scene', 'lost-satellite');
+    await expect(mount(page)).toHaveAttribute('data-scene-state', 'live', { timeout: LIVE_TIMEOUT });
+    expect(errors).toEqual([]);
+  });
+
+  test('moving between pages with different scenes swaps the scene on the one canvas', async ({ page }) => {
+    const errors = watchErrors(page);
+    await forceScene(page);
+    await goLive(page, '/au-en/services');
+    await page.getByRole('link', { name: 'Pricing', exact: false }).first().click();
+    await page.waitForURL(/\/pricing$/);
+    await expect(mount(page)).toHaveAttribute('data-scene', 'ledger');
+    await expect(mount(page)).toHaveAttribute('data-scene-state', 'live', { timeout: LIVE_TIMEOUT });
+    await page.getByRole('link', { name: 'About', exact: false }).first().click();
+    await page.waitForURL(/\/about$/);
+    await expect(mount(page)).toHaveAttribute('data-scene', 'globe');
+    await expect(mount(page)).toHaveAttribute('data-scene-state', 'live', { timeout: LIVE_TIMEOUT });
+    await expect(page.locator(STAGE)).toHaveCount(1);
+    expect(errors).toEqual([]);
+  });
+});
+
 test.describe('endurance', () => {
   test('holds steady over a long run', async ({ page }) => {
     test.slow();

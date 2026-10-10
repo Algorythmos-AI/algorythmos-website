@@ -1,22 +1,25 @@
 # 3D scenes — authoring guide
 
-Live 3D scenes are decoration: lit, shaded three.js scenes that sit beside or behind
-a page's copy. The homepage hero has the first one (`neural-core`). They carry no
-words and make no claims, and **the page never depends on one** — everything below
-exists to keep that true.
+Live 3D scenes are decoration: lit, shaded three.js scenes in a page's hero. The
+homepage has `neural-core`; every other page except the legal and support ones has
+the scene `src/data/sceneMap.ts` picks for it. They carry no words and make no
+claims, and **the page never depends on one** — everything below exists to keep
+that true.
 
 ## Files
 
 | Piece | Where |
 |---|---|
-| Catalogue: scene ids, site-wide switch | `src/data/scenes.ts` |
-| Mount (markup, no-JS still, stacking CSS) | `src/components/ui/Scene3D.astro` |
+| Catalogue: scene ids, site-wide switch, which variants have their own still | `src/data/scenes.ts` |
+| Which page shows which scene (build time only) | `src/data/sceneMap.ts` (+ `sceneMap.test.ts`) |
+| Mount (markup, stills, stacking CSS) | `src/components/ui/Scene3D.astro` |
+| A hero's scene box: a band under the copy on small screens, a column beside it from `lg` | `src/components/sections/HeroScene.astro` |
 | First-load loader: who gets 3D, and when | `src/lib/scene3d/bootstrap.ts` |
 | The decision table and frame-rate governor (pure, unit-tested) | `src/lib/scene3d/tier.ts` (+ `tier.test.ts`) |
 | Engine: renderer, loop, fallbacks (imports three) | `src/lib/scene3d/engine.ts` |
 | Scene contract | `src/lib/scene3d/types.ts` |
 | Registry of scenes, one lazy chunk each | `src/lib/scene3d/registry.ts` |
-| Shared parts: palette, environment light, lens and tone curve, soft points, dispose | `src/lib/scene3d/kit/` |
+| Shared parts: palette, environment light, lens and tone curve, soft points, rim-lit shells, orbits, satellites, paper sheets, holograms, camera framing, the globe's land mask, dispose | `src/lib/scene3d/kit/` |
 | One file per scene | `src/lib/scene3d/scenes/<id>.ts` |
 | Stills and their fingerprints | `src/assets/scenes/` (`manifest.json`) |
 | Still capture | `scripts/capture-scene-posters.mjs` (`npm run scenes:posters`) |
@@ -28,13 +31,36 @@ Decided by `pickPlan()` in `tier.ts`; the result is written to `data-scene-plan`
 | Visitor | Gets |
 |---|---|
 | Desktop or laptop | The live scene, fetched at idle after the page has loaded |
-| Phone or tablet (narrow viewport, or touch with no hover) | The still; the live scene after the first touch, at the `low` tier |
+| Phone or tablet (narrow viewport, or touch with no hover) | The still, painted after the page has loaded; the live scene after the first touch, at the `low` tier |
 | Reduced motion, pause toggle, `prefers-contrast: more`, Save-Data, ≤ 4 GB memory | The still. three.js is never requested |
 | No usable WebGL2, software rendering, Windows high-contrast mode | The still. three.js is never requested |
 | No JavaScript | The still (`<noscript>` image) |
 
 "The still" is whatever the page shows without the scene. On the homepage that is the
-2D `NeuralOrb`, which the scene is stacked over and cross-fades from.
+2D `NeuralOrb`, which the scene is stacked over and cross-fades from. Everywhere else
+it is a captured image of the scene, painted into a canvas by the loader — a canvas
+because an `<img>` or a CSS background could be picked as the page's LCP element. A
+desktop about to get the live scene does not fetch it.
+
+## Where a scene sits
+
+`HeroScene` sizes the scene's box in CSS alone, so a hero is the same height before
+and after its scene arrives. Below `lg` the scene is a band under the copy; from `lg`
+it is a column beside it. **Nothing is drawn behind text**, with one exception: the
+404 page, from `lg`, puts its scene behind centred copy, and that scene keeps its
+subject to one side. `e2e/scene-contrast.spec.ts` measures the pixels behind every
+line of hero copy, in both themes at three widths, against WCAG AA.
+
+## Which page gets which scene
+
+`sceneFor(page, slug, locale)` in `src/data/sceneMap.ts`. The rule
+(`docs/COPY_CLAIMS_SIGNOFF.md` §3g): a theme appears only where it matches what the
+page sells. `sceneMap.test.ts` pins the ones that matter — the ledger only on pricing
+and compliance pages, the scanning overlay only on document-led pages, PDF Algo Pro
+showing only what the app does.
+
+A variant (`data-scene-variant`) turns a scene or highlights part of it. Only variants
+listed in `STILL_VARIANTS` have a still of their own; the rest share the scene's.
 
 ## The rules a scene must not break
 
@@ -75,8 +101,9 @@ Decided by `pickPlan()` in `tier.ts`; the result is written to `data-scene-plan`
 3. Mount it: `<Scene3D id="<id>" class="absolute inset-0" />` inside a positioned box
    with a fixed aspect ratio, so the scene arriving cannot shift layout. The mount has
    no size of its own; one with no size never starts.
-4. Add its host page to `HOSTS` in `scripts/capture-scene-posters.mjs`, then
-   `npm run build && npm run scenes:posters <id>` and commit the stills with the manifest.
+4. Map it to its pages in `src/data/sceneMap.ts`, add a page that hosts it to `HOSTS` in
+   `scripts/capture-scene-posters.mjs`, then `npm run build && npm run scenes:posters <id>`
+   and commit the stills with the manifest.
 5. Run the gate. Look at the scene in both themes and at 390 / 768 / 1440 px.
 
 Editing a scene, anything in `kit/` (which holds the lens and tone curve, `kit/look.ts`)
@@ -103,9 +130,11 @@ and no page requests the engine.
 |---|---|
 | Decision table, governor | `src/lib/scene3d/tier.test.ts` |
 | Catalogue, registry, stills, first-load imports | `src/data/scenes.test.ts` |
+| Page → scene map and its rules | `src/data/sceneMap.test.ts` |
+| Contrast of hero copy against its scene | `e2e/scene-contrast.spec.ts` |
 | Bundle gate rules | `src/lib/perfGate.test.ts` |
 | Stills, phones, live scene, pause, theme, resize, failures | `e2e/scene3d.spec.ts` (Chromium, WebKit, Firefox) |
-| Long run, GPU governor, load races, navigation leaks | `e2e/scene3d-soak.spec.ts` (Chromium) |
+| Every scene live in both locales, long run, GPU governor, load races, navigation leaks | `e2e/scene3d-soak.spec.ts` (Chromium) |
 | Production CSP | `e2e/csp.spec.ts` |
 
 Headless browsers render WebGL in software, which the site refuses for visitors. Tests

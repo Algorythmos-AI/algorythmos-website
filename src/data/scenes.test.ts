@@ -3,7 +3,11 @@ import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { sceneHash } from '../../scripts/lib/scene-hash.mjs';
-import { SCENE_IDS } from './scenes';
+import { blog } from './blog';
+import { caseStudies } from './caseStudies';
+import { sceneFor } from './sceneMap';
+import { SCENE_IDS, stillKey } from './scenes';
+import { serviceSlugs } from './services';
 
 const ROOT = fileURLToPath(new URL('../..', import.meta.url));
 const LIB = join(ROOT, 'src', 'lib', 'scene3d');
@@ -33,20 +37,43 @@ describe('scene catalogue', () => {
       expect(read('src', 'lib', 'scene3d', 'registry.ts')).toContain(`'${id}': () => import('./scenes/${id}')`);
     });
 
-    it('has a current still in both themes, under the size cap', () => {
-      for (const theme of ['dark', 'light']) {
-        for (const width of [960, 480] as const) {
-          const file = join(STILLS, `${id}-${theme}-${width}.avif`);
-          expect(existsSync(file), `${file} — run "npm run build && npm run scenes:posters"`).toBe(true);
-          expect(statSync(file).size / 1024, file).toBeLessThan(STILL_CAP_KB[width]);
-        }
-      }
+    it('has stills captured from its current source', () => {
       const manifest = JSON.parse(read('src', 'assets', 'scenes', 'manifest.json')) as Record<string, string>;
       expect(
         manifest[id],
         `the scene or the kit changed since its still was captured — run "npm run build && npm run scenes:posters ${id}"`,
       ).toBe(sceneHash(ROOT, id));
     });
+  });
+
+  /* Every still a page can ask for: the home scene, plus whatever the page map resolves to. */
+  const refs = [
+    { id: 'neural-core' as const },
+    ...(['services', 'case-studies', 'blog', 'about', 'contact', 'careers', 'press', 'product', 'not-found'] as const).map((p) => sceneFor(p)),
+    sceneFor('pricing', undefined, 'au-en'),
+    sceneFor('pricing', undefined, 'fr-fr'),
+    sceneFor('local', 'sydney'),
+    sceneFor('local', 'paris'),
+    ...serviceSlugs.map((s) => sceneFor('service', s)),
+    ...caseStudies.map((c) => sceneFor('case-study', c.slug)),
+    ...blog.map((p) => sceneFor('post', p.slug)),
+  ];
+  const keys = [...new Set(refs.map(stillKey))].sort();
+
+  it.each(keys)('still %s exists in both themes, under the size cap', (key) => {
+    for (const theme of ['dark', 'light']) {
+      for (const width of [960, 480] as const) {
+        const file = join(STILLS, `${key}-${theme}-${width}.avif`);
+        expect(existsSync(file), `${file} — run "npm run build && npm run scenes:posters"`).toBe(true);
+        expect(statSync(file).size / 1024, file).toBeLessThan(STILL_CAP_KB[width]);
+      }
+    }
+  });
+
+  it('has no still that no page asks for', () => {
+    const files = readdirSync(STILLS).filter((f) => f.endsWith('.avif'));
+    const orphans = files.filter((f) => !keys.includes(f.replace(/-(dark|light)-(480|960)\.avif$/, '')));
+    expect(orphans).toEqual([]);
   });
 });
 
@@ -57,6 +84,7 @@ describe('first-load code never reaches three', () => {
     ['src', 'lib', 'scene3d', 'bootstrap.ts'],
     ['src', 'lib', 'scene3d', 'tier.ts'],
     ['src', 'data', 'scenes.ts'],
+    ['src', 'components', 'ui', 'Scene3D.astro'],
     ['src', 'lib', 'motion.ts'],
     ['src', 'lib', 'idle.ts'],
     ['src', 'lib', 'tokens.ts'],
