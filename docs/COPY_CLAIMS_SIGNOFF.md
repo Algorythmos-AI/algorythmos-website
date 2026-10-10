@@ -143,6 +143,22 @@ Named on `/blog/mbsc-australia-partnership` (EN/FR), in its related links, and i
 - [x] **Start date:** September 2026.
 - [x] **Independence:** separate companies; MBSC Australia is an Algorythmos client.
 
+## 3g. Visual themes in the 3D scenes (10 Oct 2026)
+
+Decided by Sam Kalaliya. A picture can imply an offering as surely as a sentence, so the scenes follow
+the same rule as the copy.
+
+- [x] **Themes follow the page.** Robotics, space, digital-currency and augmented-reality imagery may
+      appear only where it matches what that page sells. No page gains a theme it does not offer, and
+      no copy is added to explain a scene.
+- [x] **No words in a scene.** Scenes are decorative and `aria-hidden`; nothing in them reads as a claim.
+- [x] **Digital currency is drawn as an audit log and A$ / € tokens**, never as a blockchain or
+      cryptocurrency. Algorythmos sells neither.
+- [x] **PDF Algo Pro gets no augmented-reality overlay.** That page says only what the shipped app
+      does; its scene shows pages being scanned, signed and reordered, nothing more.
+- [x] **Homepage (`neural-core`):** an abstract lattice with orbiting units. It depicts no product and
+      makes no measurable claim.
+
 ## 4. Homepage, voice and positioning (`/`, footer, meta, contact, careers)
 
 Decisions (Sam Kalaliya, 26 Sep 2026):

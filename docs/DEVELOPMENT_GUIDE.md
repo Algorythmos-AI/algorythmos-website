@@ -63,7 +63,14 @@ dictionaries and an entry in `src/seo/ogPages.ts` `SERVICE_NS`.
   (the always-dark product consoles use their own `console.css` variables).
 - Every interactive element keeps a visible focus ring (`focus-visible:ring-*`).
 - Motion must respect both `prefers-reduced-motion` and the on-page toggle: scripts call
-  `motionOff()` from `src/lib/motion.ts`; CSS keys off `html[data-motion='off']`.
+  `motionOff()` from `src/lib/motion.ts`; CSS keys off `html[data-motion='off']`. A loop
+  that is already running subscribes with `onMotionChange()`, so the pause button reaches
+  it at once rather than at the next page load.
+- 3D scenes are decoration the page never depends on: see `docs/SCENES.md` before adding
+  or editing one.
+- The client router replaces every attribute on `<html>` on each in-site navigation.
+  Anything a script puts there (theme, the `js` marker, `data-motion`) has to be restored
+  on `astro:after-swap`, as `BaseLayout.astro` does.
 - Below-the-fold sections may use `data-reveal`; content inside the first viewport is
   shown synchronously.
 
@@ -83,9 +90,9 @@ npm run lint && npm run check && npm run i18n:check && npm run health:check \
 | `seo:check` | One title/description/canonical per page; root pages canonicalise to `/au-en`; 3 hreflang incl. `x-default`; OG/Twitter tags; NAP consistency with `business.ts`; sitemap URLs self-canonical; RSS validity |
 | `link:check` | Every internal link resolves in `dist/` |
 | `keys:check` | No raw translation keys leaked into HTML |
-| `perf` | Bundle report; warns above 200 kB per chunk |
-| Playwright | Chromium + WebKit: consoles, FR locale, SEO/marketing flows, axe accessibility |
-| `lh-check --strict` | Mobile Lighthouse: LCP < 2.5 s, CLS < 0.1, TBT < 300 ms |
+| `perf` | Bundle gate: no chunk over 200 kB (3D engine: 620 kB, one file, never loaded up front); homepage first-load JS ≤ 46 kB |
+| Playwright | Chromium + WebKit + Firefox: consoles, FR locale, SEO/marketing flows, axe accessibility, motion and navigation state, 3D scenes and their fallbacks, the production CSP |
+| `lh-check --strict` | Mobile Lighthouse: LCP < 2.5 s (3.0 s on CI runners), CLS < 0.1, TBT < 300 ms |
 
 ## Scheduled checks
 
