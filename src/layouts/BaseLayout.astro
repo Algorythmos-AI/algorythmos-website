@@ -163,10 +163,6 @@ const t = useTranslations(locale);
          module 404s or is blocked by CSP). */
       const markJs = () => document.documentElement.classList.add('js');
       markJs();
-      /* A view-transition swap wipes <html>'s class along with its other attributes.
-         Restore the marker before the new page paints, or reveals stop after the
-         first in-site navigation. */
-      document.addEventListener('astro:after-swap', markJs);
       function setupReveal() {
         const els = document.querySelectorAll('[data-reveal]:not(.is-visible)');
         if (!('IntersectionObserver' in window)) {
@@ -200,6 +196,15 @@ const t = useTranslations(locale);
             .forEach((e) => e.classList.add('is-visible'));
         }, 1500);
       }
+      /* A view-transition swap wipes <html>'s class along with its other attributes.
+         Restore the marker before the new page paints, or reveals stop after the
+         first in-site navigation — and reveal in the same breath: astro:page-load
+         only fires once every script on the incoming page has loaded, and the
+         opening screen must not sit hidden for that long. */
+      document.addEventListener('astro:after-swap', () => {
+        markJs();
+        setupReveal();
+      });
       document.addEventListener('astro:page-load', setupReveal);
       /* Initialize immediately if astro:page-load already fired before this module ran */
       if (document.readyState !== 'loading') setupReveal();
