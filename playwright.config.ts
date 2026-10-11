@@ -47,7 +47,7 @@ export default defineConfig({
          whether content below the fold is visible at all). */
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
-      testMatch: /(console|french-locale|a11y|responsive-header|overlays|motion|navigation-state|interactions)\.spec\.ts/,
+      testMatch: /(console|french-locale|a11y|responsive-header|overlays|motion|navigation-state|interactions|scene-debug)\.spec\.ts/,
     },
     {
       name: 'webkit-scenes',
@@ -71,16 +71,17 @@ export default defineConfig({
       dependencies: ['webkit-scenes'],
     },
     /* Real phone viewports, touch and pixel density. The desktop projects never saw the
-       see-through menu or cookie banner, so overlays and a11y also run on a phone of each engine. */
+       see-through menu or cookie banner, so overlays and a11y also run on a phone of each engine. 
+       The `?scene-debug` readout exists for phones, so it is checked on them too. */
     {
       name: 'mobile-chromium',
       use: { ...devices['Pixel 7'] },
-      testMatch: /(overlays|a11y)\.spec\.ts/,
+      testMatch: /(overlays|a11y|scene-debug)\.spec\.ts/,
     },
     {
       name: 'mobile-webkit',
       use: { ...devices['iPhone 15'] },
-      testMatch: /(overlays|a11y)\.spec\.ts/,
+      testMatch: /(overlays|a11y|scene-debug)\.spec\.ts/,
     },
   ],
   webServer: {

@@ -318,6 +318,7 @@ test.describe('failures land on the still', () => {
     // The refusal is immediate, so `loading` is too brief to observe: wait for the one warning.
     await expect.poll(() => warnings.length, { timeout: 15_000 }).toBe(1);
     await expect(mount(page)).toHaveAttribute('data-scene-state', 'static');
+    await expect(mount(page)).toHaveAttribute('data-scene-fail', 'engine-load');
     await expect(page.locator(STAGE)).toHaveCount(0);
     await expect(orb(page)).toHaveAttribute('data-orb-state', 'live');
     await page.waitForTimeout(1500);
@@ -336,6 +337,7 @@ test.describe('failures land on the still', () => {
     await expect(mount(page)).toHaveAttribute('data-scene-state', 'static', { timeout: 5000 });
     await expect(page.locator(STAGE)).toHaveCount(0);
     await expect(orb(page)).toHaveAttribute('data-orb-state', 'live', { timeout: 5000 });
+    await expect(mount(page)).toHaveAttribute('data-scene-fail', 'context-lost');
     expect(pageErrors).toEqual([]);
   });
 });

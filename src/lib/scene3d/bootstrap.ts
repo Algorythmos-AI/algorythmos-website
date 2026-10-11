@@ -14,6 +14,10 @@
  *   live     the 3D scene owns the stage
  *   paused   frozen on its last frame by the pause toggle
  * Every failure path ends on `static`.
+ *
+ * It also says how far it got and why it stopped, for whoever has to work out
+ * why a phone shows a still: `data-scene-step` (Step) and `data-scene-fail`
+ * (Fail), read by the `?scene-debug` readout (debug.ts) and by the tests.
  */
 import { SCENE3D_ENABLED, SCENE_IDS, type SceneId } from '@/data/scenes';
 import { scheduleIdle } from '@/lib/idle';
@@ -22,6 +26,10 @@ import type { Engine, EngineStats, FailReason } from './engine';
 import { isSoftwareRenderer, pickPlan, type Device } from './tier';
 
 type State = 'static' | 'loading' | 'live' | 'paused';
+/** How far the start got: waiting for its trigger, probing WebGL, fetching the engine, … */
+export type Step = 'armed' | 'probing' | 'loading' | 'building' | 'compiling' | 'live';
+/** Why this mount is showing the still although the plan allowed a scene. */
+export type Fail = FailReason | 'no-webgl' | 'software-gl' | 'engine-load' | 'motion-off';
 
 declare global {
   interface Window {
@@ -45,6 +53,7 @@ let generation = 0; // bumped on every page swap; async steps compare before tou
 let stage: { canvas: HTMLCanvasElement; gl: WebGL2RenderingContext } | null = null;
 let engine: Promise<Engine> | null = null;
 let webglUnavailable = false;
+let softwareGl = false; // …because the only renderer on offer draws on the CPU
 let engineUnavailable = false; // the chunk failed to load: no retry loop
 let contextLosses = 0;
 
@@ -110,6 +119,7 @@ function acquireStage(): typeof stage {
   if (gl && !window.__scene3dForce && isSoftwareRenderer(rendererName(gl))) {
     gl.getExtension('WEBGL_lose_context')?.loseContext(); // hand the context back at once
     gl = null;
+    softwareGl = true;
   }
   if (!gl) {
     webglUnavailable = true;
@@ -252,9 +262,21 @@ function initPage(): void {
     if (alive()) mount.dataset.sceneState = state;
   };
   const getState = () => mount.dataset.sceneState as State | undefined;
+  const setStep = (step: Step) => {
+    if (alive()) mount.dataset.sceneStep = step;
+  };
+  const setFail = (fail: Fail, error?: unknown) => {
+    if (!alive()) return;
+    mount.dataset.sceneFail = fail;
+    if (error !== undefined) mount.dataset.sceneError = String(error).slice(0, 200);
+  };
 
   const plan = pickPlan(readDevice());
   mount.dataset.scenePlan = `${plan.trigger}:${plan.tier}:${plan.reason}`;
+  /* `gave-up` covers four different histories; say which one this visit had. */
+  if (plan.reason === 'gave-up') {
+    setFail(softwareGl ? 'software-gl' : webglUnavailable ? 'no-webgl' : engineUnavailable ? 'engine-load' : gaveUp() ? 'slow' : 'context-lost');
+  }
 
   let current: Engine | null = null;
 
@@ -288,6 +310,8 @@ function initPage(): void {
     /* 'context-lost' needs nothing more here: the stage's own listener (acquireStage)
        has already retired the stage and the engine. */
     if (reason === 'error') console.warn('[scene3d] showing the still instead:', error);
+    else console.warn(`[scene3d] showing the still instead: ${reason}`);
+    setFail(reason, error);
     current = null;
     setState('static');
     paintStill(mount, signal);
@@ -297,15 +321,22 @@ function initPage(): void {
   const run = async () => {
     if (started || !alive() || motionOff()) return;
     started = true;
+    setStep('probing');
     const s = acquireStage();
-    if (!s) return paintStill(mount, signal); // no usable WebGL2: the still stands, and three is never requested
+    if (!s) {
+      /* No usable WebGL2: the still stands, and three is never requested. */
+      setFail(softwareGl ? 'software-gl' : 'no-webgl');
+      return paintStill(mount, signal);
+    }
     setState('loading');
+    setStep('loading');
     performance.mark('scene3d:start');
     try {
       const e = await loadEngine(s);
       performance.mark('scene3d:engine');
       await holdReleased(mount, signal);
       if (!alive() || motionOff()) {
+        setFail('motion-off');
         paintStill(mount, signal);
         return setState('static');
       }
@@ -320,6 +351,7 @@ function initPage(): void {
            suite of them from starving every other test of CPU. */
         maxPixelRatio: window.__scene3dForce === true && !window.__scene3dStill ? 0.5 : undefined,
         onFail,
+        onStep: setStep,
       });
       if (!shown) {
         if (getState() === 'loading') setState('static');
@@ -329,20 +361,24 @@ function initPage(): void {
       if (motionOff()) {
         /* Paused while the scene was compiling: it never takes the stage. */
         e.hide();
+        setFail('motion-off');
         paintStill(mount, signal);
         return setState('static');
       }
       setState('live');
+      setStep('live');
     } catch (error) {
       /* The engine chunk did not arrive (offline, or a stale page after a deploy). */
       engineUnavailable = true;
       engine = null;
       console.warn('[scene3d] engine unavailable, showing the still instead:', error);
+      setFail('engine-load', error);
       setState('static');
       paintStill(mount, signal);
     }
   };
 
+  setStep('armed');
   if (plan.trigger === 'interaction') {
     /* Phones and tablets: nothing is fetched until the visitor touches the page.
        `scroll` is deliberately absent — the router scrolls on every navigation. */
@@ -370,6 +406,16 @@ function initPage(): void {
 }
 
 window.__scene3dStats = async () => (engine ? (await engine).stats() : null);
+
+/* `?scene-debug`: an on-page readout of everything above, for a phone with no
+   developer tools. A chunk of its own, fetched only when asked for. */
+try {
+  if (new URLSearchParams(location.search).has('scene-debug')) {
+    void import('./debug').then((m) => m.mountDebug()).catch(() => {});
+  }
+} catch {
+  /* the readout is a convenience: never let it reach the page */
+}
 
 document.addEventListener('astro:page-load', initPage);
 /* Belt-and-braces: if this module evaluates after astro:page-load already fired. */
