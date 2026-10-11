@@ -1,0 +1,60 @@
+---
+/**
+ * ConsoleChrome — the shared window bar of every living console, so all ten
+ * read as one real product: window lights, the Algorythmos mark + wordmark,
+ * an address pill, and the signed-in user's bell + avatar.
+ *
+ * Purely decorative (lives inside ConsoleShell's aria-hidden, inert screen):
+ * the logo carries alt="" and nothing here is focusable. Styles are in
+ * src/styles/console.css.
+ */
+import { asLocale, useTranslations } from '@/i18n';
+
+interface Props {
+  /** Address shown in the pill (already localized / a literal host path). */
+  url: string;
+  /**
+   * Brand lockup: always (default), or only on phones — for the hero console,
+   * whose own sidebar brand is hidden when it reflows to a single column.
+   */
+  brand?: true | 'mobile';
+}
+
+const { url, brand = true } = Astro.props;
+const mobileOnly = brand === 'mobile';
+const t = useTranslations(asLocale(Astro.currentLocale));
+/** "Sam K." → "SK" */
+const initials = t('console.user.name')
+  .split(/\s+/)
+  .map((w) => w.charAt(0))
+  .join('')
+  .slice(0, 2)
+  .toUpperCase();
+---
+
+<div class="hc-chrome">
+  <span class="hc-lights">
+    <span class="hc-tdot hc-tdot--close"></span><span class="hc-tdot hc-tdot--min"></span><span class="hc-tdot hc-tdot--max"></span>
+  </span>
+  <span class:list={['hc-chrome-brand', { 'hc-chrome-brand--mobile': mobileOnly }]}>
+    <img src="/logo-mark.webp" alt="" aria-hidden="true" width="54" height="64" class="hc-logo" loading="lazy" decoding="async" />
+    <span class="hc-wordmark">Algoryth<span class="hc-wordmark-accent">mos</span></span>
+  </span>
+  <span class="hc-urlpill">
+    <svg class="hc-lock" viewBox="0 0 12 12" aria-hidden="true">
+      <rect x="2.25" y="5.25" width="7.5" height="5.25" rx="1.4" fill="currentColor" />
+      <path d="M4 5.25V3.9a2 2 0 0 1 4 0v1.35" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" />
+    </svg>
+    {url}
+  </span>
+  <span class="hc-chrome-right">
+    <span class="hc-bell">
+      <svg viewBox="0 0 16 16" aria-hidden="true">
+        <path d="M8 2.2a3.6 3.6 0 0 0-3.6 3.6v2.1L3.2 10.4h9.6l-1.2-2.5V5.8A3.6 3.6 0 0 0 8 2.2Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" />
+        <path d="M6.6 12.4a1.5 1.5 0 0 0 2.8 0" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" />
+      </svg>
+      <span class="hc-bell-dot"></span>
+    </span>
+    <span class="hc-avatar-sm">{initials}</span>
+  </span>
+</div>

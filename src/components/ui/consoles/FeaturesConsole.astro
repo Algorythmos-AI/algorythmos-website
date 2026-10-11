@@ -6,6 +6,7 @@
  * every data-quality check turns green.
  */
 import ConsoleShell from '@/components/ui/ConsoleShell.astro';
+import ConsoleChrome from '@/components/ui/ConsoleChrome.astro';
 import { asLocale, useTranslations } from '@/i18n';
 import { serviceVisuals } from '@/data/visuals';
 import { formatValue } from '@/lib/consoleLoop';
@@ -62,10 +63,7 @@ const strings = {
 <ConsoleShell svgFile={v.file} width={v.width} height={v.height} altKey={v.altKey} name="svc-data-feature-management">
   <div class="hc df">
     <script type="application/json" data-hc-strings set:html={JSON.stringify(strings)} />
-    <div class="hc-chrome">
-      <span class="hc-tdot"></span><span class="hc-tdot"></span><span class="hc-tdot"></span>
-      <span class="hc-urlpill">app.algorythmos.com/features</span>
-    </div>
+    <ConsoleChrome url="app.algorythmos.com/features" />
 
     <div class="df-head">
       <div>
@@ -84,7 +82,7 @@ const strings = {
           <svg viewBox="0 0 556 300" aria-hidden="true">
             {edges.map((e) => <path d={e.d} class:list={['df-edge hc-draw', { 'df-edge--trace': e.trace }]} pathLength="1" />)}
             {nodes.map((n) => (
-              <g class:list={['df-node', { 'df-node--trace': TRACE.has(n.name) }]}>
+              <g class:list={['df-node', { 'df-node--trace': TRACE.has(n.name) }]} data-node={n.name}>
                 <rect x={n.x - 54} y={n.y - 15} width="108" height="30" rx="7" />
                 <text x={n.x} y={n.y + 4} text-anchor="middle">{n.name}</text>
               </g>
@@ -182,7 +180,7 @@ const strings = {
 </style>
 
 <script>
-  import { initConsole, scheduleIdle } from '@/lib/consoleLoop';
+  import { initConsole, scheduleIdle, moveCursor, clickCursor, showToast, hideToast } from '@/lib/consoleLoop';
   import type { ConsoleContext } from '@/lib/consoleLoop';
 
   const pill = (root: HTMLElement, text: string) => {
@@ -196,10 +194,12 @@ const strings = {
     initConsole(root, {
       loopMs: 26000,
       keyframes: [
+        { t: 2800, apply: ({ root }: ConsoleContext) => moveCursor(root, '[data-node="churn v5.1"]', { x: 0.6, y: 0.7 }) },
         {
           // Trace a prediction back to its sources through the lineage graph.
           t: 5000,
           apply: ({ root, strings }: ConsoleContext) => {
+            clickCursor(root);
             root.querySelector('.df-graph')?.classList.add('df-tracing');
             pill(root, strings['pillTrace']);
             const traced = root.querySelector('[data-slot="traced"]');
@@ -226,8 +226,10 @@ const strings = {
               if (val) val.textContent = '4 / 4';
             }
             pill(root, strings['pillOk']);
+            showToast(root, strings['pillOk'], strings['refreshed']);
           },
         },
+        { t: 16200, apply: ({ root }: ConsoleContext) => hideToast(root) },
         {
           t: 19000,
           apply: ({ root }: ConsoleContext) => root.querySelector('.df-graph')?.classList.remove('df-tracing'),

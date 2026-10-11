@@ -6,6 +6,7 @@
  * canary widens 10% → 50% → 100% before v15 joins the release history.
  */
 import ConsoleShell from '@/components/ui/ConsoleShell.astro';
+import ConsoleChrome from '@/components/ui/ConsoleChrome.astro';
 import { asLocale, useTranslations } from '@/i18n';
 import { serviceVisuals } from '@/data/visuals';
 import { formatValue } from '@/lib/consoleLoop';
@@ -50,10 +51,7 @@ const strings = {
 <ConsoleShell svgFile={v.file} width={v.width} height={v.height} altKey={v.altKey} name="svc-llmops">
   <div class="hc lo">
     <script type="application/json" data-hc-strings set:html={JSON.stringify(strings)} />
-    <div class="hc-chrome">
-      <span class="hc-tdot"></span><span class="hc-tdot"></span><span class="hc-tdot"></span>
-      <span class="hc-urlpill">app.algorythmos.com/llm-releases</span>
-    </div>
+    <ConsoleChrome url="app.algorythmos.com/llm-releases" />
 
     <div class="lo-head">
       <div>
@@ -189,7 +187,7 @@ const strings = {
 </style>
 
 <script>
-  import { initConsole, scheduleIdle } from '@/lib/consoleLoop';
+  import { initConsole, scheduleIdle, moveCursor, clickCursor, showToast, hideToast } from '@/lib/consoleLoop';
   import type { ConsoleContext } from '@/lib/consoleLoop';
 
   const pill = (root: HTMLElement, text: string) => {
@@ -209,6 +207,7 @@ const strings = {
       loopMs: 28000,
       keyframes: [
         { t: 6000, apply: ({ root, strings }: ConsoleContext) => pill(root, strings['pillPassed']) },
+        { t: 8600, apply: ({ root }: ConsoleContext) => moveCursor(root, '[data-slot="canary"]', { x: 0.5, y: 0.6 }) },
         { t: 11000, apply: ({ root, strings }: ConsoleContext) => canary(root, 0.5, strings['canary50']) },
         {
           t: 17000,
@@ -231,8 +230,10 @@ const strings = {
               const rows = list.querySelectorAll('.lo-row');
               if (rows.length > 4) rows[rows.length - 1].remove();
             }
+            showToast(root, strings['pillReleased'], strings['h15']);
           },
         },
+        { t: 21200, apply: ({ root }: ConsoleContext) => hideToast(root) },
       ],
     });
   }

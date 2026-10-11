@@ -14,6 +14,9 @@ import { motionOff } from '@/lib/motion';
  * - Drift-proof loop: `[data-hc-stage]` regions are snapshotted once at init;
  *   every loop iteration restores from that snapshot, so state can never
  *   accumulate error across hours on screen.
+ * - Operator overlay (pointer + toast): driven only from keyframes, hidden on
+ *   every loop reset and whenever motion is paused; every helper no-ops when
+ *   its target is missing.
  * - Structurally leak-proof teardown: one AbortController owns all listeners,
  *   one Set owns all timer ids; astro:before-swap aborts + clears everything.
  *
@@ -159,7 +162,10 @@ export function initConsole(root: HTMLElement, opts: ConsoleOptions = {}): void 
   // Drift-proof loop: snapshot every mutable stage once, restore each iteration.
   const stages = [...root.querySelectorAll<HTMLElement>('[data-hc-stage]')];
   const baseline = stages.map((s) => s.innerHTML);
-  const resetStages = () => stages.forEach((s, i) => (s.innerHTML = baseline[i]));
+  const resetStages = () => {
+    stages.forEach((s, i) => (s.innerHTML = baseline[i]));
+    hideOverlay(root); // the pointer + toast live outside the stages
+  };
 
   // Arm JS-gated draw-on states (default CSS = fully drawn, so no-JS/RM users
   // always see the complete picture; only armed consoles start "undrawn").
@@ -271,6 +277,82 @@ export function initConsole(root: HTMLElement, opts: ConsoleOptions = {}): void 
     },
     { once: true },
   );
+}
+
+// ── Operator overlay: pointer + notification (markup in ConsoleShell) ──────
+
+/**
+ * Where a target's centre sits on the fixed canvas, from two client rects.
+ * Both rects come from the same engine in the same coordinate space, so the
+ * ratio `screen.width / canvasWidth` cancels whatever that engine does with
+ * `zoom` or `transform` — no per-browser branches. Pure for unit testing.
+ */
+export function canvasPoint(
+  target: { left: number; top: number; width: number; height: number },
+  screen: { left: number; top: number; width: number },
+  canvasWidth: number,
+  at: { x?: number; y?: number } = {},
+): { x: number; y: number } | null {
+  if (!(screen.width > 0) || !(canvasWidth > 0)) return null;
+  const k = screen.width / canvasWidth;
+  const fx = at.x ?? 0.5;
+  const fy = at.y ?? 0.5;
+  const x = (target.left + target.width * fx - screen.left) / k;
+  const y = (target.top + target.height * fy - screen.top) / k;
+  return Number.isFinite(x) && Number.isFinite(y) ? { x, y } : null;
+}
+
+/**
+ * Glide the pointer to an element (its centre by default). No-ops safely when
+ * the target, the overlay, or a measurable canvas is missing — a console can
+ * never throw because its markup changed.
+ */
+export function moveCursor(root: HTMLElement, selector: string, at: { x?: number; y?: number } = {}): void {
+  const cursor = root.querySelector<HTMLElement>('[data-hc-cursor]');
+  const screen = root.querySelector<HTMLElement>('.hc-screen');
+  const target = root.querySelector<HTMLElement>(selector);
+  if (!cursor || !screen || !target) return;
+  const canvasW = parseFloat(getComputedStyle(root).getPropertyValue('--hc-w')) || 0;
+  const pt = canvasPoint(target.getBoundingClientRect(), screen.getBoundingClientRect(), canvasW, at);
+  if (!pt) return;
+  cursor.style.setProperty('--cx', `${pt.x.toFixed(1)}px`);
+  cursor.style.setProperty('--cy', `${pt.y.toFixed(1)}px`);
+  cursor.classList.add('hc-on');
+}
+
+/** Press the pointer where it is; optionally give the pressed control feedback. */
+export function clickCursor(root: HTMLElement, pressedSelector?: string): void {
+  const cursor = root.querySelector<HTMLElement>('[data-hc-cursor]');
+  if (cursor) restartClass(cursor, 'hc-click');
+  const pressed = pressedSelector ? root.querySelector<HTMLElement>(pressedSelector) : null;
+  if (pressed) restartClass(pressed, 'hc-pressed');
+}
+
+/** Slide the notification in with a title + body (already-localized strings). */
+export function showToast(root: HTMLElement, title: string | undefined, body: string | undefined): void {
+  const toast = root.querySelector<HTMLElement>('[data-hc-toast]');
+  if (!toast || !title) return; // a missing string shows nothing rather than an empty box
+  const t = toast.querySelector('[data-hc-toast-title]');
+  const b = toast.querySelector('[data-hc-toast-body]');
+  if (t) t.textContent = title;
+  if (b) b.textContent = body ?? '';
+  toast.classList.add('hc-on');
+}
+
+export function hideToast(root: HTMLElement): void {
+  root.querySelector('[data-hc-toast]')?.classList.remove('hc-on');
+}
+
+/** Hide pointer + notification (loop reset, motion paused). */
+export function hideOverlay(root: HTMLElement): void {
+  root.querySelector('[data-hc-cursor]')?.classList.remove('hc-on', 'hc-click');
+  hideToast(root);
+}
+
+function restartClass(el: HTMLElement, cls: string): void {
+  el.classList.remove(cls);
+  void el.offsetWidth; // restart the animation reliably
+  el.classList.add(cls);
 }
 
 // ── DOM micro-helpers for keyframe apply() functions ───────────────────────

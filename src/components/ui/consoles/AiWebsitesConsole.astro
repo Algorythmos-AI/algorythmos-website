@@ -6,6 +6,7 @@
  * re-run beat (~26s) that re-pulses the rings.
  */
 import ConsoleShell from '@/components/ui/ConsoleShell.astro';
+import ConsoleChrome from '@/components/ui/ConsoleChrome.astro';
 import { asLocale, useTranslations } from '@/i18n';
 import { serviceVisuals } from '@/data/visuals';
 
@@ -38,10 +39,7 @@ const checks = [
 
 <ConsoleShell svgFile={v.file} width={v.width} height={v.height} altKey={v.altKey} name="svc-ai-websites">
   <div class="hc aw">
-    <div class="hc-chrome">
-      <span class="hc-tdot"></span><span class="hc-tdot"></span><span class="hc-tdot"></span>
-      <span class="hc-urlpill">algorythmos.com · audit</span>
-    </div>
+    <ConsoleChrome url="algorythmos.com · audit" />
 
     <div class="aw-head">
       <div>

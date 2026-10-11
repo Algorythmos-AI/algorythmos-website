@@ -5,6 +5,7 @@
  * 6 to 8 nodes — plan, apply, pool bar grows — while GPU utilisation ticks live.
  */
 import ConsoleShell from '@/components/ui/ConsoleShell.astro';
+import ConsoleChrome from '@/components/ui/ConsoleChrome.astro';
 import { asLocale, useTranslations } from '@/i18n';
 import { serviceVisuals } from '@/data/visuals';
 import { formatValue } from '@/lib/consoleLoop';
@@ -55,10 +56,7 @@ const strings = {
 <ConsoleShell svgFile={v.file} width={v.width} height={v.height} altKey={v.altKey} name="svc-ai-platform-engineering">
   <div class="hc pe">
     <script type="application/json" data-hc-strings set:html={JSON.stringify(strings)} />
-    <div class="hc-chrome">
-      <span class="hc-tdot"></span><span class="hc-tdot"></span><span class="hc-tdot"></span>
-      <span class="hc-urlpill">app.algorythmos.com/platform</span>
-    </div>
+    <ConsoleChrome url="app.algorythmos.com/platform" />
 
     <div class="pe-head">
       <div>
@@ -192,7 +190,7 @@ const strings = {
 </style>
 
 <script>
-  import { initConsole, scheduleIdle } from '@/lib/consoleLoop';
+  import { initConsole, scheduleIdle, moveCursor, clickCursor, showToast, hideToast } from '@/lib/consoleLoop';
   import type { ConsoleContext } from '@/lib/consoleLoop';
 
   const pill = (root: HTMLElement, text: string) => {
@@ -215,9 +213,11 @@ const strings = {
     initConsole(root, {
       loopMs: 26000,
       keyframes: [
+        { t: 3800, apply: ({ root }: ConsoleContext) => moveCursor(root, '[data-log]', { x: 0.45, y: 0.5 }) },
         {
           t: 6000,
           apply: ({ root, strings }: ConsoleContext) => {
+            clickCursor(root);
             pill(root, strings['applying']);
             logLine(root, strings['apply'], 'cmd');
           },
@@ -232,8 +232,10 @@ const strings = {
             if (spec) spec.textContent = '8 × L4 · ' + strings['scaled'];
             pool?.querySelector<HTMLElement>('.pe-bar')?.style.setProperty('--w', '70%');
             pill(root, strings['applied']);
+            showToast(root, strings['applied'], strings['scaled']);
           },
         },
+        { t: 16200, apply: ({ root }: ConsoleContext) => hideToast(root) },
       ],
     });
   }

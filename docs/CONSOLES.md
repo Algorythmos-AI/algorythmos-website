@@ -8,7 +8,8 @@ sitemap and `ImageObject` twin. The homepage hero uses the same system.
 
 | Piece | Where |
 |---|---|
-| Shell (frame, scaling, no-JS fallback) | `src/components/ui/ConsoleShell.astro` |
+| Shell (frame, scaling, no-JS fallback, operator overlay) | `src/components/ui/ConsoleShell.astro` |
+| Window bar (lights, logo + wordmark, address pill, bell, avatar) | `src/components/ui/ConsoleChrome.astro` |
 | Loop harness (keyframes, count-ups, visibility, motion) | `src/lib/consoleLoop.ts` (+ `consoleLoop.test.ts`) |
 | Shared screen palette and `hc-*` pieces | `src/styles/console.css` |
 | One console per service | `src/components/ui/consoles/<Name>Console.astro` |
@@ -21,6 +22,8 @@ sitemap and `ImageObject` twin. The homepage hero uses the same system.
    `blueprint`) in `src/data/services.ts`; import it in `consoles/index.ts`.
 2. **Naming.** Pick an unused two-letter class prefix (`ml`, `sq`, …). Render
    `<ConsoleShell … name="svc-<slug>">` and wrap the screen in `<div class="hc <prefix>">`.
+   Start the screen with `<ConsoleChrome url="app.algorythmos.com/<path>" />` — never hand-write
+   the bar. It carries the real mark (`/logo-mark.webp`, brightened for the dark screen).
    Strings live under `console.svc.<id>.*` in `en.global.json` **and** `fr.fr.json`; identical
    identifiers (tool names, versions) go in `identicalOk`, URL-bar chrome in `sourceOk`.
 3. **Copy.** Every visible string goes through `t()`. Strings the client script swaps in are
@@ -42,10 +45,22 @@ sitemap and `ImageObject` twin. The homepage hero uses the same system.
      snapshot every loop) or be undone by a later keyframe. Don't nest stages.
    - Re-query elements inside each `apply` — the snapshot restore replaces the nodes.
    - The harness pauses off-screen, in hidden tabs, and as soon as motion is turned off.
+   - **Operator overlay.** The shell gives every console a pointer and a notification. Drive them
+     from keyframes with `moveCursor(root, selector, { x, y })` (anchor as a fraction of the target,
+     centre by default; allow ≥2 s before the press so the 1.1 s glide finishes),
+     `clickCursor(root, pressedSelector?)`, `showToast(root, title, body)` and `hideToast(root)`.
+     Toast copy must reuse strings already on that screen (pass them through `data-hc-strings`):
+     a notification is not a place for new claims. All four no-op when their target is missing.
+     The harness hides both on every loop reset; CSS hides them on phones, under reduced motion
+     and when motion is paused, so never rely on them to carry meaning.
 7. **Accessibility.** The screen is `aria-hidden`; the shell's `role="img"` carries the alt text
    from `serviceVisuals[slug].altKey`. Never put focusable elements inside a console.
 8. **Static twin.** Hand-write `service-<slug>.svg`: `viewBox="0 0 1120 760"`, the `console.css`
    palette, under 10 KB. `src/data/services.test.ts` checks it exists, its size and viewBox.
+
+`moveCursor` converts client rects to canvas pixels with `canvasPoint` (unit-tested): the ratio
+of the screen's rendered width to the canvas width cancels whatever an engine does with `zoom`.
+`e2e/console.spec.ts` checks the pointer tip lands inside its target in Chromium and WebKit.
 
 Scaling is measured in JS (`mountConsoleScaler` sets `--hc-scale`); the old CSS
 `tan(atan2())` zoom trick was removed in `0f34c0f` because iOS Safari clipped it.

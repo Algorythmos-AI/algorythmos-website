@@ -153,6 +153,92 @@ test.describe('service consoles', () => {
   });
 });
 
+// The shared window bar (real logo + wordmark) and the operator overlay
+// (pointer + notification) added to every console.
+test.describe('console brand and operator overlay', () => {
+  const ALL = [
+    { path: '/au-en', name: 'hero-console' },
+    ...SERVICE_SLUGS.map((slug) => ({ path: `/au-en/services/${slug}`, name: `svc-${slug}` })),
+  ];
+
+  test('every console shows the real Algorythmos mark and wordmark', async ({ page }) => {
+    test.slow();
+    for (const { path, name } of ALL) {
+      await page.goto(path);
+      const console_ = page.locator(`[data-console="${name}"]`);
+      await console_.evaluate((el) => el.scrollIntoView({ block: 'center' }));
+      // the hero carries a second, phone-only mark in its window bar — assert the shown one
+      const logo = console_.locator('.hc-logo:visible').first();
+      await expect(logo, `${name}: logo visible`).toBeVisible();
+      // decoded, not a broken image
+      await expect
+        .poll(() => logo.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0), { timeout: 8000 })
+        .toBe(true);
+      await expect(console_.locator('.hc-wordmark:visible').first()).toHaveText('Algorythmos');
+    }
+  });
+
+  test('the pointer lands on the control it presses and a notification confirms it', async ({ page }) => {
+    test.slow();
+    await page.goto('/au-en/services/agentic-automation');
+    const console_ = page.locator('[data-console="svc-agentic-automation"]');
+    await console_.evaluate((el) => el.scrollIntoView({ block: 'center' }));
+    const cursor = console_.locator('[data-hc-cursor]');
+    await expect(cursor).toHaveClass(/hc-on/, { timeout: 15000 });
+    await page.waitForTimeout(1500); // glide transition (1.1s) settles
+    // The arrow's tip is the cursor box's top-left corner: it must sit inside the
+    // button. This is the check that the canvas maths holds under each engine's zoom.
+    const tip = await cursor.boundingBox();
+    const btn = await console_.locator('[data-slot="approve"]').boundingBox();
+    expect(tip && btn).toBeTruthy();
+    expect(tip!.x).toBeGreaterThanOrEqual(btn!.x);
+    expect(tip!.x).toBeLessThanOrEqual(btn!.x + btn!.width);
+    expect(tip!.y).toBeGreaterThanOrEqual(btn!.y);
+    expect(tip!.y).toBeLessThanOrEqual(btn!.y + btn!.height);
+
+    const toast = console_.locator('[data-hc-toast]');
+    await expect(toast).toHaveClass(/hc-on/, { timeout: 15000 });
+    await expect(toast.locator('[data-hc-toast-title]')).toHaveText('Human approval');
+    await expect(toast.locator('[data-hc-toast-body]')).toHaveText('approved by reviewer');
+    // readable: light text on the dark toast, not the page's ink colour
+    const color = await toast.locator('[data-hc-toast-title]').evaluate((el) => getComputedStyle(el).color);
+    expect(color).toBe('rgb(243, 243, 248)');
+  });
+
+  test('reduced motion → no pointer and no notification, ever', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto('/au-en/services/agentic-automation');
+    const console_ = page.locator('[data-console="svc-agentic-automation"]');
+    await console_.evaluate((el) => el.scrollIntoView({ block: 'center' }));
+    await page.waitForTimeout(9000); // past the pointer (4.6s) and approve (7s) beats
+    await expect(console_.locator('[data-hc-cursor]')).not.toHaveClass(/hc-on/);
+    await expect(console_.locator('[data-hc-toast]')).not.toHaveClass(/hc-on/);
+    await expect(console_.locator('[data-hc-cursor]')).toHaveCSS('opacity', '0');
+    await expect(console_.locator('[data-hc-toast]')).toHaveCSS('opacity', '0');
+  });
+
+  test('pausing motion removes a pointer that is already on screen', async ({ page }) => {
+    test.slow();
+    await page.goto('/au-en/services/agentic-automation');
+    const console_ = page.locator('[data-console="svc-agentic-automation"]');
+    await console_.evaluate((el) => el.scrollIntoView({ block: 'center' }));
+    await expect(console_.locator('[data-hc-cursor]')).toHaveClass(/hc-on/, { timeout: 15000 });
+    await page.locator('[data-motion-toggle]:visible').first().click();
+    await expect(page.locator('html')).toHaveAttribute('data-motion', 'off');
+    await expect(console_.locator('.hc-overlay')).toBeHidden();
+  });
+
+  test('phones get no pointer or floating notification', async ({ browser }) => {
+    const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+    const page = await ctx.newPage();
+    await page.goto('/au-en');
+    await expect(page.locator(`${HERO} .hc-overlay`)).toBeHidden();
+    // the sidebar (and its brand) is gone on phones — the window bar carries the mark
+    await expect(page.locator(`${HERO} .hc-chrome .hc-logo`)).toBeVisible();
+    await ctx.close();
+  });
+});
+
 // Without JS the scaled canvas must get out of the way so each console's
 // <noscript> SVG fills its frame. toBeVisible() ignores overflow clipping, so
 // assert geometry: the fallback sits inside the viewport box.
