@@ -18,10 +18,12 @@ export const { getStaticPaths, GET } = await OGImageRoute({
       [22, 17, 42],
     ],
     border: { color: [139, 92, 246], width: 16, side: 'inline-start' },
+    /* Cards with artwork keep their text clear of the band along the bottom. */
+    ...(page.art ? { bgImage: { path: page.art, fit: 'cover' as const } } : {}),
     padding: 72,
     font: {
-      title: { color: [244, 244, 248], size: 60, weight: 'SemiBold', families: ['Inter'], lineHeight: 1.15 },
-      description: { color: [158, 158, 178], size: 29, families: ['Inter'], lineHeight: 1.4 },
+      title: { color: [244, 244, 248], size: page.art ? 52 : 60, weight: 'SemiBold', families: ['Inter'], lineHeight: 1.15 },
+      description: { color: [158, 158, 178], size: page.art ? 27 : 29, families: ['Inter'], lineHeight: 1.4 },
     },
     fonts: ['./src/assets/og/font-regular.ttf', './src/assets/og/font-bold.ttf'],
     format: 'PNG',
