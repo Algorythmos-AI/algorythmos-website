@@ -14,7 +14,15 @@ import { ogKey } from '@/seo/schema';
 export interface OGPage {
   title: string;
   description: string;
+  /** Artwork band behind the text (a transparent 1200×630 PNG from scripts/build-og-art.mjs). */
+  art?: string;
 }
+
+/** Case studies and posts whose card carries artwork. Text-only is the default. */
+const CARD_ART: Record<string, string> = {
+  'ai-robotics-space-bitcoin-convergence': './src/assets/og/art-quad-core.png',
+  'ai-control-plane-robots-satellites-payments': './src/assets/og/art-quad-core.png',
+};
 
 /** Brand pages: path + the i18n keys their <head> already uses. */
 const BRAND_PAGES: { path: string; titleKey: string; descKey: string }[] = [
@@ -54,6 +62,7 @@ function buildPages(): Record<string, OGPage> {
       pages[ogKey(localizePath(loc, `/blog/${post.slug}`))] = {
         title: t(`blogDetail.posts.${post.slug}.title`),
         description: t(`blogDetail.posts.${post.slug}.meta`),
+        ...(CARD_ART[post.slug] ? { art: CARD_ART[post.slug] } : {}),
       };
     }
 
@@ -61,6 +70,7 @@ function buildPages(): Record<string, OGPage> {
       pages[ogKey(localizePath(loc, `/case-studies/${cs.slug}`))] = {
         title: t(`caseStudyDetail.studies.${cs.slug}.title`),
         description: t(`caseStudyDetail.studies.${cs.slug}.meta`),
+        ...(CARD_ART[cs.slug] ? { art: CARD_ART[cs.slug] } : {}),
       };
     }
 
