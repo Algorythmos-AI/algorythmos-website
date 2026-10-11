@@ -7,7 +7,7 @@ const base: Snapshot = {
   step: 'armed',
   sceneFps: null,
   orbState: 'static',
-  orbStatic: 'touch-only',
+  orbStatic: 'low-memory',
   orbFps: null,
   webgl2: true,
   webgl2Strict: true,
@@ -36,7 +36,7 @@ suite('scene-debug readout', () => {
     const out = text();
     expect(out).toContain('plan    interaction:low:touch-device');
     expect(out).toContain('state   static  step armed  not drawing');
-    expect(out).toContain('orb     static (touch-only)  not drawing');
+    expect(out).toContain('orb     static (low-memory)  not drawing');
     expect(out).toContain('webgl2  yes  strict yes  Apple GPU');
     expect(out).not.toContain('fail');
   });

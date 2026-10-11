@@ -9,11 +9,14 @@
  * follows the cursor. Decorative: aria-hidden, pointer-events none.
  *
  * Robustness guarantees (NeuralField conventions):
- * - prefers-reduced-motion / low-memory devices get a single static frame of
- *   the fully-formed orb (no rAF loop) rather than nothing.
+ * - Reduced motion, Save-Data and devices under 4 GB get a single static frame
+ *   of the fully-formed orb (no rAF loop) rather than nothing. Phones and tablets
+ *   animate like everyone else; a device that cannot hold 20 fps is caught by the
+ *   frame check and falls back to that same static frame.
  * - rAF pauses off-screen (IntersectionObserver) and on hidden tabs; full
  *   teardown on astro:before-swap (no leaks).
- * - DPR-aware backing store capped at 2×; frame-delta motion (rate-independent).
+ * - DPR-aware backing store capped at 2× (1.5× on touch devices); frame-delta
+ *   motion (rate-independent).
  * - Recolors + rebuilds glow sprites live on theme toggle.
  * - Zero per-frame O(n²): connection pairs are precomputed once (rigid sphere),
  *   particles render via pre-baked gradient sprites (no shadowBlur).
@@ -130,10 +133,25 @@ const { class: klass = '' } = Astro.props;
     const FORM_STAGGER = 0.6; // s, per-particle delay spread
 
     const reduceMotion = motionOff();
-    const deviceMemory = (navigator as Navigator & { deviceMemory?: number }).deviceMemory;
-    /* Safari never reports deviceMemory, so treat touch-only devices as low-power too */
-    const coarseOnly = window.matchMedia('(pointer: coarse)').matches && !window.matchMedia('(hover: hover)').matches;
-    const staticMode = reduceMotion || (deviceMemory !== undefined && deviceMemory <= 4) || (deviceMemory === undefined && coarseOnly);
+    const nav = navigator as Navigator & { deviceMemory?: number; connection?: { saveData?: boolean } };
+    const deviceMemory = nav.deviceMemory;
+    const saveData = nav.connection?.saveData === true;
+    const lowMemory = deviceMemory !== undefined && deviceMemory < 4;
+    const staticMode = reduceMotion || saveData || lowMemory;
+    const coarse = window.matchMedia('(pointer: coarse)').matches;
+    /* Frame check: a device that averages worse than SLOW_FRAME_MS over two windows
+       in a row keeps the formed orb as a still, for this page view. Safari hides
+       deviceMemory, so this — not a guess from the pointer type — is what protects
+       a weak phone. Not judged while the 3D scene stacked over this orb is starting:
+       compiling its shaders stalls every frame on the page, on any device. */
+    const SLOW_FRAME_MS = 50; // under 20 fps
+    const CHECK_WARMUP_MS = 1000;
+    const CHECK_WINDOW_MS = 2000;
+    let tooSlow = false;
+    let checkFrom = 0;
+    let checkFrames = 0;
+    let slowWindows = 0;
+    let scene: HTMLElement | null = null; // the Scene3D mount stacked over this orb, if any
     const canHover = window.matchMedia('(hover: hover)').matches;
 
     /* Skip the entrance if it already played this session (view transitions,
@@ -154,7 +172,7 @@ const { class: klass = '' } = Astro.props;
     canvas.dataset.orbState = 'static';
     /* Why this orb is one painted frame, and how many it has drawn if it is not:
        read by the `?scene-debug` readout and by the tests that prove it moves. */
-    if (staticMode) canvas.dataset.orbStatic = reduceMotion ? 'motion-off' : deviceMemory !== undefined ? 'low-memory' : 'touch-only';
+    if (staticMode) canvas.dataset.orbStatic = reduceMotion ? 'motion-off' : saveData ? 'save-data' : 'low-memory';
     let framesDrawn = 0;
     (window as Window & { __orbFrames?: () => number }).__orbFrames = () => framesDrawn;
     let w = 0;
@@ -463,8 +481,31 @@ const { class: klass = '' } = Astro.props;
 
     const frame = (now: number) => {
       raf = requestAnimationFrame(frame);
-      const dt = Math.min((now - last) / 1000, 0.05);
+      const gap = now - last;
+      const dt = Math.min(Math.max(0, gap) / 1000, 0.05);
       last = now;
+
+      /* frame check (see SLOW_FRAME_MS); one long gap is a suspension, not a frame time */
+      if (gap > 1000 || scene?.dataset.sceneState === 'loading') {
+        checkFrom = now + CHECK_WARMUP_MS;
+        checkFrames = 0;
+      } else if (now >= checkFrom) {
+        checkFrames++;
+        const span = now - checkFrom;
+        if (span >= CHECK_WINDOW_MS && checkFrames >= 4) {
+          slowWindows = span / checkFrames > SLOW_FRAME_MS ? slowWindows + 1 : 0;
+          if (slowWindows >= 2) {
+            tooSlow = true;
+            canvas.dataset.orbStatic = 'slow';
+            stop();
+            completeFormation();
+            return;
+          }
+          checkFrom = now;
+          checkFrames = 0;
+        }
+      }
+
       elapsed += dt;
       yaw += YAW_SPEED * dt;
 
@@ -526,7 +567,7 @@ const { class: klass = '' } = Astro.props;
     const size = () => {
       const rect = canvas.getBoundingClientRect();
       if (!rect.width || !rect.height) return;
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const dpr = Math.min(window.devicePixelRatio || 1, coarse ? 1.5 : 2);
       w = rect.width;
       h = rect.height;
       canvas.width = Math.round(w * dpr);
@@ -539,11 +580,14 @@ const { class: klass = '' } = Astro.props;
     };
 
     const start = () => {
-      if (staticMode || halted || running || !onScreen || document.hidden) return;
+      if (staticMode || tooSlow || halted || running || !onScreen || document.hidden) return;
       if (!w || !h) size(); // loaded hidden: observers were silent, measure now
       running = true;
       canvas.dataset.orbState = 'live';
       last = performance.now();
+      checkFrom = last + CHECK_WARMUP_MS;
+      checkFrames = 0;
+      slowWindows = 0;
       raf = requestAnimationFrame(frame);
     };
     const stop = () => {
@@ -583,7 +627,7 @@ const { class: klass = '' } = Astro.props;
     if ((staticMode || document.hidden) && (!w || !h)) retryTimer = window.setTimeout(retrySize, 300);
 
     const io = new IntersectionObserver((entries) => {
-      onScreen = entries[0]?.isIntersecting ?? true;
+      onScreen = entries[entries.length - 1]?.isIntersecting ?? true; // the newest entry is the current truth
       if (onScreen) start();
       else stop();
     });
@@ -636,7 +680,7 @@ const { class: klass = '' } = Astro.props;
 
     /* Hand the stage to the 3D core when one is stacked over this orb and goes live;
        take it back if that scene later falls to its still (context loss, slow GPU). */
-    const scene = canvas.closest('[data-orb-stack]')?.querySelector<HTMLElement>('[data-scene]') ?? null;
+    scene = canvas.closest('[data-orb-stack]')?.querySelector<HTMLElement>('[data-scene]') ?? null;
     const handover = new MutationObserver(() => {
       const state = scene?.dataset.sceneState;
       if (state === 'live') halt();

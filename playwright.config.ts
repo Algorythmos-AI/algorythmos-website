@@ -16,6 +16,11 @@ export const E2E_ORIGIN = `http://localhost:${PORT}`;
    projects are chained so only one engine is rendering a scene at any moment.
    (To run one engine's scene specs alone: `--project=firefox-scenes --no-deps`.) */
 const SCENE_SPECS = /(scene3d|scene3d-soak|csp)\.spec\.ts/;
+/* The same, on phone and tablet profiles. */
+const MOBILE_SCENE_SPECS = /scene3d-mobile\.spec\.ts/;
+/* What the phone and tablet projects run besides. */
+const MOBILE_SPECS = /(overlays|a11y|scene-debug|motion-mobile)\.spec\.ts/;
+const TABLET_SPECS = /motion-mobile\.spec\.ts/;
 
 export default defineConfig({
   testDir: './e2e',
@@ -33,7 +38,7 @@ export default defineConfig({
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
-      testIgnore: SCENE_SPECS,
+      testIgnore: [SCENE_SPECS, MOBILE_SCENE_SPECS, /motion-mobile\.spec\.ts/],
     },
     {
       name: 'chromium-scenes',
@@ -70,19 +75,33 @@ export default defineConfig({
       workers: 1,
       dependencies: ['webkit-scenes'],
     },
-    /* Real phone viewports, touch and pixel density. The desktop projects never saw the
-       see-through menu or cookie banner, so overlays and a11y also run on a phone of each engine. 
-       The `?scene-debug` readout exists for phones, so it is checked on them too. */
+    /* Real phone and tablet profiles: touch, pixel density, mobile user agent. The
+       desktop projects never saw the see-through menu or cookie banner, and nothing
+       at all checked that motion runs on a phone — the sphere sat frozen on every
+       iPhone. So these run the overlay and a11y specs, the `?scene-debug` readout
+       (it exists for phones) and the motion contract. */
+    { name: 'mobile-chromium', use: { ...devices['Pixel 7'] }, testMatch: MOBILE_SPECS },
+    { name: 'mobile-webkit', use: { ...devices['iPhone 15'] }, testMatch: MOBILE_SPECS },
+    { name: 'tablet-chromium', use: { ...devices['Galaxy Tab S4'] }, testMatch: TABLET_SPECS },
+    { name: 'tablet-webkit', use: { ...devices['iPad (gen 7)'] }, testMatch: TABLET_SPECS },
+    { name: 'tablet-webkit-landscape', use: { ...devices['iPad (gen 7) landscape'] }, testMatch: TABLET_SPECS },
+    /* …and a live scene on each, one at a time, after the desktop engines (see SCENE_SPECS). */
     {
-      name: 'mobile-chromium',
+      name: 'mobile-chromium-scenes',
       use: { ...devices['Pixel 7'] },
-      testMatch: /(overlays|a11y|scene-debug)\.spec\.ts/,
+      testMatch: MOBILE_SCENE_SPECS,
+      workers: 1,
+      dependencies: ['firefox-scenes'],
     },
     {
-      name: 'mobile-webkit',
+      name: 'mobile-webkit-scenes',
       use: { ...devices['iPhone 15'] },
-      testMatch: /(overlays|a11y|scene-debug)\.spec\.ts/,
+      testMatch: MOBILE_SCENE_SPECS,
+      workers: 1,
+      dependencies: ['mobile-chromium-scenes'],
     },
+    /* No tablet scene project: a tablet takes the same path as a phone (tier.test.ts
+       pins that), and each software-rendered pass costs the CI job minutes it does not have. */
   ],
   webServer: {
     /* CI has already run `npm run build`; locally we build first so the preview is fresh.

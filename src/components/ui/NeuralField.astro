@@ -157,7 +157,7 @@ const { class: klass = '' } = Astro.props;
     size();
 
     const io = new IntersectionObserver((entries) => {
-      onScreen = entries[0]?.isIntersecting ?? true;
+      onScreen = entries[entries.length - 1]?.isIntersecting ?? true; // the newest entry is the current truth
       if (onScreen) start();
       else stop();
     });

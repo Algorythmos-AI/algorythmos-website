@@ -84,6 +84,7 @@ describe('first-load code never reaches three', () => {
     ['src', 'lib', 'scene3d', 'bootstrap.ts'],
     ['src', 'lib', 'scene3d', 'tier.ts'],
     ['src', 'lib', 'scene3d', 'debug.ts'], // lazy, but it is not the engine either
+    ['src', 'lib', 'scene3d', 'still.ts'], // lazy too: what a visitor without the engine sees
     ['src', 'data', 'scenes.ts'],
     ['src', 'components', 'ui', 'Scene3D.astro'],
     ['src', 'lib', 'motion.ts'],
