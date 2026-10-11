@@ -1,0 +1,626 @@
+[
+  {
+    "path": "brand/logo/mark/algorythmos-mark-color.svg",
+    "kind": "svg"
+  },
+  {
+    "path": "brand/logo/mark/algorythmos-mark-color-512.png",
+    "kind": "png",
+    "width": 433,
+    "height": 512
+  },
+  {
+    "path": "brand/logo/mark/algorythmos-mark-color-1024.png",
+    "kind": "png",
+    "width": 865,
+    "height": 1024
+  },
+  {
+    "path": "brand/logo/mark/algorythmos-mark-color-2048.png",
+    "kind": "png",
+    "width": 1730,
+    "height": 2048
+  },
+  {
+    "path": "brand/logo/mark/algorythmos-mark-color-4096.png",
+    "kind": "png",
+    "width": 3461,
+    "height": 4096
+  },
+  {
+    "path": "brand/logo/mark/algorythmos-mark-indigo.svg",
+    "kind": "svg"
+  },
+  {
+    "path": "brand/logo/mark/algorythmos-mark-indigo-512.png",
+    "kind": "png",
+    "width": 433,
+    "height": 512
+  },
+  {
+    "path": "brand/logo/mark/algorythmos-mark-indigo-1024.png",
+    "kind": "png",
+    "width": 865,
+    "height": 1024
+  },
+  {
+    "path": "brand/logo/mark/algorythmos-mark-indigo-2048.png",
+    "kind": "png",
+    "width": 1730,
+    "height": 2048
+  },
+  {
+    "path": "brand/logo/mark/algorythmos-mark-indigo-4096.png",
+    "kind": "png",
+    "width": 3461,
+    "height": 4096
+  },
+  {
+    "path": "brand/print/algorythmos-mark-indigo.pdf",
+    "kind": "pdf"
+  },
+  {
+    "path": "brand/logo/mark/algorythmos-mark-white.svg",
+    "kind": "svg"
+  },
+  {
+    "path": "brand/logo/mark/algorythmos-mark-white-512.png",
+    "kind": "png",
+    "width": 433,
+    "height": 512
+  },
+  {
+    "path": "brand/logo/mark/algorythmos-mark-white-1024.png",
+    "kind": "png",
+    "width": 865,
+    "height": 1024
+  },
+  {
+    "path": "brand/logo/mark/algorythmos-mark-white-2048.png",
+    "kind": "png",
+    "width": 1730,
+    "height": 2048
+  },
+  {
+    "path": "brand/logo/mark/algorythmos-mark-white-4096.png",
+    "kind": "png",
+    "width": 3461,
+    "height": 4096
+  },
+  {
+    "path": "brand/logo/mark/algorythmos-mark-black.svg",
+    "kind": "svg"
+  },
+  {
+    "path": "brand/logo/mark/algorythmos-mark-black-512.png",
+    "kind": "png",
+    "width": 433,
+    "height": 512
+  },
+  {
+    "path": "brand/logo/mark/algorythmos-mark-black-1024.png",
+    "kind": "png",
+    "width": 865,
+    "height": 1024
+  },
+  {
+    "path": "brand/logo/mark/algorythmos-mark-black-2048.png",
+    "kind": "png",
+    "width": 1730,
+    "height": 2048
+  },
+  {
+    "path": "brand/logo/mark/algorythmos-mark-black-4096.png",
+    "kind": "png",
+    "width": 3461,
+    "height": 4096
+  },
+  {
+    "path": "brand/print/algorythmos-mark-black.pdf",
+    "kind": "pdf"
+  },
+  {
+    "path": "brand/logo/horizontal/algorythmos-horizontal-color.svg",
+    "kind": "svg"
+  },
+  {
+    "path": "brand/logo/horizontal/algorythmos-horizontal-color-800.png",
+    "kind": "png",
+    "width": 800,
+    "height": 187
+  },
+  {
+    "path": "brand/logo/horizontal/algorythmos-horizontal-color-1600.png",
+    "kind": "png",
+    "width": 1600,
+    "height": 374
+  },
+  {
+    "path": "brand/logo/horizontal/algorythmos-horizontal-color-3200.png",
+    "kind": "png",
+    "width": 3200,
+    "height": 748
+  },
+  {
+    "path": "brand/logo/horizontal/algorythmos-horizontal-indigo.svg",
+    "kind": "svg"
+  },
+  {
+    "path": "brand/logo/horizontal/algorythmos-horizontal-indigo-800.png",
+    "kind": "png",
+    "width": 800,
+    "height": 187
+  },
+  {
+    "path": "brand/logo/horizontal/algorythmos-horizontal-indigo-1600.png",
+    "kind": "png",
+    "width": 1600,
+    "height": 374
+  },
+  {
+    "path": "brand/logo/horizontal/algorythmos-horizontal-indigo-3200.png",
+    "kind": "png",
+    "width": 3200,
+    "height": 748
+  },
+  {
+    "path": "brand/print/algorythmos-horizontal-indigo.pdf",
+    "kind": "pdf"
+  },
+  {
+    "path": "brand/logo/horizontal/algorythmos-horizontal-white.svg",
+    "kind": "svg"
+  },
+  {
+    "path": "brand/logo/horizontal/algorythmos-horizontal-white-800.png",
+    "kind": "png",
+    "width": 800,
+    "height": 187
+  },
+  {
+    "path": "brand/logo/horizontal/algorythmos-horizontal-white-1600.png",
+    "kind": "png",
+    "width": 1600,
+    "height": 374
+  },
+  {
+    "path": "brand/logo/horizontal/algorythmos-horizontal-white-3200.png",
+    "kind": "png",
+    "width": 3200,
+    "height": 748
+  },
+  {
+    "path": "brand/logo/horizontal/algorythmos-horizontal-black.svg",
+    "kind": "svg"
+  },
+  {
+    "path": "brand/logo/horizontal/algorythmos-horizontal-black-800.png",
+    "kind": "png",
+    "width": 800,
+    "height": 187
+  },
+  {
+    "path": "brand/logo/horizontal/algorythmos-horizontal-black-1600.png",
+    "kind": "png",
+    "width": 1600,
+    "height": 374
+  },
+  {
+    "path": "brand/logo/horizontal/algorythmos-horizontal-black-3200.png",
+    "kind": "png",
+    "width": 3200,
+    "height": 748
+  },
+  {
+    "path": "brand/print/algorythmos-horizontal-black.pdf",
+    "kind": "pdf"
+  },
+  {
+    "path": "brand/logo/stacked/algorythmos-stacked-color.svg",
+    "kind": "svg"
+  },
+  {
+    "path": "brand/logo/stacked/algorythmos-stacked-color-512.png",
+    "kind": "png",
+    "width": 512,
+    "height": 449
+  },
+  {
+    "path": "brand/logo/stacked/algorythmos-stacked-color-1024.png",
+    "kind": "png",
+    "width": 1024,
+    "height": 899
+  },
+  {
+    "path": "brand/logo/stacked/algorythmos-stacked-color-2048.png",
+    "kind": "png",
+    "width": 2048,
+    "height": 1798
+  },
+  {
+    "path": "brand/logo/stacked/algorythmos-stacked-indigo.svg",
+    "kind": "svg"
+  },
+  {
+    "path": "brand/logo/stacked/algorythmos-stacked-indigo-512.png",
+    "kind": "png",
+    "width": 512,
+    "height": 449
+  },
+  {
+    "path": "brand/logo/stacked/algorythmos-stacked-indigo-1024.png",
+    "kind": "png",
+    "width": 1024,
+    "height": 899
+  },
+  {
+    "path": "brand/logo/stacked/algorythmos-stacked-indigo-2048.png",
+    "kind": "png",
+    "width": 2048,
+    "height": 1798
+  },
+  {
+    "path": "brand/print/algorythmos-stacked-indigo.pdf",
+    "kind": "pdf"
+  },
+  {
+    "path": "brand/logo/stacked/algorythmos-stacked-white.svg",
+    "kind": "svg"
+  },
+  {
+    "path": "brand/logo/stacked/algorythmos-stacked-white-512.png",
+    "kind": "png",
+    "width": 512,
+    "height": 449
+  },
+  {
+    "path": "brand/logo/stacked/algorythmos-stacked-white-1024.png",
+    "kind": "png",
+    "width": 1024,
+    "height": 899
+  },
+  {
+    "path": "brand/logo/stacked/algorythmos-stacked-white-2048.png",
+    "kind": "png",
+    "width": 2048,
+    "height": 1798
+  },
+  {
+    "path": "brand/logo/stacked/algorythmos-stacked-black.svg",
+    "kind": "svg"
+  },
+  {
+    "path": "brand/logo/stacked/algorythmos-stacked-black-512.png",
+    "kind": "png",
+    "width": 512,
+    "height": 449
+  },
+  {
+    "path": "brand/logo/stacked/algorythmos-stacked-black-1024.png",
+    "kind": "png",
+    "width": 1024,
+    "height": 899
+  },
+  {
+    "path": "brand/logo/stacked/algorythmos-stacked-black-2048.png",
+    "kind": "png",
+    "width": 2048,
+    "height": 1798
+  },
+  {
+    "path": "brand/print/algorythmos-stacked-black.pdf",
+    "kind": "pdf"
+  },
+  {
+    "path": "brand/logo/wordmark/algorythmos-wordmark-indigo.svg",
+    "kind": "svg"
+  },
+  {
+    "path": "brand/logo/wordmark/algorythmos-wordmark-indigo-800.png",
+    "kind": "png",
+    "width": 800,
+    "height": 125
+  },
+  {
+    "path": "brand/logo/wordmark/algorythmos-wordmark-indigo-1600.png",
+    "kind": "png",
+    "width": 1600,
+    "height": 250
+  },
+  {
+    "path": "brand/logo/wordmark/algorythmos-wordmark-indigo-3200.png",
+    "kind": "png",
+    "width": 3200,
+    "height": 500
+  },
+  {
+    "path": "brand/print/algorythmos-wordmark-indigo.pdf",
+    "kind": "pdf"
+  },
+  {
+    "path": "brand/logo/wordmark/algorythmos-wordmark-white.svg",
+    "kind": "svg"
+  },
+  {
+    "path": "brand/logo/wordmark/algorythmos-wordmark-white-800.png",
+    "kind": "png",
+    "width": 800,
+    "height": 125
+  },
+  {
+    "path": "brand/logo/wordmark/algorythmos-wordmark-white-1600.png",
+    "kind": "png",
+    "width": 1600,
+    "height": 250
+  },
+  {
+    "path": "brand/logo/wordmark/algorythmos-wordmark-white-3200.png",
+    "kind": "png",
+    "width": 3200,
+    "height": 500
+  },
+  {
+    "path": "brand/logo/wordmark/algorythmos-wordmark-black.svg",
+    "kind": "svg"
+  },
+  {
+    "path": "brand/logo/wordmark/algorythmos-wordmark-black-800.png",
+    "kind": "png",
+    "width": 800,
+    "height": 125
+  },
+  {
+    "path": "brand/logo/wordmark/algorythmos-wordmark-black-1600.png",
+    "kind": "png",
+    "width": 1600,
+    "height": 250
+  },
+  {
+    "path": "brand/logo/wordmark/algorythmos-wordmark-black-3200.png",
+    "kind": "png",
+    "width": 3200,
+    "height": 500
+  },
+  {
+    "path": "brand/print/algorythmos-wordmark-black.pdf",
+    "kind": "pdf"
+  },
+  {
+    "path": "brand/icon/algorythmos-icon-1024.png",
+    "kind": "png",
+    "width": 1024,
+    "height": 1024
+  },
+  {
+    "path": "brand/icon/algorythmos-icon-512.png",
+    "kind": "png",
+    "width": 512,
+    "height": 512
+  },
+  {
+    "path": "brand/icon/algorythmos-icon-192.png",
+    "kind": "png",
+    "width": 192,
+    "height": 192
+  },
+  {
+    "path": "brand/icon/algorythmos-icon-180.png",
+    "kind": "png",
+    "width": 180,
+    "height": 180
+  },
+  {
+    "path": "brand/icon/algorythmos-maskable-512.png",
+    "kind": "png",
+    "width": 512,
+    "height": 512
+  },
+  {
+    "path": "brand/icon/algorythmos-maskable-192.png",
+    "kind": "png",
+    "width": 192,
+    "height": 192
+  },
+  {
+    "path": "brand/icon/algorythmos-favicon-16.png",
+    "kind": "png",
+    "width": 16,
+    "height": 16
+  },
+  {
+    "path": "brand/icon/algorythmos-favicon-32.png",
+    "kind": "png",
+    "width": 32,
+    "height": 32
+  },
+  {
+    "path": "brand/icon/algorythmos-favicon-48.png",
+    "kind": "png",
+    "width": 48,
+    "height": 48
+  },
+  {
+    "path": "brand/icon/favicon.ico",
+    "kind": "ico",
+    "sizes": [
+      16,
+      32,
+      48
+    ]
+  },
+  {
+    "path": "brand/social/algorythmos-avatar-1080.png",
+    "kind": "png",
+    "width": 1080,
+    "height": 1080
+  },
+  {
+    "path": "brand/social/algorythmos-avatar-light-1080.png",
+    "kind": "png",
+    "width": 1080,
+    "height": 1080
+  },
+  {
+    "path": "brand/social/algorythmos-linkedin-company-1128x191.png",
+    "kind": "png",
+    "width": 1128,
+    "height": 191
+  },
+  {
+    "path": "brand/social/algorythmos-linkedin-profile-1584x396.png",
+    "kind": "png",
+    "width": 1584,
+    "height": 396
+  },
+  {
+    "path": "brand/social/algorythmos-x-header-1500x500.png",
+    "kind": "png",
+    "width": 1500,
+    "height": 500
+  },
+  {
+    "path": "brand/social/algorythmos-youtube-2560x1440.png",
+    "kind": "png",
+    "width": 2560,
+    "height": 1440
+  },
+  {
+    "path": "brand/social/algorythmos-share-1200x630.png",
+    "kind": "png",
+    "width": 1200,
+    "height": 630
+  },
+  {
+    "path": "brand/ads/algorythmos-ad-square-1080-gradient.png",
+    "kind": "png",
+    "width": 1080,
+    "height": 1080
+  },
+  {
+    "path": "brand/ads/algorythmos-ad-square-1080-dark.png",
+    "kind": "png",
+    "width": 1080,
+    "height": 1080
+  },
+  {
+    "path": "brand/ads/algorythmos-ad-square-1080-light.png",
+    "kind": "png",
+    "width": 1080,
+    "height": 1080
+  },
+  {
+    "path": "brand/ads/algorythmos-ad-story-1080x1920-gradient.png",
+    "kind": "png",
+    "width": 1080,
+    "height": 1920
+  },
+  {
+    "path": "brand/ads/algorythmos-ad-story-1080x1920-dark.png",
+    "kind": "png",
+    "width": 1080,
+    "height": 1920
+  },
+  {
+    "path": "brand/ads/algorythmos-ad-story-1080x1920-light.png",
+    "kind": "png",
+    "width": 1080,
+    "height": 1920
+  },
+  {
+    "path": "brand/ads/algorythmos-ad-landscape-1200x628-gradient.png",
+    "kind": "png",
+    "width": 1200,
+    "height": 628
+  },
+  {
+    "path": "brand/ads/algorythmos-ad-landscape-1200x628-dark.png",
+    "kind": "png",
+    "width": 1200,
+    "height": 628
+  },
+  {
+    "path": "brand/ads/algorythmos-ad-landscape-1200x628-light.png",
+    "kind": "png",
+    "width": 1200,
+    "height": 628
+  },
+  {
+    "path": "brand/ads/algorythmos-ad-wide-1920x1080-gradient.png",
+    "kind": "png",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "path": "brand/ads/algorythmos-ad-wide-1920x1080-dark.png",
+    "kind": "png",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "path": "brand/ads/algorythmos-ad-wide-1920x1080-light.png",
+    "kind": "png",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "path": "public/logo-mark.png",
+    "kind": "png",
+    "width": 865,
+    "height": 1024
+  },
+  {
+    "path": "public/logo-mark.webp",
+    "kind": "webp",
+    "width": 108,
+    "height": 128
+  },
+  {
+    "path": "public/favicon.ico",
+    "kind": "ico",
+    "sizes": [
+      16,
+      32,
+      48
+    ]
+  },
+  {
+    "path": "public/favicon-192.png",
+    "kind": "png",
+    "width": 192,
+    "height": 192
+  },
+  {
+    "path": "public/favicon-512.png",
+    "kind": "png",
+    "width": 512,
+    "height": 512
+  },
+  {
+    "path": "public/apple-touch-icon.png",
+    "kind": "png",
+    "width": 180,
+    "height": 180
+  },
+  {
+    "path": "public/maskable-192.png",
+    "kind": "png",
+    "width": 192,
+    "height": 192
+  },
+  {
+    "path": "public/maskable-512.png",
+    "kind": "png",
+    "width": 512,
+    "height": 512
+  },
+  {
+    "path": "public/Algorythmos.png",
+    "kind": "png",
+    "width": 1200,
+    "height": 630
+  },
+  {
+    "path": "public/bimi/algorythmos.svg",
+    "kind": "svg"
+  }
+]
