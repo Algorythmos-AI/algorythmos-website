@@ -23,7 +23,9 @@
     "scenes:posters": "node scripts/capture-scene-posters.mjs",
     "lh": "node scripts/lh-check.mjs",
     "i18n:check": "node scripts/i18nCheck.mjs",
-    "health:check": "node scripts/healthCheck.mjs"
+    "health:check": "node scripts/healthCheck.mjs",
+    "brand:build": "node brand/source/build-brand.mjs",
+    "brand:check": "node brand/source/build-brand.mjs --check"
   },
   "dependencies": {
     "@astrojs/react": "^7.0.1",

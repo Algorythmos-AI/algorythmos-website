@@ -43,6 +43,9 @@ jobs:
       - name: Type-check
         run: npm run check
 
+      - name: Brand assets match the logo master
+        run: npm run brand:check
+
       - name: i18n parity, attribute copy and meta lengths
         run: npm run i18n:check
 

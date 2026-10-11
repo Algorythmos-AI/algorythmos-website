@@ -12,7 +12,7 @@ export default getViteConfig({
   // @ts-expect-error — vitest augments Vite's config; not surfaced on getViteConfig's param type
   test: {
     environment: 'node',
-    include: ['src/**/*.{test,spec}.{js,ts}'],
+    include: ['src/**/*.{test,spec}.{js,ts}', 'brand/**/*.test.mjs'],
     passWithNoTests: true,
   },
 });
