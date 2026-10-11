@@ -25,6 +25,8 @@ const PAGES = [
   '/au-en/services/model-monitoring',
   '/fr-fr/blog/llmops-in-production',
   '/au-en/case-studies/clinical-document-ai',
+  '/au-en/case-studies/ai-robotics-space-bitcoin-convergence',
+  '/fr-fr/case-studies/ai-robotics-space-bitcoin-convergence',
   '/au-en/pdf-algo-pro',
   '/fr-fr/pdf-algo-pro/privacy',
   '/au-en/pdf-algo-pro/support',

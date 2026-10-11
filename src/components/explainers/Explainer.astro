@@ -1,0 +1,214 @@
+---
+/**
+ * One step-through explainer: a diagram and the numbered steps it walks through.
+ *
+ * The markup below is the finished picture — every part drawn, every step listed —
+ * so it reads correctly with no script, with motion paused, in print and to
+ * crawlers. src/lib/explainerLoop.ts only adds the stepping (see its contract).
+ * The diagram is hidden from assistive technology; the step list says the same thing.
+ */
+import { asLocale, useTranslations } from '@/i18n';
+import { EXPLAINERS_ENABLED, EXPLAINER_STEPS, type ExplainerId } from '@/data/explainers';
+import AgentLoop from './art/AgentLoop.astro';
+import FleetPath from './art/FleetPath.astro';
+import LaunchLink from './art/LaunchLink.astro';
+import MineBlock from './art/MineBlock.astro';
+import WholeJob from './art/WholeJob.astro';
+
+interface Props {
+  id: ExplainerId;
+}
+const { id } = Astro.props;
+const t = useTranslations(asLocale(Astro.currentLocale));
+
+const ART = {
+  'agent-loop': AgentLoop,
+  'fleet-path': FleetPath,
+  'launch-link': LaunchLink,
+  'mine-block': MineBlock,
+  'whole-job': WholeJob,
+} satisfies Record<ExplainerId, unknown>;
+const Art = ART[id];
+
+const count = EXPLAINER_STEPS[id];
+const steps = Array.from({ length: count }, (_, i) => t(`explainers.${id}.steps.${i}`));
+const headingId = `ex-${id}-title`;
+---
+
+<figure
+  class="ex rounded-2xl border border-line glass p-4 sm:p-6"
+  data-explainer={EXPLAINERS_ENABLED ? id : undefined}
+  data-ex-steps={count}
+  aria-labelledby={headingId}
+>
+  <figcaption>
+    <h3 id={headingId} class="text-base font-semibold text-ink">{t(`explainers.${id}.title`)}</h3>
+    <p class="mt-1 text-sm text-ink-muted">{t(`explainers.${id}.caption`)}</p>
+  </figcaption>
+  <div class="mt-5 grid items-start gap-6 lg:grid-cols-[1.35fr_1fr]">
+    <div class="ex-stage rounded-xl border border-line/70 bg-surface-2/40 p-2 sm:p-3">
+      <Art />
+    </div>
+    <ol class="space-y-2 text-sm">
+      {steps.map((s, i) => (
+        <li class="ex-step flex gap-3 rounded-lg border border-transparent px-3 py-2 text-ink-muted" data-at={i}>
+          <span class="font-mono text-xs leading-5 text-ink-subtle">{i + 1}</span>
+          <span>{s}</span>
+        </li>
+      ))}
+    </ol>
+  </div>
+  {EXPLAINERS_ENABLED && (
+    <button type="button" data-ex-replay class="ex-replay mt-4 rounded-lg border border-line px-3 py-1.5 text-xs font-medium text-ink-muted hover:text-ink">
+      {t('explainers.replay')}
+    </button>
+  )}
+</figure>
+
+<style is:global>
+  /* ── Explainer diagrams ─────────────────────────────────────────────── */
+  .ex-art {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .ex-art text {
+    font-family: var(--font-sans);
+  }
+  .ex-node {
+    fill: rgb(var(--surface-1));
+    stroke: rgb(var(--border-strong));
+    stroke-width: 1.5;
+  }
+  .ex-node-brand {
+    fill: rgb(var(--brand) / 0.12);
+    stroke: rgb(var(--brand));
+    stroke-width: 1.5;
+  }
+  .ex-block {
+    fill: rgb(var(--border-strong));
+  }
+  .ex-grid {
+    stroke: rgb(var(--border));
+    stroke-width: 1;
+    fill: none;
+  }
+  .ex-link {
+    stroke: rgb(var(--border-strong));
+    stroke-width: 1.5;
+    fill: none;
+  }
+  .ex-flow {
+    stroke: rgb(var(--brand));
+    stroke-width: 2.25;
+    fill: none;
+    stroke-linecap: round;
+  }
+  .ex-flow-2 {
+    stroke: rgb(var(--accent));
+    stroke-width: 2.25;
+    fill: none;
+    stroke-linecap: round;
+  }
+  .ex-dash {
+    stroke-dasharray: 5 5;
+  }
+  .ex-token {
+    fill: rgb(var(--brand));
+  }
+  .ex-token-2 {
+    fill: rgb(var(--accent));
+  }
+  .ex-chip {
+    fill: rgb(var(--border));
+  }
+  .ex-chip-done {
+    fill: rgb(var(--brand));
+  }
+  .ex-warn {
+    fill: rgb(var(--warning) / 0.25);
+    stroke: rgb(var(--warning));
+    stroke-width: 1.5;
+  }
+  .ex-ok {
+    stroke: rgb(var(--success));
+    stroke-width: 2.5;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .ex-ok-fill {
+    fill: rgb(var(--success));
+  }
+  .ex-bad-fill {
+    fill: rgb(var(--danger));
+  }
+  .ex-arrow {
+    fill: rgb(var(--border-strong));
+  }
+  .ex-arrow-brand {
+    fill: rgb(var(--brand));
+  }
+  .ex-label {
+    fill: rgb(var(--text));
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .ex-sub {
+    fill: rgb(var(--text-muted));
+    font-size: 12px;
+  }
+
+  /* Static picture: parts that only exist mid-run (an earlier position, a failed try) are left out. */
+  .ex [data-until] {
+    display: none;
+  }
+  .ex-replay {
+    display: none;
+  }
+
+  /* Stepping, armed by explainerLoop.ts. */
+  .ex[data-ex-run] [data-until] {
+    display: inline;
+  }
+  .ex[data-ex-run] .ex-art [data-at] {
+    opacity: 0;
+    transition: opacity var(--dur-slow) var(--ease-smooth);
+  }
+  .ex[data-ex-run] .ex-art [data-at].is-on {
+    opacity: 1;
+  }
+  .ex[data-ex-run] .ex-fly.is-now {
+    animation: ex-fly 1000ms var(--ease-smooth) both;
+  }
+  .ex[data-ex-run] .ex-step {
+    opacity: 0.55;
+    transition:
+      opacity var(--dur-slow) var(--ease-smooth),
+      border-color var(--dur-slow) var(--ease-smooth);
+  }
+  .ex[data-ex-run] .ex-step.is-on {
+    opacity: 1;
+  }
+  .ex[data-ex-run] .ex-step.is-now {
+    border-color: rgb(var(--brand) / 0.6);
+    color: rgb(var(--text));
+  }
+  .ex[data-ex-run] .ex-replay {
+    display: inline-flex;
+  }
+  @keyframes ex-fly {
+    from {
+      transform: translate(var(--fx, 0px), var(--fy, 0px));
+    }
+  }
+</style>
+
+<script>
+  import { armExplainers } from '@/lib/explainerLoop';
+
+  const arm = () => armExplainers();
+  document.addEventListener('astro:page-load', arm);
+  /* Initialize immediately if astro:page-load already fired before this module ran */
+  if (document.readyState !== 'loading') arm();
+</script>

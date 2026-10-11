@@ -16,6 +16,7 @@ export interface RelatedRef {
 export const serviceRelated: Record<string, RelatedRef[]> = {
   'agentic-automation': [
     { type: 'blog', slug: 'agentic-ai' },
+    { type: 'case-study', slug: 'ai-robotics-space-bitcoin-convergence' },
     { type: 'case-study', slug: 'financial-compliance' },
     { type: 'case-study', slug: 'manufacturing-docs' },
   ],
@@ -123,6 +124,11 @@ export const blogRelated: Record<string, RelatedRef[]> = {
     { type: 'service', slug: 'document-intelligence' },
     { type: 'blog', slug: 'gdpr-ai' },
   ],
+  'ai-control-plane-robots-satellites-payments': [
+    { type: 'case-study', slug: 'ai-robotics-space-bitcoin-convergence' },
+    { type: 'service', slug: 'agentic-automation' },
+    { type: 'blog', slug: 'agentic-ai' },
+  ],
   'port-botany-document-flows': [
     { type: 'case-study', slug: 'port-botany-ai-ml' },
     { type: 'service', slug: 'document-intelligence' },
@@ -135,6 +141,12 @@ export const blogRelated: Record<string, RelatedRef[]> = {
 
 /** Case study → the service that delivered it + a sibling study. */
 export const caseStudyRelated: Record<string, RelatedRef[]> = {
+  'ai-robotics-space-bitcoin-convergence': [
+    { type: 'service', slug: 'agentic-automation' },
+    { type: 'blog', slug: 'ai-control-plane-robots-satellites-payments' },
+    { type: 'service', slug: 'llmops' },
+    { type: 'case-study', slug: 'port-botany-ai-ml' },
+  ],
   'clinical-document-ai': [
     { type: 'service', slug: 'llmops' },
     { type: 'blog', slug: 'llmops-in-production' },

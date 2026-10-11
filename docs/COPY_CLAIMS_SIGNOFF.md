@@ -164,6 +164,71 @@ the same rule as the copy.
       page on AI-Powered Websites. The container yard appears only on the Port Botany and logistics
       study pages and the Port Botany post. `src/data/sceneMap.test.ts` enforces the placement.
 
+## 3h. Case study — AI, Robotics, Space and Bitcoin (`/case-studies/ai-robotics-space-bitcoin-convergence`) — evidence report (11 Oct 2026)
+
+Labelled on-page as an industry evidence report. The note states that Algorythmos has not been engaged by
+any organisation named, builds none of the robotics, space or Bitcoin systems described, that the delivery
+job is an illustrative scenario, and that nothing on the page is financial or investment advice. It was
+written from a strategy paper that cited no sources; every figure below was re-sourced (accessed
+11 Oct 2026). Source numbers are the page's own.
+
+| Claim on the page | Source |
+|---|---|
+| AI could add up to $15.7T to the world economy by 2030 (2017 estimate, 2016 prices) | [1] PwC — Sizing the Prize |
+| 78% of organisations used AI in 2024 (55% the year before); notable models: US 40, China 15, Europe 3; US private AI investment $109.1B; GPT-3.5-level inference cost down >280-fold, Nov 2022 – Oct 2024 | [2] Stanford HAI — AI Index 2025 |
+| Transformer and attention; retrieval-augmented generation; reason-and-act loops | [3] Vaswani 2017; [4] Lewis 2020; [5] Yao 2022 |
+| AlphaFold predicts structure from sequence; RFdiffusion designs protein backbones | [6] Jumper 2021; [7] Watson 2023 |
+| New drug: $2,558M capitalised, $1,395M out of pocket (2013 dollars) | [8] DiMasi, Grabowski, Hansen 2016 |
+| 7.9% likelihood of approval from Phase I, 2011–2020 | [9] BIO / Informa / QLS |
+| First drug with AI-discovered target and AI-designed molecule: 71-patient Phase 2a trial | [10] Nature Medicine 2025 |
+| 5 million industrial robots in operation end 2025 (+9%); >600,000 installed in 2025; China 59%; US second ahead of Japan | [11] IFR press release, 24 Sep 2026 |
+| 4,663,698 industrial robots in operation in 2024 | [12] IFR World Robotics 2025 executive summary |
+| Amazon: >1 million robots, >300 facilities; DeepFleet cuts fleet travel time 10% (Amazon's own statement) | [13] aboutamazon.com |
+| Conflict-based search; vision-language-action models; domain randomisation | [14] Sharon 2015; [15] Brohan 2023; [16] Tobin 2017 |
+| Li-ion pack price $108/kWh in 2025, record low, −8% on 2024 | [17] BloombergNEF |
+| Shuttle $54,500/kg ($61,700 in 2018 dollars); Falcon 9 $62M for 22,800 kg = $2,720/kg; Falcon Heavy $1,400/kg; factor of 20 | [18] Jones, NASA Ames, ICES-2018-81 |
+| Booster landing guidance by convex optimisation; successive convexification | [19] Blackmore 2016; [20] Szmuk and Açıkmeşe 2018 |
+| Laser inter-satellite links can beat fibre over long distances; routes recomputed as satellites move | [21] Handley 2018 |
+| Starlink: 12,988 launched, 11,137 in orbit (table dated 9 Oct 2026) | [22] McDowell |
+| Space economy $630B in 2023, projected $1.8T by 2035 | [23] WEF and McKinsey 2024 |
+| 2.2 billion people offline in 2025 (6 billion online); 29% offline in 2024 (revised) | [24] ITU Facts and Figures 2025 |
+| Proof-of-work, longest chain; block header, Merkle root, retarget every 2,016 blocks, ten-minute interval | [25] Nakamoto 2008; [26] Bitcoin developer guide |
+| Reward halves every 210,000 blocks; supply bounded just under 21 million | [27] Bitcoin Wiki — Controlled supply |
+| Schnorr signatures; Lightning payment channels; L402 | [28] BIP 340; [29] Poon and Dryja 2016; [30] Lightning Labs |
+| SEC approved spot bitcoin ETP listings on 10 Jan 2024, stating it was not an endorsement | [31] SEC statement |
+| Mining: 138 TWh/yr; 52.4% sustainable (42.6% renewables, 9.8% nuclear); gas 38.2%; coal 8.9%; survey covers 48% of activity | [32] Cambridge CCAF 2025 |
+| ERCOT large flexible loads (≥75 MW), mostly crypto mining, have voluntary curtailment agreements | [33] US EIA, 3 Oct 2024 |
+
+**Left out because no source supports them** (shown as such in the page's "Claims checked" table):
+generative AI cutting four to five years of discovery to four to six months; a $20,000 humanoid; a 300%
+pick-rate gain and 40% unit-cost cut; launch below $200/kg; companies holding bitcoin outperforming peers.
+The "10–20% workflow efficiency" figure and the capital-allocation recommendation in the source paper
+were dropped without mention.
+
+**Not verified to a primary table:** the IFR operational-stock series for 2021–2023, so no robot chart is
+published. The Cambridge report gives no figure for the remainder of the energy mix, so that chart is a
+bar chart of the four reported sources, not a whole.
+
+- [x] **Scope:** the "approach" section and FAQ say Algorythmos builds the agent, data and MLOps layer
+      only. Nothing implies it builds robots, satellites or Bitcoin infrastructure.
+- [x] **No investment view.** Bitcoin is described as settlement technology. No price, return or
+      allocation statement appears, and the note and the last FAQ say so.
+- [x] **Illustrative scenario:** the delivery job carries no figures and is labelled as illustrative in
+      the note, the solution paragraph and the last explainer's caption.
+- [x] **Explainers are not scenes.** The five step-through diagrams (`src/components/explainers/`) are
+      teaching figures inside this report, each captioned as a schematic. They appear on no other page.
+      One of them draws a block being mined. §3g's rule that digital currency is never drawn as a
+      blockchain applies to the decorative 3D scenes and to pages selling a service; **Sam to confirm
+      this exception for the report.** The hero scene is the agentic-automation service's own
+      (`agent-swarm`), chosen by the usual rule.
+- [x] **Companion post** `/blog/ai-control-plane-robots-satellites-payments` reuses only figures from
+      this section (78% adoption, 5 million robots, L402). The design guidance is Algorythmos's own
+      delivery approach, not client results.
+- [x] `src/data/citations.test.ts` fails the build if a marker points at a missing source, if EN and FR
+      cite differently, or if a listed source is never cited.
+- [ ] Owner to re-verify annually: IFR (each September), ITU (each November), BloombergNEF (each
+      December), AI Index (each April), and the Starlink count whenever the page is revised.
+
 ## 4. Homepage, voice and positioning (`/`, footer, meta, contact, careers)
 
 Decisions (Sam Kalaliya, 26 Sep 2026):

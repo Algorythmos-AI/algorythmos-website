@@ -32,6 +32,43 @@ const labelKeys = (slug: string, i: number, n: number) =>
 /** slug → ordered list of charts to render on the detail page. */
 export const caseStudyCharts: Record<string, ChartDef[]> = {
   /**
+   * Sources (see the study's sources list): NASA launch-cost paper (2018 dollars),
+   * Stanford AI Index 2025, ITU Facts and Figures 2025 and the Cambridge Digital
+   * Mining Industry Report. The Cambridge report gives no figure for the small
+   * remainder of the mix, so the four reported sources are shown as bars, not
+   * as a whole.
+   */
+  'ai-robotics-space-bitcoin-convergence': [
+    {
+      type: 'bar',
+      titleKey: keys('ai-robotics-space-bitcoin-convergence', 0).title,
+      captionKey: keys('ai-robotics-space-bitcoin-convergence', 0).caption,
+      labelKeys: labelKeys('ai-robotics-space-bitcoin-convergence', 0, 3),
+      datasets: [{ labelKey: keys('ai-robotics-space-bitcoin-convergence', 0).series(0), data: [61.7, 2.7, 1.4] }],
+    },
+    {
+      type: 'bar',
+      titleKey: keys('ai-robotics-space-bitcoin-convergence', 1).title,
+      captionKey: keys('ai-robotics-space-bitcoin-convergence', 1).caption,
+      labelKeys: labelKeys('ai-robotics-space-bitcoin-convergence', 1, 3),
+      datasets: [{ labelKey: keys('ai-robotics-space-bitcoin-convergence', 1).series(0), data: [40, 15, 3] }],
+    },
+    {
+      type: 'doughnut',
+      titleKey: keys('ai-robotics-space-bitcoin-convergence', 2).title,
+      captionKey: keys('ai-robotics-space-bitcoin-convergence', 2).caption,
+      labelKeys: labelKeys('ai-robotics-space-bitcoin-convergence', 2, 2),
+      datasets: [{ labelKey: keys('ai-robotics-space-bitcoin-convergence', 2).series(0), data: [6.0, 2.2] }],
+    },
+    {
+      type: 'bar',
+      titleKey: keys('ai-robotics-space-bitcoin-convergence', 3).title,
+      captionKey: keys('ai-robotics-space-bitcoin-convergence', 3).caption,
+      labelKeys: labelKeys('ai-robotics-space-bitcoin-convergence', 3, 4),
+      datasets: [{ labelKey: keys('ai-robotics-space-bitcoin-convergence', 3).series(0), data: [42.6, 9.8, 38.2, 8.9] }],
+    },
+  ],
+  /**
    * Sources (see the study's sources list): NSW Ports rail page + Shipping
    * Australia (rail volumes), Patrick Terminals (AutoRail capacity), NSW Ports
    * port page (import distance), and the cited literature for the low end of

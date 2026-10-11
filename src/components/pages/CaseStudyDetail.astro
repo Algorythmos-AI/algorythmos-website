@@ -13,6 +13,8 @@ import { bookingUrl } from '@/lib/links';
 import Breadcrumbs from '@/components/ui/Breadcrumbs.astro';
 import RelatedLinks from '@/components/ui/RelatedLinks.astro';
 import { caseStudyRelated } from '@/data/related';
+import Explainer from '@/components/explainers/Explainer.astro';
+import { caseStudyExplainers } from '@/data/explainers';
 
 interface Props {
   slug: string;
@@ -137,12 +139,75 @@ const faqLd = faqs.length
   : null;
 
 const sources: { label: string; url: string }[] = [];
-for (let i = 0; i < 20; i++) {
+for (let i = 0; i < 40; i++) {
   const label = getDict(locale)[`caseStudyDetail.studies.${slug}.sources.${i}.label`];
   const url = getDict(locale)[`caseStudyDetail.studies.${slug}.sources.${i}.url`];
   if (!label || !url) break;
   sources.push({ label, url });
 }
+
+/**
+ * Long-form blocks, all optional and read on the merged dictionary so a study
+ * without them renders exactly as before:
+ *  - `pillars.N.{title,job,how,algorithms.M,players,limits}` — one technical section each;
+ *  - `orchestration.{title,body,steps.N}` — how the pillars are driven together;
+ *  - `claims.N.{claim,source,verdict}` — popular figures set against their sources.
+ * A study that has pillars also gets a contents list and section anchors.
+ */
+const dict = getDict(locale);
+const sk = (key: string) => dict[`caseStudyDetail.studies.${slug}.${key}`];
+const seq = (key: string, max: number): string[] => {
+  const out: string[] = [];
+  for (let i = 0; i < max; i++) {
+    const v = sk(`${key}.${i}`);
+    if (!v) break;
+    out.push(v);
+  }
+  return out;
+};
+const explainers = caseStudyExplainers[slug];
+
+const pillars: { id: string; title: string; job?: string; how: string; algorithms: string[]; players?: string; limits?: string }[] = [];
+for (let i = 0; i < 8; i++) {
+  const title = sk(`pillars.${i}.title`);
+  const how = sk(`pillars.${i}.how`);
+  if (!title || !how) break;
+  pillars.push({
+    id: `pillar-${i + 1}`,
+    title,
+    job: sk(`pillars.${i}.job`),
+    how,
+    algorithms: seq(`pillars.${i}.algorithms`, 10),
+    players: sk(`pillars.${i}.players`),
+    limits: sk(`pillars.${i}.limits`),
+  });
+}
+
+const orchTitle = sk('orchestration.title');
+const orchBody = sk('orchestration.body');
+const orchestration = orchTitle && orchBody ? { title: orchTitle, body: orchBody, steps: seq('orchestration.steps', 8) } : null;
+
+const claims: { claim: string; source: string; verdict: string }[] = [];
+for (let i = 0; i < 24; i++) {
+  const claim = sk(`claims.${i}.claim`);
+  const source = sk(`claims.${i}.source`);
+  const verdict = sk(`claims.${i}.verdict`);
+  if (!claim || !source || !verdict) break;
+  claims.push({ claim, source, verdict });
+}
+
+const longForm = pillars.length > 0;
+/** Anchor ids exist only on long-form studies, so the short ones keep their markup. */
+const anchor = (id: string) => (longForm ? id : undefined);
+const contents = longForm
+  ? [
+      ...pillars.map((p) => ({ href: `#${p.id}`, label: p.title })),
+      ...(orchestration ? [{ href: '#orchestration', label: orchestration.title }] : []),
+      ...(claims.length ? [{ href: '#claims', label: t('caseStudyDetail.sections.claims') }] : []),
+      ...(faqs.length ? [{ href: '#faq', label: t('caseStudyDetail.sections.faq') }] : []),
+      ...(sources.length ? [{ href: '#sources', label: t('caseStudyDetail.sections.sources') }] : []),
+    ]
+  : [];
 ---
 
 <BaseLayout title={getDict(locale)[`caseStudyDetail.studies.${slug}.seoTitle`] ?? study.title} description={getDict(locale)[`caseStudyDetail.studies.${slug}.seoDescription`] ?? study.meta} path={path} ogType="article" image={ogImg} jsonLd={[articleLd, crumbs, ...(faqLd ? [faqLd] : [])]}>
@@ -165,7 +230,7 @@ for (let i = 0; i < 20; i++) {
 
   {stats.length > 0 && (
     <section class="container-page pt-10">
-      <div class="grid gap-4 sm:grid-cols-3">
+      <div class:list={['grid gap-4', stats.length === 4 ? 'sm:grid-cols-2 lg:grid-cols-4' : 'sm:grid-cols-3']}>
         {stats.map((s, i) => (
           <div
             data-reveal
@@ -187,6 +252,22 @@ for (let i = 0; i < 20; i++) {
         {note}
       </p>
     </section>
+  )}
+
+  {contents.length > 0 && (
+    <nav class="container-page pt-10" aria-label={t('caseStudyDetail.sections.contents')}>
+      <div data-reveal class="rounded-2xl border border-line glass p-6">
+        <h2 class="text-sm font-semibold uppercase tracking-wider text-ink-subtle">{t('caseStudyDetail.sections.contents')}</h2>
+        <ol class="mt-4 grid gap-x-8 gap-y-2 text-sm sm:grid-cols-2">
+          {contents.map((c, i) => (
+            <li class="flex gap-3">
+              <span class="font-mono text-xs leading-5 text-ink-subtle">{i + 1}</span>
+              <a href={c.href} class="text-ink-muted underline-offset-4 hover:text-ink hover:underline">{c.label}</a>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </nav>
   )}
 
   <section class="container-page py-16">
@@ -229,6 +310,75 @@ for (let i = 0; i < 20; i++) {
     </div>
   </section>
 
+  {pillars.map((p, i) => (
+    <section id={p.id} class="container-page scroll-mt-24 pb-16">
+      <h2 data-reveal class="text-h3 font-semibold text-ink">{p.title}</h2>
+      {p.job && (
+        <p data-reveal class="mt-4 max-w-measure rounded-xl border border-brand/30 bg-brand/5 px-4 py-3 text-sm text-ink-muted">
+          <span class="font-semibold text-ink">{t('caseStudyDetail.pillar.job')}</span> {p.job}
+        </p>
+      )}
+      <div class="mt-8 grid gap-10 lg:grid-cols-[1.5fr_1fr]">
+        <div data-reveal>
+          <h3 class="text-base font-semibold text-ink">{t('caseStudyDetail.pillar.how')}</h3>
+          <p class="mt-3 text-ink-muted">{p.how}</p>
+          {p.players && (
+            <>
+              <h3 class="mt-8 text-base font-semibold text-ink">{t('caseStudyDetail.pillar.players')}</h3>
+              <p class="mt-3 text-ink-muted">{p.players}</p>
+            </>
+          )}
+          {p.limits && (
+            <>
+              <h3 class="mt-8 text-base font-semibold text-ink">{t('caseStudyDetail.pillar.limits')}</h3>
+              <p class="mt-3 text-ink-muted">{p.limits}</p>
+            </>
+          )}
+        </div>
+        {p.algorithms.length > 0 && (
+          <aside data-reveal style="--reveal-delay: 80ms" class="h-fit rounded-2xl border border-line glass p-6">
+            <h3 class="text-base font-semibold text-ink">{t('caseStudyDetail.pillar.algorithms')}</h3>
+            <ul class="mt-4 space-y-3 text-sm text-ink-muted">
+              {p.algorithms.map((a) => (
+                <li class="flex gap-3">
+                  <span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-brand" aria-hidden="true"></span>
+                  <span>{a}</span>
+                </li>
+              ))}
+            </ul>
+          </aside>
+        )}
+      </div>
+      {explainers?.pillars[i] && (
+        <div data-reveal class="mt-10">
+          <Explainer id={explainers.pillars[i]} />
+        </div>
+      )}
+    </section>
+  ))}
+
+  {orchestration && (
+    <section id="orchestration" class="container-page scroll-mt-24 pb-16">
+      <h2 data-reveal class="text-h3 font-semibold text-ink">{orchestration.title}</h2>
+      <p data-reveal class="mt-4 max-w-measure text-lead text-ink-muted">{orchestration.body}</p>
+      {orchestration.steps.length > 0 && (
+        <ol data-reveal class="mt-8 grid gap-4 md:grid-cols-2">
+          {orchestration.steps.map((step, i) => (
+            <li class="flex gap-4 rounded-2xl border border-line glass p-5">
+              <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-brand/40 text-sm font-semibold text-brand">{i + 1}</span>
+              <p class="pt-1 text-sm text-ink-muted">{step}</p>
+            </li>
+          ))}
+        </ol>
+      )}
+      {explainers?.orchestration && (
+        <div data-reveal class="mt-10">
+          <Explainer id={explainers.orchestration} />
+        </div>
+      )}
+    </section>
+  )}
+
   {charts.length > 0 && (
     <section class="container-page pb-20">
       <div class="grid gap-6 md:grid-cols-2">
@@ -247,8 +397,36 @@ for (let i = 0; i < 20; i++) {
     </section>
   )}
 
+  {claims.length > 0 && (
+    <section id="claims" class="container-page scroll-mt-24 pb-16">
+      <h2 id="claims-title" data-reveal class="text-h3 font-semibold text-ink">{t('caseStudyDetail.sections.claims')}</h2>
+      <p data-reveal class="mt-3 max-w-measure text-ink-muted">{t('caseStudyDetail.claims.intro')}</p>
+      {/* Scrolls sideways on a phone, so it must be reachable from the keyboard. */}
+      <div data-reveal class="mt-6 overflow-x-auto rounded-2xl border border-line glass" role="region" tabindex="0" aria-labelledby="claims-title">
+        <table class="w-full min-w-[640px] text-left text-sm">
+          <thead class="text-xs uppercase tracking-wider text-ink-subtle">
+            <tr>
+              <th scope="col" class="p-4 font-semibold">{t('caseStudyDetail.claims.claim')}</th>
+              <th scope="col" class="p-4 font-semibold">{t('caseStudyDetail.claims.source')}</th>
+              <th scope="col" class="p-4 font-semibold">{t('caseStudyDetail.claims.verdict')}</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-line text-ink-muted">
+            {claims.map((c) => (
+              <tr>
+                <th scope="row" class="p-4 align-top font-medium text-ink">{c.claim}</th>
+                <td class="p-4 align-top">{c.source}</td>
+                <td class="p-4 align-top font-medium text-ink">{c.verdict}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  )}
+
   {faqs.length > 0 && (
-    <section class="container-page pb-4">
+    <section id={anchor('faq')} class:list={['container-page pb-4', longForm && 'scroll-mt-24']}>
       <h2 data-reveal class="text-h3 font-semibold text-ink">{t('caseStudyDetail.sections.faq')}</h2>
       <div data-reveal class="mt-6 max-w-measure divide-y divide-line overflow-hidden rounded-2xl border border-line glass">
         {faqs.map((f) => (
@@ -265,7 +443,7 @@ for (let i = 0; i < 20; i++) {
   )}
 
   {sources.length > 0 && (
-    <section class="container-page pb-4">
+    <section id={anchor('sources')} class:list={['container-page pb-4', longForm && 'scroll-mt-24']}>
       <h2 data-reveal class="text-h3 font-semibold text-ink">{t('caseStudyDetail.sections.sources')}</h2>
       <ol data-reveal class="mt-4 grid gap-2 text-sm text-ink-muted sm:grid-cols-2">
         {sources.map((src, i) => (

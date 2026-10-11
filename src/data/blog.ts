@@ -51,6 +51,19 @@ export interface BlogPost {
 
 export const blog: BlogPost[] = [
   {
+    slug: 'ai-control-plane-robots-satellites-payments',
+    postIndex: 21,
+    date: '2026-10-11',
+    body: [
+      { kind: 'prose', base: 'content.0', paragraphs: [0, 1] },
+      { kind: 'prose', base: 'content.1', paragraphs: [0], list: [0, 1, 2] },
+      { kind: 'prose', base: 'content.2', paragraphs: [0], list: [0, 1, 2] },
+      { kind: 'prose', base: 'content.3', paragraphs: [0], list: [0, 1, 2] },
+      { kind: 'prose', base: 'content.4', paragraphs: [0], list: [0, 1, 2] },
+      { kind: 'prose', base: 'content.5', paragraphs: [0, 1] },
+    ],
+  },
+  {
     slug: 'mbsc-australia-partnership',
     postIndex: 20,
     date: '2026-09-29',
