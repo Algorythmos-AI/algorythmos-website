@@ -83,6 +83,7 @@ describe('first-load code never reaches three', () => {
   const FIRST_LOAD = [
     ['src', 'lib', 'scene3d', 'bootstrap.ts'],
     ['src', 'lib', 'scene3d', 'tier.ts'],
+    ['src', 'lib', 'scene3d', 'debug.ts'], // lazy, but it is not the engine either
     ['src', 'data', 'scenes.ts'],
     ['src', 'components', 'ui', 'Scene3D.astro'],
     ['src', 'lib', 'motion.ts'],

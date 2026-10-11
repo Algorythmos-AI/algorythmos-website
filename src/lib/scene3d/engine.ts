@@ -39,6 +39,8 @@ export interface ShowOptions {
   maxPixelRatio?: number;
   /** The scene could not start or could not continue. The canvas is already gone. */
   onFail(reason: FailReason, error?: unknown): void;
+  /** Progress through show(), for the mount's `data-scene-step`. */
+  onStep?(step: 'building' | 'compiling'): void;
 }
 
 export interface EngineStats {
@@ -329,6 +331,7 @@ export function createEngine(canvas: HTMLCanvasElement, gl: WebGL2RenderingConte
         const mod = await scenes[opts.id]();
         if (mine !== token) return false;
         performance.mark('scene3d:module');
+        opts.onStep?.('building');
 
         const scene = new Scene();
         const camera = new PerspectiveCamera(FOV, 1, 0.1, 60);
@@ -350,6 +353,7 @@ export function createEngine(canvas: HTMLCanvasElement, gl: WebGL2RenderingConte
         performance.mark('scene3d:built');
         readScroll();
         input.scroll = opts.still ? 0 : scrollTarget;
+        opts.onStep?.('compiling');
 
         /* Compile off the main thread where the driver allows, then put two frames
            on the canvas before it is shown — the first can still hitch on upload. */

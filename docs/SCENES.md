@@ -42,6 +42,27 @@ it is a captured image of the scene, painted into a canvas by the loader — a c
 because an `<img>` or a CSS background could be picked as the page's LCP element. A
 desktop about to get the live scene does not fetch it.
 
+## Finding out why a visitor has the still
+
+Add `?scene-debug` to any page that has a scene (for example `/au-en?scene-debug`). A
+readout appears along the bottom of the page: the plan, how far the start got, the
+failure if there was one, whether WebGL2 is available, whether motion is off because of
+the OS setting or the pause button, and the frame rate of the scene and of the homepage
+orb. It is for phones, which have no developer tools: a screenshot of it answers "why is
+it not moving?".
+
+The same facts are on the mount for tests and for a desktop inspector:
+
+| Attribute | Values |
+|---|---|
+| `data-scene-step` | `armed`, `probing`, `loading`, `building`, `compiling`, `live` |
+| `data-scene-fail` | `no-webgl`, `software-gl`, `engine-load`, `slow`, `context-lost`, `error`, `motion-off` |
+| `data-scene-error` | The error text, when there was one |
+| `data-orb-static` (on the orb) | `motion-off`, `low-memory`, `touch-only` |
+
+The readout (`debug.ts`) is fetched only when the flag is present. It reads state and
+changes nothing.
+
 ## Where a scene sits
 
 `HeroScene` sizes the scene's box in CSS alone, so a hero is the same height before

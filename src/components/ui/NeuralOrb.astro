@@ -152,6 +152,11 @@ const { class: klass = '' } = Astro.props;
        3D core has taken over the stage (Scene3D). The formed orb stays painted. */
     let halted = false;
     canvas.dataset.orbState = 'static';
+    /* Why this orb is one painted frame, and how many it has drawn if it is not:
+       read by the `?scene-debug` readout and by the tests that prove it moves. */
+    if (staticMode) canvas.dataset.orbStatic = reduceMotion ? 'motion-off' : deviceMemory !== undefined ? 'low-memory' : 'touch-only';
+    let framesDrawn = 0;
+    (window as Window & { __orbFrames?: () => number }).__orbFrames = () => framesDrawn;
     let w = 0;
     let h = 0;
     let brand: RGB = { r: 167, g: 139, b: 250 };
@@ -510,6 +515,7 @@ const { class: klass = '' } = Astro.props;
       }
 
       renderFrame(formProgress);
+      framesDrawn++;
     };
 
     const drawStatic = () => {
