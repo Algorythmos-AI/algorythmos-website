@@ -158,25 +158,20 @@ test.describe('the still on an inner page', () => {
   });
 });
 
-test.describe('phones and tablets wait for a first touch', () => {
+test.describe('a phone-sized viewport starts by itself, at the phone tier', () => {
+  /* The real device profiles (touch, pixel density, user agent) are in
+     scene3d-mobile.spec.ts; this is the same rule on every desktop engine. */
   test.use({ viewport: { width: 390, height: 844 }, hasTouch: true });
 
-  test('nothing is fetched before a touch; the scene starts after one', async ({ page, browserName }) => {
-    test.skip(browserName === 'firefox', 'Playwright cannot emulate touch input in Firefox');
+  test('the scene goes live with no touch', async ({ page }) => {
     const engine = watchEngine(page);
     await forceScene(page);
     await page.goto(HOME);
-    await page.waitForTimeout(3000);
-    await expect(mount(page)).toHaveAttribute('data-scene-plan', 'interaction:low:touch-device');
-    await expect(mount(page)).toHaveAttribute('data-scene-state', 'static');
-    expect(engine, 'no engine request before the first touch').toEqual([]);
-
+    await expect(mount(page)).toHaveAttribute('data-scene-plan', 'idle:low:touch-device');
     test.skip(!(await hasWebgl2(page)), 'this browser build cannot create a WebGL2 context, even in software');
-    await page.touchscreen.tap(195, 420);
     await expect(mount(page)).toHaveAttribute('data-scene-state', 'live', { timeout: LIVE_TIMEOUT });
     expect(engine.length).toBeGreaterThan(0);
   });
-
 });
 
 for (const width of [320, 390]) {
@@ -335,9 +330,40 @@ test.describe('failures land on the still', () => {
       c.getContext('webgl2')?.getExtension('WEBGL_lose_context')?.loseContext();
     });
     await expect(mount(page)).toHaveAttribute('data-scene-state', 'static', { timeout: 5000 });
-    await expect(page.locator(STAGE)).toHaveCount(0);
     await expect(orb(page)).toHaveAttribute('data-orb-state', 'live', { timeout: 5000 });
+    expect(pageErrors).toEqual([]);
+  });
+
+  test('a lost context gets one fresh attempt, and a second loss ends it', async ({ page }) => {
+    const pageErrors: string[] = [];
+    page.on('pageerror', (e) => pageErrors.push(String(e)));
+    const lose = () =>
+      page.locator(STAGE).evaluate((c: HTMLCanvasElement) => {
+        c.getContext('webgl2')?.getExtension('WEBGL_lose_context')?.loseContext();
+      });
+    await forceScene(page);
+    await goLive(page);
+    await lose();
+    await expect(mount(page)).toHaveAttribute('data-scene-state', 'static', { timeout: 5000 });
+    // …and comes back by itself, on a new canvas.
+    await expect(mount(page)).toHaveAttribute('data-scene-state', 'live', { timeout: LIVE_TIMEOUT });
+    await expect(page.locator(STAGE)).toHaveCount(1);
+    await expect(mount(page)).not.toHaveAttribute('data-scene-fail', /.+/);
+    const before = (await stats(page))!.frames;
+    await page.waitForTimeout(1000);
+    expect((await stats(page))!.frames).toBeGreaterThan(before);
+
+    await lose();
+    await expect(mount(page)).toHaveAttribute('data-scene-state', 'static', { timeout: 5000 });
     await expect(mount(page)).toHaveAttribute('data-scene-fail', 'context-lost');
+    await page.waitForTimeout(6000);
+    await expect(mount(page), 'no third attempt').toHaveAttribute('data-scene-state', 'static');
+    await expect(page.locator(STAGE)).toHaveCount(0);
+    /* The orb has the stage back, formed. Whether it is still looping is not asserted
+       here: with two software GL contexts behind it this machine can fall under the
+       orb's own 20 fps check, which rightly leaves it as a still. The phone profiles
+       (scene3d-mobile.spec.ts) assert that it moves. */
+    await expect(orb(page)).toHaveAttribute('data-orb-formed', '1');
     expect(pageErrors).toEqual([]);
   });
 });

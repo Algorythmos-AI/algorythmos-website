@@ -1,23 +1,24 @@
 import { describe, it, expect } from 'vitest';
 import {
   govern,
-  isSoftwareRenderer,
   newSampler,
-  pickPlan,
   sampleFrame,
   GOVERNOR_STALL_STRIKES,
   GOVERNOR_WARMUP_MS,
   GOVERNOR_WINDOW_MS,
   MIN_PIXEL_RATIO,
   SLOW_FRAME_MS,
-  type Device,
+  TIER_PATIENCE,
   type GovernorVerdict,
-} from './tier';
+} from './governor';
+import { isSlowConnection, isSoftwareRenderer, pickPlan, type Device } from './tier';
 
 const desktop: Device = {
   enabled: true,
   motionOff: false,
   saveData: false,
+  slowConnection: false,
+  touchAutostart: true,
   moreContrast: false,
   forcedColors: false,
   deviceMemory: 8,
@@ -35,8 +36,8 @@ describe('pickPlan — who never downloads the engine', () => {
     ['the visitor asked to save data', { saveData: true }, 'save-data'],
     ['the visitor asked for more contrast', { moreContrast: true }, 'more-contrast'],
     ['Windows high-contrast mode is on', { forcedColors: true }, 'forced-colors'],
-    ['the device reports 4 GB or less', { deviceMemory: 4 }, 'low-memory'],
     ['the device reports 2 GB', { deviceMemory: 2 }, 'low-memory'],
+    ['the device reports 1 GB', { deviceMemory: 1 }, 'low-memory'],
     ['this session already gave up on the GPU', { gaveUp: true }, 'gave-up'],
   ] as const)('%s', (_label, over, reason) => {
     expect(plan(over)).toEqual({ tier: 'low', trigger: 'never', reason });
@@ -48,33 +49,68 @@ describe('pickPlan — who never downloads the engine', () => {
   });
 });
 
-describe('pickPlan — phones and tablets wait for a first touch', () => {
+describe('pickPlan — phones and tablets start by themselves, at the phone tier', () => {
+  const iphone = { deviceMemory: undefined, width: 393, coarsePointer: true, hover: false } as const;
+  const android = { deviceMemory: 8, width: 412, coarsePointer: true, hover: false } as const;
+
   it('an iPhone (no deviceMemory, touch only)', () => {
-    expect(plan({ deviceMemory: undefined, width: 393, coarsePointer: true, hover: false })).toEqual({
+    expect(plan(iphone)).toEqual({ tier: 'low', trigger: 'idle', reason: 'touch-device' });
+  });
+
+  it('an Android phone with plenty of memory', () => {
+    expect(plan(android)).toEqual({ tier: 'low', trigger: 'idle', reason: 'touch-device' });
+  });
+
+  it('an Android phone reporting the 4 GB minimum: the scene, under the governor', () => {
+    expect(plan({ ...android, deviceMemory: 4 })).toEqual({ tier: 'low', trigger: 'idle', reason: 'touch-device' });
+  });
+
+  it('an iPad in landscape: wide, but nothing to hover with', () => {
+    expect(plan({ deviceMemory: undefined, width: 1180, coarsePointer: true, hover: false })).toEqual({
       tier: 'low',
-      trigger: 'interaction',
+      trigger: 'idle',
       reason: 'touch-device',
     });
   });
 
-  it('an Android phone with plenty of memory', () => {
-    expect(plan({ deviceMemory: 8, width: 412, coarsePointer: true, hover: false }).trigger).toBe('interaction');
+  it('a narrow viewport whatever the pointer says', () => {
+    expect(plan({ width: 412, coarsePointer: false, hover: true })).toEqual({ tier: 'low', trigger: 'idle', reason: 'touch-device' });
+    expect(plan({ width: 767 }).tier).toBe('low');
   });
 
-  it('an iPad in landscape: wide, but nothing to hover with', () => {
-    expect(plan({ deviceMemory: undefined, width: 1180, coarsePointer: true, hover: false }).trigger).toBe('interaction');
+  it('a connection known to be slow waits for a first touch before fetching anything', () => {
+    expect(plan({ ...android, slowConnection: true })).toEqual({ tier: 'low', trigger: 'interaction', reason: 'slow-connection' });
+    expect(plan({ ...iphone, slowConnection: true }).trigger).toBe('interaction');
   });
 
-  it('a narrow viewport whatever the pointer says — the path Lighthouse mobile takes', () => {
-    expect(plan({ width: 412, coarsePointer: false, hover: true }).trigger).toBe('interaction');
-    expect(plan({ width: 767 }).trigger).toBe('interaction');
+  it('a slow connection does not hold a desktop back', () => {
+    expect(plan({ slowConnection: true }).trigger).toBe('idle');
   });
+
+  it('with the switch off, every phone and tablet waits for a first touch again', () => {
+    expect(plan({ ...iphone, touchAutostart: false })).toEqual({ tier: 'low', trigger: 'interaction', reason: 'touch-device' });
+    expect(plan({ ...android, touchAutostart: false }).trigger).toBe('interaction');
+    expect(plan({ width: 1180, coarsePointer: true, hover: false, touchAutostart: false }).trigger).toBe('interaction');
+  });
+
+  it('the switch does not touch desktops', () => {
+    expect(plan({ touchAutostart: false })).toEqual({ tier: 'high', trigger: 'idle', reason: 'desktop' });
+  });
+});
+
+describe('isSlowConnection', () => {
+  it.each(['slow-2g', '2g', '3g'])('%s is slow', (type) => expect(isSlowConnection(type)).toBe(true));
+  it.each(['4g', '5g', '', undefined])('%s is not', (type) => expect(isSlowConnection(type)).toBe(false));
 });
 
 describe('pickPlan — desktops load at idle', () => {
   it('a machine reporting 8 GB or more gets the top tier', () => {
     expect(plan({})).toEqual({ tier: 'high', trigger: 'idle', reason: 'desktop' });
     expect(plan({ width: 768 }).trigger).toBe('idle');
+  });
+
+  it('a machine reporting the 4 GB minimum gets the phone tier', () => {
+    expect(plan({ deviceMemory: 4 })).toEqual({ tier: 'low', trigger: 'idle', reason: 'desktop' });
   });
 
   it('Safari and Firefox hide deviceMemory, so they get the middle tier', () => {
@@ -187,6 +223,69 @@ describe('sampleFrame — judging a running scene', () => {
     for (let i = 1; i <= GOVERNOR_STALL_STRIKES; i++) verdicts.push(sampleFrame(sampler, i * 1500, 1500, 1));
     expect(verdicts.slice(0, -1).every((v) => v.action === 'keep')).toBe(true);
     expect(verdicts.at(-1)).toEqual({ action: 'give-up' });
+  });
+
+  describe('patience — the phone tier needs two bad windows in a row', () => {
+    /** Feed frames with the given gaps (ms), repeating the list until `durationMs`; return the non-"keep" verdicts. */
+    const feed = (gaps: (now: number) => number, durationMs: number, patience: number, sampler = newSampler(0)) => {
+      const verdicts: GovernorVerdict[] = [];
+      let now = 0;
+      while (now < durationMs) {
+        const gap = gaps(now);
+        now += gap;
+        const v = sampleFrame(sampler, now, gap, MIN_PIXEL_RATIO, patience);
+        if (v.action !== 'keep') verdicts.push(v);
+      }
+      return verdicts;
+    };
+    const LOW = TIER_PATIENCE.low;
+
+    it('only the phone tier is given a second window', () => {
+      expect(TIER_PATIENCE).toEqual({ high: 1, medium: 1, low: 2 });
+    });
+
+    it('a phone capped at 30 fps (Low Power Mode) keeps its scene for as long as it likes', () => {
+      expect(feed(() => 33.4, 120_000, LOW)).toEqual([]);
+      expect(feed(() => 33.4, 120_000, 1), 'and so would any other tier').toEqual([]);
+    });
+
+    it('one window of dropped frames at 30 fps is forgiven on the phone tier, and fatal without patience', () => {
+      // A burst of 120 ms hitches between 1 s and 3 s (the first judged window), then steady 30 fps.
+      const hitchy = (now: number) => (now > 1000 && now < 3000 ? 120 : 33.4);
+      expect(feed(hitchy, 30_000, LOW)).toEqual([]);
+      expect(feed(hitchy, 30_000, 1)).toEqual([{ action: 'give-up' }]);
+    });
+
+    it('a phone that stays slow is still given up on — one window later, and once', () => {
+      const sampler = newSampler(0);
+      const verdicts = feed(() => 55, GOVERNOR_WARMUP_MS + GOVERNOR_WINDOW_MS * 2 + 200, LOW, sampler);
+      expect(verdicts).toEqual([{ action: 'give-up' }]);
+      expect(feed(() => 55, GOVERNOR_WARMUP_MS + GOVERNOR_WINDOW_MS + 200, LOW), 'not after the first window').toEqual([]);
+    });
+
+    it('a good window in between wipes the slate', () => {
+      // Bad, good, bad, good… never two in a row.
+      const alternating = (now: number) => (Math.floor((now - GOVERNOR_WARMUP_MS) / GOVERNOR_WINDOW_MS) % 2 === 0 ? 55 : 20);
+      expect(feed(alternating, 40_000, LOW)).toEqual([]);
+    });
+
+    it('a renderer that cannot draw a frame in a second gets a second run of stalls, no more', () => {
+      const sampler = newSampler(0);
+      const verdicts: GovernorVerdict[] = [];
+      for (let i = 1; i <= GOVERNOR_STALL_STRIKES * 2; i++) verdicts.push(sampleFrame(sampler, i * 1500, 1500, MIN_PIXEL_RATIO, LOW));
+      expect(verdicts.slice(0, -1).every((v) => v.action === 'keep')).toBe(true);
+      expect(verdicts.at(-1)).toEqual({ action: 'give-up' });
+    });
+
+    it('shedding pixels is not held back by patience', () => {
+      const sampler = newSampler(0);
+      const verdicts: GovernorVerdict[] = [];
+      for (let now = 55; now <= GOVERNOR_WARMUP_MS + GOVERNOR_WINDOW_MS + 200; now += 55) {
+        const v = sampleFrame(sampler, now, 55, 1.5, LOW);
+        if (v.action !== 'keep') verdicts.push(v);
+      }
+      expect(verdicts).toEqual([{ action: 'lower', pixelRatio: 1.13 }]);
+    });
   });
 
   it('walks a 2× screen down to the floor and then stops', () => {

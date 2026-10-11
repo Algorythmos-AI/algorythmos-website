@@ -22,7 +22,8 @@ import { applyLook, FOV } from './kit/look';
 import { readPalette } from './kit/palette';
 import { seeded, seedFrom } from './kit/rng';
 import { scenes } from './registry';
-import { newSampler, sampleFrame, TIER_PIXEL_RATIO, type Tier } from './tier';
+import { newSampler, sampleFrame, TIER_PATIENCE, TIER_PIXEL_RATIO } from './governor';
+import type { Tier } from './tier';
 import type { SceneInput, SceneInstance, Viewport } from './types';
 
 export type FailReason = 'error' | 'context-lost' | 'slow';
@@ -196,9 +197,9 @@ export function createEngine(canvas: HTMLCanvasElement, gl: WebGL2RenderingConte
       return;
     }
 
-    /* Frame-rate governor (tier.ts): shed pixels first, then hand back to the still. */
+    /* Frame-rate governor (governor.ts): shed pixels first, then hand back to the still. */
     if (!a.opts.governor) return;
-    const verdict = sampleFrame(sampler, now, elapsed, pixelRatio);
+    const verdict = sampleFrame(sampler, now, elapsed, pixelRatio, TIER_PATIENCE[a.opts.tier]);
     if (verdict.action === 'give-up') fail('slow');
     else if (verdict.action === 'lower') {
       pixelRatio = verdict.pixelRatio;
@@ -291,6 +292,15 @@ export function createEngine(canvas: HTMLCanvasElement, gl: WebGL2RenderingConte
       () => {
         if (document.hidden) stop();
         else start();
+      },
+      { signal },
+    );
+    /* Restored from the back-forward cache: the page comes back as it was left,
+       and not every browser reports that as a visibility change. */
+    window.addEventListener(
+      'pageshow',
+      (event) => {
+        if (event.persisted) start();
       },
       { signal },
     );

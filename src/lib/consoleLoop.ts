@@ -250,7 +250,7 @@ export function initConsole(root: HTMLElement, opts: ConsoleOptions = {}): void 
   // ── Visibility plumbing ──────────────────────────────────────────────────
   const io = new IntersectionObserver(
     (entries) => {
-      onScreen = entries[0]?.isIntersecting ?? false;
+      onScreen = entries[entries.length - 1]?.isIntersecting ?? false; // the newest entry is the current truth
       if (onScreen && !seen && !motionOff()) {
         seen = true;
         root.classList.add('hc-live'); // triggers CSS draw-on transitions

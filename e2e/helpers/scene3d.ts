@@ -76,3 +76,8 @@ export interface Stats {
 export function stats(page: Page): Promise<Stats | null> {
   return page.evaluate(() => (window as unknown as { __scene3dStats: () => Promise<Stats | null> }).__scene3dStats());
 }
+
+/** Frames the homepage's 2D orb has drawn in its loop (0 while it is a single still frame). */
+export function orbFrames(page: Page): Promise<number> {
+  return page.evaluate(() => (window as unknown as { __orbFrames?: () => number }).__orbFrames?.() ?? 0);
+}

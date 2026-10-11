@@ -15,6 +15,14 @@
  */
 export const SCENE3D_ENABLED = true;
 
+/**
+ * Phones and tablets start their scene by themselves, like a desktop does: once
+ * the page has loaded, the mount is near the viewport and the browser is idle.
+ * `false` puts them back to waiting for a first touch before anything is
+ * fetched — a one-line rollback of that decision alone.
+ */
+export const SCENE3D_TOUCH_AUTOSTART = true;
+
 export const SCENE_IDS = [
   'neural-core',
   'constellation',

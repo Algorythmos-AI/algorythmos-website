@@ -15,7 +15,8 @@ that true.
 | Mount (markup, stills, stacking CSS) | `src/components/ui/Scene3D.astro` |
 | A hero's scene box: a band under the copy on small screens, a column beside it from `lg` | `src/components/sections/HeroScene.astro` |
 | First-load loader: who gets 3D, and when | `src/lib/scene3d/bootstrap.ts` |
-| The decision table and frame-rate governor (pure, unit-tested) | `src/lib/scene3d/tier.ts` (+ `tier.test.ts`) |
+| The decision table (pure, unit-tested) | `src/lib/scene3d/tier.ts` (+ `tier.test.ts`) |
+| The frame-rate governor (pure, unit-tested, loaded with the engine) | `src/lib/scene3d/governor.ts` (+ `tier.test.ts`) |
 | Engine: renderer, loop, fallbacks (imports three) | `src/lib/scene3d/engine.ts` |
 | Scene contract | `src/lib/scene3d/types.ts` |
 | Registry of scenes, one lazy chunk each | `src/lib/scene3d/registry.ts` |
@@ -31,8 +32,9 @@ Decided by `pickPlan()` in `tier.ts`; the result is written to `data-scene-plan`
 | Visitor | Gets |
 |---|---|
 | Desktop or laptop | The live scene, fetched at idle after the page has loaded |
-| Phone or tablet (narrow viewport, or touch with no hover) | The still, painted after the page has loaded; the live scene after the first touch, at the `low` tier |
-| Reduced motion, pause toggle, `prefers-contrast: more`, Save-Data, ≤ 4 GB memory | The still. three.js is never requested |
+| Phone or tablet (narrow viewport, or touch with no hover) | The still, painted after the page has loaded; then the live scene at the `low` tier, started the same way as on a desktop, with no touch needed |
+| Phone or tablet on a connection the browser reports as 3g or slower | The still; the live scene after the first touch |
+| Reduced motion, pause toggle, `prefers-contrast: more`, Save-Data, under 4 GB memory | The still. three.js is never requested |
 | No usable WebGL2, software rendering, Windows high-contrast mode | The still. three.js is never requested |
 | No JavaScript | The still (`<noscript>` image) |
 
@@ -41,6 +43,22 @@ Decided by `pickPlan()` in `tier.ts`; the result is written to `data-scene-plan`
 it is a captured image of the scene, painted into a canvas by the loader — a canvas
 because an `<img>` or a CSS background could be picked as the page's LCP element. A
 desktop about to get the live scene does not fetch it.
+
+The 2D orb animates on every device, phones and tablets included. It is one still
+frame only for reduced motion, Save-Data, under 4 GB of memory, or a device its own
+frame check finds below 20 fps.
+
+### When the start goes wrong
+
+Every one of these ends on the still (or the moving 2D orb), and each is tried once:
+
+| What happens | What the loader does |
+|---|---|
+| The strict WebGL2 request is refused | Asks once more without `failIfMajorPerformanceCaveat`; the software-renderer check and the governor still apply |
+| The engine chunk does not arrive | One more try after 2 s. WebKit remembers a failed module for the life of the document, so there the visitor keeps the still until the next full page load |
+| The start takes more than 12 s | Abandoned for this page (`data-scene-fail="timeout"`); no mount stays on `loading` |
+| The frame rate falls under 25 fps | Fewer pixels first; at the floor the `low` tier is given a second window before the scene is dropped for the session |
+| The GL context is lost | One fresh attempt once the page is visible again; a second loss in the visit ends it |
 
 ## Finding out why a visitor has the still
 
@@ -56,9 +74,9 @@ The same facts are on the mount for tests and for a desktop inspector:
 | Attribute | Values |
 |---|---|
 | `data-scene-step` | `armed`, `probing`, `loading`, `building`, `compiling`, `live` |
-| `data-scene-fail` | `no-webgl`, `software-gl`, `engine-load`, `slow`, `context-lost`, `error`, `motion-off` |
+| `data-scene-fail` | `no-webgl`, `software-gl`, `engine-load`, `timeout`, `slow`, `context-lost`, `error`, `motion-off` |
 | `data-scene-error` | The error text, when there was one |
-| `data-orb-static` (on the orb) | `motion-off`, `low-memory`, `touch-only` |
+| `data-orb-static` (on the orb) | `motion-off`, `save-data`, `low-memory`, `slow` |
 
 The readout (`debug.ts`) is fetched only when the flag is present. It reads state and
 changes nothing.
@@ -168,6 +186,9 @@ re-captured. Engine and loader changes do not.
 Set `SCENE3D_ENABLED = false` in `src/data/scenes.ts`. Every mount renders as its still
 and no page requests the engine.
 
+To undo only the phone and tablet auto-start, set `SCENE3D_TOUCH_AUTOSTART = false` in
+the same file: they go back to waiting for a first touch before the engine is fetched.
+
 ## Tests
 
 | What | Where |
@@ -180,6 +201,9 @@ and no page requests the engine.
 | Stills, phones, live scene, pause, theme, resize, failures | `e2e/scene3d.spec.ts` (Chromium, WebKit, Firefox) |
 | Every scene live in both locales, long run, GPU governor, load races, navigation leaks | `e2e/scene3d-soak.spec.ts` (Chromium) |
 | Production CSP | `e2e/csp.spec.ts` |
+| Phones and tablets: start with no touch, pause, hidden tab, rotation, every failure path | `e2e/scene3d-mobile.spec.ts` (Pixel 7, iPhone 15, iPad) |
+| Phones and tablets: the orb, console, belt, reveals, count-ups and explainers actually move | `e2e/motion-mobile.spec.ts` (Pixel 7, iPhone 15, Galaxy Tab S4, iPad both ways) |
+| The `?scene-debug` readout | `src/lib/scene3d/debug.test.ts`, `e2e/scene-debug.spec.ts` |
 
 Headless browsers render WebGL in software, which the site refuses for visitors. Tests
 that need a live scene call `forceScene(page)` (`e2e/helpers/scene3d.ts`).

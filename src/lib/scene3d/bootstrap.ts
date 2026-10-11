@@ -19,17 +19,17 @@
  * why a phone shows a still: `data-scene-step` (Step) and `data-scene-fail`
  * (Fail), read by the `?scene-debug` readout (debug.ts) and by the tests.
  */
-import { SCENE3D_ENABLED, SCENE_IDS, type SceneId } from '@/data/scenes';
+import { SCENE3D_ENABLED, SCENE3D_TOUCH_AUTOSTART, SCENE_IDS, type SceneId } from '@/data/scenes';
 import { scheduleIdle } from '@/lib/idle';
 import { motionOff, onMotionChange } from '@/lib/motion';
 import type { Engine, EngineStats, FailReason } from './engine';
-import { isSoftwareRenderer, pickPlan, type Device } from './tier';
+import { isSlowConnection, isSoftwareRenderer, pickPlan, type Device } from './tier';
 
 type State = 'static' | 'loading' | 'live' | 'paused';
 /** How far the start got: waiting for its trigger, probing WebGL, fetching the engine, … */
 export type Step = 'armed' | 'probing' | 'loading' | 'building' | 'compiling' | 'live';
 /** Why this mount is showing the still although the plan allowed a scene. */
-export type Fail = FailReason | 'no-webgl' | 'software-gl' | 'engine-load' | 'motion-off';
+export type Fail = FailReason | 'no-webgl' | 'software-gl' | 'engine-load' | 'timeout' | 'motion-off';
 
 declare global {
   interface Window {
@@ -42,11 +42,19 @@ declare global {
     __scene3dStill?: boolean;
     /** Leak test: live GPU object counts from the engine. */
     __scene3dStats?: () => Promise<EngineStats | null>;
+    /** Tests: the start time limit in ms (0 = none). Off by default under `__scene3dForce`, where a software start is slow by design. */
+    __scene3dStartLimit?: number;
   }
 }
 
 const GAVE_UP_KEY = 'scene3d-gave-up';
 const MAX_CONTEXT_LOSSES = 1; // one re-create per visit, then stills for the rest of it
+/** From deciding to start to a frame on screen. Past this the visitor keeps the still: no mount sits on `loading` for ever. */
+const START_LIMIT_MS = 12_000;
+/** One more try for an engine chunk that did not arrive (a dropped request on a phone), this long after the first. */
+const ENGINE_RETRY_MS = 2000;
+/** After a lost context, how long before the one fresh attempt — the GPU process needs a moment. */
+const RECOVER_MS = 1500;
 
 /* Module state survives client-side navigation: the router never re-runs a module. */
 let generation = 0; // bumped on every page swap; async steps compare before touching the DOM
@@ -73,11 +81,13 @@ function rememberGaveUp(): void {
 }
 
 function readDevice(): Device {
-  const nav = navigator as Navigator & { deviceMemory?: number; connection?: { saveData?: boolean } };
+  const nav = navigator as Navigator & { deviceMemory?: number; connection?: { saveData?: boolean; effectiveType?: string } };
   return {
     enabled: SCENE3D_ENABLED,
     motionOff: motionOff(),
     saveData: nav.connection?.saveData === true,
+    slowConnection: isSlowConnection(nav.connection?.effectiveType),
+    touchAutostart: SCENE3D_TOUCH_AUTOSTART,
     moreContrast: window.matchMedia('(prefers-contrast: more)').matches,
     forcedColors: window.matchMedia('(forced-colors: active)').matches,
     deviceMemory: nav.deviceMemory,
@@ -92,36 +102,49 @@ function readDevice(): Device {
  * One canvas and one GL context for the whole visit. Created — and therefore
  * probed — before the engine is requested, so a browser without usable WebGL2
  * never downloads three. Software rendering counts as unusable: a still looks
- * better than a slideshow. `failIfMajorPerformanceCaveat` catches some of it and
- * the renderer string the rest; whatever slips past both meets the frame-rate
- * governor in the engine.
+ * better than a slideshow. The renderer string says so on most browsers, and
+ * whatever slips past it meets the frame-rate governor in the engine.
+ *
+ * `failIfMajorPerformanceCaveat` is asked for first and, if that is refused,
+ * dropped: browsers disagree about what a "caveat" is, and a phone that answers
+ * no to the strict question can still have a GPU that draws the scene well. The
+ * two checks above are what actually keep a slideshow off the page.
  */
-function acquireStage(): typeof stage {
-  if (stage) return stage;
-  if (webglUnavailable) return null;
+function openContext(strict: boolean, touch: boolean): NonNullable<typeof stage> | null {
   const canvas = document.createElement('canvas');
   canvas.className = 'scene3d-stage';
   canvas.setAttribute('aria-hidden', 'true');
-  let gl: WebGL2RenderingContext | null = null;
   try {
-    gl = canvas.getContext('webgl2', {
+    const gl = canvas.getContext('webgl2', {
       alpha: true,
       antialias: true, // phone mounts are small; edges without it shimmer
       depth: true,
       stencil: false,
       premultipliedAlpha: true,
-      powerPreference: 'high-performance',
-      failIfMajorPerformanceCaveat: !window.__scene3dForce,
+      /* A phone has one GPU and a battery: let it choose. */
+      powerPreference: touch ? 'default' : 'high-performance',
+      failIfMajorPerformanceCaveat: strict,
     });
+    return gl ? { canvas, gl } : null;
   } catch {
-    gl = null;
+    return null;
   }
-  if (gl && !window.__scene3dForce && isSoftwareRenderer(rendererName(gl))) {
+}
+
+function acquireStage(): typeof stage {
+  if (stage) return stage;
+  if (webglUnavailable) return null;
+  const touch = window.matchMedia('(pointer: coarse)').matches;
+  const forced = !!window.__scene3dForce;
+  const opened = openContext(!forced, touch) ?? (forced ? null : openContext(false, touch));
+  const canvas = opened?.canvas;
+  let gl = opened?.gl ?? null;
+  if (gl && !forced && isSoftwareRenderer(rendererName(gl))) {
     gl.getExtension('WEBGL_lose_context')?.loseContext(); // hand the context back at once
     gl = null;
     softwareGl = true;
   }
-  if (!gl) {
+  if (!gl || !canvas) {
     webglUnavailable = true;
     return null;
   }
@@ -151,8 +174,17 @@ function rendererName(gl: WebGL2RenderingContext): string | null {
   return info ? String(gl.getParameter(info.UNMASKED_RENDERER_WEBGL) ?? '') : plain || null;
 }
 
+/**
+ * The engine chunk, with one second try: a single dropped request should not cost
+ * the visit its scenes. That works where the browser fetches again (Chromium,
+ * Firefox). WebKit remembers a failed module for the life of the document, so
+ * there the second try fails at once and the visitor keeps the still until the
+ * next full page load — the same outcome as before, never worse.
+ */
 function loadEngine(s: NonNullable<typeof stage>): Promise<Engine> {
-  engine ??= import('./engine').then((m) => m.createEngine(s.canvas, s.gl));
+  engine ??= import('./engine')
+    .catch(() => new Promise((resolve) => window.setTimeout(resolve, ENGINE_RETRY_MS)).then(() => import('./engine')))
+    .then((m) => m.createEngine(s.canvas, s.gl));
   return engine;
 }
 
@@ -191,60 +223,13 @@ function holdReleased(mount: HTMLElement, signal: AbortSignal): Promise<void> {
 }
 
 /**
- * Paint the captured still into the mount's poster canvas, for whoever is not
- * getting the live scene (or not yet). Waits for the page to finish loading so
- * the image never competes with it, picks the size for this mount and the theme
- * in force, and repaints when either changes.
+ * Paint the captured still (still.ts) for whoever is not getting the live scene, or
+ * not yet. A chunk of its own, fetched only by a page that has a poster canvas:
+ * the homepage shows its 2D orb instead and never asks for it.
  */
 function paintStill(mount: HTMLElement, signal: AbortSignal): void {
-  const canvas = mount.querySelector<HTMLCanvasElement>('canvas.scene3d-poster');
-  if (!canvas || canvas.dataset.painting) return;
-  canvas.dataset.painting = '1';
-  let job = 0;
-  const paint = async () => {
-    const mine = ++job;
-    const theme = document.documentElement.dataset.theme === 'light' ? 'light' : 'dark';
-    const [small, large] = (theme === 'light' ? canvas.dataset.stillLight : canvas.dataset.stillDark)?.split(' ') ?? [];
-    const rect = canvas.getBoundingClientRect();
-    if (!small || !rect.width || !rect.height) return;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const image = new Image();
-    image.decoding = 'async';
-    image.src = rect.width * dpr > 560 && large ? large : small;
-    try {
-      await image.decode();
-    } catch {
-      return; // offline, or a browser without AVIF: the page simply has no picture here
-    }
-    if (mine !== job || signal.aborted) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-    canvas.width = Math.round(rect.width * dpr);
-    canvas.height = Math.round(rect.height * dpr);
-    const scale = Math.min(canvas.width / image.naturalWidth, canvas.height / image.naturalHeight);
-    const w = image.naturalWidth * scale;
-    const h = image.naturalHeight * scale;
-    ctx.drawImage(image, (canvas.width - w) / 2, (canvas.height - h) / 2, w, h);
-    canvas.dataset.painted = theme;
-  };
-  void pageLoaded(signal).then(() => scheduleIdle(() => void paint()));
-
-  let timer = 0;
-  const later = () => {
-    window.clearTimeout(timer);
-    timer = window.setTimeout(() => void paint(), 160);
-  };
-  const themes = new MutationObserver(later);
-  themes.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
-  const sizes = new ResizeObserver(() => {
-    if (canvas.dataset.painted) later();
-  });
-  sizes.observe(canvas);
-  signal.addEventListener('abort', () => {
-    window.clearTimeout(timer);
-    themes.disconnect();
-    sizes.disconnect();
-  });
+  if (!mount.querySelector('canvas.scene3d-poster')) return;
+  void import('./still').then((m) => m.paintStill(mount, signal)).catch(() => {});
 }
 
 function initPage(): void {
@@ -300,9 +285,10 @@ function initPage(): void {
   );
 
   /* Whoever is certain to keep the still, or will wait for a touch before anything
-     else arrives, gets it painted now. A desktop about to load the live scene does
+     else arrives, gets it painted now — and so does the phone tier, where the engine
+     can be seconds away on mobile data. A desktop about to load the live scene does
      not download a picture it would show for a second — unless that scene fails. */
-  if (plan.trigger !== 'idle') paintStill(mount, signal);
+  if (plan.trigger !== 'idle' || plan.tier === 'low') paintStill(mount, signal);
   if (plan.trigger === 'never') return;
 
   const onFail = (reason: FailReason, error?: unknown) => {
@@ -315,12 +301,41 @@ function initPage(): void {
     current = null;
     setState('static');
     paintStill(mount, signal);
+    if (reason === 'context-lost') recover();
+  };
+
+  /* A lost context is often not the page's fault — a phone takes them from tabs it
+     has put in the background. One fresh attempt, once the page is being looked at
+     again; the visit-wide cap (MAX_CONTEXT_LOSSES) still ends a GPU that keeps failing. */
+  let recovered = false;
+  const recover = () => {
+    if (recovered || contextLosses > MAX_CONTEXT_LOSSES) return;
+    recovered = true;
+    const again = () => {
+      if (!alive() || motionOff() || getState() !== 'static') return;
+      started = false;
+      scheduleIdle(() => void run());
+    };
+    const timer = window.setTimeout(() => {
+      if (!document.hidden) return again();
+      const shown = () => {
+        if (document.hidden) return;
+        document.removeEventListener('visibilitychange', shown);
+        window.removeEventListener('pageshow', shown);
+        again();
+      };
+      document.addEventListener('visibilitychange', shown, { signal });
+      window.addEventListener('pageshow', shown, { signal });
+    }, RECOVER_MS);
+    signal.addEventListener('abort', () => window.clearTimeout(timer), { once: true });
   };
 
   let started = false;
   const run = async () => {
     if (started || !alive() || motionOff()) return;
     started = true;
+    delete mount.dataset.sceneFail;
+    delete mount.dataset.sceneError;
     setStep('probing');
     const s = acquireStage();
     if (!s) {
@@ -331,10 +346,32 @@ function initPage(): void {
     setState('loading');
     setStep('loading');
     performance.mark('scene3d:start');
+
+    /* The start has a time limit. Whatever is still on its way when it runs out —
+       a download, a shader compile that never reports back — is abandoned for this
+       page, and the visitor keeps the still. */
+    let timedOut = false;
+    const limit = window.__scene3dStartLimit ?? (window.__scene3dForce ? 0 : START_LIMIT_MS);
+    const watchdog = limit
+      ? window.setTimeout(() => {
+          if (!alive() || getState() !== 'loading') return;
+          timedOut = true;
+          console.warn('[scene3d] showing the still instead: timeout');
+          setFail('timeout');
+          current = null;
+          setState('static');
+          paintStill(mount, signal);
+          void engine?.then((e) => alive() && e.hide()).catch(() => {});
+        }, limit)
+      : 0;
+    signal.addEventListener('abort', () => window.clearTimeout(watchdog), { once: true });
+
     try {
       const e = await loadEngine(s);
+      if (timedOut) return;
       performance.mark('scene3d:engine');
       await holdReleased(mount, signal);
+      if (timedOut) return;
       if (!alive() || motionOff()) {
         setFail('motion-off');
         paintStill(mount, signal);
@@ -357,7 +394,7 @@ function initPage(): void {
         if (getState() === 'loading') setState('static');
         return;
       }
-      if (!alive()) return;
+      if (!alive() || timedOut) return;
       if (motionOff()) {
         /* Paused while the scene was compiling: it never takes the stage. */
         e.hide();
@@ -372,15 +409,18 @@ function initPage(): void {
       engineUnavailable = true;
       engine = null;
       console.warn('[scene3d] engine unavailable, showing the still instead:', error);
-      setFail('engine-load', error);
+      if (!timedOut) setFail('engine-load', error);
       setState('static');
       paintStill(mount, signal);
+    } finally {
+      window.clearTimeout(watchdog);
     }
   };
 
   setStep('armed');
   if (plan.trigger === 'interaction') {
-    /* Phones and tablets: nothing is fetched until the visitor touches the page.
+    /* A phone on a slow connection (or every phone, with SCENE3D_TOUCH_AUTOSTART off):
+       nothing is fetched until the visitor touches the page.
        `scroll` is deliberately absent — the router scrolls on every navigation. */
     const arm = () => void pageLoaded(signal).then(() => scheduleIdle(() => void run()));
     for (const type of ['pointerdown', 'touchstart', 'keydown', 'wheel'] as const) {
@@ -389,7 +429,7 @@ function initPage(): void {
     return;
   }
 
-  /* Desktop: after the page has loaded, once the mount is near the viewport, at idle. */
+  /* Everyone else: after the page has loaded, once the mount is near the viewport, at idle. */
   void pageLoaded(signal).then(() => {
     if (!alive()) return;
     const io = new IntersectionObserver(

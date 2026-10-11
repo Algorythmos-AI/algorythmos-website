@@ -164,6 +164,12 @@ the same rule as the copy.
       page on AI-Powered Websites. The container yard appears only on the Port Botany and logistics
       study pages and the Port Botany post. `src/data/sceneMap.test.ts` enforces the placement.
 
+- [x] **Phones and tablets get the same motion as desktops** (decided by Sam Kalaliya, 11 Oct 2026):
+      the homepage sphere animates on every device, and the 3D scene starts by itself after the page
+      has loaded instead of waiting for a first touch. Reduced motion, the pause button, Save-Data,
+      slow connections and weak GPUs keep the still. `SCENE3D_TOUCH_AUTOSTART` in
+      `src/data/scenes.ts` reverses the auto-start alone.
+
 ## 3h. Case study — AI, Robotics, Space and Bitcoin (`/case-studies/ai-robotics-space-bitcoin-convergence`) — evidence report (11 Oct 2026)
 
 Labelled on-page as an industry evidence report. The note states that Algorythmos has not been engaged by
