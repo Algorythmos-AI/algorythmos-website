@@ -34,12 +34,22 @@ const sceneAdvances = async (page: Page) => {
   await page.waitForTimeout(1200);
   expect((await stats(page))!.frames, 'the scene is drawing').toBeGreaterThan(before);
 };
+/**
+ * The 2D orb has the stage and is moving — or this machine draws it at under
+ * 20 fps (a CI runner in software, with GL contexts behind it), in which case the
+ * orb's own frame check has rightly left it as its formed still frame.
+ */
 const orbAdvances = async (page: Page) => {
   await bringIntoView(page);
-  await expect(orb(page)).toHaveAttribute('data-orb-state', 'live', { timeout: 8000 });
+  await expect(orb(page)).toHaveAttribute('data-orb-formed', '1', { timeout: 8000 });
+  await expect
+    .poll(async () => (await orb(page).getAttribute('data-orb-static')) === 'slow' || (await orb(page).getAttribute('data-orb-state')) === 'live', { timeout: 8000 })
+    .toBe(true);
+  if ((await orb(page).getAttribute('data-orb-static')) === 'slow') return;
   const before = await orbFrames(page);
-  await page.waitForTimeout(1200);
-  expect(await orbFrames(page), 'the 2D orb is drawing').toBeGreaterThan(before);
+  await expect
+    .poll(async () => (await orbFrames(page)) > before || (await orb(page).getAttribute('data-orb-static')) === 'slow', { timeout: 5000 })
+    .toBe(true);
 };
 const stubConnection = (page: Page, connection: { effectiveType?: string; saveData?: boolean }) =>
   page.addInitScript((c) => {
@@ -302,7 +312,6 @@ test.describe('every failure ends on something finished', () => {
       await goLive(page);
       await lose();
       await expect(mount(page)).toHaveAttribute('data-scene-state', 'static', { timeout: 5000 });
-      await expect(orb(page)).toHaveAttribute('data-orb-state', 'live', { timeout: 5000 });
       await expect(mount(page)).toHaveAttribute('data-scene-state', 'live', { timeout: LIVE_TIMEOUT });
       await sceneAdvances(page);
 

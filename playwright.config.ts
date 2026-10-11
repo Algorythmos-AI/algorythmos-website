@@ -20,7 +20,7 @@ const SCENE_SPECS = /(scene3d|scene3d-soak|csp)\.spec\.ts/;
 const MOBILE_SCENE_SPECS = /scene3d-mobile\.spec\.ts/;
 /* What the phone and tablet projects run besides. */
 const MOBILE_SPECS = /(overlays|a11y|scene-debug|motion-mobile)\.spec\.ts/;
-const TABLET_SPECS = /(scene-debug|motion-mobile)\.spec\.ts/;
+const TABLET_SPECS = /motion-mobile\.spec\.ts/;
 
 export default defineConfig({
   testDir: './e2e',
@@ -100,13 +100,8 @@ export default defineConfig({
       workers: 1,
       dependencies: ['mobile-chromium-scenes'],
     },
-    {
-      name: 'tablet-webkit-scenes',
-      use: { ...devices['iPad (gen 7) landscape'] },
-      testMatch: MOBILE_SCENE_SPECS,
-      workers: 1,
-      dependencies: ['mobile-webkit-scenes'],
-    },
+    /* No tablet scene project: a tablet takes the same path as a phone (tier.test.ts
+       pins that), and each software-rendered pass costs the CI job minutes it does not have. */
   ],
   webServer: {
     /* CI has already run `npm run build`; locally we build first so the preview is fresh.

@@ -201,7 +201,7 @@ the same file: they go back to waiting for a first touch before the engine is fe
 | Stills, phones, live scene, pause, theme, resize, failures | `e2e/scene3d.spec.ts` (Chromium, WebKit, Firefox) |
 | Every scene live in both locales, long run, GPU governor, load races, navigation leaks | `e2e/scene3d-soak.spec.ts` (Chromium) |
 | Production CSP | `e2e/csp.spec.ts` |
-| Phones and tablets: start with no touch, pause, hidden tab, rotation, every failure path | `e2e/scene3d-mobile.spec.ts` (Pixel 7, iPhone 15, iPad) |
+| Phones and tablets: start with no touch, pause, hidden tab, rotation, every failure path | `e2e/scene3d-mobile.spec.ts` (Pixel 7, iPhone 15) |
 | Phones and tablets: the orb, console, belt, reveals, count-ups and explainers actually move | `e2e/motion-mobile.spec.ts` (Pixel 7, iPhone 15, Galaxy Tab S4, iPad both ways) |
 | The `?scene-debug` readout | `src/lib/scene3d/debug.test.ts`, `e2e/scene-debug.spec.ts` |
 

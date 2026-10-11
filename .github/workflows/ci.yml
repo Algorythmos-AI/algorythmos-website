@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     # Three browser engines, and the 3D scene specs render WebGL in software on these
     # runners (slow by nature, and run one at a time).
-    timeout-minutes: 45
+    timeout-minutes: 60
 
     steps:
       - name: Checkout
