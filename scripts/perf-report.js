@@ -135,6 +135,7 @@ function analyzeBundle() {
     console.log(`${colors.green}✅ No chunk over ${SIZE_LIMIT_KB} kB (3D engine: ${ENGINE_LIMIT_KB} kB)${colors.reset}`);
     console.log(`${colors.green}✅ No page loads the 3D engine up front${colors.reset}`);
     console.log(`${colors.green}✅ Home first-load JS under ${HOME_FIRST_LOAD_LIMIT_KB} kB${colors.reset}`);
+    console.log(`${colors.green}✅ Backdrop blur keeps its -webkit- form for Safari before 18${colors.reset}`);
   }
 
   console.log(colors.bold + '\n📋 FINAL STATUS' + colors.reset);

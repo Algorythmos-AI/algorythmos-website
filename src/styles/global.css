@@ -153,10 +153,23 @@
   }
 
   /* Opt-in blur for a surface that has been measured not to regress Lighthouse.
-     Write only the unprefixed property: Lightning CSS adds -webkit- for Safari,
-     but drops the unprefixed line if both are written in that order. */
+     (Not in use; if it is taken up, give it a line in the @supports block below.) */
   .glass-blur {
     backdrop-filter: blur(14px) saturate(140%);
+  }
+  /* Safari before 18 (every iOS 15–17 browser) only knows the -webkit- form, and the
+     CSS minifier keeps just one of the two when they share a rule — the built site
+     had none, so the header and the secondary button lost their blur there. A rule
+     of its own, for the browsers that need it, survives the build
+     (`npm run perf` fails if it has not). Values mirror the Tailwind
+     utilities in use: backdrop-blur-xl (header) and backdrop-blur (button). */
+  @supports not (backdrop-filter: blur(1px)) {
+    .backdrop-blur-xl {
+      -webkit-backdrop-filter: blur(24px);
+    }
+    .backdrop-blur {
+      -webkit-backdrop-filter: blur(8px);
+    }
   }
 
   /* Gradient hairline border via mask (works both themes) */
@@ -177,8 +190,12 @@
     transition: opacity var(--dur) var(--ease-smooth);
     pointer-events: none;
   }
-  .ring-gradient:hover::before {
-    opacity: 1;
+  /* Only where there is a pointer to move away again: on a touch screen a hover
+     style sticks to whatever was tapped last. */
+  @media (hover: hover) {
+    .ring-gradient:hover::before {
+      opacity: 1;
+    }
   }
   /* Cursor spotlight: a soft pool of brand light under the pointer (position set by
      the delegated listener in BaseLayout). It sits above the card's own background

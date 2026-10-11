@@ -167,3 +167,86 @@ test('a step-through explainer starts and advances', async ({ page }) => {
   await expect(first).toHaveAttribute('data-ex-run', '', { timeout: 8000 });
   await expect.poll(() => first.getAttribute('data-ex-step'), { timeout: 10_000 }).toBe('2');
 });
+
+test.describe('touch does not get stuck', () => {
+  test('tapping the technology belt does not leave it paused', async ({ page }) => {
+    await page.goto(HOME);
+    const belt = page.locator('.tech-belt');
+    await expect(async () => {
+      await center(page, '.tech-belt');
+      await page.waitForTimeout(250);
+      await expect(belt).toBeInViewport({ ratio: 1 });
+    }).toPass({ timeout: 10_000 });
+    const track = page.locator('.tech-track').first();
+    await expect.poll(() => track.evaluate((el) => getComputedStyle(el).animationName)).not.toBe('none');
+    await belt.tap();
+    await page.waitForTimeout(300);
+    expect(await track.evaluate((el) => getComputedStyle(el).animationPlayState)).toBe('running');
+    const x = () => track.evaluate((el) => el.getBoundingClientRect().x);
+    const before = await x();
+    await page.waitForTimeout(700);
+    expect(await x(), 'still travelling after the tap').toBeLessThan(before - 5);
+  });
+
+  test('the belt loops by exactly one track, with no jump', async ({ page }) => {
+    await page.goto(HOME);
+    const end = await page.locator('.tech-track').first().evaluate((el) => {
+      const frames = (el.getAnimations()[0]?.effect as KeyframeEffect | undefined)?.getKeyframes() ?? [];
+      return String(frames.at(-1)?.transform ?? '');
+    });
+    expect(end.replace(/\s/g, '')).toMatch(/^translate(X)?\(-100%\)$/);
+  });
+
+  test('a tapped card does not keep its hover ring', async ({ page }) => {
+    await page.goto(HOME);
+    const card = page.locator('.ring-gradient').first();
+    await card.evaluate((el) => el.scrollIntoView({ block: 'center', behavior: 'instant' }));
+    const ring = () => card.evaluate((el) => getComputedStyle(el, '::before').opacity);
+    expect(await ring()).toBe('0');
+    await card.dispatchEvent('pointerdown');
+    await card.hover({ force: true }).catch(() => {}); // what a tap leaves behind on a touch screen
+    await page.waitForTimeout(400);
+    expect(await ring(), 'no hover style where nothing can hover').toBe('0');
+  });
+});
+
+test('the announcement bar finishes collapsing before it is removed', async ({ page }) => {
+  await page.goto(HOME);
+  const bar = page.locator('#announce');
+  test.skip(!(await bar.count()) || !(await bar.isVisible()), 'no announcement is showing');
+  /* Time from the tap to `hidden`: the collapse takes 350 ms, and the bar used to
+     vanish on the first transition to end (the button's colour, or its own opacity). */
+  await page.evaluate(() => {
+    const el = document.getElementById('announce')!;
+    const state = { tapped: 0, hiddenAfter: -1 };
+    (window as unknown as { __announce: typeof state }).__announce = state;
+    document.getElementById('announce-dismiss')!.addEventListener('click', () => (state.tapped = performance.now()), { capture: true });
+    new MutationObserver(() => {
+      if (el.hidden && state.hiddenAfter < 0) state.hiddenAfter = performance.now() - state.tapped;
+    }).observe(el, { attributes: true, attributeFilter: ['hidden'] });
+  });
+  await page.locator('#announce-dismiss').tap();
+  await expect(bar).toBeHidden({ timeout: 3000 });
+  const after = await page.evaluate(() => (window as unknown as { __announce: { hiddenAfter: number } }).__announce.hiddenAfter);
+  expect(after, 'not cut short').toBeGreaterThanOrEqual(300);
+  expect(after).toBeLessThan(1500);
+});
+
+test('the hero scroll cue is centred', async ({ page }) => {
+  await page.goto(HOME);
+  const cue = page.locator('.hero-viewport svg.animate-bounce, svg.animate-bounce').first();
+  await expect.poll(async () => {
+    const box = await cue.boundingBox();
+    return box ? Math.abs(box.x + box.width / 2 - page.viewportSize()!.width / 2) : 999;
+  }).toBeLessThan(2);
+});
+
+test.describe('a short, wide screen (a phone on its side)', () => {
+  test('an explainer taller than the screen still starts', async ({ page }) => {
+    await page.setViewportSize({ width: 740, height: 360 });
+    await page.goto('/au-en/case-studies/ai-robotics-space-bitcoin-convergence');
+    const first = page.locator('figure.ex').first();
+    await first.evaluate((el) => el.scrollIntoView({ block: 'start', behavior: 'instant' }));
+    await expect(first).toHaveAttribute('data-ex-run', '', { timeout: 8000 });
+  });
+});
