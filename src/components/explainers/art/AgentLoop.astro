@@ -1,0 +1,56 @@
+---
+/** The agent loop: goal → plan → tool call → observation → revise → answer. */
+import { asLocale, useTranslations } from '@/i18n';
+const t = useTranslations(asLocale(Astro.currentLocale));
+const L = (name: string) => t(`explainers.agent-loop.labels.${name}`);
+/** The three plan items inside the planner, left to right. */
+const chips = [222, 266, 310];
+---
+
+<svg class="ex-art" viewBox="0 0 560 300" aria-hidden="true" focusable="false">
+  <defs>
+    <marker id="ex-agent-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path class="ex-arrow" d="M0 0 10 5 0 10z"></path>
+    </marker>
+  </defs>
+
+  {/* Wiring */}
+  <path class="ex-link" d="M126 148H206" marker-end="url(#ex-agent-arrow)"></path>
+  <path class="ex-link" d="M354 128C400 128 400 64 434 64" marker-end="url(#ex-agent-arrow)"></path>
+  <path class="ex-link" d="M489 92V204" marker-end="url(#ex-agent-arrow)"></path>
+  <path class="ex-link" d="M434 232C400 232 400 168 354 168" marker-end="url(#ex-agent-arrow)"></path>
+  <path class="ex-link" d="M280 192V236" marker-end="url(#ex-agent-arrow)"></path>
+
+  {/* The path the work takes, lit step by step */}
+  <path class="ex-flow" data-at="2" d="M354 128C400 128 400 64 434 64"></path>
+  <path class="ex-flow" data-at="3" d="M489 92V204"></path>
+  <path class="ex-flow" data-at="4" d="M434 232C400 232 400 168 354 168"></path>
+  <path class="ex-flow" data-at="5" d="M280 192V236"></path>
+
+  {/* Nodes */}
+  <rect class="ex-node" x="16" y="120" width="110" height="56" rx="10"></rect>
+  <text class="ex-label" x="71" y="153" text-anchor="middle">{L('goal')}</text>
+
+  <rect class="ex-node-brand" x="206" y="104" width="148" height="88" rx="12"></rect>
+  <text class="ex-label" x="280" y="138" text-anchor="middle">{L('planner')}</text>
+  {chips.map((x) => <rect class="ex-chip" data-at="1" x={x} y="158" width="28" height="12" rx="4"></rect>)}
+  <rect class="ex-chip-done" data-at="4" x={chips[0]} y="158" width="28" height="12" rx="4"></rect>
+  <rect class="ex-chip-done" data-at="5" x={chips[1]} y="158" width="28" height="12" rx="4"></rect>
+  <rect class="ex-chip-done" data-at="5" x={chips[2]} y="158" width="28" height="12" rx="4"></rect>
+
+  <rect class="ex-node" x="434" y="36" width="110" height="56" rx="10"></rect>
+  <text class="ex-label" x="489" y="69" text-anchor="middle">{L('tool')}</text>
+
+  <rect class="ex-node" x="434" y="204" width="110" height="56" rx="10"></rect>
+  <text class="ex-label" x="489" y="237" text-anchor="middle">{L('observation')}</text>
+
+  <rect class="ex-node" x="225" y="236" width="110" height="48" rx="10"></rect>
+  <text class="ex-label" x="272" y="265" text-anchor="middle">{L('answer')}</text>
+  <path class="ex-ok" data-at="5" d="M308 260l5 5 9-10"></path>
+
+  {/* The request in flight */}
+  <circle class="ex-token ex-fly" data-at="0" data-until="1" cx="198" cy="148" r="7" style="--fx:-74px"></circle>
+  <circle class="ex-token ex-fly" data-at="2" data-until="3" cx="428" cy="64" r="7" style="--fx:-74px;--fy:64px"></circle>
+  <circle class="ex-token ex-fly" data-at="3" data-until="4" cx="489" cy="198" r="7" style="--fy:-100px"></circle>
+  <circle class="ex-token ex-fly" data-at="4" data-until="5" cx="360" cy="168" r="7" style="--fx:74px;--fy:64px"></circle>
+</svg>

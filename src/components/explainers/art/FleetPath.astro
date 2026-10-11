@@ -1,0 +1,51 @@
+---
+/** Fleet path finding: two robots, one single-lane aisle, one waits. */
+import { asLocale, useTranslations } from '@/i18n';
+const t = useTranslations(asLocale(Astro.currentLocale));
+const L = (name: string) => t(`explainers.fleet-path.labels.${name}`);
+
+/** Grid geometry: 9 columns × 5 rows of 50-unit cells; the last column is the dock. */
+const X0 = 30;
+const Y0 = 25;
+const CELL = 50;
+const COLS = 9;
+const ROWS = 5;
+const cx = (col: number) => X0 + col * CELL + CELL / 2;
+const cy = (row: number) => Y0 + row * CELL + CELL / 2;
+
+/** Shelving: two racks, each with a one-cell gap on the middle row. */
+const shelves = [2, 5].flatMap((col) => [0, 1, 3, 4].map((row) => ({ col, row })));
+---
+
+<svg class="ex-art" viewBox="0 0 510 300" aria-hidden="true" focusable="false">
+  {/* Floor grid */}
+  {Array.from({ length: COLS + 1 }, (_, i) => <path class="ex-grid" d={`M${X0 + i * CELL} ${Y0}V${Y0 + ROWS * CELL}`}></path>)}
+  {Array.from({ length: ROWS + 1 }, (_, i) => <path class="ex-grid" d={`M${X0} ${Y0 + i * CELL}H${X0 + COLS * CELL}`}></path>)}
+
+  {/* Dock column and shelving */}
+  <rect class="ex-node-brand" x={X0 + (COLS - 1) * CELL} y={Y0} width={CELL} height={ROWS * CELL}></rect>
+  <text class="ex-sub" x={cx(COLS - 1)} y="17" text-anchor="middle">{L('dock')}</text>
+  {shelves.map((s) => <rect class="ex-block" x={X0 + s.col * CELL + 6} y={Y0 + s.row * CELL + 6} width={CELL - 12} height={CELL - 12} rx="4"></rect>)}
+  <text class="ex-sub" x={cx(2)} y="17" text-anchor="middle">{L('shelves')}</text>
+
+  {/* Planned routes: both need the same aisle */}
+  <polyline class="ex-flow ex-dash" data-at="1" points={`${cx(0)},${cy(0)} ${cx(1)},${cy(0)} ${cx(1)},${cy(2)} ${cx(7)},${cy(2)} ${cx(7)},${cy(1)} ${cx(8)},${cy(1)}`}></polyline>
+  <polyline class="ex-flow-2 ex-dash" data-at="1" points={`${cx(0)},${cy(4)} ${cx(1)},${cy(4)} ${cx(1)},${cy(2)} ${cx(7)},${cy(2)} ${cx(7)},${cy(3)} ${cx(8)},${cy(3)}`}></polyline>
+
+  {/* The contested cell, and the robot told to wait */}
+  <rect class="ex-warn" data-at="2" data-until="4" x={X0 + CELL} y={Y0 + 2 * CELL} width={CELL} height={CELL}></rect>
+  <text class="ex-sub" data-at="3" data-until="4" x={cx(0)} y={cy(3) + 4} text-anchor="middle">{L('wait')}</text>
+
+  {/* Robot one */}
+  <circle class="ex-token" data-at="0" data-until="2" cx={cx(0)} cy={cy(0)} r="14"></circle>
+  <circle class="ex-token ex-fly" data-at="2" data-until="3" cx={cx(1)} cy={cy(1)} r="14" style="--fx:-50px;--fy:-50px"></circle>
+  <circle class="ex-token ex-fly" data-at="3" data-until="4" cx={cx(3)} cy={cy(2)} r="14" style="--fx:-100px;--fy:-50px"></circle>
+  <circle class="ex-token ex-fly" data-at="4" data-until="5" cx={cx(6)} cy={cy(2)} r="14" style="--fx:-150px"></circle>
+  <circle class="ex-token ex-fly" data-at="5" cx={cx(8)} cy={cy(1)} r="14" style="--fx:-100px;--fy:50px"></circle>
+
+  {/* Robot two */}
+  <circle class="ex-token-2" data-at="0" data-until="2" cx={cx(0)} cy={cy(4)} r="14"></circle>
+  <circle class="ex-token-2 ex-fly" data-at="2" data-until="4" cx={cx(1)} cy={cy(3)} r="14" style="--fx:-50px;--fy:50px"></circle>
+  <circle class="ex-token-2 ex-fly" data-at="4" data-until="5" cx={cx(3)} cy={cy(2)} r="14" style="--fx:-100px;--fy:50px"></circle>
+  <circle class="ex-token-2 ex-fly" data-at="5" cx={cx(8)} cy={cy(3)} r="14" style="--fx:-250px;--fy:-50px"></circle>
+</svg>

@@ -1,0 +1,48 @@
+---
+/** Launch, land, link: a booster flies and returns; a packet crosses the constellation by laser. */
+import { asLocale, useTranslations } from '@/i18n';
+const t = useTranslations(asLocale(Astro.currentLocale));
+const L = (name: string) => t(`explainers.launch-link.labels.${name}`);
+/** Satellites on the orbit arc, left to right. The first is the one this launch delivers. */
+const sats = [
+  { x: 200, y: 52 },
+  { x: 330, y: 34 },
+  { x: 460, y: 52 },
+];
+---
+
+<svg class="ex-art" viewBox="0 0 560 300" aria-hidden="true" focusable="false">
+  {/* Ground, pad, terminals */}
+  <path class="ex-link" d="M0 262H560"></path>
+  <rect class="ex-block" x="40" y="258" width="40" height="6" rx="2"></rect>
+  <text class="ex-sub" x="60" y="284" text-anchor="middle">{L('pad')}</text>
+  <rect class="ex-node" x="160" y="248" width="20" height="14" rx="3"></rect>
+  <text class="ex-sub" x="170" y="284" text-anchor="middle">{L('terminal')}</text>
+  <rect class="ex-node" x="488" y="244" width="24" height="18" rx="3"></rect>
+  <text class="ex-sub" x="500" y="284" text-anchor="middle">{L('station')}</text>
+
+  {/* Orbit, ascent and return paths */}
+  <path class="ex-link ex-dash" d="M120 86Q330 -14 540 86"></path>
+  <path class="ex-link ex-dash" d="M60 236Q62 120 120 60"></path>
+  <path class="ex-link ex-dash" d="M75 95Q46 160 60 236"></path>
+
+  {/* The constellation; the first satellite arrives with this launch */}
+  {sats.slice(1).map((s) => <rect class="ex-node-brand" x={s.x - 11} y={s.y - 7} width="22" height="14" rx="3"></rect>)}
+  <rect class="ex-node-brand ex-fly" data-at="3" x={sats[0].x - 11} y={sats[0].y - 7} width="22" height="14" rx="3" style="--fx:-80px;--fy:8px"></rect>
+
+  {/* Booster: up, back, down on the pad */}
+  <rect class="ex-token ex-fly" data-at="0" data-until="1" x="55" y="134" width="10" height="30" rx="3" style="--fy:88px"></rect>
+  <rect class="ex-token ex-fly" data-at="1" data-until="2" x="70" y="80" width="10" height="30" rx="3" style="--fx:-15px;--fy:54px"></rect>
+  <rect class="ex-token ex-fly" data-at="2" x="55" y="228" width="10" height="30" rx="3" style="--fx:15px;--fy:-148px"></rect>
+  {/* Upper stage carries on to orbit */}
+  <circle class="ex-token-2 ex-fly" data-at="1" data-until="3" cx="120" cy="60" r="6" style="--fx:-60px;--fy:90px"></circle>
+
+  {/* The packet: up, across by laser, down */}
+  <path class="ex-flow" data-at="4" d={`M170 248L${sats[0].x} ${sats[0].y + 8}`}></path>
+  <path class="ex-flow-2" data-at="4" d={`M${sats[0].x + 12} ${sats[0].y}L${sats[1].x - 12} ${sats[1].y}`}></path>
+  <path class="ex-flow-2" data-at="4" d={`M${sats[1].x + 12} ${sats[1].y}L${sats[2].x - 12} ${sats[2].y}`}></path>
+  <text class="ex-sub" data-at="4" x="330" y="78" text-anchor="middle">{L('laser')}</text>
+  <circle class="ex-token ex-fly" data-at="4" data-until="5" cx={sats[2].x} cy={sats[2].y + 16} r="6" style="--fx:-290px;--fy:180px"></circle>
+  <path class="ex-flow" data-at="5" d={`M${sats[2].x} ${sats[2].y + 8}L500 244`}></path>
+  <circle class="ex-token ex-fly" data-at="5" cx="500" cy="236" r="6" style="--fx:-40px;--fy:-168px"></circle>
+</svg>

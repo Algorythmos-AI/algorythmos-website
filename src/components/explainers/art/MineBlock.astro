@@ -1,0 +1,77 @@
+---
+/** Mining a block: gather transactions, try nonces until the hash falls below the target, chain it, retarget. */
+import { asLocale, useTranslations } from '@/i18n';
+const t = useTranslations(asLocale(Astro.currentLocale));
+const L = (name: string) => t(`explainers.mine-block.labels.${name}`);
+
+/** The hash meter under the block: a hash is valid only left of the target mark. */
+const BAR_X = 196;
+const BAR_W = 190;
+const TARGET_X = 236;
+/** Where each nonce try lands on the meter: two misses, then a hit. */
+const tries = [
+  { at: 1, until: 2, x: 344, ok: false },
+  { at: 2, until: 3, x: 292, ok: false },
+  { at: 3, until: undefined, x: 214, ok: true },
+];
+/** Header rows inside the candidate block, top to bottom. */
+const rows = ['prevHash', 'merkle', 'nonce'];
+/** Network nodes that check the finished block. */
+const nodes = [
+  { x: 446, y: 140 },
+  { x: 482, y: 164 },
+  { x: 518, y: 140 },
+];
+---
+
+<svg class="ex-art" viewBox="0 0 560 300" aria-hidden="true" focusable="false">
+  <defs>
+    <marker id="ex-mine-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path class="ex-arrow-brand" d="M0 0 10 5 0 10z"></path>
+    </marker>
+  </defs>
+
+  {/* Previous block */}
+  <rect class="ex-node" x="16" y="70" width="120" height="110" rx="10"></rect>
+  <text class="ex-label" x="76" y="130" text-anchor="middle">{L('prev')}</text>
+
+  {/* Candidate block and its header */}
+  <rect class="ex-node-brand" x="196" y="30" width="190" height="168" rx="12"></rect>
+  <text class="ex-label" x="291" y="56" text-anchor="middle">{L('candidate')}</text>
+  {rows.map((r, i) => (
+    <>
+      <text class="ex-sub" x="210" y={90 + i * 34}>{L(r)}</text>
+      <rect class="ex-chip" x="300" y={78 + i * 34} width="72" height="16" rx="4"></rect>
+    </>
+  ))}
+  <rect class="ex-chip-done" data-at="4" x="300" y="78" width="72" height="16" rx="4"></rect>
+  <rect class="ex-chip-done" data-at="0" x="300" y="112" width="72" height="16" rx="4"></rect>
+  <rect class="ex-chip-done" data-at="3" x="300" y="146" width="72" height="16" rx="4"></rect>
+
+  {/* Waiting transactions feed the Merkle root */}
+  {[420, 448, 476, 504].map((x) => <rect class="ex-block" x={x} y="40" width="20" height="20" rx="4"></rect>)}
+  <text class="ex-sub" x="472" y="28" text-anchor="middle">{L('transactions')}</text>
+  <path class="ex-flow" data-at="0" d="M472 60C472 120 420 120 376 120" marker-end="url(#ex-mine-arrow)"></path>
+
+  {/* Hash meter */}
+  <rect class="ex-chip" x={BAR_X} y="236" width={BAR_W} height="8" rx="4"></rect>
+  <path class="ex-ok" d={`M${TARGET_X} 226V254`}></path>
+  <text class="ex-sub" x={TARGET_X} y="272" text-anchor="middle">{L('target')}</text>
+  <text class="ex-sub" x={BAR_X + BAR_W} y="272" text-anchor="end">{L('hash')}</text>
+  {tries.map((h) => <circle class={h.ok ? 'ex-ok-fill' : 'ex-bad-fill'} data-at={h.at} data-until={h.until} cx={h.x} cy="240" r="8"></circle>)}
+
+  {/* Chained to the previous block, checked by the network */}
+  <path class="ex-flow" data-at="4" d="M196 125H140" marker-end="url(#ex-mine-arrow)"></path>
+  {nodes.map((n) => (
+    <>
+      <circle class="ex-node" cx={n.x} cy={n.y} r="13"></circle>
+      <path class="ex-ok" data-at="4" d={`M${n.x - 6} ${n.y}l4 4 8-9`}></path>
+    </>
+  ))}
+  <text class="ex-sub" x="482" y="200" text-anchor="middle">{L('verify')}</text>
+
+  {/* Difficulty retarget */}
+  <path class="ex-link" d="M450 252A30 30 0 0 1 510 252"></path>
+  <path class="ex-flow" data-at="5" d="M480 252L498 232"></path>
+  <text class="ex-sub" x="480" y="272" text-anchor="middle">{L('retarget')}</text>
+</svg>

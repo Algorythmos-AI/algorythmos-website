@@ -7,6 +7,7 @@
     "caseStudyDetail.studies.healthcare-burden.charts.retention.verbalNotes",
     "caseStudyDetail.studies.healthcare-burden.charts.timeDist.documentation",
     "caseStudyDetail.studies.manufacturing-docs.focus",
+    "charts.caseStudy.ai-robotics-space-bitcoin-convergence.0.labels.2",
     "charts.caseStudy.healthcare-burden.0.labels.1",
     "console.svc.web.c2",
     "console.svc.web.perf",
@@ -52,6 +53,12 @@
     ]
   },
   "titleCaseOk": [
+    "Bitcoin",
+    "Falcon",
+    "Heavy",
+    "Index",
+    "Merkle",
+    "Wiki",
     "ACT",
     "Act",
     "Afrique",

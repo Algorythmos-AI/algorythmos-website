@@ -27,6 +27,7 @@ const URLS = [
   { label: 'home (au-en)', path: '/au-en' },
   { label: 'service (fr-fr)', path: '/fr-fr/services/agentic-automation' },
   { label: 'case study (au-en)', path: '/au-en/case-studies/port-botany-ai-ml' },
+  { label: 'evidence report (au-en)', path: '/au-en/case-studies/ai-robotics-space-bitcoin-convergence' },
   { label: 'services (au-en)', path: '/au-en/services' },
   { label: 'llmops (fr-fr)', path: '/fr-fr/services/llmops' },
 ];

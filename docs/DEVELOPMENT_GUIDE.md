@@ -48,8 +48,16 @@ follow automatically.
 (`title, meta, industry, region, focus, challenge, solution, approach.0-3, results.0-4,
 stats.0-2.{value,label}, cta, keywords`; optional `badge`, `note`, `sources.N.{label,url}`,
 `faqs.N.{question,answer}` — the FAQ renders visibly and as FAQPage schema),
-charts in `src/data/caseStudyCharts.ts`, links in `related.ts`, the slug in
-`e2e/french-locale.spec.ts`, and a claims section in `COPY_CLAIMS_SIGNOFF.md`.
+charts in `src/data/caseStudyCharts.ts`, links in `related.ts`, and a claims section in
+`COPY_CLAIMS_SIGNOFF.md`. (`e2e/french-locale.spec.ts` reads the slugs from the registry.)
+
+**A long-form evidence report** adds optional blocks to the same template, all read from the same
+namespace: `pillars.N.{title,job,how,algorithms.M,players,limits}`, `orchestration.{title,body,steps.N}`
+and `claims.N.{claim,source,verdict}`. A study with pillars also gets a contents list and section
+anchors. Step-through diagrams are registered in `src/data/explainers.ts` (one per pillar, plus one
+for the orchestration block), drawn in `src/components/explainers/art/`, with copy under
+`explainers.<id>.*`. `EXPLAINERS_ENABLED = false` in that file ships them as static diagrams.
+`src/data/citations.test.ts` checks every `[n]` marker against the sources list.
 
 **A service.** `src/data/services.ts` plus the `service<Name>.*` namespace in both
 dictionaries and an entry in `src/seo/ogPages.ts` `SERVICE_NS`.
