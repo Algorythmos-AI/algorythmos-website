@@ -10,6 +10,9 @@
 //      It is only ever fetched by a dynamic import, after the page has loaded.
 //   4. The home page's first-load JS — every chunk its HTML names plus everything
 //      those import statically — stays under HOME_FIRST_LOAD_LIMIT_KB.
+//   5. If the CSS blurs a backdrop, it also carries the -webkit- form. Safari before
+//      18 (every iOS 15–17 browser) knows no other, and the minifier has dropped it
+//      before without anything noticing.
 
 import fs from 'fs';
 import path from 'path';
@@ -165,6 +168,12 @@ export function analyze(distDir, limits = {}) {
     if (size / 1024 > homeLimit) {
       result.failures.push(`${page} first-load JS is ${kb(size / 1024)}, over the ${homeLimit} kB ceiling.`);
     }
+  }
+
+  // Rule 5 — the backdrop blur keeps its -webkit- form.
+  const css = result.cssFiles.map((f) => fs.readFileSync(path.join(astroDir, f.name), 'utf-8')).join('\n');
+  if (/(^|[^-])backdrop-filter\s*:/.test(css) && !/-webkit-backdrop-filter\s*:/.test(css)) {
+    result.failures.push('The CSS uses backdrop-filter without a -webkit-backdrop-filter fallback; Safari before 18 would show no blur.');
   }
 
   return result;

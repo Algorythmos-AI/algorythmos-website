@@ -809,8 +809,10 @@ function validateMetaLengths() {
 // Build-output guards: defects that no source check can see
 //   - CSS: Lightning CSS keeps only the -webkit- line when a rule lists
 //     `backdrop-filter` then `-webkit-backdrop-filter`, silently dropping the
-//     blur in Chromium and Firefox. Every rule block that has the prefixed
-//     property must also carry the unprefixed one.
+//     blur in Chromium and Firefox. Every selector that has the prefixed
+//     property must also carry the unprefixed one — in the same rule, or in a
+//     rule of its own (the prefixed line lives in an `@supports not` block so
+//     the minifier cannot merge the pair away; see global.css).
 //   - HTML: JSX drops the space between a closing inline tag and the next
 //     expression on a new line ("Enterprise-grade</mark>rigour").
 // ---------------------------------------------------------------------------
@@ -827,13 +829,19 @@ function validateBuildOutput() {
   const before = errors;
 
   let blocks = 0;
+  const UNPREFIXED = /(^|;|\s)backdrop-filter\s*:/;
   for (const file of walkExt(DIST, '.css')) {
     const css = readFileSync(file, 'utf8');
-    for (const m of css.matchAll(/([^{}]*)\{([^{}]*)\}/g)) {
+    const rules = [...css.matchAll(/([^{}]*)\{([^{}]*)\}/g)];
+    const unprefixed = new Set();
+    for (const m of rules) {
+      if (UNPREFIXED.test(m[2])) for (const sel of m[1].split(',')) unprefixed.add(sel.trim());
+    }
+    for (const m of rules) {
       const body = m[2];
       if (!body.includes('-webkit-backdrop-filter')) continue;
       blocks++;
-      if (!/(^|;|\s)backdrop-filter\s*:/.test(body)) {
+      if (!UNPREFIXED.test(body) && !m[1].split(',').every((sel) => unprefixed.has(sel.trim()))) {
         log.error(`${relative(ROOT, file)}: "${m[1].trim().slice(0, 60)}" has -webkit-backdrop-filter without backdrop-filter`);
         errors++;
       }

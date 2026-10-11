@@ -2,6 +2,9 @@
 export default {
   content: ['./src/**/*.{astro,html,js,ts,jsx,tsx,md,mdx}'],
   darkMode: ['selector', '[data-theme="dark"]'],
+  /* `hover:` utilities apply only where the device can hover. On a touch screen a
+     hover style otherwise sticks to the last thing tapped. */
+  future: { hoverOnlyWhenSupported: true },
   theme: {
     /* Full list, in ascending order, so `nav` sits between lg and xl in the
        generated CSS. Adding it via `extend` would append it after 2xl and break

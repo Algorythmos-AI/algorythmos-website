@@ -78,7 +78,11 @@ const href = localizePath(locale, announcement.href);
       const done = () => {
         el.hidden = true;
       };
-      el.addEventListener('transitionend', done, { once: true });
+      /* The bar's own collapse, and nothing else: the dismiss button's colour
+         transition bubbles up here and ends first, as does the bar's opacity. */
+      el.addEventListener('transitionend', (event) => {
+        if (event.target === el && event.propertyName === 'max-height') done();
+      });
       window.setTimeout(done, 450);
     });
   }

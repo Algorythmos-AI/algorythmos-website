@@ -127,7 +127,9 @@ function mount(figure: HTMLElement, signal: AbortSignal): () => void {
       inView = entries.some((e) => e.isIntersecting);
       if (inView && !running) start();
     },
-    { threshold: 0.35 },
+    /* Low, as in consoleLoop: a figure stacked tall on a phone can never show 35% of
+       itself in a short viewport, and would never start. */
+    { threshold: 0.15 },
   );
   io.observe(figure);
 

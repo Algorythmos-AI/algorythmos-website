@@ -88,6 +88,10 @@ const t = useTranslations(locale);
       animation: belt-scroll 42s linear infinite;
       will-change: transform;
     }
+  }
+  /* Pause under a pointer, to read a name. Not on touch: a tap leaves the belt
+     "hovered", and it would sit stopped until something else was tapped. */
+  @media (prefers-reduced-motion: no-preference) and (hover: hover) {
     .tech-belt:hover .tech-track {
       animation-play-state: paused;
     }
@@ -124,6 +128,7 @@ const t = useTranslations(locale);
   }
   @keyframes belt-scroll {
     from { transform: translateX(0); }
-    to { transform: translateX(calc(-100% - 1rem)); }
+    /* One full track: its trailing padding already is the gap to the copy that follows. */
+    to { transform: translateX(-100%); }
   }
 </style>

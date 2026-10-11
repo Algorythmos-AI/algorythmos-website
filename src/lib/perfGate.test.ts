@@ -130,4 +130,27 @@ describe('perf gate', () => {
     );
     expect(analyze(dist, LIMITS).failures).toEqual([expect.stringContaining('au-en/index.html first-load JS')]);
   });
+
+  describe('backdrop blur keeps its -webkit- form', () => {
+    it('fails when the CSS blurs a backdrop with the unprefixed property only', () => {
+      const dist = build(HOMES, { 'site.A.css': '.header{backdrop-filter:blur(24px)}' });
+      expect(analyze(dist, LIMITS).failures).toEqual([expect.stringMatching(/-webkit-backdrop-filter fallback/)]);
+    });
+
+    it('passes when the prefixed form is there too, in a rule of its own', () => {
+      const dist = build(HOMES, {
+        'site.A.css': '.header{backdrop-filter:blur(24px)}@supports not (backdrop-filter:blur(1px)){.header{-webkit-backdrop-filter:blur(24px)}}',
+      });
+      expect(analyze(dist, LIMITS).failures).toEqual([]);
+    });
+
+    it('does not mistake the prefixed property for the plain one', () => {
+      const dist = build(HOMES, { 'site.A.css': '.header{-webkit-backdrop-filter:blur(24px)}' });
+      expect(analyze(dist, LIMITS).failures).toEqual([]);
+    });
+
+    it('has nothing to say about a build with no blur', () => {
+      expect(analyze(build(HOMES, { 'site.A.css': '.a{color:red}' }), LIMITS).failures).toEqual([]);
+    });
+  });
 });
