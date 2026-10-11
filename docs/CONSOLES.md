@@ -56,7 +56,8 @@ sitemap and `ImageObject` twin. The homepage hero uses the same system.
 7. **Accessibility.** The screen is `aria-hidden`; the shell's `role="img"` carries the alt text
    from `serviceVisuals[slug].altKey`. Never put focusable elements inside a console.
 8. **Static twin.** Hand-write `service-<slug>.svg`: `viewBox="0 0 1120 760"`, the `console.css`
-   palette, under 10 KB. `src/data/services.test.ts` checks it exists, its size and viewBox.
+   palette, under 10 KB. Copy the 48px window bar (lights, vector mark, wordmark, lock, bell,
+   avatar) from an existing twin so it matches `ConsoleChrome`. `src/data/services.test.ts` checks it exists, its size and viewBox.
 
 `moveCursor` converts client rects to canvas pixels with `canvasPoint` (unit-tested): the ratio
 of the screen's rendered width to the canvas width cancels whatever an engine does with `zoom`.

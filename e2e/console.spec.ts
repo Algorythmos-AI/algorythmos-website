@@ -205,6 +205,16 @@ test.describe('console brand and operator overlay', () => {
     expect(color).toBe('rgb(243, 243, 248)');
   });
 
+  test('every console drives the pointer at least once per loop', async ({ page }) => {
+    test.setTimeout(240_000);
+    for (const { path, name } of ALL) {
+      await page.goto(path);
+      const console_ = page.locator(`[data-console="${name}"]`);
+      await console_.evaluate((el) => el.scrollIntoView({ block: 'center' }));
+      await expect(console_.locator('[data-hc-cursor]'), `${name}: pointer shown`).toHaveClass(/hc-on/, { timeout: 20000 });
+    }
+  });
+
   test('reduced motion → no pointer and no notification, ever', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto('/au-en/services/agentic-automation');
