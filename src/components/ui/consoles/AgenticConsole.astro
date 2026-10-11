@@ -5,6 +5,7 @@
  * "Post to system" step runs → completes; run stats update; then the run resets.
  */
 import ConsoleShell from '@/components/ui/ConsoleShell.astro';
+import ConsoleChrome from '@/components/ui/ConsoleChrome.astro';
 import { asLocale, useTranslations } from '@/i18n';
 import { serviceVisuals } from '@/data/visuals';
 
@@ -46,6 +47,9 @@ const strings = {
   doneMeta: t('console.svc.agentic.doneMeta'),
   headerDone: t('console.svc.agentic.headerDone'),
   headerAwaiting: t('console.svc.agentic.headerAwaiting'),
+  /* Notification titles reuse the step names — no new claims. */
+  toastApproval: t('console.svc.agentic.step5'),
+  toastPost: t('console.svc.agentic.step6'),
 };
 
 const statuses: Record<string, string> = {
@@ -59,10 +63,7 @@ const statuses: Record<string, string> = {
 <ConsoleShell svgFile={v.file} width={v.width} height={v.height} altKey={v.altKey} name="svc-agentic-automation">
   <div class="hc ac">
     <script type="application/json" data-hc-strings set:html={JSON.stringify(strings)} />
-    <div class="hc-chrome">
-      <span class="hc-tdot"></span><span class="hc-tdot"></span><span class="hc-tdot"></span>
-      <span class="hc-urlpill">app.algorythmos.com/agents/contract-review</span>
-    </div>
+    <ConsoleChrome url="app.algorythmos.com/agents/contract-review" />
 
     <div class="ac-head">
       <div>
@@ -215,7 +216,7 @@ const statuses: Record<string, string> = {
 </style>
 
 <script>
-  import { initConsole, scheduleIdle } from '@/lib/consoleLoop';
+  import { initConsole, scheduleIdle, moveCursor, clickCursor, showToast, hideToast } from '@/lib/consoleLoop';
   import type { ConsoleContext } from '@/lib/consoleLoop';
 
   function setStepState(root: HTMLElement, key: string, patch: { state?: string; sub?: string; status?: string; flash?: boolean }) {
@@ -242,9 +243,16 @@ const statuses: Record<string, string> = {
       loopMs: 30000,
       keyframes: [
         {
-          // The reviewer approves — the gate opens.
+          // The reviewer reaches for Approve…
+          t: 4600,
+          apply: ({ root }: ConsoleContext) => moveCursor(root, '[data-slot="approve"]', { x: 0.55, y: 0.6 }),
+        },
+        {
+          // …and approves — the gate opens.
           t: 7000,
           apply: ({ root, strings }: ConsoleContext) => {
+            clickCursor(root, '[data-slot="approve"]');
+            showToast(root, strings['toastApproval'], strings['approvedSub']);
             setStepState(root, 'approval', { state: 'done', sub: strings['approvedSub'], status: strings['approvedMeta'], flash: true });
             const btn = root.querySelector('[data-slot="approve"]');
             if (btn) { btn.classList.remove('hc-flash'); btn.classList.add('hc-flash'); }
@@ -255,6 +263,7 @@ const statuses: Record<string, string> = {
           // Final step starts writing to the ERP.
           t: 12000,
           apply: ({ root, strings }: ConsoleContext) => {
+            hideToast(root);
             setStepState(root, 'post', { state: 'pending', sub: strings['postingSub'], status: strings['runningMeta'] });
             rail(root, 0.9);
           },
@@ -263,6 +272,7 @@ const statuses: Record<string, string> = {
           // Run completes; stats update coherently.
           t: 18000,
           apply: ({ root, strings }: ConsoleContext) => {
+            showToast(root, strings['toastPost'], strings['doneSub']);
             setStepState(root, 'post', { state: 'done', sub: strings['doneSub'], status: strings['doneMeta'], flash: true });
             rail(root, 1);
             stat(root, 'tools', '6');
@@ -271,6 +281,10 @@ const statuses: Record<string, string> = {
             const sub = root.querySelector('[data-slot="runsub"]');
             if (sub) sub.textContent = strings['headerDone'];
           },
+        },
+        {
+          t: 22500,
+          apply: ({ root }: ConsoleContext) => hideToast(root),
         },
       ],
     });

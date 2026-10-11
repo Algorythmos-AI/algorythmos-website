@@ -6,6 +6,7 @@
  * bar nudges up and active accounts tick.
  */
 import ConsoleShell from '@/components/ui/ConsoleShell.astro';
+import ConsoleChrome from '@/components/ui/ConsoleChrome.astro';
 import { asLocale, useTranslations } from '@/i18n';
 import { serviceVisuals } from '@/data/visuals';
 
@@ -31,16 +32,15 @@ const metrics = ['revenue', 'net_revenue_retention', 'gross_margin', 'active_acc
 const strings = {
   refreshing: t('console.svc.sql.refreshing'),
   refreshed: t('console.svc.sql.refreshedNow'),
+  /* Notification reuses the dashboard title + the refresh status — no new claims. */
+  toastTitle: t('console.svc.sql.title'),
 };
 ---
 
 <ConsoleShell svgFile={v.file} width={v.width} height={v.height} altKey={v.altKey} name="svc-sql-dashboards">
   <div class="hc sq">
     <script type="application/json" data-hc-strings set:html={JSON.stringify(strings)} />
-    <div class="hc-chrome">
-      <span class="hc-tdot"></span><span class="hc-tdot"></span><span class="hc-tdot"></span>
-      <span class="hc-urlpill">app.algorythmos.com/dashboards</span>
-    </div>
+    <ConsoleChrome url="app.algorythmos.com/dashboards" />
 
     <div class="sq-head">
       <div>
@@ -165,7 +165,7 @@ const strings = {
 </style>
 
 <script>
-  import { initConsole, scheduleIdle } from '@/lib/consoleLoop';
+  import { initConsole, scheduleIdle, moveCursor, clickCursor, showToast, hideToast } from '@/lib/consoleLoop';
   import type { ConsoleContext } from '@/lib/consoleLoop';
 
   function setup() {
@@ -174,10 +174,12 @@ const strings = {
     initConsole(root, {
       loopMs: 22000,
       keyframes: [
+        { t: 7600, apply: ({ root }: ConsoleContext) => moveCursor(root, '[data-slot="refresh"]', { x: 0.8, y: 0.6 }) },
         {
-          // Scheduled refresh kicks off.
+          // The analyst asks for a refresh.
           t: 10000,
           apply: ({ root, strings }: ConsoleContext) => {
+            clickCursor(root);
             const el = root.querySelector('[data-slot="refresh"]');
             if (el) el.textContent = strings['refreshing'];
             root.classList.add('sq-refreshing');
@@ -192,8 +194,10 @@ const strings = {
             const bar = root.querySelector<HTMLElement>('[data-bar="8"]');
             if (bar) bar.style.height = '338px';
             root.classList.remove('sq-refreshing');
+            showToast(root, strings['toastTitle'], strings['refreshed']);
           },
         },
+        { t: 16600, apply: ({ root }: ConsoleContext) => hideToast(root) },
       ],
     });
   }

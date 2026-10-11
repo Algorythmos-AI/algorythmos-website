@@ -19,6 +19,9 @@
  * original SVG stays on disk untouched — image-sitemap / ImageObject / llms.txt
  * asset, and the no-JS visual via <noscript>.
  *
+ * Every console also gets an operator overlay (a pointer + a notification),
+ * hidden until a console's script drives it through the loop harness.
+ *
  * A11y: the console is a *picture* of a product — role="img" with one label;
  * the screen is aria-hidden and inert (pointer-events/user-select none), and
  * console markup must never contain focusable elements.
@@ -61,6 +64,23 @@ const alt = t(altKey);
     >
       <div class="hc-screen" aria-hidden="true">
         <slot />
+        {/* Operator overlay — a pointer and a notification the loop harness can
+            drive (moveCursor / clickCursor / showToast). Invisible until used. */}
+        <div class="hc-overlay">
+          <span class="hc-cursor" data-hc-cursor>
+            <span class="hc-cursor-ring"></span>
+            <svg viewBox="0 0 22 22">
+              <path d="M3 2.2 18.4 10.6l-6.7 1.7-2.6 6.6L3 2.2Z" fill="#fff" stroke="#0c0c13" stroke-width="1.4" stroke-linejoin="round" />
+            </svg>
+          </span>
+          <div class="hc-toast" data-hc-toast>
+            <span class="hc-toast-logo"><img src="/logo-mark.webp" alt="" aria-hidden="true" width="54" height="64" loading="lazy" decoding="async" /></span>
+            <span>
+              <span class="hc-toast-title" data-hc-toast-title></span>
+              <span class="hc-toast-body" data-hc-toast-body></span>
+            </span>
+          </div>
+        </div>
       </div>
       <noscript>
         <img src={svgFile} alt={alt} width={width} height={height} loading="lazy" decoding="async" class="hc-fallback" />
@@ -80,6 +100,7 @@ const alt = t(altKey);
 
   .hc-screen {
     /* Native canvas box (vars, not inline, so the mobile query can override). */
+    position: relative; /* anchors the operator overlay to the canvas */
     width: var(--hc-w);
     height: var(--hc-h);
     /* --hc-scale is a plain number set by the scaler (mountConsoleScaler). */

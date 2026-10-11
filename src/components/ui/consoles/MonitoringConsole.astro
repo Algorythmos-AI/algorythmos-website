@@ -6,6 +6,7 @@
  * and v5.2 is promoted — while the health tiles tick live.
  */
 import ConsoleShell from '@/components/ui/ConsoleShell.astro';
+import ConsoleChrome from '@/components/ui/ConsoleChrome.astro';
 import { asLocale, useTranslations } from '@/i18n';
 import { serviceVisuals } from '@/data/visuals';
 import { formatValue } from '@/lib/consoleLoop';
@@ -53,10 +54,7 @@ const strings = {
 <ConsoleShell svgFile={v.file} width={v.width} height={v.height} altKey={v.altKey} name="svc-model-monitoring">
   <div class="hc mm">
     <script type="application/json" data-hc-strings set:html={JSON.stringify(strings)} />
-    <div class="hc-chrome">
-      <span class="hc-tdot"></span><span class="hc-tdot"></span><span class="hc-tdot"></span>
-      <span class="hc-urlpill">app.algorythmos.com/monitoring</span>
-    </div>
+    <ConsoleChrome url="app.algorythmos.com/monitoring" />
 
     <div class="mm-head">
       <div>
@@ -191,7 +189,7 @@ const strings = {
 </style>
 
 <script>
-  import { initConsole, scheduleIdle } from '@/lib/consoleLoop';
+  import { initConsole, scheduleIdle, moveCursor, clickCursor, showToast, hideToast } from '@/lib/consoleLoop';
   import type { ConsoleContext } from '@/lib/consoleLoop';
 
   const pill = (root: HTMLElement, text: string) => {
@@ -228,8 +226,11 @@ const strings = {
             root.querySelector('.mm-plot')?.classList.add('mm-drifting');
             pill(root, strings['pillAlert']);
             event(root, strings['alertDrift'], strings['justNow'], 'warning');
+            showToast(root, strings['pillAlert'], strings['alertDrift']);
           },
         },
+        { t: 8200, apply: ({ root }: ConsoleContext) => moveCursor(root, '[data-hc-list]', { x: 0.35, y: 0.12 }) },
+        { t: 10200, apply: ({ root }: ConsoleContext) => hideToast(root) },
         {
           t: 12000,
           apply: ({ root, strings }: ConsoleContext) => {
@@ -243,8 +244,10 @@ const strings = {
             root.querySelector('.mm-plot')?.classList.remove('mm-drifting');
             pill(root, strings['pillResolved']);
             event(root, strings['alertPromoted'], strings['justNow'], 'success');
+            showToast(root, strings['pillResolved'], strings['alertPromoted']);
           },
         },
+        { t: 23200, apply: ({ root }: ConsoleContext) => hideToast(root) },
       ],
     });
   }

@@ -6,6 +6,7 @@
  * re-run beat (~26s) that re-pulses the rings.
  */
 import ConsoleShell from '@/components/ui/ConsoleShell.astro';
+import ConsoleChrome from '@/components/ui/ConsoleChrome.astro';
 import { asLocale, useTranslations } from '@/i18n';
 import { serviceVisuals } from '@/data/visuals';
 
@@ -38,17 +39,16 @@ const checks = [
 
 <ConsoleShell svgFile={v.file} width={v.width} height={v.height} altKey={v.altKey} name="svc-ai-websites">
   <div class="hc aw">
-    <div class="hc-chrome">
-      <span class="hc-tdot"></span><span class="hc-tdot"></span><span class="hc-tdot"></span>
-      <span class="hc-urlpill">algorythmos.com · audit</span>
-    </div>
+    {/* Notification reuses the screen title + status — no new claims. */}
+    <script type="application/json" data-hc-strings set:html={JSON.stringify({ toastTitle: t('console.svc.web.title'), toastBody: t('console.svc.web.passing') })} />
+    <ConsoleChrome url="algorythmos.com · audit" />
 
     <div class="aw-head">
       <div>
         <div class="aw-title">{t('console.svc.web.title')}</div>
         <div class="aw-sub">{t('console.svc.web.sub')}</div>
       </div>
-      <span class="hc-livepill"><span class="hc-livedot"></span>{t('console.svc.web.passing')}</span>
+      <span class="hc-livepill" data-slot="pill"><span class="hc-livedot"></span>{t('console.svc.web.passing')}</span>
     </div>
 
     {/* Score rings */}
@@ -175,7 +175,7 @@ const checks = [
 </style>
 
 <script>
-  import { initConsole, scheduleIdle } from '@/lib/consoleLoop';
+  import { initConsole, scheduleIdle, moveCursor, clickCursor, showToast, hideToast } from '@/lib/consoleLoop';
   import type { ConsoleContext } from '@/lib/consoleLoop';
 
   function setup() {
@@ -184,8 +184,17 @@ const checks = [
     initConsole(root, {
       loopMs: 26000,
       keyframes: [
-        { t: 16000, apply: ({ root }: ConsoleContext) => root.classList.add('aw-rerun') },
-        { t: 19000, apply: ({ root }: ConsoleContext) => root.classList.remove('aw-rerun') },
+        // The operator re-runs the audit from the status pill; the result is confirmed.
+        { t: 13400, apply: ({ root }: ConsoleContext) => moveCursor(root, '[data-slot="pill"]', { x: 0.6, y: 0.65 }) },
+        { t: 16000, apply: ({ root }: ConsoleContext) => { clickCursor(root, '[data-slot="pill"]'); root.classList.add('aw-rerun'); } },
+        {
+          t: 19000,
+          apply: ({ root, strings }: ConsoleContext) => {
+            root.classList.remove('aw-rerun');
+            showToast(root, strings['toastTitle'], strings['toastBody']);
+          },
+        },
+        { t: 22600, apply: ({ root }: ConsoleContext) => hideToast(root) },
       ],
     });
   }

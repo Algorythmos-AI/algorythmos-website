@@ -6,6 +6,7 @@
  * rotates in. Health bars grow on first view.
  */
 import ConsoleShell from '@/components/ui/ConsoleShell.astro';
+import ConsoleChrome from '@/components/ui/ConsoleChrome.astro';
 import { asLocale, useTranslations } from '@/i18n';
 import { serviceVisuals } from '@/data/visuals';
 
@@ -50,10 +51,7 @@ const strings = {
 <ConsoleShell svgFile={v.file} width={v.width} height={v.height} altKey={v.altKey} name="svc-mlops-cicd">
   <div class="hc ml">
     <script type="application/json" data-hc-strings set:html={JSON.stringify(strings)} />
-    <div class="hc-chrome">
-      <span class="hc-tdot"></span><span class="hc-tdot"></span><span class="hc-tdot"></span>
-      <span class="hc-urlpill">app.algorythmos.com/pipelines</span>
-    </div>
+    <ConsoleChrome url="app.algorythmos.com/pipelines" />
 
     <div class="ml-head">
       <div>
@@ -218,7 +216,7 @@ const strings = {
 </style>
 
 <script>
-  import { initConsole, scheduleIdle } from '@/lib/consoleLoop';
+  import { initConsole, scheduleIdle, moveCursor, clickCursor, showToast, hideToast } from '@/lib/consoleLoop';
   import type { ConsoleContext } from '@/lib/consoleLoop';
 
   function stage(root: HTMLElement, key: string, patch: { state?: string; sub?: string }) {
@@ -238,6 +236,7 @@ const strings = {
     initConsole(root, {
       loopMs: 30000,
       keyframes: [
+        { t: 4800, apply: ({ root }: ConsoleContext) => moveCursor(root, '[data-stage="deploy"]', { x: 0.62, y: 0.7 }) },
         { t: 7000, apply: ({ root, strings }: ConsoleContext) => stage(root, 'deploy', { sub: strings['canary60'] }) },
         { t: 13000, apply: ({ root, strings }: ConsoleContext) => { stage(root, 'deploy', { sub: strings['canary100'] }); fill(root, 0.86); } },
         {
@@ -263,8 +262,10 @@ const strings = {
               const rows = list.querySelectorAll('[data-run]');
               if (rows.length > 5) rows[rows.length - 1].remove();
             }
+            showToast(root, strings['pillDone'], strings['r419']);
           },
         },
+        { t: 23200, apply: ({ root }: ConsoleContext) => hideToast(root) },
       ],
     });
   }

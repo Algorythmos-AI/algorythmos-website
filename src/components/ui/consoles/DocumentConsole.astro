@@ -6,6 +6,7 @@
  * the batch counter and re-scans the next invoice (~24s).
  */
 import ConsoleShell from '@/components/ui/ConsoleShell.astro';
+import ConsoleChrome from '@/components/ui/ConsoleChrome.astro';
 import { asLocale, useTranslations } from '@/i18n';
 import { serviceVisuals } from '@/data/visuals';
 
@@ -25,23 +26,23 @@ const strings = {
   batch2: t('console.svc.doc.batch2'),
   scanning: t('console.svc.doc.scanning'),
   validated: t('console.svc.doc.validated'),
+  /* Notification reuses the button label + the validated count — no new claims. */
+  toastTitle: t('console.svc.doc.export'),
+  toastBody: t('console.svc.doc.count'),
 };
 ---
 
 <ConsoleShell svgFile={v.file} width={v.width} height={v.height} altKey={v.altKey} name="svc-document-intelligence">
   <div class="hc dc">
     <script type="application/json" data-hc-strings set:html={JSON.stringify(strings)} />
-    <div class="hc-chrome">
-      <span class="hc-tdot"></span><span class="hc-tdot"></span><span class="hc-tdot"></span>
-      <span class="hc-urlpill">app.algorythmos.com/documents</span>
-    </div>
+    <ConsoleChrome url="app.algorythmos.com/documents" />
 
     <div class="dc-head">
       <div>
         <div class="dc-title">{t('console.svc.doc.title')}</div>
         <div class="dc-sub" data-slot="batch" data-hc-stage>{t('console.svc.doc.batch1')}</div>
       </div>
-      <span class="hc-cta">{t('console.svc.doc.export')}</span>
+      <span class="hc-cta" data-slot="export">{t('console.svc.doc.export')}</span>
     </div>
 
     <div class="dc-cols">
@@ -203,7 +204,7 @@ const strings = {
 </style>
 
 <script>
-  import { initConsole, scheduleIdle } from '@/lib/consoleLoop';
+  import { initConsole, scheduleIdle, moveCursor, clickCursor, showToast, hideToast } from '@/lib/consoleLoop';
   import type { ConsoleContext } from '@/lib/consoleLoop';
 
   function setup() {
@@ -212,6 +213,23 @@ const strings = {
     initConsole(root, {
       loopMs: 24000,
       keyframes: [
+        {
+          // Fields are validated — the operator reaches for Export…
+          t: 6200,
+          apply: ({ root }: ConsoleContext) => moveCursor(root, '[data-slot="export"]', { x: 0.6, y: 0.6 }),
+        },
+        {
+          // …and sends the batch on.
+          t: 8600,
+          apply: ({ root, strings }: ConsoleContext) => {
+            clickCursor(root, '[data-slot="export"]');
+            showToast(root, strings['toastTitle'], strings['toastBody']);
+          },
+        },
+        {
+          t: 12200,
+          apply: ({ root }: ConsoleContext) => hideToast(root),
+        },
         {
           // Next document in the batch — counter advances, a re-scan sweeps.
           t: 14000,

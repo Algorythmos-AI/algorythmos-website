@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { consoleMayAdvance, easeOutQuart, formatValue, scaleFor } from './consoleLoop';
+import { canvasPoint, consoleMayAdvance, easeOutQuart, formatValue, scaleFor } from './consoleLoop';
 
 describe('scaleFor', () => {
   it('returns the fit ratio', () => {
@@ -65,5 +65,36 @@ describe('consoleMayAdvance', () => {
   });
   it('stops as soon as motion is turned off mid-session', () => {
     expect(consoleMayAdvance(true, false, true)).toBe(false);
+  });
+});
+
+describe('canvasPoint', () => {
+  const target = { left: 300, top: 200, width: 100, height: 40 };
+
+  it('maps a target centre to canvas px at scale 1', () => {
+    expect(canvasPoint(target, { left: 100, top: 50, width: 1280 }, 1280)).toEqual({ x: 250, y: 170 });
+  });
+
+  it('undoes the scale when the screen is rendered smaller than the canvas', () => {
+    // screen drawn at half size: every client px is two canvas px
+    const pt = canvasPoint({ left: 150, top: 100, width: 50, height: 20 }, { left: 50, top: 25, width: 640 }, 1280);
+    expect(pt).toEqual({ x: 250, y: 170 });
+  });
+
+  it('gives the same answer when the engine reports unscaled rects', () => {
+    // some engines report rects inside a zoomed box in the box's own px (ratio 1)
+    expect(canvasPoint(target, { left: 100, top: 50, width: 1280 }, 1280)).toEqual(
+      canvasPoint({ left: 150, top: 100, width: 50, height: 20 }, { left: 50, top: 25, width: 640 }, 1280),
+    );
+  });
+
+  it('honours an anchor other than the centre', () => {
+    expect(canvasPoint(target, { left: 100, top: 50, width: 1280 }, 1280, { x: 0, y: 1 })).toEqual({ x: 200, y: 190 });
+  });
+
+  it('returns null instead of NaN/Infinity when nothing is measurable', () => {
+    expect(canvasPoint(target, { left: 0, top: 0, width: 0 }, 1280)).toBeNull();
+    expect(canvasPoint(target, { left: 0, top: 0, width: 1280 }, 0)).toBeNull();
+    expect(canvasPoint({ ...target, left: NaN }, { left: 0, top: 0, width: 1280 }, 1280)).toBeNull();
   });
 });

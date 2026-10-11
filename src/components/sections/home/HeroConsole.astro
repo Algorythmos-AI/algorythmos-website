@@ -12,6 +12,7 @@
  * pauses off-screen / in hidden tabs. All strings via i18n (locale-blind JS).
  */
 import ConsoleShell from '@/components/ui/ConsoleShell.astro';
+import ConsoleChrome from '@/components/ui/ConsoleChrome.astro';
 import { asLocale, useTranslations, REGIONS } from '@/i18n';
 import { heroVisual } from '@/data/visuals';
 import { formatValue } from '@/lib/consoleLoop';
@@ -21,16 +22,25 @@ const t = useTranslations(locale);
 const lang = REGIONS[locale].lang;
 
 /* KPI source values — coherent story: 1,284 runs at 99.2% ⇒ ~10 failures/day. */
-const KPI = { runs: 1284, success: 99.2, latency: 1.8 };
+const KPI = { runs: 1284, success: 99.2, latency: 1.8, perHour: 86 };
 
-const nav = [
-  { key: 'console.nav.agents', active: true },
-  { key: 'console.nav.overview' },
-  { key: 'console.nav.documents' },
-  { key: 'console.nav.dashboards' },
-  { key: 'console.nav.pipelines' },
-  { key: 'console.nav.monitoring' },
+/* Sidebar nav — 16px line icons (single path each, stroke = currentColor). */
+const nav: { key: string; icon: string; active?: boolean }[] = [
+  { key: 'console.nav.agents', active: true, icon: 'M8 1.8v2.2M4.2 4h7.6a1.6 1.6 0 0 1 1.6 1.6v5.2a1.6 1.6 0 0 1-1.6 1.6H4.2a1.6 1.6 0 0 1-1.6-1.6V5.600A1.6 1.6 0 0 1 4.200 4ZM6 7.600v1.400M10 7.600v1.400M1.200 7.600v2M14.800 7.600v2' },
+  { key: 'console.nav.overview', icon: 'M2.600 2.600h4.400v4.400H2.600zM9 2.600h4.400v4.400H9zM2.600 9h4.400v4.400H2.600zM9 9h4.400v4.400H9z' },
+  { key: 'console.nav.documents', icon: 'M4 1.800h5.200l3 3v9.400H4zM9 1.800v3.200h3.200M6 8.200h4.200M6 10.800h4.200' },
+  { key: 'console.nav.dashboards', icon: 'M2.400 13.400h11.200M4.400 13.400V8.400M8 13.400V3.400M11.600 13.400V6.400' },
+  { key: 'console.nav.pipelines', icon: 'M3.600 2.400a1.600 1.600 0 1 0 0 3.200 1.600 1.600 0 0 0 0-3.200ZM12.400 10.400a1.600 1.600 0 1 0 0 3.200 1.600 1.600 0 0 0 0-3.200ZM3.600 5.600v3.200a3.200 3.200 0 0 0 3.200 3.200h4' },
+  { key: 'console.nav.monitoring', icon: 'M1.600 8.400h2.800l1.800-4.800 3.200 8.800 1.800-4h3.200' },
 ];
+
+/** "Sam K." → "SK" for the avatar. */
+const initials = t('console.user.name')
+  .split(/\s+/)
+  .map((w) => w.charAt(0))
+  .join('')
+  .slice(0, 2)
+  .toUpperCase();
 
 const steps = [
   t('console.steps.ingest'),
@@ -51,6 +61,8 @@ const dynamicStrings = {
   'email.retry.sub': t('console.sub.email.retrying'),
   'email.retry.meta': t('console.meta.retrying'),
   'email.running.meta': t('console.meta.running'),
+  /* Notification copy reuses the run's own strings — no new claims. */
+  'toast.title': t('console.runs.contract'),
 };
 ---
 
@@ -65,28 +77,27 @@ const dynamicStrings = {
     <script type="application/json" data-hc-strings set:html={JSON.stringify(dynamicStrings)} />
 
     {/* ── Chrome bar ── */}
-    <div class="hc-chrome">
-      <span class="hc-tdot"></span><span class="hc-tdot"></span><span class="hc-tdot"></span>
-      <span class="hc-urlpill"><span class="hc-dot hc-dot--success"></span>{t('console.url')}</span>
-    </div>
+    <ConsoleChrome url={t('console.url')} brand="mobile" />
 
     <div class="hc-body">
       {/* ── Sidebar ── */}
       <aside class="hc-side">
         <div class="hc-brand">
-          <span class="hc-brandmark"></span>
-          <span class="hc-brandname">Algorythmos</span>
+          <img src="/logo-mark.webp" alt="" aria-hidden="true" width="54" height="64" class="hc-logo" decoding="async" />
+          <span class="hc-wordmark">Algoryth<span class="hc-wordmark-accent">mos</span></span>
         </div>
         <nav class="hc-nav">
           {nav.map((item) => (
             <span class:list={['hc-navitem', { 'hc-navitem--active': item.active }]}>
-              <span class="hc-navdot"></span>
+              <svg class="hc-navicon" viewBox="0 0 16 16" aria-hidden="true">
+                <path d={item.icon} fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
               {t(item.key)}
             </span>
           ))}
         </nav>
         <div class="hc-user">
-          <span class="hc-avatar"></span>
+          <span class="hc-avatar">{initials}<span class="hc-avatar-status"></span></span>
           <span>
             <span class="hc-username">{t('console.user.name')}</span>
             <span class="hc-userrole">{t('console.user.role')}</span>
@@ -116,7 +127,7 @@ const dynamicStrings = {
             </span>
             <span class="hc-kpi-delta hc-kpi-delta--up">{t('console.kpi.runsDelta')}</span>
             <svg class="hc-spark" viewBox="0 0 84 32" aria-hidden="true">
-              <polyline points="2,26 16,20 30,24 44,12 58,16 72,4" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              <polyline pathLength="1" points="2,26 16,20 30,24 44,12 58,16 72,4" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
           </div>
           <div class="hc-card hc-kpi">
@@ -126,7 +137,7 @@ const dynamicStrings = {
             </span>
             <span class="hc-kpi-delta hc-kpi-delta--up">{t('console.kpi.successDelta')}</span>
             <svg class="hc-spark" viewBox="0 0 84 32" aria-hidden="true">
-              <polyline points="2,24 16,22 30,18 44,19 58,12 72,8" fill="none" stroke="#22d3ee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              <polyline pathLength="1" points="2,24 16,22 30,18 44,19 58,12 72,8" fill="none" stroke="#22d3ee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
           </div>
           <div class="hc-card hc-kpi">
@@ -136,7 +147,7 @@ const dynamicStrings = {
             </span>
             <span class="hc-kpi-delta">{t('console.kpi.latencyNote')}</span>
             <svg class="hc-spark" viewBox="0 0 84 32" aria-hidden="true">
-              <polyline points="2,18 16,22 30,16 44,20 58,17 72,19" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              <polyline pathLength="1" points="2,18 16,22 30,16 44,20 58,17 72,19" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
           </div>
         </div>
@@ -177,8 +188,13 @@ const dynamicStrings = {
                 stroke-linecap="round"
                 stroke-linejoin="round"
               />
+              <line class="hc-endpoint hc-nowline" x1="616" y1="48" x2="616" y2="152" stroke="#22d3ee" stroke-opacity="0.35" stroke-dasharray="3 4" />
               <circle class="hc-endpoint" cx="616" cy="48" r="3.5" fill="#22d3ee" />
             </svg>
+            <span class="hc-charttip" data-hc-charttip>
+              <span class="hc-charttip-value">{formatValue(KPI.perHour, 'int', lang)}</span>
+              <span class="hc-charttip-label">{t('console.chart.sub')}</span>
+            </span>
             <div class="hc-axis">
               <span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>{t('console.chart.now')}</span>
             </div>
@@ -264,16 +280,8 @@ const dynamicStrings = {
     padding: 28px 16px 24px;
   }
   .hc-brand { display: flex; align-items: center; gap: 10px; padding: 0 8px; }
-  .hc-brandmark {
-    position: relative;
-    width: 26px; height: 26px; border-radius: 8px;
-    background: linear-gradient(135deg, #8b5cf6, #6366f1);
-  }
-  .hc-brandmark::after {
-    content: ''; position: absolute; top: -4px; right: -4px;
-    width: 10px; height: 10px; border-radius: 50%; background: var(--c-accent);
-  }
-  .hc-brandname { font-size: 15px; font-weight: 600; }
+  .hc-brand .hc-logo { height: 26px; }
+  .hc-brand .hc-wordmark { font-size: 16px; }
   .hc-nav { display: flex; flex-direction: column; gap: 4px; margin-top: 40px; }
   .hc-navitem {
     position: relative;
@@ -281,23 +289,37 @@ const dynamicStrings = {
     height: 36px; padding: 0 16px; border-radius: 9px;
     font-size: 13.5px; color: var(--c-muted);
   }
-  .hc-navdot { width: 8px; height: 8px; border-radius: 50%; background: #5a5c74; flex: none; }
-  .hc-navitem--active { background: rgb(255 255 255 / 0.06); color: var(--c-ink); }
+  .hc-navicon { width: 16px; height: 16px; flex: none; color: #6f7190; }
+  .hc-navitem--active {
+    background: linear-gradient(90deg, rgb(167 139 250 / 0.16), rgb(255 255 255 / 0.04));
+    color: var(--c-ink);
+  }
   .hc-navitem--active::before {
     content: ''; position: absolute; left: 0; top: 0; bottom: 0;
     width: 3px; border-radius: 1.5px; background: var(--c-brand);
   }
-  .hc-navitem--active .hc-navdot { background: var(--c-brand); }
+  .hc-navitem--active .hc-navicon { color: var(--c-brand); }
   .hc-user {
     margin-top: auto; display: flex; align-items: center; gap: 12px;
     padding: 20px 8px 0; border-top: 1px solid var(--c-line-soft);
   }
-  .hc-avatar { width: 18px; height: 18px; border-radius: 50%; background: #262636; flex: none; }
+  .hc-avatar {
+    position: relative;
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 30px; height: 30px; border-radius: 50%; flex: none;
+    background: linear-gradient(135deg, #8b5cf6, #22d3ee);
+    font-size: 11px; font-weight: 700; letter-spacing: 0.02em; color: #0c0c13;
+  }
+  .hc-avatar-status {
+    position: absolute; right: -1px; bottom: -1px;
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--c-success); box-shadow: 0 0 0 2px var(--c-panel);
+  }
   .hc-username { display: block; font-size: 12.5px; color: var(--c-muted); }
   .hc-userrole { display: block; font-size: 11px; color: var(--c-subtle); }
 
   /* Main column */
-  .hc-main { flex: 1; min-width: 0; padding: 28px 36px 32px; display: flex; flex-direction: column; gap: 24px; }
+  .hc-main { flex: 1; min-width: 0; padding: 24px 36px 20px; display: flex; flex-direction: column; gap: 18px; }
   .hc-header { display: flex; align-items: flex-start; justify-content: space-between; }
   .hc-title { font-size: 22px; font-weight: 600; }
   .hc-subtitle { margin-top: 6px; font-size: 13px; color: var(--c-muted); }
@@ -319,7 +341,18 @@ const dynamicStrings = {
 
   /* Middle row */
   .hc-midrow { display: grid; grid-template-columns: 1fr 288px; gap: 16px; }
-  .hc-chart { padding: 20px 24px; }
+  .hc-chart { position: relative; padding: 20px 24px; }
+  /* Readout pinned to the live end of the line. */
+  .hc-charttip {
+    position: absolute; right: 44px; top: 62px;
+    display: flex; flex-direction: column; align-items: flex-end;
+    padding: 7px 11px; border-radius: 9px;
+    background: rgb(26 26 38 / 0.96);
+    border: 1px solid rgb(34 211 238 / 0.32);
+    box-shadow: 0 10px 24px -14px rgb(0 0 0 / 0.9);
+  }
+  .hc-charttip-value { font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--c-ink); }
+  .hc-charttip-label { font-size: 10px; color: var(--c-subtle); white-space: nowrap; }
   .hc-chart-svg { display: block; width: 640px; height: 176px; margin-top: 8px; }
   .hc-axis { display: flex; justify-content: space-between; font-size: 11px; color: var(--c-subtle); padding: 2px 24px 0; }
 
@@ -345,8 +378,8 @@ const dynamicStrings = {
     position: relative;
     display: flex;
     justify-content: space-between;
-    margin: 44px 56px 8px;
-    height: 84px;
+    margin: 40px 56px 0;
+    height: 64px;
   }
   .hc-track, .hc-track-fill {
     position: absolute; left: 16px; right: 16px; top: 16px; height: 2px;
@@ -412,6 +445,17 @@ const dynamicStrings = {
       animation: hc-node-pulse 2.6s var(--ease-smooth, ease-in-out) infinite;
     }
     .hc-track-fill { transition: transform 0.45s var(--ease-quint, ease-out); }
+    /* sparklines + chart readout join the draw-on */
+    :global(.hc-armed) .hc-spark polyline { stroke-dasharray: 1; stroke-dashoffset: 1; }
+    :global(.hc-armed.hc-live) .hc-spark polyline {
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset 1.2s var(--ease-quint, cubic-bezier(0.22, 1, 0.36, 1)) 0.5s;
+    }
+    :global(.hc-armed) .hc-charttip { opacity: 0; transform: translateY(6px); }
+    :global(.hc-armed.hc-live) .hc-charttip {
+      opacity: 1; transform: none;
+      transition: opacity 0.4s ease 1.8s, transform 0.5s var(--ease-quint, ease-out) 1.8s;
+    }
     .hc-run { transition: transform 0.45s var(--ease-quint, ease-out), opacity 0.45s ease; }
   }
 
@@ -435,6 +479,7 @@ const dynamicStrings = {
     .hc-midrow { grid-template-columns: 1fr; gap: 14px; }
     .hc-chart { padding: 16px; }
     .hc-chart-svg { width: 100%; height: 128px; }
+    .hc-charttip { right: 20px; top: 48px; }
 
     .hc-workflow { padding: 16px; }
     .hc-stepper { margin: 30px 12px 4px; height: 40px; }
@@ -445,7 +490,10 @@ const dynamicStrings = {
 </style>
 
 <script>
-  import { initConsole, setRun, rotateRunList, setStep, scheduleIdle } from '@/lib/consoleLoop';
+  import {
+    initConsole, setRun, rotateRunList, setStep, scheduleIdle,
+    moveCursor, clickCursor, showToast, hideToast,
+  } from '@/lib/consoleLoop';
   import type { ConsoleContext } from '@/lib/consoleLoop';
 
   function setup() {
@@ -457,15 +505,30 @@ const dynamicStrings = {
       loopMs: 46000,
       keyframes: [
         {
-          // Approve: contract 3/5 → 4/5, stepper advances to the human gate.
+          // The operator reaches for the human gate…
+          t: 5600,
+          apply: ({ root }: ConsoleContext) => moveCursor(root, '[data-step="4"] .hc-stepnode'),
+        },
+        {
+          // …and approves: contract 3/5 → 4/5, stepper advances to the human gate.
           t: 8000,
           apply: ({ root, strings }: ConsoleContext) => {
+            clickCursor(root, '[data-step="4"] .hc-stepnode');
             setRun(root, 'contract', {
               sub: strings['contract.approved.sub'],
               meta: strings['contract.approved.meta'],
               flash: true,
             });
             setStep(root, 4);
+            showToast(root, strings['toast.title'], strings['contract.approved.sub']);
+          },
+        },
+        {
+          // Pointer drifts up to read the live throughput figure.
+          t: 11600,
+          apply: ({ root }: ConsoleContext) => {
+            hideToast(root);
+            moveCursor(root, '[data-hc-charttip]', { x: 0.3, y: 0.7 });
           },
         },
         {
@@ -479,7 +542,12 @@ const dynamicStrings = {
               flash: true,
             });
             setStep(root, 5);
+            showToast(root, strings['toast.title'], strings['contract.done.sub']);
           },
+        },
+        {
+          t: 18600,
+          apply: ({ root }: ConsoleContext) => hideToast(root),
         },
         {
           // Rotate: a fresh run arrives on top, the oldest leaves; timeline advances.
@@ -489,6 +557,11 @@ const dynamicStrings = {
             setRun(root, 'invoice', { meta: strings['invoice.later'] });
             setStep(root, 2);
           },
+        },
+        {
+          // The operator looks at the run that just arrived.
+          t: 23000,
+          apply: ({ root }: ConsoleContext) => moveCursor(root, '[data-run="email"] .hc-run-name', { x: 0.7, y: 0.6 }),
         },
         {
           // Progress: the new run advances — every 3rd loop it hits a retry first
