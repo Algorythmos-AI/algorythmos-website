@@ -20,6 +20,12 @@ const ART: Record<string, string> = {
   'launch-link': 'LaunchLink',
   'mine-block': 'MineBlock',
   'whole-job': 'WholeJob',
+  'speech-loop': 'SpeechLoop',
+  'em-spectrum': 'EmSpectrum',
+  'fibre-span': 'FibreSpan',
+  'sat-links': 'SatLinks',
+  'orbital-node': 'OrbitalNode',
+  'fibre-free-route': 'FibreFreeRoute',
 };
 const art = (id: string) =>
   readFileSync(fileURLToPath(new URL(`../components/explainers/art/${ART[id]}.astro`, import.meta.url)), 'utf-8');

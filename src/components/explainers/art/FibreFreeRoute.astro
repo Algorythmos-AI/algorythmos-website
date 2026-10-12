@@ -1,0 +1,52 @@
+---
+/** The thought experiment: Sydney to California over radio and laser links only, with an optional stop at a computer in orbit. */
+import { asLocale, useTranslations } from '@/i18n';
+const t = useTranslations(asLocale(Astro.currentLocale));
+const L = (name: string) => t(`explainers.fibre-free-route.labels.${name}`);
+const sats = [
+  { x: 130, y: 132 },
+  { x: 230, y: 96 },
+  { x: 330, y: 96 },
+  { x: 430, y: 132 },
+];
+const K = { x: 280, y: 40 };
+const SYD = { x: 64, y: 236 };
+const CAL = { x: 496, y: 236 };
+const hop = (a: { x: number; y: number }, b: { x: number; y: number }) => `M${a.x + 12} ${a.y}L${b.x - 12} ${b.y}`;
+---
+
+<svg class="ex-art" viewBox="0 0 560 300" aria-hidden="true" focusable="false">
+  <path class="ex-link" d="M0 296Q280 262 560 296"></path>
+  <text class="ex-sub" x="280" y="258" text-anchor="middle">{L('hypo')}</text>
+  {sats.map((s) => <rect class="ex-node-brand" x={s.x - 12} y={s.y - 8} width="24" height="16" rx="3"></rect>)}
+  <rect class="ex-node" x={K.x - 16} y={K.y - 12} width="32" height="24" rx="4"></rect>
+  <text class="ex-sub" x={K.x} y="18" text-anchor="middle">{L('compute')}</text>
+  <rect class="ex-node" x={SYD.x - 12} y={SYD.y} width="24" height="16" rx="3"></rect>
+  <text class="ex-sub" x={SYD.x} y="272" text-anchor="middle">{L('sydney')}</text>
+  <rect class="ex-node" x={CAL.x - 12} y={CAL.y} width="24" height="16" rx="3"></rect>
+  <text class="ex-sub" x={CAL.x} y="272" text-anchor="middle">{L('california')}</text>
+
+  {/* 0: the message becomes packets */}
+  <circle class="ex-token" data-at="0" data-until="1" cx={SYD.x} cy={SYD.y - 12} r="6"></circle>
+
+  {/* 1: radio up */}
+  <path class="ex-flow ex-dash" data-at="1" d={`M${SYD.x} ${SYD.y}L${sats[0].x - 4} ${sats[0].y + 9}`}></path>
+  <circle class="ex-token ex-fly" data-at="1" data-until="2" cx={sats[0].x} cy={sats[0].y + 18} r="6" style="--fx:-66px;--fy:86px"></circle>
+
+  {/* 2: laser across the mesh */}
+  {[0, 1, 2].map((i) => <path class="ex-flow-2" data-at="2" d={hop(sats[i], sats[i + 1])}></path>)}
+  <text class="ex-sub" data-at="2" x="280" y="124" text-anchor="middle">{L('mesh')}</text>
+  <circle class="ex-token ex-fly" data-at="2" data-until="3" cx={sats[1].x} cy={sats[1].y + 18} r="6" style="--fx:-100px;--fy:36px"></circle>
+
+  {/* 3: an optional stop at a computer in orbit */}
+  <path class="ex-flow ex-dash" data-at="3" d={`M${sats[1].x + 6} ${sats[1].y - 9}L${K.x - 12} ${K.y + 12}M${K.x + 12} ${K.y + 12}L${sats[2].x - 6} ${sats[2].y - 9}`}></path>
+  <rect class="ex-node-brand" data-at="3" x={K.x - 16} y={K.y - 12} width="32" height="24" rx="4"></rect>
+  <circle class="ex-token ex-fly" data-at="3" data-until="4" cx={K.x} cy={K.y} r="6" style="--fx:-50px;--fy:74px"></circle>
+
+  {/* 4: radio down */}
+  <path class="ex-flow ex-dash" data-at="4" d={`M${sats[3].x + 4} ${sats[3].y + 9}L${CAL.x} ${CAL.y}`}></path>
+  <circle class="ex-token ex-fly" data-at="4" data-until="5" cx={CAL.x} cy={CAL.y - 12} r="6" style="--fx:-66px;--fy:-86px"></circle>
+
+  {/* 5: delivered */}
+  <circle class="ex-ok-fill" data-at="5" cx={CAL.x} cy={CAL.y - 12} r="7"></circle>
+</svg>
