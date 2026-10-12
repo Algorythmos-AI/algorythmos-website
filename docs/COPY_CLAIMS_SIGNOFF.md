@@ -235,6 +235,64 @@ bar chart of the four reported sources, not a whole.
 - [ ] Owner to re-verify annually: IFR (each September), ITU (each November), BloombergNEF (each
       December), AI Index (each April), and the Starlink count whenever the page is revised.
 
+## 3i. Case study — From Vibrations to Photons (`/case-studies/signals-fibre-satellites-orbital-compute`) — evidence report (13 Oct 2026)
+
+Labelled on-page as an industry evidence report. The note states that Algorythmos has not been engaged by
+any organisation named, builds none of the cables, satellites or chips described, that company
+announcements are cited as what the company reports, and that the fibre-free route is a thought
+experiment. It was written from a research paper whose references were re-opened one by one (accessed
+13 Oct 2026); the paper's 22 references reduce to the 17 below once duplicates are merged. Source numbers
+are the page's own.
+
+| Claim on the page | Source |
+|---|---|
+| Glass fibres in use since the 1930s; in the 1960s Kao showed very pure glass carries enough light; half of the 2009 Nobel Prize in Physics | [1] Nobel Prize — Kao, facts |
+| Electromagnetic radiation acts as a wave in some circumstances and as a beam of photons in others | [2] OpenStax, University Physics vol. 3, 6.6 |
+| Radio to gamma rays are all electromagnetic radiation, set apart by wavelength | [3] NASA Science |
+| Radio below about 3 × 10⁹ Hz, gamma rays above about 3 × 10¹⁹ Hz; frequency and energy rise together | [4] NASA Goddard spectrum chart |
+| Sound in air is a longitudinal pressure wave; molecules oscillate about equilibrium positions | [5] OpenStax, University Physics vol. 1, 17.1 |
+| Loudspeaker: voice coil in a magnet's field, fixed to a diaphragm | [6] Engineering LibreTexts (Fiore) |
+| The ITU publishes design guidelines for optical fibre submarine cable systems | [7] ITU-T G Suppl. 41 (07/2024) |
+| Starlink: Ku-band phased-array and dual-band antennas for customers; 3 lasers per satellite at up to 200 Gbps; about 550 km orbit; around 25 ms against 600+ ms geostationary (35,786 km); mini laser 25 Gbps | [8] Starlink — Technology (company figures) |
+| Magnetron produces microwaves; water molecules vibrate, producing heat; food does not become radioactive | [9] US FDA |
+| DSOC: UHD video from 19 million miles at 267 Mbps (Dec 2023); data from 288 million miles (Jul 2024); 65th and final pass Sept 2025; status completed | [10] NASA DSOC mission page |
+| Laser data does not travel faster than radio; higher data rates, narrower beam, smaller terminal; a fraction of a degree misses; clouds and mist interrupt; several ground stations | [11] NASA Optical Communications Overview |
+| First working laser, Theodore Maiman, 16 May 1960 | [12] APS News |
+| Submarine cables carry over 99 per cent of international data flows | [13] ITU Global Connectivity Report 2025, ch. 3 |
+| Cable weaknesses: physical risks, repair times, geographic concentration, reliance on few systems; small island states and LDCs most exposed; permitting | [14] ITU press release, 10 Jul 2026 |
+| Project Suncatcher announced 4 Nov 2025: solar-powered satellites carrying TPU chips | [15] Google |
+| Up to eight times more solar power; heat leaves only through radiators; proton-beam radiation tests; cluster laser links to be tested in 2027; two satellites planned for 2027; each satellite must know its position relative to neighbours | [16] Google, 24 Sep 2026 |
+| Prototype built with Planet launched 1 Oct 2026 on a SpaceX rideshare; contact confirmed; will measure TPU response to radiation and temperature | [17] Google, 1 Oct 2026 |
+
+**Left out because no source page supports them:** the 2.45 GHz microwave-oven frequency (the FDA page
+gives none); Corning's 1970 low-loss fibre and the 1988 TAT-8 cable; the year 1966 and George Hockham
+(the Nobel facts page says "in the 1960s"); the relations c = fλ and E = hf (not stated in the cited
+OpenStax section); Starlink's satellite count (the page's figure disagrees with §3h's source). The source
+paper's date for the first Google post was wrong and is corrected to 4 Nov 2025.
+
+**Not verified to a primary table:** the difference between an optical amplifier and a regenerator is
+standard engineering, but the ITU-T page cited at [7] shows only the document's title and date, so [7] is
+cited for the existence of the guidelines and nothing more. The chart shows 99 / 1 as a floor, and its
+caption says so. No link-rate chart is published: a deep-space demonstration and a vendor maximum do not
+belong on one axis.
+
+- [x] **Scope:** the "approach" section says Algorythmos builds the software and data layer only.
+      Nothing implies it builds cables, satellites, ground stations or chips.
+- [x] **Company figures stay attributed.** Every Starlink and Google figure is worded as what the
+      company publishes or reports, and carries a "company-reported" verdict in the claims table.
+- [x] **Thought experiment:** the Sydney-to-California route is labelled as a thought experiment in the
+      note, the section title, its body and the claims table.
+- [x] **No client claim in this sector** (Sam Kalaliya, 13 Oct 2026: there is no paid work in telecom,
+      fibre or satellite yet). The approach section is written as "how an engagement would run". The page
+      does not say or imply that Algorythmos has clients in this sector, names no operator as a customer
+      and gives no measured result for the sector. A representative engagement, labelled as such, may be
+      added; a real one replaces it when it exists.
+- [x] **Hero scene** is the ai-platform-engineering service's own (`platform-station`), chosen by the
+      usual rule. No explicit scene entry.
+- [ ] **Sam to confirm** the wording of the call to action ("Running a network, a constellation or a
+      ground segment?") as an invitation and not a statement of current work.
+- [ ] Re-verify all 17 sources by 13 Oct 2027, and sooner if Google reports results from the prototype.
+
 ## 4. Homepage, voice and positioning (`/`, footer, meta, contact, careers)
 
 Decisions (Sam Kalaliya, 26 Sep 2026):

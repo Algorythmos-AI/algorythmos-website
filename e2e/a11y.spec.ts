@@ -27,6 +27,8 @@ const PAGES = [
   '/au-en/case-studies/clinical-document-ai',
   '/au-en/case-studies/ai-robotics-space-bitcoin-convergence',
   '/fr-fr/case-studies/ai-robotics-space-bitcoin-convergence',
+  '/au-en/case-studies/signals-fibre-satellites-orbital-compute',
+  '/fr-fr/case-studies/signals-fibre-satellites-orbital-compute',
   '/au-en/pdf-algo-pro',
   '/fr-fr/pdf-algo-pro/privacy',
   '/au-en/pdf-algo-pro/support',

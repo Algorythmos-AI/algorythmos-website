@@ -38,6 +38,7 @@ describe('case-study citations', () => {
   it('at least the evidence reports are covered', () => {
     expect(withSources).toContain('port-botany-ai-ml');
     expect(withSources).toContain('ai-robotics-space-bitcoin-convergence');
+    expect(withSources).toContain('signals-fibre-satellites-orbital-compute');
   });
 });
 

@@ -32,6 +32,21 @@ const labelKeys = (slug: string, i: number, n: number) =>
 /** slug → ordered list of charts to render on the detail page. */
 export const caseStudyCharts: Record<string, ChartDef[]> = {
   /**
+   * Source: ITU Global Connectivity Report 2025, chapter 3 ("over 99 per cent of
+   * international data flows"). The report gives a floor, not a split, so the
+   * caption says the cable share is a minimum. Link rates are deliberately not
+   * charted: a deep-space demonstration and a vendor maximum do not share an axis.
+   */
+  'signals-fibre-satellites-orbital-compute': [
+    {
+      type: 'doughnut',
+      titleKey: keys('signals-fibre-satellites-orbital-compute', 0).title,
+      captionKey: keys('signals-fibre-satellites-orbital-compute', 0).caption,
+      labelKeys: labelKeys('signals-fibre-satellites-orbital-compute', 0, 2),
+      datasets: [{ labelKey: keys('signals-fibre-satellites-orbital-compute', 0).series(0), data: [99, 1] }],
+    },
+  ],
+  /**
    * Sources (see the study's sources list): NASA launch-cost paper (2018 dollars),
    * Stanford AI Index 2025, ITU Facts and Figures 2025 and the Cambridge Digital
    * Mining Industry Report. The Cambridge report gives no figure for the small
