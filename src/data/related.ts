@@ -125,6 +125,11 @@ export const blogRelated: Record<string, RelatedRef[]> = {
     { type: 'service', slug: 'document-intelligence' },
     { type: 'blog', slug: 'gdpr-ai' },
   ],
+  'where-ai-runs-fibre-satellite-orbit': [
+    { type: 'service', slug: 'ai-platform-engineering' },
+    { type: 'case-study', slug: 'signals-fibre-satellites-orbital-compute' },
+    { type: 'service', slug: 'model-monitoring' },
+  ],
   'ai-control-plane-robots-satellites-payments': [
     { type: 'case-study', slug: 'ai-robotics-space-bitcoin-convergence' },
     { type: 'service', slug: 'agentic-automation' },
@@ -144,9 +149,14 @@ export const blogRelated: Record<string, RelatedRef[]> = {
 export const caseStudyRelated: Record<string, RelatedRef[]> = {
   'signals-fibre-satellites-orbital-compute': [
     { type: 'service', slug: 'ai-platform-engineering' },
-    { type: 'service', slug: 'model-monitoring' },
+    { type: 'blog', slug: 'where-ai-runs-fibre-satellite-orbit' },
+    { type: 'case-study', slug: 'satellite-link-monitoring' },
     { type: 'case-study', slug: 'ai-robotics-space-bitcoin-convergence' },
-    { type: 'case-study', slug: 'model-monitoring-logistics' },
+  ],
+  'satellite-link-monitoring': [
+    { type: 'service', slug: 'model-monitoring' },
+    { type: 'case-study', slug: 'signals-fibre-satellites-orbital-compute' },
+    { type: 'blog', slug: 'model-monitoring-drift' },
   ],
   'ai-robotics-space-bitcoin-convergence': [
     { type: 'service', slug: 'agentic-automation' },
