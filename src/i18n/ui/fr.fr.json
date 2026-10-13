@@ -1177,7 +1177,7 @@
   "privacy.sections.collect.items.0": "Formulaire de contact : votre nom, votre adresse e-mail et votre message, ainsi que votre entreprise si vous l'indiquez.",
   "privacy.sections.collect.items.1": "Contexte envoyé avec le formulaire : la langue de la page et, si vous venez d'un lien de campagne, sa source (paramètres UTM).",
   "privacy.sections.collect.items.2": "Réservation d'un appel : si vous utilisez notre lien Calendly, Calendly collecte les informations saisies, selon sa propre politique de confidentialité.",
-  "privacy.sections.collect.items.3": "Mesure d'audience, uniquement si vous l'acceptez : mesures anonymes de pages vues et de performance, sans cookie (Vercel Web Analytics et Speed Insights).",
+  "privacy.sections.collect.items.3": "Mesure d'audience, uniquement si vous l'acceptez : mesures anonymes de pages vues et de performance, sans cookie (Vercel Web Analytics et Speed Insights, ainsi qu’Umami, que nous hébergeons nous-mêmes).",
   "privacy.sections.collect.items.4": "Données techniques : comme pour tout site, notre hébergeur traite les adresses IP et les détails des requêtes pour servir et protéger le site.",
   "privacy.sections.use.title": "Ce que nous en faisons",
   "privacy.sections.use.content": "Nous utilisons vos informations uniquement pour :",

@@ -4,6 +4,11 @@
  * Runs against the built output via `astro preview` (see playwright.config).
  */
 import { test, expect } from '@playwright/test';
+import { UMAMI } from '../src/data/analytics';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+
+const vercel = JSON.parse(readFileSync(join(process.cwd(), 'vercel.json'), 'utf8')) as { headers: { headers: { key: string; value: string }[] }[] };
 
 test.describe('locale routing & region banner', () => {
   test('footer local links round-trip to landing pages', async ({ page }) => {
@@ -36,14 +41,52 @@ test.describe('locale routing & region banner', () => {
 
 test.describe('consent & attribution', () => {
   test('analytics does not load without consent; loads after accept', async ({ page }) => {
+    /* The Umami host is never contacted from a test run. */
+    const umami: string[] = [];
+    await page.route(/umami-production/, (route) => {
+      umami.push(route.request().url());
+      return route.abort();
+    });
     await page.goto('/au-en');
     expect(await page.evaluate(() => (window as never as Record<string, unknown>)['__algAnalytics'])).toBeFalsy();
+    await expect(page.locator('script[data-website-id]')).toHaveCount(0);
+    expect(umami).toEqual([]);
     await page.locator('#consent-accept').click();
     await expect
       .poll(async () => page.evaluate(() => (window as never as Record<string, unknown>)['__algAnalytics']))
       .toBeTruthy();
     const cookies = await page.context().cookies();
     expect(cookies.find((c) => c.name === 'consent')?.value).toBe('granted');
+    const tag = page.locator('script[data-website-id]');
+    await expect(tag).toHaveCount(1);
+    await expect(tag).toHaveAttribute('src', UMAMI.src);
+    await expect(tag).toHaveAttribute('data-website-id', UMAMI.websiteId);
+    await expect(tag).toHaveAttribute('data-domains', UMAMI.domains);
+    await expect.poll(() => umami.length).toBeGreaterThan(0);
+  });
+
+  test('declining analytics requests nothing from Umami, on this page or the next', async ({ page }) => {
+    const umami: string[] = [];
+    await page.route(/umami-production/, (route) => {
+      umami.push(route.request().url());
+      return route.abort();
+    });
+    await page.goto('/au-en');
+    await page.locator('#consent-decline').click();
+    await page.goto('/au-en/about');
+    await expect(page.locator('script[data-website-id]')).toHaveCount(0);
+    expect(umami).toEqual([]);
+  });
+
+  test('the security policy lets the Umami script load and report, and nothing wider', () => {
+    const headers = vercel.headers.flatMap((h) => h.headers);
+    const csp = headers.find((h) => h.key.toLowerCase() === 'content-security-policy')?.value ?? '';
+    const origin = new URL(UMAMI.src).origin;
+    const directive = (name: string) => csp.split(';').map((d) => d.trim()).find((d) => d.startsWith(name)) ?? '';
+    expect(directive('script-src')).toContain(origin);
+    expect(directive('connect-src')).toContain(origin);
+    expect(csp).not.toContain('railway.app/*');
+    expect(csp).not.toContain('*.railway.app');
   });
 
   test('first-touch UTM params are captured session-scoped and sent with the enquiry', async ({ page }) => {

@@ -1247,7 +1247,7 @@
   "privacy.sections.collect.items.0": "Contact form: your name, email address and message, and your company if you add it.",
   "privacy.sections.collect.items.1": "Context sent with the form: the page language and, if you arrived from a campaign link, its source (UTM parameters).",
   "privacy.sections.collect.items.2": "Booking a call: if you use our Calendly link, Calendly collects the details you enter, under its own privacy policy.",
-  "privacy.sections.collect.items.3": "Analytics, only if you accept them: anonymous, cookie-free page-view and performance measurements (Vercel Web Analytics and Speed Insights).",
+  "privacy.sections.collect.items.3": "Analytics, only if you accept them: anonymous, cookie-free page-view and performance measurements (Vercel Web Analytics and Speed Insights, and Umami, which we host ourselves).",
   "privacy.sections.collect.items.4": "Technical data: like any website, our hosting provider processes IP addresses and request details to deliver and protect the site.",
   "privacy.sections.use.title": "How we use it",
   "privacy.sections.use.content": "We use your information only to:",
