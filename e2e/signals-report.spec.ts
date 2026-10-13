@@ -37,7 +37,7 @@ for (const locale of LOCALES) {
       }
       await expect(page.locator('#claims tbody tr')).toHaveCount(15);
       await expect(page.locator('#sources ol > li')).toHaveCount(SOURCES);
-      await expect(page.locator('#orchestration ol > li')).toHaveCount(6);
+      await expect(page.locator('#orchestration ol > li:not(.ex-step)'), 'route steps, not the explainer’s own list').toHaveCount(6);
       await expect(page.locator('[role="note"]')).toHaveCount(1);
       expect(errors, errors.join('\n')).toEqual([]);
     });
