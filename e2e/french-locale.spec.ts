@@ -47,6 +47,9 @@ const ENGLISH_SENTINELS = [
   'How AI Orchestrates',
   'Claims checked against sources',
   'Core algorithms',
+  'From Vibrations to Photons',
+  'Thought experiment',
+  'Company-reported',
 ];
 
 test.describe('FR pages render fully in French', () => {

@@ -28,6 +28,7 @@ const URLS = [
   { label: 'service (fr-fr)', path: '/fr-fr/services/agentic-automation' },
   { label: 'case study (au-en)', path: '/au-en/case-studies/port-botany-ai-ml' },
   { label: 'evidence report (au-en)', path: '/au-en/case-studies/ai-robotics-space-bitcoin-convergence' },
+  { label: 'signals report (au-en)', path: '/au-en/case-studies/signals-fibre-satellites-orbital-compute' },
   { label: 'services (au-en)', path: '/au-en/services' },
   { label: 'llmops (fr-fr)', path: '/fr-fr/services/llmops' },
 ];

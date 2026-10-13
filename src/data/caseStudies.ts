@@ -7,7 +7,8 @@
  *    (title, meta, industry, region, focus, challenge, approach.0-3, solution,
  *    results.0-4, cta, keywords — resolved in CaseStudyDetail.astro)
  *
- * Evidence/research studies (port-botany-ai-ml, healthcare-burden,
+ * Evidence/research studies (signals-fibre-satellites-orbital-compute,
+ * ai-robotics-space-bitcoin-convergence, port-botany-ai-ml, healthcare-burden,
  * admin-burden-evidence) carry a `badge`; client engagements (`kind: 'client'`)
  * carry the "Client engagement · anonymised" badge and note; representative
  * engagements carry a `note` flagging the figures as illustrative. No fabricated
@@ -34,6 +35,7 @@ export interface CaseStudy {
  * matches the existing site.
  */
 export const caseStudies: CaseStudy[] = [
+  { slug: 'signals-fibre-satellites-orbital-compute', i18nIndex: 12, date: '2026-10-13' },
   { slug: 'ai-robotics-space-bitcoin-convergence', i18nIndex: 11, date: '2026-10-11' },
   { slug: 'port-botany-ai-ml', i18nIndex: 6, date: '2026-09-25' },
   { slug: 'admin-burden-evidence', i18nIndex: 5, date: '2026-08-11' },
