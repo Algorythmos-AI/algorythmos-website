@@ -301,6 +301,11 @@ belong on one axis.
       and that no figure on the page is a measured client result. It carries no stat band and no
       percentages; its "results" are deliverables. It is replaced by a `kind: 'client'` study when a real
       engagement exists. **Sam to confirm the wording of the note.**
+- [x] **Preview card.** The report's Open Graph card is a finished image per locale
+      (`scripts/build-og-card.mjs`). It asks "Will satellites replace fibre?" and states three figures,
+      each from the table above: over 99% by cable [13], 200 Gbps per Starlink laser link, marked as a
+      company figure [8], and one prototype AI satellite in orbit [17]. Re-render it if any of the three
+      changes.
 - [x] **Announcement bar** points at this report from 13 Oct 2026 (`src/data/announcement.ts`).
 - [x] **Hero scene** is the ai-platform-engineering service's own (`platform-station`), chosen by the
       usual rule. No explicit scene entry.
