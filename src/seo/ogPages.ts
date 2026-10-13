@@ -33,6 +33,10 @@ const CARD_FULL: Record<string, Record<string, string>> = {
     'au-en': './src/assets/og/card-signals-en.png',
     'fr-fr': './src/assets/og/card-signals-fr.png',
   },
+  'dram-4f2-cell-architecture': {
+    'au-en': './src/assets/og/card-dram-en.png',
+    'fr-fr': './src/assets/og/card-dram-fr.png',
+  },
 };
 
 /** Brand pages: path + the i18n keys their <head> already uses. */

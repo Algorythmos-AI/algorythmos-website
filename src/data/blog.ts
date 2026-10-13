@@ -51,6 +51,19 @@ export interface BlogPost {
 
 export const blog: BlogPost[] = [
   {
+    slug: 'why-memory-density-matters-for-ai',
+    postIndex: 23,
+    date: '2026-10-13',
+    body: [
+      { kind: 'prose', base: 'content.0', paragraphs: [0, 1] },
+      { kind: 'prose', base: 'content.1', paragraphs: [0], list: [0, 1, 2] },
+      { kind: 'prose', base: 'content.2', paragraphs: [0], list: [0, 1, 2] },
+      { kind: 'prose', base: 'content.3', paragraphs: [0], list: [0, 1, 2] },
+      { kind: 'prose', base: 'content.4', paragraphs: [0], list: [0, 1, 2] },
+      { kind: 'prose', base: 'content.5', paragraphs: [0, 1] },
+    ],
+  },
+  {
     slug: 'where-ai-runs-fibre-satellite-orbit',
     postIndex: 22,
     date: '2026-10-13',

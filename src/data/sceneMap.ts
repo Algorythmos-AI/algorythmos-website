@@ -48,6 +48,8 @@ const POST_SCENES: Record<string, SceneRef> = {
   'ai-consultancy-australia': { id: 'globe', variant: 'sydney' },
   'mbsc-australia-partnership': { id: 'globe', variant: 'sydney' },
   'port-botany-document-flows': { id: 'port-yard' },
+  // The companion to the DRAM report shares its picture.
+  'why-memory-density-matters-for-ai': { id: 'memory-array' },
 };
 
 /* A service's own scene. It is shown on the service page and on the studies and
