@@ -140,6 +140,8 @@ test.describe('density calculator', () => {
     await expect(calc.locator('[data-density-share]')).toHaveText('60%');
     await expect(calc.locator('[data-density-area]')).toHaveText('80.0%');
     await expect(calc.locator('[data-density-gain]')).toHaveText('+25.0%');
+    /* The island hydrates when it scrolls into view; Astro drops the `ssr` attribute once it has. */
+    await expect(page.locator('astro-island', { has: calc })).not.toHaveAttribute('ssr', '');
     const slider = calc.getByRole('slider');
     await slider.fill('80');
     await expect(calc.locator('[data-density-area]')).toHaveText('73.3%');
