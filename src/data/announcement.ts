@@ -6,8 +6,8 @@
  * Set `enabled: false` to remove the bar site-wide without touching layout.
  */
 export const announcement = {
-  id: 'case-studies-2026-10',
+  id: 'signals-report-2026-10',
   enabled: true,
   /** Region-relative path, localized at render time via localizePath(). */
-  href: '/case-studies/ai-robotics-space-bitcoin-convergence',
+  href: '/case-studies/signals-fibre-satellites-orbital-compute',
 } as const;

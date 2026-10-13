@@ -22,6 +22,8 @@ export interface OGPage {
 const CARD_ART: Record<string, string> = {
   'ai-robotics-space-bitcoin-convergence': './src/assets/og/art-quad-core.png',
   'ai-control-plane-robots-satellites-payments': './src/assets/og/art-quad-core.png',
+  'signals-fibre-satellites-orbital-compute': './src/assets/og/art-signals.png',
+  'where-ai-runs-fibre-satellite-orbit': './src/assets/og/art-signals.png',
 };
 
 /** Brand pages: path + the i18n keys their <head> already uses. */

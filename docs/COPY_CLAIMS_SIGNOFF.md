@@ -292,6 +292,16 @@ belong on one axis.
       is reused from §3h. The orbital one is captioned as a single prototype and the route as a thought
       experiment. The statement that fibre and satellite lasers use infrared light is general knowledge
       and carries no figure.
+- [x] **Companion post** `/blog/where-ai-runs-fibre-satellite-orbit` reuses only figures from this
+      section (over 99% on submarine cables, 25 ms against 600 ms as Starlink states it, the 1 Oct 2026
+      prototype, tests planned for 2027). The design guidance is Algorythmos's own delivery approach, not
+      client results.
+- [x] **Representative engagement** `/case-studies/satellite-link-monitoring` (13 Oct 2026). Its note
+      says in terms that it is not a delivered project, that Algorythmos has no client in this sector yet
+      and that no figure on the page is a measured client result. It carries no stat band and no
+      percentages; its "results" are deliverables. It is replaced by a `kind: 'client'` study when a real
+      engagement exists. **Sam to confirm the wording of the note.**
+- [x] **Announcement bar** points at this report from 13 Oct 2026 (`src/data/announcement.ts`).
 - [x] **Hero scene** is the ai-platform-engineering service's own (`platform-station`), chosen by the
       usual rule. No explicit scene entry.
 - [ ] **Sam to confirm** the wording of the call to action ("Running a network, a constellation or a

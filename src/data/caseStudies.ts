@@ -44,6 +44,7 @@ export const caseStudies: CaseStudy[] = [
   { slug: 'ml-deployment-platform', i18nIndex: 8, date: '2026-09-27', kind: 'client' },
   { slug: 'model-monitoring-logistics', i18nIndex: 9, date: '2026-09-27', kind: 'client' },
   { slug: 'retail-data-foundation', i18nIndex: 10, date: '2026-09-27', kind: 'client' },
+  { slug: 'satellite-link-monitoring', i18nIndex: 13, date: '2026-10-13' },
   { slug: 'financial-compliance', i18nIndex: 0, date: '2026-05-31', updatedAt: '2026-09-25' },
   { slug: 'manufacturing-docs', i18nIndex: 1, date: '2026-05-31', updatedAt: '2026-09-25' },
   { slug: 'healthcare-mlops', i18nIndex: 2, date: '2026-05-31', updatedAt: '2026-09-25' },
