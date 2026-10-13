@@ -24,4 +24,5 @@ export const scenes = {
   'platform-station': () => import('./scenes/platform-station'),
   'holo-site': () => import('./scenes/holo-site'),
   'port-yard': () => import('./scenes/port-yard'),
+  'memory-array': () => import('./scenes/memory-array'),
 } satisfies Record<SceneId, () => Promise<SceneModule>>;

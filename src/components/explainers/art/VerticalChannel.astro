@@ -1,0 +1,47 @@
+---
+/** The access transistor lying flat, then standing up with the gate wrapped round it. */
+import { asLocale, useTranslations } from '@/i18n';
+const t = useTranslations(asLocale(Astro.currentLocale));
+const L = (name: string) => t(`explainers.vertical-channel.labels.${name}`);
+/** Centres of the flat device and the upright one. */
+const A = 140;
+const B = 392;
+---
+
+<svg class="ex-art" viewBox="0 0 560 300" aria-hidden="true" focusable="false">
+  <path class="ex-link ex-dash" d="M270 30V280"></path>
+  <text class="ex-label" x={A} y="40" text-anchor="middle">{L('flat')}</text>
+  <text class="ex-label" x={B} y="40" text-anchor="middle">{L('upright')}</text>
+
+  {/* 0: source, gate and drain side by side on the surface */}
+  <path class="ex-link" data-at="0" d={`M${A - 100} 200H${A + 100}`}></path>
+  <rect class="ex-node" data-at="0" x={A - 80} y="178" width="50" height="22" rx="3"></rect>
+  <rect class="ex-node" data-at="0" x={A + 30} y="178" width="50" height="22" rx="3"></rect>
+  <rect class="ex-token" data-at="0" x={A - 30} y="192" width="60" height="8"></rect>
+  <rect class="ex-node-brand" data-at="0" x={A - 30} y="150" width="60" height="34" rx="4"></rect>
+  <text class="ex-sub" data-at="0" x={A - 55} y="218" text-anchor="middle">{L('source')}</text>
+  <text class="ex-sub" data-at="0" x={A + 55} y="218" text-anchor="middle">{L('drain')}</text>
+  <text class="ex-sub" data-at="0" x={A} y="140" text-anchor="middle">{L('gate')}</text>
+
+  {/* 1: so the cell is wide */}
+  <path class="ex-flow-2" data-at="1" d={`M${A - 80} 244H${A + 80}M${A - 80} 238v12M${A + 80} 238v12`}></path>
+  <text class="ex-sub" data-at="1" x={A} y="268" text-anchor="middle">{L('wide')}</text>
+
+  {/* 2: the channel is turned upright */}
+  <rect class="ex-node" data-at="2" x={B - 60} y="212" width="120" height="14" rx="3"></rect>
+  <rect class="ex-token" data-at="2" x={B - 10} y="122" width="20" height="90" rx="3"></rect>
+  <text class="ex-sub" data-at="2" x={B + 68} y="223">{L('bitline')}</text>
+
+  {/* 3: the gate wraps the channel */}
+  <rect class="ex-node-brand" data-at="3" x={B - 34} y="140" width="20" height="54" rx="3"></rect>
+  <rect class="ex-node-brand" data-at="3" x={B + 14} y="140" width="20" height="54" rx="3"></rect>
+  <text class="ex-sub" data-at="3" x={B + 42} y="171">{L('wrap')}</text>
+
+  {/* 4: the capacitor sits directly on top */}
+  <rect class="ex-node" data-at="4" x={B - 18} y="60" width="36" height="58" rx="4"></rect>
+  <text class="ex-sub" data-at="4" x={B + 26} y="93">{L('capacitor')}</text>
+
+  {/* 5: and the cell is narrow */}
+  <path class="ex-flow-2" data-at="5" d={`M${B - 34} 244H${B + 34}M${B - 34} 238v12M${B + 34} 238v12`}></path>
+  <text class="ex-sub" data-at="5" x={B} y="268" text-anchor="middle">{L('narrow')}</text>
+</svg>

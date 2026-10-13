@@ -31,6 +31,7 @@ const PAGES = [
   ['/au-en/services/sql-dashboards', 'dash-terrain'],
   ['/au-en/services/ai-websites', 'holo-site'],
   ['/au-en/case-studies/port-botany-ai-ml', 'port-yard'],
+  ['/au-en/case-studies/dram-4f2-cell-architecture', 'memory-array'],
   ['/au-en/case-studies/manufacturing-docs', 'scan'],
   ['/au-en/pricing', 'ledger'],
   ['/fr-fr/pricing', 'ledger (EUR)'],

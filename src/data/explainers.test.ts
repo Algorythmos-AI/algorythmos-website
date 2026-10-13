@@ -26,6 +26,15 @@ const ART: Record<string, string> = {
   'sat-links': 'SatLinks',
   'orbital-node': 'OrbitalNode',
   'fibre-free-route': 'FibreFreeRoute',
+  'cell-read': 'CellRead',
+  'array-access': 'ArrayAccess',
+  'cell-footprint': 'CellFootprint',
+  'vertical-channel': 'VerticalChannel',
+  'pitch-multiply': 'PitchMultiply',
+  'capacitor-stack': 'CapacitorStack',
+  'ai-memory-map': 'AiMemoryMap',
+  'footprint-vs-stack': 'FootprintVsStack',
+  'qual-ladder': 'QualLadder',
 };
 const art = (id: string) =>
   readFileSync(fileURLToPath(new URL(`../components/explainers/art/${ART[id]}.astro`, import.meta.url)), 'utf-8');

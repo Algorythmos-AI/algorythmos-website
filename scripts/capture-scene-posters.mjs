@@ -58,6 +58,7 @@ const HOSTS = {
   'dash-terrain': '/au-en/services/sql-dashboards',
   'holo-site': '/au-en/services/ai-websites',
   'port-yard': '/au-en/case-studies/port-botany-ai-ml',
+  'memory-array': '/au-en/case-studies/dram-4f2-cell-architecture',
 };
 const sceneOf = (key) => key.split('@')[0];
 
@@ -144,7 +145,8 @@ try {
   fs.mkdirSync(OUT_DIR, { recursive: true });
   /* A real GPU where there is one (identical output, far quicker); software otherwise. */
   const args = process.platform === 'darwin' ? ['--use-angle=metal', '--enable-gpu', '--ignore-gpu-blocklist'] : [];
-  const browser = await chromium.launch({ args });
+  /* SCENE_CHANNEL=chrome captures with an installed Chrome when Playwright's own browsers are not downloaded. */
+  const browser = await chromium.launch({ args, channel: process.env.SCENE_CHANNEL || undefined });
   const manifestFile = path.join(OUT_DIR, 'manifest.json');
   const manifest = fs.existsSync(manifestFile) ? JSON.parse(fs.readFileSync(manifestFile, 'utf-8')) : {};
   for (const key of keys) {

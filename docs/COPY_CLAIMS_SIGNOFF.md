@@ -388,8 +388,22 @@ with no stated affiliation.
       what the press reports, and carries a "company-reported" or "reported plan" verdict.
 - [x] **No client claim in this sector.** The page names no customer and gives no measured client
       result. No representative engagement is published for it.
-- [x] **Hero scene** by the usual rule (the ai-platform-engineering service's own) until the
-      report's own scene is added.
+- [x] **Hero scene** `memory-array`, the report's own: a field of memory cells with a wordline
+      sweeping the rows and one cell being read. It carries no words and no figures, and appears on
+      this report only (`src/data/sceneMap.test.ts` pins that), in keeping with §3g.
+- [x] **Explainers.** Nine step-through diagrams drawn for this report (`cell-read`,
+      `array-access`, `cell-footprint`, `vertical-channel`, `pitch-multiply`, `capacitor-stack`,
+      `ai-memory-map`, `footprint-vs-stack`, `qual-ladder`), each captioned as a schematic and none a
+      maker's layout. The 24 and 36 cells in `cell-footprint` are the geometry of a 12 F square; the
+      cell counts in `footprint-vs-stack` are captioned as illustrative.
+- [x] **Density calculator.** An interactive figure of this report's own whole-die model
+      (`src/lib/densityModel.ts`, unit-tested against the figures quoted on the page). Its caption says
+      it is an idealised model and not a measurement of any product; the array share is the reader's
+      input, not a sourced figure.
+- [x] **Verdict colours** follow the kind of evidence (`claims.N.kind`): green for physics and
+      arithmetic, brand for peer-reviewed demonstrations, teal for company-reported, amber for a
+      reported plan or an unestablished claim, red for a false one. The wording of each verdict is
+      unchanged by its colour.
 - [ ] **Sam to confirm** the wording of the call to action ("Sizing memory for training or
       inference?") as an invitation and not a statement of current work.
 - [ ] Re-open every source on the day of merge and correct any wording that the live page does not

@@ -116,7 +116,7 @@ what the app does.
 | About, Contact, Careers, Press, the city pages, the case-study and blog indexes | `globe` |
 | PDF Algo Pro | `pages` |
 | 404 | `lost-satellite` |
-| A case study or post | The scene of the first service in its entry in `src/data/related.ts`; `scan` when that service is Document Intelligence. Explicit exceptions (`ledger@audit`, `port-yard`, `globe@sydney`) are listed at the top of `sceneMap.ts` |
+| A case study or post | The scene of the first service in its entry in `src/data/related.ts`; `scan` when that service is Document Intelligence. Explicit exceptions (`ledger@audit`, `port-yard`, `memory-array`, `globe@sydney`) are listed at the top of `sceneMap.ts` |
 
 A service added to `src/data/services.ts` before it has a scene of its own falls back
 to the constellation, turned to that service's satellite.

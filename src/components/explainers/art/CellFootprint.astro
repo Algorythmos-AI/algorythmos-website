@@ -1,0 +1,53 @@
+---
+/** The same square of silicon tiled twice: 24 cells at 6F², 36 cells at 4F². */
+import { asLocale, useTranslations } from '@/i18n';
+const t = useTranslations(asLocale(Astro.currentLocale));
+const L = (name: string) => t(`explainers.cell-footprint.labels.${name}`);
+/** One F is 12 units; both squares are 12F on a side. */
+const F = 12;
+const SIDE = 12 * F;
+const TOP = 96;
+const LEFT = 40;
+const RIGHT = 240;
+/** Cells of `w` by `h` F filling a square whose corner is at `x0`. */
+const tile = (x0: number, w: number, h: number) => {
+  const out: { x: number; y: number; w: number; h: number; i: number }[] = [];
+  let i = 0;
+  for (let r = 0; r < 12 / h; r++) for (let c = 0; c < 12 / w; c++) out.push({ x: x0 + c * w * F, y: TOP + r * h * F, w: w * F, h: h * F, i: i++ });
+  return out;
+};
+const six = tile(LEFT, 3, 2);
+const four = tile(RIGHT, 2, 2);
+---
+
+<svg class="ex-art" viewBox="0 0 560 300" aria-hidden="true" focusable="false">
+  <rect class="ex-grid" x={LEFT} y={TOP} width={SIDE} height={SIDE}></rect>
+  <rect class="ex-grid" x={RIGHT} y={TOP} width={SIDE} height={SIDE}></rect>
+
+  {/* 0: one 6F² cell, three F by two F */}
+  <rect class="ex-node" data-at="0" x={LEFT} y="40" width={3 * F} height={2 * F} rx="2"></rect>
+  <path class="ex-grid" data-at="0" d={`M${LEFT + F} 40v${2 * F}M${LEFT + 2 * F} 40v${2 * F}M${LEFT} ${40 + F}h${3 * F}`}></path>
+  <text class="ex-label" data-at="0" x={LEFT + 3 * F + 12} y="57">{L('six')}</text>
+
+  {/* 1: the square holds 24 of them */}
+  {six.map((c) => <rect class="ex-node" data-at="1" x={c.x + 1.5} y={c.y + 1.5} width={c.w - 3} height={c.h - 3} rx="2"></rect>)}
+  <text class="ex-sub" data-at="1" x={LEFT + SIDE / 2} y="262" text-anchor="middle">{L('sixCount')}</text>
+
+  {/* 2: one 4F² cell, two F by two F */}
+  <rect class="ex-node-brand" data-at="2" x={RIGHT} y="40" width={2 * F} height={2 * F} rx="2"></rect>
+  <path class="ex-grid" data-at="2" d={`M${RIGHT + F} 40v${2 * F}M${RIGHT} ${40 + F}h${2 * F}`}></path>
+  <text class="ex-label" data-at="2" x={RIGHT + 2 * F + 12} y="57">{L('four')}</text>
+
+  {/* 3: the same square holds 36 */}
+  {four.map((c) => <rect class="ex-node" data-at="3" x={c.x + 1.5} y={c.y + 1.5} width={c.w - 3} height={c.h - 3} rx="2"></rect>)}
+  <text class="ex-sub" data-at="3" x={RIGHT + SIDE / 2} y="262" text-anchor="middle">{L('fourCount')}</text>
+
+  {/* 4: twelve more cells in the same area */}
+  {four.filter((c) => c.i >= 24).map((c) => <rect class="ex-node-brand" data-at="4" x={c.x + 1.5} y={c.y + 1.5} width={c.w - 3} height={c.h - 3} rx="2"></rect>)}
+  <text class="ex-label" data-at="4" x="476" y="150" text-anchor="middle">{L('gain')}</text>
+  <text class="ex-sub" data-at="4" x="476" y="170" text-anchor="middle">{L('perArea')}</text>
+
+  {/* 5: the circuits around the array do not shrink with it */}
+  <rect class="ex-warn" data-at="5" x="416" y="196" width="120" height="38" rx="6"></rect>
+  <text class="ex-sub" data-at="5" x="476" y="262" text-anchor="middle">{L('periphery')}</text>
+</svg>

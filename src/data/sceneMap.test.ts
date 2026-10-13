@@ -63,7 +63,7 @@ describe('sceneFor — themes follow the page (docs/COPY_CLAIMS_SIGNOFF.md §3g)
   it('a study or post shows the scene of the service that leads it', () => {
     /* The explicit choices at the top of sceneMap.ts; every other article follows its lead. */
     const explicit = [
-      'financial-compliance', 'port-botany-ai-ml', 'model-monitoring-logistics',
+      'financial-compliance', 'port-botany-ai-ml', 'model-monitoring-logistics', 'dram-4f2-cell-architecture',
       'gdpr-ai', 'eu-ai-act-gdpr-sme-roadmap', 'port-botany-document-flows',
       'choosing-ai-consultancy-sydney', 'ai-consultancy-australia', 'mbsc-australia-partnership',
     ];
@@ -87,6 +87,12 @@ describe('sceneFor — themes follow the page (docs/COPY_CLAIMS_SIGNOFF.md §3g)
     const yard = ARTICLES.filter((a) => a.scene.id === 'port-yard').map((a) => a.slug);
     expect(yard.sort()).toEqual(['model-monitoring-logistics', 'port-botany-ai-ml', 'port-botany-document-flows']);
     expect(serviceSlugs.map((s) => sceneFor('service', s).id)).not.toContain('port-yard');
+  });
+
+  it('the memory array belongs to the DRAM report only', () => {
+    const array = ARTICLES.filter((a) => a.scene.id === 'memory-array').map((a) => a.slug);
+    expect(array.sort()).toEqual(['dram-4f2-cell-architecture']);
+    expect(serviceSlugs.map((s) => sceneFor('service', s).id)).not.toContain('memory-array');
   });
 
   it('PDF Algo Pro gets pages doing what the app does, not the scanning overlay', () => {

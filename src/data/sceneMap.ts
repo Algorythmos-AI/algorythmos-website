@@ -36,6 +36,8 @@ const CASE_STUDY_SCENES: Record<string, SceneRef> = {
   // Ports and freight: the yard itself.
   'port-botany-ai-ml': { id: 'port-yard' },
   'model-monitoring-logistics': { id: 'port-yard' },
+  // A report about the memory cell: the array of cells itself.
+  'dram-4f2-cell-architecture': { id: 'memory-array' },
 };
 const POST_SCENES: Record<string, SceneRef> = {
   // Regulation and record-keeping, not document capture.
