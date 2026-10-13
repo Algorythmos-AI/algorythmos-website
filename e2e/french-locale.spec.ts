@@ -24,6 +24,7 @@ const FR_ROUTES = [
   '/fr-fr/blog/port-botany-document-flows',
   '/fr-fr/blog/ai-control-plane-robots-satellites-payments',
   '/fr-fr/blog/where-ai-runs-fibre-satellite-orbit',
+  '/fr-fr/blog/why-memory-density-matters-for-ai',
   '/fr-fr/blog/llmops-in-production',
   '/fr-fr/blog/feature-stores-lineage',
   '/fr-fr/about',

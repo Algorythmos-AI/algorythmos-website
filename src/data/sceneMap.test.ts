@@ -63,7 +63,7 @@ describe('sceneFor — themes follow the page (docs/COPY_CLAIMS_SIGNOFF.md §3g)
   it('a study or post shows the scene of the service that leads it', () => {
     /* The explicit choices at the top of sceneMap.ts; every other article follows its lead. */
     const explicit = [
-      'financial-compliance', 'port-botany-ai-ml', 'model-monitoring-logistics', 'dram-4f2-cell-architecture',
+      'financial-compliance', 'port-botany-ai-ml', 'model-monitoring-logistics', 'dram-4f2-cell-architecture', 'why-memory-density-matters-for-ai',
       'gdpr-ai', 'eu-ai-act-gdpr-sme-roadmap', 'port-botany-document-flows',
       'choosing-ai-consultancy-sydney', 'ai-consultancy-australia', 'mbsc-australia-partnership',
     ];
@@ -89,9 +89,9 @@ describe('sceneFor — themes follow the page (docs/COPY_CLAIMS_SIGNOFF.md §3g)
     expect(serviceSlugs.map((s) => sceneFor('service', s).id)).not.toContain('port-yard');
   });
 
-  it('the memory array belongs to the DRAM report only', () => {
+  it('the memory array belongs to the DRAM report and its companion post only', () => {
     const array = ARTICLES.filter((a) => a.scene.id === 'memory-array').map((a) => a.slug);
-    expect(array.sort()).toEqual(['dram-4f2-cell-architecture']);
+    expect(array.sort()).toEqual(['dram-4f2-cell-architecture', 'why-memory-density-matters-for-ai']);
     expect(serviceSlugs.map((s) => sceneFor('service', s).id)).not.toContain('memory-array');
   });
 

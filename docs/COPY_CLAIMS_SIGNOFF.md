@@ -404,6 +404,15 @@ with no stated affiliation.
       arithmetic, brand for peer-reviewed demonstrations, teal for company-reported, amber for a
       reported plan or an unestablished claim, red for a false one. The wording of each verdict is
       unchanged by its colour.
+- [x] **Companion post** `/blog/why-memory-density-matters-for-ai` reuses only figures from this
+      section (a third smaller, 3.0× against 1.6×, 2 TB/s across 2,048 bits, a module reported as
+      planned for the end of 2026). The sizing guidance is Algorythmos's own delivery approach, not
+      client results. It shares the report's hero scene.
+- [x] **Preview card** `card-dram-{en,fr}.png` (`node scripts/build-og-card.mjs dram`). It carries
+      33.3%, 1.5× (both marked as arithmetic), 24 and 36 cells in a 12 F square, and "0 published
+      yield or cost figures for 4F² DRAM", which is true of the 39 sources here and no wider.
+      Re-render it if the claim count, the source count or any of those figures changes.
+- [x] **Announcement bar** points at this report from 13 Oct 2026 (`src/data/announcement.ts`).
 - [ ] **Sam to confirm** the wording of the call to action ("Sizing memory for training or
       inference?") as an invitation and not a statement of current work.
 - [ ] Re-open every source on the day of merge and correct any wording that the live page does not
