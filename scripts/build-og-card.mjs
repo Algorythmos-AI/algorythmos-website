@@ -9,7 +9,7 @@
  * and 600 exist there; nothing here asks for another.
  *
  * The PNGs are committed. Run only to change one:
- *   node scripts/build-og-card.mjs                 → src/assets/og/card-<name>-<locale>.png (1200×630)
+ *   node scripts/build-og-card.mjs [name…]         → src/assets/og/card-<name>-<locale>.png (1200×630)
  *   node scripts/build-og-card.mjs --social <dir>  → also 1600×900 (16:9) copies for X and Medium
  */
 import { mkdtempSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
@@ -30,7 +30,7 @@ const socialAt = process.argv.indexOf("--social");
 const socialDir = socialAt > -1 ? resolve(process.argv[socialAt + 1]) : null;
 
 /** Copy for the signals report card. Every figure is sourced in the report itself. */
-const COPY = {
+const SIGNALS = {
   en: {
     eyebrow: "EVIDENCE REPORT  ·  15 CLAIMS  ·  17 SOURCES",
     h: ["Will satellites", "replace fibre?"],
@@ -66,6 +66,44 @@ const COPY = {
     cable: "câble sous-marin",
     laser: "liaisons laser",
     node: "calcul",
+  },
+};
+
+/** Copy for the DRAM report card. The two percentages are arithmetic on the nominal cell areas. */
+const DRAM = {
+  en: {
+    eyebrow: "EVIDENCE REPORT  ·  12 CLAIMS  ·  39 SOURCES",
+    h: ["Does 4F² mean", "50% more memory?"],
+    sub: [
+      "We checked the claim against peer-reviewed",
+      "papers, standards and patents.",
+    ],
+    stats: [
+      ["33.3%", "less area per cell,", "6F² to 4F² (arithmetic)"],
+      ["1.5×", "the cells in the same", "array area (arithmetic)"],
+      ["0", "published yield or cost", "figures for 4F² DRAM"],
+    ],
+    six: "6F² cell",
+    four: "4F² cell",
+    same: "the same area of silicon",
+    cells: "cells",
+  },
+  fr: {
+    eyebrow: "RAPPORT DE SYNTHÈSE  ·  12 AFFIRMATIONS  ·  39 SOURCES",
+    h: ["La 4F², est-ce 50 %", "de mémoire en plus ?"],
+    sub: [
+      "Nous avons confronté l’affirmation aux articles",
+      "à comité de lecture, aux normes et aux brevets.",
+    ],
+    stats: [
+      ["33,3 %", "de surface par cellule", "en moins (arithmétique)"],
+      ["1,5×", "de cellules dans la même", "surface (arithmétique)"],
+      ["0", "rendement ou coût publié", "pour un produit 4F²"],
+    ],
+    six: "cellule 6F²",
+    four: "cellule 4F²",
+    same: "la même surface de silicium",
+    cells: "cellules",
   },
 };
 
@@ -119,9 +157,69 @@ const link = (a, b) =>
 const terminal = (p) =>
   `<rect x="${(p.x - 9).toFixed(1)}" y="${(p.y - 12).toFixed(1)}" width="18" height="12" rx="3" fill="${INK}"/>`;
 
+/** The signals picture: Earth, the cable under it and the laser mesh over it. */
+const signalsDefs = `<linearGradient id="beam" gradientUnits="userSpaceOnUse" x1="${sats[0].x}" y1="0" x2="${sats[3].x}" y2="0">
+      <stop offset="0" stop-color="${VIOLET}"/><stop offset="1" stop-color="${CYAN}"/>
+    </linearGradient>`;
+const signalsPicture = (T) => `<!-- orbit and the laser mesh -->
+    <path d="${arc(RO, -150, -30)}" fill="none" stroke="#ffffff" stroke-opacity="0.16" stroke-width="1.5" stroke-dasharray="3 9"/>
+    ${link(sats[0], sats[1])}${link(sats[1], sats[2])}${link(sats[2], sats[3])}
+    <path d="M${syd.x.toFixed(1)} ${(syd.y - 12).toFixed(1)}L${sats[0].x.toFixed(1)} ${(sats[0].y + 16).toFixed(1)}" stroke="${VIOLET}" stroke-width="2.5" stroke-dasharray="2 8" stroke-linecap="round"/>
+    <path d="M${cal.x.toFixed(1)} ${(cal.y - 12).toFixed(1)}L${sats[3].x.toFixed(1)} ${(sats[3].y + 16).toFixed(1)}" stroke="${CYAN}" stroke-width="2.5" stroke-dasharray="2 8" stroke-linecap="round"/>
+    ${sat(sats[0])}${sat(sats[1])}${sat(sats[2], true)}${sat(sats[3])}
+    <text x="${((sats[1].x + sats[2].x) / 2).toFixed(1)}" y="${(sats[1].y - 30).toFixed(1)}" text-anchor="middle" ${F} font-size="15" font-weight="600" fill="${MUTED}" letter-spacing="1.5">${esc(T.laser.toUpperCase())}</text>
+    <text x="${sats[2].x.toFixed(1)}" y="${(sats[2].y + 38).toFixed(1)}" text-anchor="middle" ${F} font-size="13" font-weight="600" fill="${CYAN}" letter-spacing="1.2">${esc(T.node.toUpperCase())}</text>
+
+    <!-- Earth, with the cable that does the real work -->
+    <circle cx="${C.x}" cy="${C.y}" r="${RE}" fill="url(#earth)" stroke="${VIOLET}" stroke-opacity="0.55" stroke-width="2"/>
+    <path d="${arc(RE - 34, -121, -59)}" fill="none" stroke="${CYAN}" stroke-width="5" stroke-linecap="round"/>
+    <path d="${arc(RE - 34, -121, -59)}" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-dasharray="1 30" stroke-opacity="0.9"/>
+    <path d="M${syd.x.toFixed(1)} ${syd.y.toFixed(1)}L${at(RE - 34, -121).x.toFixed(1)} ${at(RE - 34, -121).y.toFixed(1)}M${cal.x.toFixed(1)} ${cal.y.toFixed(1)}L${at(RE - 34, -59).x.toFixed(1)} ${at(RE - 34, -59).y.toFixed(1)}" stroke="${CYAN}" stroke-width="5" stroke-linecap="round"/>
+    ${terminal(syd)}${terminal(cal)}
+    <text x="${C.x}" y="${C.y - RE + 78}" text-anchor="middle" ${F} font-size="15" font-weight="600" fill="${CYAN}" letter-spacing="1.5">${esc(T.cable.toUpperCase())}</text>
+    <text x="${(syd.x - 16).toFixed(1)}" y="${(syd.y + 2).toFixed(1)}" text-anchor="end" ${F} font-size="16" font-weight="600" fill="${INK}">${esc(T.a)}</text>
+    <text x="${(cal.x + 16).toFixed(1)}" y="${(cal.y + 2).toFixed(1)}" text-anchor="start" ${F} font-size="16" font-weight="600" fill="${INK}">${esc(T.b)}</text>`;
+
+/** The DRAM picture: one square of silicon tiled with 6F² cells, then with 4F² cells. */
+const UNIT = 15;
+const SIDE = 12 * UNIT;
+const SQ_Y = 196;
+const SQ_A = 690;
+const SQ_B = 946;
+const tile = (x0, w, h, extraFrom) => {
+  let out = "";
+  let i = 0;
+  for (let r = 0; r < 12 / h; r++)
+    for (let c = 0; c < 12 / w; c++, i++) {
+      const hot = extraFrom !== undefined && i >= extraFrom;
+      out += `<rect x="${x0 + c * w * UNIT + 2}" y="${SQ_Y + r * h * UNIT + 2}" width="${w * UNIT - 4}" height="${h * UNIT - 4}" rx="4" fill="${hot ? CYAN : VIOLET}" fill-opacity="${hot ? 0.3 : 0.2}" stroke="${hot ? CYAN : VIOLET}" stroke-width="1.6"/>`;
+    }
+  return out;
+};
+const dramPicture = (T) => `<rect x="${SQ_A - 6}" y="${SQ_Y - 6}" width="${SIDE + 12}" height="${SIDE + 12}" rx="10" fill="#ffffff" fill-opacity="0.03" stroke="#ffffff" stroke-opacity="0.16"/>
+    <rect x="${SQ_B - 6}" y="${SQ_Y - 6}" width="${SIDE + 12}" height="${SIDE + 12}" rx="10" fill="#ffffff" fill-opacity="0.03" stroke="#ffffff" stroke-opacity="0.16"/>
+    ${tile(SQ_A, 3, 2)}
+    ${tile(SQ_B, 2, 2, 24)}
+    <path d="M${SQ_A + SIDE + 22} ${SQ_Y + SIDE / 2}H${SQ_B - 30}" stroke="url(#step)" stroke-width="3" stroke-linecap="round"/>
+    <path d="M${SQ_B - 32} ${SQ_Y + SIDE / 2 - 8}l12 8l-12 8z" fill="${CYAN}"/>
+    <text x="${SQ_A + SIDE / 2}" y="${SQ_Y - 24}" text-anchor="middle" ${F} font-size="15" font-weight="600" fill="${MUTED}" letter-spacing="1.5">${esc(T.six.toUpperCase())}</text>
+    <text x="${SQ_B + SIDE / 2}" y="${SQ_Y - 24}" text-anchor="middle" ${F} font-size="15" font-weight="600" fill="${CYAN}" letter-spacing="1.5">${esc(T.four.toUpperCase())}</text>
+    <text x="${SQ_A + SIDE / 2}" y="${SQ_Y + SIDE + 44}" text-anchor="middle" ${F} font-size="30" font-weight="600" fill="${INK}">24 <tspan font-size="17" font-weight="400" fill="${MUTED}">${esc(T.cells)}</tspan></text>
+    <text x="${SQ_B + SIDE / 2}" y="${SQ_Y + SIDE + 44}" text-anchor="middle" ${F} font-size="30" font-weight="600" fill="${CYAN}">36 <tspan font-size="17" font-weight="400" fill="${MUTED}">${esc(T.cells)}</tspan></text>
+    <text x="${(SQ_A + SQ_B + SIDE) / 2}" y="${SQ_Y + SIDE + 86}" text-anchor="middle" ${F} font-size="15" font-weight="600" fill="${MUTED}" letter-spacing="1.5">${esc(T.same.toUpperCase())}</text>`;
+const dramDefs = `<linearGradient id="step" gradientUnits="userSpaceOnUse" x1="${SQ_A + SIDE}" y1="0" x2="${SQ_B}" y2="0">
+      <stop offset="0" stop-color="${VIOLET}"/><stop offset="1" stop-color="${CYAN}"/>
+    </linearGradient>`;
+
+/** Every card this script draws. `node scripts/build-og-card.mjs dram` renders one. */
+const CARDS = {
+  signals: { copy: SIGNALS, defs: signalsDefs, picture: signalsPicture },
+  dram: { copy: DRAM, defs: dramDefs, picture: dramPicture },
+};
+
 /** One card as SVG. `H` is 630 for the site card, 675 for the 16:9 social copy. */
-const render = (lang, H = 630, scale = 1) => {
-  const T = COPY[lang];
+const render = (card, lang, H = 630, scale = 1) => {
+  const T = card.copy[lang];
   const stat = ([n, l1, l2], i) => {
     const x = 72 + i * 186;
     return (
@@ -143,9 +241,7 @@ const render = (lang, H = 630, scale = 1) => {
     <radialGradient id="earth" cx="50%" cy="0%" r="100%">
       <stop offset="0" stop-color="#2a2356"/><stop offset="0.55" stop-color="#141030"/><stop offset="1" stop-color="#0b0a18"/>
     </radialGradient>
-    <linearGradient id="beam" gradientUnits="userSpaceOnUse" x1="${sats[0].x}" y1="0" x2="${sats[3].x}" y2="0">
-      <stop offset="0" stop-color="${VIOLET}"/><stop offset="1" stop-color="${CYAN}"/>
-    </linearGradient>
+    ${card.defs}
     <pattern id="dots" width="28" height="28" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.1" fill="#ffffff" fill-opacity="0.07"/></pattern>
     <clipPath id="frame"><rect y="${-(H - 630) / 2}" width="${W}" height="${H}"/></clipPath>
   </defs>
@@ -156,24 +252,7 @@ const render = (lang, H = 630, scale = 1) => {
   <g clip-path="url(#frame)">
     <ellipse cx="${C.x}" cy="300" rx="430" ry="330" fill="url(#glow)"/>
 
-    <!-- orbit and the laser mesh -->
-    <path d="${arc(RO, -150, -30)}" fill="none" stroke="#ffffff" stroke-opacity="0.16" stroke-width="1.5" stroke-dasharray="3 9"/>
-    ${link(sats[0], sats[1])}${link(sats[1], sats[2])}${link(sats[2], sats[3])}
-    <path d="M${syd.x.toFixed(1)} ${(syd.y - 12).toFixed(1)}L${sats[0].x.toFixed(1)} ${(sats[0].y + 16).toFixed(1)}" stroke="${VIOLET}" stroke-width="2.5" stroke-dasharray="2 8" stroke-linecap="round"/>
-    <path d="M${cal.x.toFixed(1)} ${(cal.y - 12).toFixed(1)}L${sats[3].x.toFixed(1)} ${(sats[3].y + 16).toFixed(1)}" stroke="${CYAN}" stroke-width="2.5" stroke-dasharray="2 8" stroke-linecap="round"/>
-    ${sat(sats[0])}${sat(sats[1])}${sat(sats[2], true)}${sat(sats[3])}
-    <text x="${((sats[1].x + sats[2].x) / 2).toFixed(1)}" y="${(sats[1].y - 30).toFixed(1)}" text-anchor="middle" ${F} font-size="15" font-weight="600" fill="${MUTED}" letter-spacing="1.5">${esc(T.laser.toUpperCase())}</text>
-    <text x="${sats[2].x.toFixed(1)}" y="${(sats[2].y + 38).toFixed(1)}" text-anchor="middle" ${F} font-size="13" font-weight="600" fill="${CYAN}" letter-spacing="1.2">${esc(T.node.toUpperCase())}</text>
-
-    <!-- Earth, with the cable that does the real work -->
-    <circle cx="${C.x}" cy="${C.y}" r="${RE}" fill="url(#earth)" stroke="${VIOLET}" stroke-opacity="0.55" stroke-width="2"/>
-    <path d="${arc(RE - 34, -121, -59)}" fill="none" stroke="${CYAN}" stroke-width="5" stroke-linecap="round"/>
-    <path d="${arc(RE - 34, -121, -59)}" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-dasharray="1 30" stroke-opacity="0.9"/>
-    <path d="M${syd.x.toFixed(1)} ${syd.y.toFixed(1)}L${at(RE - 34, -121).x.toFixed(1)} ${at(RE - 34, -121).y.toFixed(1)}M${cal.x.toFixed(1)} ${cal.y.toFixed(1)}L${at(RE - 34, -59).x.toFixed(1)} ${at(RE - 34, -59).y.toFixed(1)}" stroke="${CYAN}" stroke-width="5" stroke-linecap="round"/>
-    ${terminal(syd)}${terminal(cal)}
-    <text x="${C.x}" y="${C.y - RE + 78}" text-anchor="middle" ${F} font-size="15" font-weight="600" fill="${CYAN}" letter-spacing="1.5">${esc(T.cable.toUpperCase())}</text>
-    <text x="${(syd.x - 16).toFixed(1)}" y="${(syd.y + 2).toFixed(1)}" text-anchor="end" ${F} font-size="16" font-weight="600" fill="${INK}">${esc(T.a)}</text>
-    <text x="${(cal.x + 16).toFixed(1)}" y="${(cal.y + 2).toFixed(1)}" text-anchor="start" ${F} font-size="16" font-weight="600" fill="${INK}">${esc(T.b)}</text>
+    ${card.picture(T)}
   </g>
 
   </g>
@@ -194,24 +273,28 @@ const render = (lang, H = 630, scale = 1) => {
 </svg>`;
 };
 
-for (const lang of Object.keys(COPY)) {
-  const out = resolve(ROOT, `src/assets/og/card-signals-${lang}.png`);
-  writeFileSync(
-    out,
-    await sharp(Buffer.from(render(lang)))
-      .png({ compressionLevel: 9 })
-      .toBuffer(),
-  );
-  console.log("wrote", out);
-  if (socialDir) {
-    mkdirSync(socialDir, { recursive: true });
-    const wide = resolve(socialDir, `signals-card-${lang}-1600x900.png`);
+const only = process.argv.slice(2).filter((a, i, all) => !a.startsWith("--") && all[i - 1] !== "--social");
+for (const [name, card] of Object.entries(CARDS)) {
+  if (only.length && !only.includes(name)) continue;
+  for (const lang of Object.keys(card.copy)) {
+    const out = resolve(ROOT, `src/assets/og/card-${name}-${lang}.png`);
     writeFileSync(
-      wide,
-      await sharp(Buffer.from(render(lang, 675, 1600 / 1200)))
+      out,
+      await sharp(Buffer.from(render(card, lang)))
         .png({ compressionLevel: 9 })
         .toBuffer(),
     );
-    console.log("wrote", wide);
+    console.log("wrote", out);
+    if (socialDir) {
+      mkdirSync(socialDir, { recursive: true });
+      const wide = resolve(socialDir, `${name}-card-${lang}-1600x900.png`);
+      writeFileSync(
+        wide,
+        await sharp(Buffer.from(render(card, lang, 675, 1600 / 1200)))
+          .png({ compressionLevel: 9 })
+          .toBuffer(),
+      );
+      console.log("wrote", wide);
+    }
   }
 }

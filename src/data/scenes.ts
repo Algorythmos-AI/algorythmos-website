@@ -42,6 +42,8 @@ export const SCENE_IDS = [
   'platform-station',
   'holo-site',
   'port-yard',
+  // The DRAM evidence report:
+  'memory-array',
 ] as const;
 export type SceneId = (typeof SCENE_IDS)[number];
 

@@ -20,6 +20,15 @@ import FibreSpan from './art/FibreSpan.astro';
 import SatLinks from './art/SatLinks.astro';
 import OrbitalNode from './art/OrbitalNode.astro';
 import FibreFreeRoute from './art/FibreFreeRoute.astro';
+import CellRead from './art/CellRead.astro';
+import ArrayAccess from './art/ArrayAccess.astro';
+import CellFootprint from './art/CellFootprint.astro';
+import VerticalChannel from './art/VerticalChannel.astro';
+import PitchMultiply from './art/PitchMultiply.astro';
+import CapacitorStack from './art/CapacitorStack.astro';
+import AiMemoryMap from './art/AiMemoryMap.astro';
+import FootprintVsStack from './art/FootprintVsStack.astro';
+import QualLadder from './art/QualLadder.astro';
 
 interface Props {
   id: ExplainerId;
@@ -39,6 +48,15 @@ const ART = {
   'sat-links': SatLinks,
   'orbital-node': OrbitalNode,
   'fibre-free-route': FibreFreeRoute,
+  'cell-read': CellRead,
+  'array-access': ArrayAccess,
+  'cell-footprint': CellFootprint,
+  'vertical-channel': VerticalChannel,
+  'pitch-multiply': PitchMultiply,
+  'capacitor-stack': CapacitorStack,
+  'ai-memory-map': AiMemoryMap,
+  'footprint-vs-stack': FootprintVsStack,
+  'qual-ladder': QualLadder,
 } satisfies Record<ExplainerId, unknown>;
 const Art = ART[id];
 

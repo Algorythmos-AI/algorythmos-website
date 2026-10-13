@@ -1,0 +1,45 @@
+---
+/** The memories in one AI server: cache inside the chips, stacked memory by the accelerator, modules by the processor, flash for storage. */
+import { asLocale, useTranslations } from '@/i18n';
+const t = useTranslations(asLocale(Astro.currentLocale));
+const L = (name: string) => t(`explainers.ai-memory-map.labels.${name}`);
+/** Module positions beside the processor, and die positions in the two stacks. */
+const dimms = [66, 94, 122, 150];
+const dies = [66, 82, 98, 114];
+---
+
+<svg class="ex-art" viewBox="0 0 560 300" aria-hidden="true" focusable="false">
+  <rect class="ex-node" x="60" y="60" width="120" height="70" rx="8"></rect>
+  <text class="ex-label" x="112" y="101" text-anchor="middle">{L('cpu')}</text>
+  <rect class="ex-node" x="320" y="60" width="130" height="70" rx="8"></rect>
+  <text class="ex-label" x="376" y="101" text-anchor="middle">{L('accelerator')}</text>
+
+  {/* 0: a small, fast cache inside each chip */}
+  <rect class="ex-token-2" data-at="0" x="150" y="68" width="22" height="14" rx="2"></rect>
+  <rect class="ex-token-2" data-at="0" x="420" y="68" width="22" height="14" rx="2"></rect>
+  <text class="ex-sub" data-at="0" x="250" y="50" text-anchor="middle">{L('sram')}</text>
+
+  {/* 1: stacked memory right beside the accelerator */}
+  {dies.map((y) => <rect class="ex-node" data-at="1" x="462" y={y} width="32" height="12" rx="2"></rect>)}
+  {dies.map((y) => <rect class="ex-node" data-at="1" x="502" y={y} width="32" height="12" rx="2"></rect>)}
+  <text class="ex-sub" data-at="1" x="498" y="148" text-anchor="middle">{L('hbm')}</text>
+
+  {/* 2: memory modules beside the processor */}
+  {dimms.map((x) => <rect class="ex-node" data-at="2" x={x} y="150" width="20" height="52" rx="3"></rect>)}
+  <text class="ex-sub" data-at="2" x="118" y="222" text-anchor="middle">{L('ddr')}</text>
+
+  {/* 3: flash storage keeps the model with the power off */}
+  <rect class="ex-node" data-at="3" x="230" y="226" width="110" height="40" rx="6"></rect>
+  <text class="ex-sub" data-at="3" x="285" y="250" text-anchor="middle">{L('flash')}</text>
+
+  {/* 4: a model is loaded from storage, through main memory, into the accelerator's memory */}
+  <path class="ex-flow" data-at="4" d="M230 246H196V176H178"></path>
+  <path class="ex-flow" data-at="4" d="M180 112H320"></path>
+  <circle class="ex-token ex-fly" data-at="4" data-until="5" cx="250" cy="112" r="6" style="--fx:-54px;--fy:134px"></circle>
+
+  {/* 5: the DRAM cell is what the modules and the stacks are built from */}
+  {dimms.map((x) => <rect class="ex-node-brand" data-at="5" x={x} y="150" width="20" height="52" rx="3"></rect>)}
+  {dies.map((y) => <rect class="ex-node-brand" data-at="5" x="462" y={y} width="32" height="12" rx="2"></rect>)}
+  {dies.map((y) => <rect class="ex-node-brand" data-at="5" x="502" y={y} width="32" height="12" rx="2"></rect>)}
+  <text class="ex-sub" data-at="5" x="450" y="196" text-anchor="middle">{L('dram')}</text>
+</svg>

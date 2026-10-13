@@ -1,0 +1,47 @@
+---
+/** A small corner of the array: one row is opened, every column is sensed, one bit leaves. */
+import { asLocale, useTranslations } from '@/i18n';
+const t = useTranslations(asLocale(Astro.currentLocale));
+const L = (name: string) => t(`explainers.array-access.labels.${name}`);
+/** Wordline heights and bitline positions; the selected row and column are `ROW` and `COL`. */
+const rows = [80, 120, 160, 200];
+const cols = [150, 220, 290, 360, 430];
+const ROW = 1;
+const COL = 2;
+const AMP = 232;
+---
+
+<svg class="ex-art" viewBox="0 0 560 300" aria-hidden="true" focusable="false">
+  <rect class="ex-node" x="24" y="60" width="60" height="160" rx="8"></rect>
+  {rows.map((y) => <path class="ex-link" d={`M84 ${y}H470`}></path>)}
+  {cols.map((x) => <path class="ex-link" d={`M${x} 56V${AMP}`}></path>)}
+  {rows.map((y) => cols.map((x) => <rect class="ex-chip" x={x - 6} y={y - 6} width="12" height="12" rx="2"></rect>))}
+  {cols.map((x) => <rect class="ex-node" x={x - 18} y={AMP} width="36" height="20" rx="4"></rect>)}
+  <rect class="ex-node" x="132" y="262" width="316" height="22" rx="6"></rect>
+  <text class="ex-sub" x="54" y="240" text-anchor="middle">{L('decoder')}</text>
+  <text class="ex-sub" x="478" y={rows[0] + 4}>{L('wordlines')}</text>
+  <text class="ex-sub" x="290" y="44" text-anchor="middle">{L('bitlines')}</text>
+  <text class="ex-sub" x="458" y={AMP + 14}>{L('amps')}</text>
+  <text class="ex-sub" x="458" y="277">{L('select')}</text>
+
+  {/* 0: the address reaches the row decoder */}
+  <rect class="ex-node-brand" data-at="0" x="24" y="60" width="60" height="160" rx="8"></rect>
+
+  {/* 1: one wordline switches on */}
+  <path class="ex-flow" data-at="1" d={`M84 ${rows[ROW]}H470`}></path>
+
+  {/* 2: every cell on that row shares its charge */}
+  {cols.map((x) => <rect class="ex-token" data-at="2" x={x - 6} y={rows[ROW] - 6} width="12" height="12" rx="2"></rect>)}
+  {cols.map((x) => <path class="ex-flow ex-dash" data-at="2" data-until="3" d={`M${x} ${rows[ROW] + 8}V${AMP}`}></path>)}
+
+  {/* 3: every sense amplifier decides its column */}
+  {cols.map((x) => <rect class="ex-node-brand" data-at="3" x={x - 18} y={AMP} width="36" height="20" rx="4"></rect>)}
+
+  {/* 4: the column select picks one */}
+  <path class="ex-flow-2" data-at="4" d={`M${cols[COL]} ${AMP + 20}V262`}></path>
+  <rect class="ex-token-2" data-at="4" x={cols[COL] - 18} y="262" width="36" height="22" rx="4"></rect>
+
+  {/* 5: the bit leaves, and the whole row has been rewritten */}
+  <circle class="ex-ok-fill ex-fly" data-at="5" cx={cols[COL]} cy="292" r="5" style="--fx:0px;--fy:-50px"></circle>
+  {cols.map((x) => <rect class="ex-chip-done" data-at="5" x={x - 6} y={rows[ROW] - 6} width="12" height="12" rx="2"></rect>)}
+</svg>

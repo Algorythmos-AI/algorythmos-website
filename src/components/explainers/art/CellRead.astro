@@ -1,0 +1,50 @@
+---
+/** One DRAM cell being read: the charge nudges the bitline, the amplifier decides, the charge goes back. */
+import { asLocale, useTranslations } from '@/i18n';
+const t = useTranslations(asLocale(Astro.currentLocale));
+const L = (name: string) => t(`explainers.cell-read.labels.${name}`);
+/** The bitline runs left to right; the cell hangs under it at `X`. */
+const BL = 110;
+const X = 200;
+const WL = 168;
+---
+
+<svg class="ex-art" viewBox="0 0 560 300" aria-hidden="true" focusable="false">
+  <path class="ex-link" d={`M40 ${BL}H420`}></path>
+  <path class="ex-link" d={`M${X} ${BL}V150M${X} 186V214M${X} 240V258M${X - 16} 258H${X + 16}`}></path>
+  <path class="ex-link" d={`M40 ${WL}H${X - 24}`}></path>
+  <rect class="ex-node" x={X - 24} y="150" width="48" height="36" rx="6"></rect>
+  <rect class="ex-node" x={X - 30} y="214" width="60" height="8" rx="2"></rect>
+  <rect class="ex-node" x={X - 30} y="232" width="60" height="8" rx="2"></rect>
+  <rect class="ex-node" x="420" y="86" width="110" height="48" rx="8"></rect>
+  <text class="ex-sub" x="44" y="98">{L('bitline')}</text>
+  <text class="ex-sub" x="44" y="158">{L('wordline')}</text>
+  <text class="ex-sub" x={X + 34} y="172">{L('switch')}</text>
+  <text class="ex-sub" x={X + 40} y="231">{L('capacitor')}</text>
+  <text class="ex-sub" x="475" y="154" text-anchor="middle">{L('amp')}</text>
+
+  {/* 0: the capacitor holds a charge */}
+  <rect class="ex-token" data-at="0" x={X - 30} y="214" width="60" height="8" rx="2"></rect>
+  <text class="ex-sub" data-at="0" x={X + 40} y="249">{L('charge')}</text>
+
+  {/* 1: the bitline is set to the halfway level */}
+  <path class="ex-flow-2 ex-dash" data-at="1" d={`M40 ${BL}H420`}></path>
+  <text class="ex-sub" data-at="1" x="320" y="98" text-anchor="middle">{L('half')}</text>
+
+  {/* 2: the wordline opens the switch */}
+  <path class="ex-flow" data-at="2" d={`M40 ${WL}H${X - 24}`}></path>
+  <rect class="ex-node-brand" data-at="2" x={X - 24} y="150" width="48" height="36" rx="6"></rect>
+
+  {/* 3: the charge spreads onto the bitline and nudges it */}
+  <circle class="ex-token ex-fly" data-at="3" data-until="4" cx="300" cy={BL} r="6" style={`--fx:-100px;--fy:108px`}></circle>
+  <text class="ex-sub" data-at="3" data-until="4" x="320" y="132" text-anchor="middle">{L('nudge')}</text>
+
+  {/* 4: the amplifier drives the bitline to a full level */}
+  <rect class="ex-node-brand" data-at="4" x="420" y="86" width="110" height="48" rx="8"></rect>
+  <path class="ex-flow" data-at="4" d={`M${X} ${BL}H420`}></path>
+  <text class="ex-sub" data-at="4" x="475" y="76" text-anchor="middle">{L('full')}</text>
+
+  {/* 5: the full level refills the capacitor */}
+  <circle class="ex-ok-fill ex-fly" data-at="5" cx={X} cy="204" r="6" style={`--fx:120px;--fy:-94px`}></circle>
+  <path class="ex-ok" data-at="5" d="M464 110l8 8l14 -16"></path>
+</svg>

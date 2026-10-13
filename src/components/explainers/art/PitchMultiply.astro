@@ -1,0 +1,43 @@
+---
+/** One printed pattern becomes four times as many lines, and placement errors travel with it. */
+import { asLocale, useTranslations } from '@/i18n';
+const t = useTranslations(asLocale(Astro.currentLocale));
+const L = (name: string) => t(`explainers.pitch-multiply.labels.${name}`);
+/** Three printed lines; each grows a spacer on both sides, and each spacer grows two more. */
+const printed = [60, 220, 380];
+const PW = 40;
+const SW = 12;
+const TW = 8;
+const first = printed.flatMap((x) => [x - SW, x + PW]);
+const second = first.flatMap((x) => [x - TW, x + SW]);
+const A = 40;
+const B = 118;
+const C = 196;
+const H = 32;
+---
+
+<svg class="ex-art" viewBox="0 0 560 300" aria-hidden="true" focusable="false">
+  <text class="ex-sub" x="450" y={A + 20}>{L('print')}</text>
+  <text class="ex-sub" x="450" y={B + 20}>{L('double')}</text>
+  <text class="ex-sub" x="450" y={C + 20}>{L('quad')}</text>
+
+  {/* 0: lithography prints three lines */}
+  {printed.map((x) => <rect class="ex-node" data-at="0" x={x} y={A} width={PW} height={H} rx="2"></rect>)}
+
+  {/* 1: a thin layer is left on both sides of each */}
+  {first.map((x) => <rect class="ex-token" data-at="1" x={x} y={A} width={SW} height={H} rx="2"></rect>)}
+
+  {/* 2: the printed lines are removed: six lines remain */}
+  {first.map((x) => <rect class="ex-token" data-at="2" x={x} y={B} width={SW} height={H} rx="2"></rect>)}
+
+  {/* 3: the same trick again, on the six */}
+  {second.map((x) => <rect class="ex-token-2" data-at="3" x={x} y={B} width={TW} height={H} rx="2"></rect>)}
+
+  {/* 4: twelve lines from three */}
+  {second.map((x) => <rect class="ex-token-2" data-at="4" x={x} y={C} width={TW} height={H} rx="2"></rect>)}
+
+  {/* 5: any error in a width shifts every line made from it */}
+  <rect class="ex-warn" data-at="5" x={second[1] + TW + 2} y={C - 4} width={second[2] - second[1] - TW - 4} height={H + 8} rx="3"></rect>
+  <rect class="ex-warn" data-at="5" x={second[5] + TW + 2} y={C - 4} width={second[6] - second[5] - TW - 4} height={H + 8} rx="3"></rect>
+  <text class="ex-sub" data-at="5" x="226" y="262" text-anchor="middle">{L('errors')}</text>
+</svg>

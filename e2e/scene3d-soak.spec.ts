@@ -41,6 +41,7 @@ const SCENE_PAGES: [scene: string, path: string][] = [
   ['dash-terrain', '/services/sql-dashboards'],
   ['holo-site', '/services/ai-websites'],
   ['port-yard', '/case-studies/port-botany-ai-ml'],
+  ['memory-array', '/case-studies/dram-4f2-cell-architecture'],
   ['scan', '/case-studies/manufacturing-docs'],
   ['globe', '/about'],
   ['globe', '/contact'],

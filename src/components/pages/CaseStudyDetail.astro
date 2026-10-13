@@ -15,6 +15,8 @@ import RelatedLinks from '@/components/ui/RelatedLinks.astro';
 import { caseStudyRelated } from '@/data/related';
 import Explainer from '@/components/explainers/Explainer.astro';
 import { caseStudyExplainers } from '@/data/explainers';
+import DensityCalculator from '@/components/islands/DensityCalculator';
+import { densityCalculatorAt } from '@/data/caseStudyWidgets';
 
 interface Props {
   slug: string;
@@ -190,13 +192,37 @@ const orchTitle = sk('orchestration.title');
 const orchBody = sk('orchestration.body');
 const orchestration = orchTitle && orchBody ? { title: orchTitle, body: orchBody, steps: seq('orchestration.steps', 8) } : null;
 
-const claims: { claim: string; source: string; verdict: string }[] = [];
+/**
+ * Optional `claims.N.kind` colours the verdict: what kind of evidence the row rests on.
+ * A row without one, or with a kind not listed here, renders as plain text as before.
+ */
+const VERDICT_TONE: Record<string, string> = {
+  ok: 'border-success/40 bg-success/10',
+  math: 'border-success/40 bg-success/10',
+  shown: 'border-brand/40 bg-brand/10',
+  company: 'border-accent/40 bg-accent/10',
+  plan: 'border-warning/50 bg-warning/10',
+  open: 'border-warning/50 bg-warning/10',
+  false: 'border-danger/40 bg-danger/10',
+};
+const calculatorLabels = {
+  title: t('densityCalculator.title'),
+  caption: t('densityCalculator.caption'),
+  slider: t('densityCalculator.slider'),
+  before: t('densityCalculator.before'),
+  after: t('densityCalculator.after'),
+  array: t('densityCalculator.array'),
+  periphery: t('densityCalculator.periphery'),
+  area: t('densityCalculator.area'),
+  gain: t('densityCalculator.gain'),
+};
+const claims: { claim: string; source: string; verdict: string; tone?: string }[] = [];
 for (let i = 0; i < 24; i++) {
   const claim = sk(`claims.${i}.claim`);
   const source = sk(`claims.${i}.source`);
   const verdict = sk(`claims.${i}.verdict`);
   if (!claim || !source || !verdict) break;
-  claims.push({ claim, source, verdict });
+  claims.push({ claim, source, verdict, tone: VERDICT_TONE[sk(`claims.${i}.kind`) ?? ''] });
 }
 
 const longForm = pillars.length > 0;
@@ -357,6 +383,11 @@ const contents = longForm
           <Explainer id={explainers.pillars[i]} />
         </div>
       )}
+      {densityCalculatorAt[slug] === i && (
+        <div data-reveal class="mt-10">
+          <DensityCalculator client:visible labels={calculatorLabels} locale={locale === 'fr-fr' ? 'fr-FR' : 'en-AU'} />
+        </div>
+      )}
     </section>
   ))}
 
@@ -419,7 +450,9 @@ const contents = longForm
               <tr>
                 <th scope="row" class="p-4 align-top font-medium text-ink">{c.claim}</th>
                 <td class="p-4 align-top">{c.source}</td>
-                <td class="p-4 align-top font-medium text-ink">{c.verdict}</td>
+                <td class="p-4 align-top font-medium text-ink">
+                  {c.tone ? <span data-verdict class:list={['inline-block rounded-lg border px-2.5 py-1', c.tone]}>{c.verdict}</span> : c.verdict}
+                </td>
               </tr>
             ))}
           </tbody>

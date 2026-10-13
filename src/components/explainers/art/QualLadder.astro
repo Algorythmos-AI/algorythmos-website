@@ -1,0 +1,31 @@
+---
+/** Six rungs between a disclosed architecture and a memory module that competes on cost. */
+import { asLocale, useTranslations } from '@/i18n';
+const t = useTranslations(asLocale(Astro.currentLocale));
+const L = (name: string) => t(`explainers.qual-ladder.labels.${name}`);
+const W = 82;
+const H = 30;
+/** Each rung is one step to the right and one step up. */
+const rungs = [0, 1, 2, 3, 4, 5].map((i) => ({ i, x: 20 + i * 88, y: 236 - i * 36 }));
+---
+
+<svg class="ex-art" viewBox="0 0 560 300" aria-hidden="true" focusable="false">
+  {rungs.map((r) => <rect class="ex-node" x={r.x} y={r.y} width={W} height={H} rx="6"></rect>)}
+  {rungs.slice(1).map((r) => <path class="ex-link ex-dash" d={`M${r.x - 6} ${r.y + H + 36 - H / 2}H${r.x + W / 2}V${r.y + H}`}></path>)}
+
+  {/* 0 to 5: one rung at a time; the marker shows how far the evidence reaches */}
+  <rect class="ex-node-brand" data-at="0" x={rungs[0].x} y={rungs[0].y} width={W} height={H} rx="6"></rect>
+  <text class="ex-sub" data-at="0" x={rungs[0].x + W / 2} y={rungs[0].y + 20} text-anchor="middle">{L('disclosed')}</text>
+  <rect class="ex-node-brand" data-at="1" x={rungs[1].x} y={rungs[1].y} width={W} height={H} rx="6"></rect>
+  <text class="ex-sub" data-at="1" x={rungs[1].x + W / 2} y={rungs[1].y + 20} text-anchor="middle">{L('prototype')}</text>
+  <rect class="ex-node-brand" data-at="2" x={rungs[2].x} y={rungs[2].y} width={W} height={H} rx="6"></rect>
+  <text class="ex-sub" data-at="2" x={rungs[2].x + W / 2} y={rungs[2].y + 20} text-anchor="middle">{L('samples')}</text>
+  <rect class="ex-node-brand" data-at="3" x={rungs[3].x} y={rungs[3].y} width={W} height={H} rx="6"></rect>
+  <text class="ex-sub" data-at="3" x={rungs[3].x + W / 2} y={rungs[3].y + 20} text-anchor="middle">{L('qualified')}</text>
+  <rect class="ex-node-brand" data-at="4" x={rungs[4].x} y={rungs[4].y} width={W} height={H} rx="6"></rect>
+  <text class="ex-sub" data-at="4" x={rungs[4].x + W / 2} y={rungs[4].y + 20} text-anchor="middle">{L('volume')}</text>
+  <rect class="ex-node-brand" data-at="5" x={rungs[5].x} y={rungs[5].y} width={W} height={H} rx="6"></rect>
+  <text class="ex-sub" data-at="5" x={rungs[5].x + W / 2} y={rungs[5].y + 20} text-anchor="middle">{L('economic')}</text>
+  {rungs.slice(0, 5).map((r) => <circle class="ex-token ex-fly" data-at={r.i} data-until={r.i + 1} cx={r.x + W / 2} cy={r.y - 12} r="6" style="--fx:-88px;--fy:36px"></circle>)}
+  <circle class="ex-ok-fill ex-fly" data-at="5" cx={rungs[5].x + W / 2} cy={rungs[5].y - 12} r="7" style="--fx:-88px;--fy:36px"></circle>
+</svg>

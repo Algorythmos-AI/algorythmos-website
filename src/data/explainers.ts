@@ -24,6 +24,15 @@ export const EXPLAINER_IDS = [
   'sat-links',
   'orbital-node',
   'fibre-free-route',
+  'cell-read',
+  'array-access',
+  'cell-footprint',
+  'vertical-channel',
+  'pitch-multiply',
+  'capacitor-stack',
+  'ai-memory-map',
+  'footprint-vs-stack',
+  'qual-ladder',
 ] as const;
 export type ExplainerId = (typeof EXPLAINER_IDS)[number];
 
@@ -40,6 +49,15 @@ export const EXPLAINER_STEPS: Record<ExplainerId, number> = {
   'sat-links': 6,
   'orbital-node': 6,
   'fibre-free-route': 6,
+  'cell-read': 6,
+  'array-access': 6,
+  'cell-footprint': 6,
+  'vertical-channel': 6,
+  'pitch-multiply': 6,
+  'capacitor-stack': 6,
+  'ai-memory-map': 6,
+  'footprint-vs-stack': 6,
+  'qual-ladder': 6,
 };
 
 /** Which explainers a case study shows: one per pillar, in order, plus the orchestration one. */
@@ -51,5 +69,9 @@ export const caseStudyExplainers: Record<string, { pillars: ExplainerId[]; orche
   'signals-fibre-satellites-orbital-compute': {
     pillars: ['speech-loop', 'em-spectrum', 'fibre-span', 'sat-links', 'orbital-node'],
     orchestration: 'fibre-free-route',
+  },
+  'dram-4f2-cell-architecture': {
+    pillars: ['cell-read', 'array-access', 'cell-footprint', 'vertical-channel', 'pitch-multiply', 'capacitor-stack', 'ai-memory-map', 'footprint-vs-stack'],
+    orchestration: 'qual-ladder',
   },
 };

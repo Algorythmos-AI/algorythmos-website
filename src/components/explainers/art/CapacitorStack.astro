@@ -1,0 +1,43 @@
+---
+/** A capacitor that must grow taller as its footprint shrinks; and an array bonded to separately made logic. */
+import { asLocale, useTranslations } from '@/i18n';
+const t = useTranslations(asLocale(Astro.currentLocale));
+const L = (name: string) => t(`explainers.capacitor-stack.labels.${name}`);
+const BASE = 230;
+/** Bond positions between the two wafers. */
+const bonds = [344, 382, 420, 458, 496];
+---
+
+<svg class="ex-art" viewBox="0 0 560 300" aria-hidden="true" focusable="false">
+  <path class="ex-link" d={`M30 ${BASE}H250`}></path>
+  <path class="ex-link ex-dash" d="M280 30V280"></path>
+
+  {/* 0: a wide footprint allows a short capacitor */}
+  <rect class="ex-node" data-at="0" x="50" y={BASE - 60} width="44" height="60" rx="4"></rect>
+  <text class="ex-sub" data-at="0" x="72" y="252" text-anchor="middle">{L('short')}</text>
+
+  {/* 1: a smaller footprint needs a taller one to hold the same charge */}
+  <rect class="ex-node" data-at="1" x="128" y={BASE - 110} width="24" height="110" rx="4"></rect>
+  <rect class="ex-node-brand" data-at="1" x="196" y={BASE - 180} width="12" height="180" rx="3"></rect>
+  <text class="ex-sub" data-at="1" x="202" y="252" text-anchor="middle">{L('tall')}</text>
+
+  {/* 2: tall, thin structures are hard to etch and fill evenly */}
+  <rect class="ex-warn" data-at="2" x="186" y="42" width="32" height="30" rx="4"></rect>
+  <text class="ex-sub" data-at="2" x="120" y="62" text-anchor="middle">{L('hard')}</text>
+
+  {/* 3: the cell array and the logic are made on separate wafers */}
+  <rect class="ex-node" data-at="3" x="324" y="62" width="192" height="48" rx="6"></rect>
+  {bonds.map((x) => <rect class="ex-chip" data-at="3" x={x - 5} y="70" width="10" height="32" rx="2"></rect>)}
+  <text class="ex-sub" data-at="3" x="420" y="50" text-anchor="middle">{L('array')}</text>
+  <rect class="ex-node" data-at="3" x="324" y="192" width="192" height="48" rx="6"></rect>
+  <rect class="ex-block" data-at="3" x="340" y="204" width="50" height="24" rx="3"></rect>
+  <rect class="ex-block" data-at="3" x="402" y="204" width="36" height="24" rx="3"></rect>
+  <rect class="ex-block" data-at="3" x="450" y="204" width="50" height="24" rx="3"></rect>
+  <text class="ex-sub" data-at="3" x="420" y="260" text-anchor="middle">{L('logic')}</text>
+
+  {/* 4: then joined face to face */}
+  {bonds.map((x) => <path class="ex-flow" data-at="4" d={`M${x} 110V192`}></path>)}
+
+  {/* 5: each side was built with the process that suits it */}
+  <path class="ex-ok" data-at="5" d="M526 150l7 7l12 -15"></path>
+</svg>

@@ -126,6 +126,11 @@ export const blogRelated: Record<string, RelatedRef[]> = {
     { type: 'service', slug: 'document-intelligence' },
     { type: 'blog', slug: 'gdpr-ai' },
   ],
+  'why-memory-density-matters-for-ai': [
+    { type: 'service', slug: 'ai-platform-engineering' },
+    { type: 'case-study', slug: 'dram-4f2-cell-architecture' },
+    { type: 'service', slug: 'llmops' },
+  ],
   'where-ai-runs-fibre-satellite-orbit': [
     { type: 'service', slug: 'ai-platform-engineering' },
     { type: 'case-study', slug: 'signals-fibre-satellites-orbital-compute' },
@@ -150,6 +155,7 @@ export const blogRelated: Record<string, RelatedRef[]> = {
 export const caseStudyRelated: Record<string, RelatedRef[]> = {
   'dram-4f2-cell-architecture': [
     { type: 'service', slug: 'ai-platform-engineering' },
+    { type: 'blog', slug: 'why-memory-density-matters-for-ai' },
     { type: 'service', slug: 'llmops' },
     { type: 'case-study', slug: 'signals-fibre-satellites-orbital-compute' },
     { type: 'case-study', slug: 'ml-deployment-platform' },
