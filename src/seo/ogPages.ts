@@ -16,14 +16,23 @@ export interface OGPage {
   description: string;
   /** Artwork band behind the text (a transparent 1200×630 PNG from scripts/build-og-art.mjs). */
   art?: string;
+  /** A finished 1200×630 card from scripts/build-og-card.mjs. It carries its own text, so the route draws none. */
+  card?: string;
 }
 
 /** Case studies and posts whose card carries artwork. Text-only is the default. */
 const CARD_ART: Record<string, string> = {
   'ai-robotics-space-bitcoin-convergence': './src/assets/og/art-quad-core.png',
   'ai-control-plane-robots-satellites-payments': './src/assets/og/art-quad-core.png',
-  'signals-fibre-satellites-orbital-compute': './src/assets/og/art-signals.png',
   'where-ai-runs-fibre-satellite-orbit': './src/assets/og/art-signals.png',
+};
+
+/** Case studies whose card is a finished image, one per locale, because its text is part of the picture. */
+const CARD_FULL: Record<string, Record<string, string>> = {
+  'signals-fibre-satellites-orbital-compute': {
+    'au-en': './src/assets/og/card-signals-en.png',
+    'fr-fr': './src/assets/og/card-signals-fr.png',
+  },
 };
 
 /** Brand pages: path + the i18n keys their <head> already uses. */
@@ -72,7 +81,7 @@ function buildPages(): Record<string, OGPage> {
       pages[ogKey(localizePath(loc, `/case-studies/${cs.slug}`))] = {
         title: t(`caseStudyDetail.studies.${cs.slug}.title`),
         description: t(`caseStudyDetail.studies.${cs.slug}.meta`),
-        ...(CARD_ART[cs.slug] ? { art: CARD_ART[cs.slug] } : {}),
+        ...(CARD_FULL[cs.slug]?.[loc] ? { card: CARD_FULL[cs.slug][loc] } : CARD_ART[cs.slug] ? { art: CARD_ART[cs.slug] } : {}),
       };
     }
 
