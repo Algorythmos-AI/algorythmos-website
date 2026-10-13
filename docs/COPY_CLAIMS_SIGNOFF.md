@@ -308,6 +308,90 @@ belong on one axis.
       ground segment?") as an invitation and not a statement of current work.
 - [ ] Re-verify all 17 sources by 13 Oct 2027, and sooner if Google reports results from the prototype.
 
+## 3j. Case study — The 4F² DRAM Cell (`/case-studies/dram-4f2-cell-architecture`) — evidence report (13 Oct 2026)
+
+Labelled on-page as an evidence report. The subject is the DRAM cell and what a move from 6F² to 4F²
+changes; CXMT's October 2026 conference talk is the occasion, set beside the peer-reviewed work of
+Samsung, SK hynix, and Kioxia with Nanya. It was written from a draft that was half engineering and half
+equity research. Sam Kalaliya's decision (13 Oct 2026): technology only. Source numbers are the page's
+own; every source was opened on 13 Oct 2026.
+
+| Claim on the page | Source |
+|---|---|
+| One transistor and one capacitor per cell; charged through the transistor; read-out destroys the information; periodic regeneration | [1] Dennard, US 3,387,286 |
+| Charge leaks; refresh interval constant at 64 ms for several generations; bitlines precharged to half the supply | [2] Liu et al., RAIDR |
+| Charge sharing onto the bitline; sense amplifier restores the cell; open-bitline architecture; amplifier about two orders of magnitude larger than a cell; blocks of 512 or 1,024 lines | [3] Seshadri and Mutlu |
+| ΔV = Vdd/2 × Ccell/(Ccell + Cbitline); Ccell about one tenth of Cbitline; about 4.5% of Vdd | [4] MSOE lecture notes |
+| Open/folded bitline arrangement gives a 6F² cell, F being the feature size | [5] Takashima et al., 1994 |
+| 46 nm 6F² cell with a wordline buried below the silicon surface | [6] Schloesser et al., IEDM 2008 |
+| Modern chips use a 6F² cell with a saddle-fin transistor | [7] Nam et al., DRAMScope |
+| 4F² is the practical limit of the 1T-1C cell; a vertical cell transistor is required; capacitor shape from cylinder to pillar; no clear path beyond the planar cell | [8] IRDS More Moore 2022 |
+| Array efficiency defined; bitline sense amplifiers 8% to 15% of die, local wordline drivers 5% to 10%; redundancy sits in row and column logic | [9] Vogelsang |
+| Gate-all-around junctionless vertical transistor, on/off above 10⁹, swing 62.5 mV/dec; lower bitline capacitance; buried bitline harder to form; double patterning applied twice orthogonally | [10] Yoo et al. (CXMT), IEDM 2023 |
+| 8 Gb full array at 198 Mbit/mm² | [11] Feng et al. (CXMT), IMW 2023 |
+| Back gate shared by two neighbouring cells; bending and leaning of thin, tall silicon | [12] Park et al. (Samsung), IEDM 2023 |
+| Oxide-channel vertical transistor stacked on core and peripheral transistors without wafer bonding | [13] Ha et al. (Samsung), IEDM 2023 |
+| 4F² array with peri-under-cell integration by wafer bonding | [14] Park et al. (SK hynix), VLSI 2025 |
+| 6F² buried-gate scheme since the early 2010s, scaled to the 10 nm class | [15] Cha (SK hynix), VLSI 2025 |
+| 275 Mbit array; oxide-channel vertical transistor on top of the capacitor | [16] Fujii et al. (Kioxia, Nanya), IEDM 2024 |
+| 8F² and 6F² as the earlier cells; about 30% more gross dies per wafer than 6F² | [17] Chung et al. (Samsung), ESSDERC 2011 |
+| Bitline-to-bitline coupling a first-order bottleneck in 4F² arrays (modelled) | [18] Lee et al., JXCDC 2026 |
+| Cell capacitance around 25 fF; high-aspect-ratio capacitors; ZrO2/Al2O3/ZrO2 between TiN; etch profile changes leakage and capacitance | [19] Shin et al., JSTS 2019 |
+| 20 nm DRAM without EUV; 21% more cell capacitance from a honeycomb structure | [20] Park et al. (Samsung), IEDM 2015 |
+| Five EUV layers at 14 nm; about 20% fewer process steps | [21] Kim et al. (Samsung), VLSI 2023 |
+| Spacers on mandrel sidewalls, mandrel removed; pitch P1 to P1/2 to P1/4; spacing may come out uneven | [22] Song et al., US 10,559,501 |
+| Array and logic wafers processed independently in 3D NAND | [23] Huo et al., VLSI 2022 |
+| 6F² array bonded over core and periphery | [24] Lee et al. (Samsung), VLSI 2024 |
+| Vertically stacked DRAM raises density with the number of layers | [25] Han et al. (Samsung), VLSI 2023 |
+| Five stacked layers on a peri-core wafer; Si/SiGe sacrificial multilayers; hybrid wafer bonding | [26] Choi et al. (SK hynix), VLSI 2024 |
+| 16-tier structure; horizontal storage capacitors | [27] Han et al. (Samsung), VLSI 2026 |
+| DDR5 devices of 8 Gb to 32 Gb | [28] JEDEC JESD79-5D |
+| HBM tightly coupled to the host compute die | [29] JEDEC JESD270-4A |
+| HBM4: 2,048-bit interface, up to 2 TB/s, stacks 4 to 16 high | [30] JEDEC press release, 16 Apr 2025 |
+| Compute 3.0× per two years against 1.6× for DRAM bandwidth; bottleneck shifting to memory bandwidth | [31] Gholami et al. |
+| Per-request memory limits batch size | [32] Kwon et al. |
+| CXL enables main-memory expansion | [33] Maruf et al. |
+| SRAM uses six-transistor cells and holds fewer bits per area; flash is non-volatile | [34] Cornell ECE 4740 |
+| Flash stores data as electrons in the cell | [35] Cai et al. |
+| Fifth-generation platform: 11.95 nm half-pitch by quadruple patterning; 45:1 capacitor aspect ratio; at least 50% more dies per wafer against the previous platform, normalised to 8 Gb. No mention of 4F² | [36] CXMT release, 20 Sep 2026 |
+| Vertical surrounded-gate transistor; conference of 10 Oct 2026; DDR5 RDIMM planned by year-end; 30% to 50% density; products may adopt 4F² only in part | [37] TrendForce, 12 Oct 2026 |
+| About 33% less cell area than 6F²; no specifications disclosed | [38] Seoul Economic Daily, 12 Oct 2026 |
+| A 4F² cell is 2F by 2F | [39] SK hynix Newsroom |
+
+**Left out, by decision:** everything in the draft about share prices, the October 2026 sell-off,
+selling prices, margins, valuations, market or revenue share, wafer-capacity targets, company-by-company
+equity exposure, scenarios and investor indicators, with its Barron's, MarketWatch, Reuters and S&P
+references. No trade, export-control or national-competition commentary; CXMT is named as a company only.
+
+**Left out because no opened source supports them:** a single figure for the cell array's share of a die
+(the calculator and chart treat it as a variable and say so); a 32 ms refresh figure; hybrid bonding in
+CXMT's product (reports name no specification); the 56.1% yield sometimes attached to [26] (not in its
+abstract); Kioxia's off-current figure (on the company page, not in [16]); a CXMT press release for the
+4F² announcement (none was found: the news rests on a conference talk reported by [37] and [38]).
+
+**Not verified to a primary full text:** most IEEE papers ([5], [6], [11] to [27] except as noted) were
+read as abstracts on IEEE Xplore, and the page's note says so; [10] and [8] were read in full. The
+ΔV relation at [4] comes from university lecture notes; the standard textbooks (Keeth et al.; Jacob et
+al.) were not available to read. [34] is lecture slides. [31] to [33] were read as arXiv abstracts.
+The whole-die relation (new area = 1 − p/3) is this report's own arithmetic, shown as an idealised
+model wherever it appears. arXiv 2609.14464 (in the draft) is not used: it is an unreviewed preprint
+with no stated affiliation.
+
+- [x] **Scope:** the approach section and the last FAQ say Algorythmos does not design memory chips;
+      it sizes, deploys and monitors AI systems.
+- [x] **Company figures stay attributed.** Every CXMT figure is worded as what the company states or
+      what the press reports, and carries a "company-reported" or "reported plan" verdict.
+- [x] **No client claim in this sector.** The page names no customer and gives no measured client
+      result. No representative engagement is published for it.
+- [x] **Hero scene** by the usual rule (the ai-platform-engineering service's own) until the
+      report's own scene is added.
+- [ ] **Sam to confirm** the wording of the call to action ("Sizing memory for training or
+      inference?") as an invitation and not a statement of current work.
+- [ ] Re-open every source on the day of merge and correct any wording that the live page does not
+      bear out; the quotations behind this table were gathered through a summarising reader.
+- [ ] Re-verify all 39 sources by 13 Oct 2027, and sooner if CXMT publishes a specification or a
+      4F² product ships.
+
 ## 4. Homepage, voice and positioning (`/`, footer, meta, contact, careers)
 
 Decisions (Sam Kalaliya, 26 Sep 2026):

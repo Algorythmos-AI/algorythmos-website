@@ -51,6 +51,9 @@ const ENGLISH_SENTINELS = [
   'From Vibrations to Photons',
   'Thought experiment',
   'Company-reported',
+  'How Memory Is Being Redesigned',
+  'Established physics',
+  'Not established',
 ];
 
 test.describe('FR pages render fully in French', () => {

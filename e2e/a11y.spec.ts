@@ -29,6 +29,8 @@ const PAGES = [
   '/fr-fr/case-studies/ai-robotics-space-bitcoin-convergence',
   '/au-en/case-studies/signals-fibre-satellites-orbital-compute',
   '/fr-fr/case-studies/signals-fibre-satellites-orbital-compute',
+  '/au-en/case-studies/dram-4f2-cell-architecture',
+  '/fr-fr/case-studies/dram-4f2-cell-architecture',
   '/au-en/pdf-algo-pro',
   '/fr-fr/pdf-algo-pro/privacy',
   '/au-en/pdf-algo-pro/support',
