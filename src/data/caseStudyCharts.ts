@@ -200,4 +200,24 @@ export const caseStudyCharts: Record<string, ChartDef[]> = {
       datasets: [{ labelKey: keys('admin-burden-evidence', 1).series(0), data: [32, 68] }],
     },
   ],
+  /**
+   * Nominal cell areas, and the idealised whole-die model from the report:
+   * die area = 1 − p/3 of the original when a share p of it is cell array.
+   */
+  'dram-4f2-cell-architecture': [
+    {
+      type: 'bar',
+      titleKey: keys('dram-4f2-cell-architecture', 0).title,
+      captionKey: keys('dram-4f2-cell-architecture', 0).caption,
+      labelKeys: labelKeys('dram-4f2-cell-architecture', 0, 3),
+      datasets: [{ labelKey: keys('dram-4f2-cell-architecture', 0).series(0), data: [8, 6, 4] }],
+    },
+    {
+      type: 'line',
+      titleKey: keys('dram-4f2-cell-architecture', 1).title,
+      captionKey: keys('dram-4f2-cell-architecture', 1).caption,
+      labelKeys: labelKeys('dram-4f2-cell-architecture', 1, 5),
+      datasets: [{ labelKey: keys('dram-4f2-cell-architecture', 1).series(0), data: [86.7, 83.3, 80, 76.7, 73.3] }],
+    },
+  ],
 };

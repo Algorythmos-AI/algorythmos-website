@@ -133,8 +133,7 @@ test.describe('phone width', () => {
   }
 });
 
-test('the index lists the report first', async ({ page }) => {
+test('the index lists the report', async ({ page }) => {
   await page.goto('/au-en/case-studies');
-  const first = page.locator('main a[href^="/au-en/case-studies/"]').first();
-  await expect(first).toHaveAttribute('href', `/au-en/case-studies/${SLUG}`);
+  await expect(page.locator(`main a[href="/au-en/case-studies/${SLUG}"]`).first()).toBeVisible();
 });

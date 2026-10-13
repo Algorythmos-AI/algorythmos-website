@@ -49,6 +49,7 @@ export const serviceRelated: Record<string, RelatedRef[]> = {
     { type: 'blog', slug: 'ai-platform-kubernetes' },
     { type: 'case-study', slug: 'ml-deployment-platform' },
     { type: 'case-study', slug: 'signals-fibre-satellites-orbital-compute' },
+    { type: 'case-study', slug: 'dram-4f2-cell-architecture' },
     { type: 'service', slug: 'mlops-cicd' },
     { type: 'service', slug: 'model-monitoring' },
   ],
@@ -147,6 +148,12 @@ export const blogRelated: Record<string, RelatedRef[]> = {
 
 /** Case study → the service that delivered it + a sibling study. */
 export const caseStudyRelated: Record<string, RelatedRef[]> = {
+  'dram-4f2-cell-architecture': [
+    { type: 'service', slug: 'ai-platform-engineering' },
+    { type: 'service', slug: 'llmops' },
+    { type: 'case-study', slug: 'signals-fibre-satellites-orbital-compute' },
+    { type: 'case-study', slug: 'ml-deployment-platform' },
+  ],
   'signals-fibre-satellites-orbital-compute': [
     { type: 'service', slug: 'ai-platform-engineering' },
     { type: 'blog', slug: 'where-ai-runs-fibre-satellite-orbit' },

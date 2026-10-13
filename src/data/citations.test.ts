@@ -39,6 +39,7 @@ describe('case-study citations', () => {
     expect(withSources).toContain('port-botany-ai-ml');
     expect(withSources).toContain('ai-robotics-space-bitcoin-convergence');
     expect(withSources).toContain('signals-fibre-satellites-orbital-compute');
+    expect(withSources).toContain('dram-4f2-cell-architecture');
   });
 });
 

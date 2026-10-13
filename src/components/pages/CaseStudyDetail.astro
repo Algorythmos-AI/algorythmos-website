@@ -149,7 +149,8 @@ for (let i = 0; i < 40; i++) {
 /**
  * Long-form blocks, all optional and read on the merged dictionary so a study
  * without them renders exactly as before:
- *  - `pillars.N.{title,job,how,algorithms.M,players,limits}` — one technical section each;
+ *  - `pillars.N.{title,job,how,algorithms.M,players,limits}` — one technical section each
+ *    (sub-headings are shared, or the study's own `labels.*`);
  *  - `orchestration.{title,body,steps.N}` — how the pillars are driven together;
  *  - `claims.N.{claim,source,verdict}` — popular figures set against their sources.
  * A study that has pillars also gets a contents list and section anchors.
@@ -166,6 +167,8 @@ const seq = (key: string, max: number): string[] => {
   return out;
 };
 const explainers = caseStudyExplainers[slug];
+/** A study may rename the fixed pillar sub-headings (`labels.{job,algorithms,players,limits}`) where the shared wording does not fit its subject. */
+const pl = (k: 'job' | 'how' | 'algorithms' | 'players' | 'limits') => sk(`labels.${k}`) ?? t(`caseStudyDetail.pillar.${k}`);
 
 const pillars: { id: string; title: string; job?: string; how: string; algorithms: string[]; players?: string; limits?: string }[] = [];
 for (let i = 0; i < 8; i++) {
@@ -315,29 +318,29 @@ const contents = longForm
       <h2 data-reveal class="text-h3 font-semibold text-ink">{p.title}</h2>
       {p.job && (
         <p data-reveal class="mt-4 max-w-measure rounded-xl border border-brand/30 bg-brand/5 px-4 py-3 text-sm text-ink-muted">
-          <span class="font-semibold text-ink">{t('caseStudyDetail.pillar.job')}</span> {p.job}
+          <span class="font-semibold text-ink">{pl('job')}</span> {p.job}
         </p>
       )}
       <div class="mt-8 grid gap-10 lg:grid-cols-[1.5fr_1fr]">
         <div data-reveal>
-          <h3 class="text-base font-semibold text-ink">{t('caseStudyDetail.pillar.how')}</h3>
+          <h3 class="text-base font-semibold text-ink">{pl('how')}</h3>
           <p class="mt-3 text-ink-muted">{p.how}</p>
           {p.players && (
             <>
-              <h3 class="mt-8 text-base font-semibold text-ink">{t('caseStudyDetail.pillar.players')}</h3>
+              <h3 class="mt-8 text-base font-semibold text-ink">{pl('players')}</h3>
               <p class="mt-3 text-ink-muted">{p.players}</p>
             </>
           )}
           {p.limits && (
             <>
-              <h3 class="mt-8 text-base font-semibold text-ink">{t('caseStudyDetail.pillar.limits')}</h3>
+              <h3 class="mt-8 text-base font-semibold text-ink">{pl('limits')}</h3>
               <p class="mt-3 text-ink-muted">{p.limits}</p>
             </>
           )}
         </div>
         {p.algorithms.length > 0 && (
           <aside data-reveal style="--reveal-delay: 80ms" class="h-fit rounded-2xl border border-line glass p-6">
-            <h3 class="text-base font-semibold text-ink">{t('caseStudyDetail.pillar.algorithms')}</h3>
+            <h3 class="text-base font-semibold text-ink">{pl('algorithms')}</h3>
             <ul class="mt-4 space-y-3 text-sm text-ink-muted">
               {p.algorithms.map((a) => (
                 <li class="flex gap-3">
@@ -447,9 +450,10 @@ const contents = longForm
       <h2 data-reveal class="text-h3 font-semibold text-ink">{t('caseStudyDetail.sections.sources')}</h2>
       <ol data-reveal class="mt-4 grid gap-2 text-sm text-ink-muted sm:grid-cols-2">
         {sources.map((src, i) => (
-          <li class="flex gap-2">
+          <li class="flex min-w-0 gap-2">
             <span class="w-6 shrink-0 font-mono text-xs text-ink-subtle">[{i + 1}]</span>
-            <a href={src.url} target="_blank" rel="noopener nofollow" class="underline-offset-4 hover:text-ink hover:underline">{src.label}</a>
+            {/* A DOI is one long unbreakable word: let it wrap, or it widens the page on a phone. */}
+            <a href={src.url} target="_blank" rel="noopener nofollow" class="min-w-0 break-words underline-offset-4 hover:text-ink hover:underline">{src.label}</a>
           </li>
         ))}
       </ol>
