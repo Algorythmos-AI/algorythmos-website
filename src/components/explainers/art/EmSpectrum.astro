@@ -1,0 +1,41 @@
+---
+/** One spectrum: seven bands, a wave that tightens to the right, and the part used for data. */
+import { asLocale, useTranslations } from '@/i18n';
+const t = useTranslations(asLocale(Astro.currentLocale));
+const L = (name: string) => t(`explainers.em-spectrum.labels.${name}`);
+/** Band left edges; each band is 68 wide. `at` is the step it appears on. */
+const W = 68;
+const bands = [0, 1, 2, 3, 4, 5, 6].map((i) => ({ x: 28 + i * 72, at: i < 2 ? 0 : i < 4 ? 1 : 2 }));
+/** A wave whose wavelength shortens from left to right. */
+let d = 'M28 196';
+for (let x = 28, half = 34, up = true; x < 530; half = Math.max(5, half * 0.86), up = !up) {
+  const end = Math.min(532, x + half);
+  d += `Q${(x + end) / 2} ${up ? 166 : 226} ${end} 196`;
+  x = end;
+}
+---
+
+<svg class="ex-art" viewBox="0 0 560 300" aria-hidden="true" focusable="false">
+  {bands.map((b) => <rect class="ex-node" data-at={b.at} x={b.x} y="64" width={W} height="40" rx="6"></rect>)}
+  <text class="ex-sub" data-at="0" x={bands[0].x + W / 2} y="124" text-anchor="middle">{L('radio')}</text>
+  <text class="ex-sub" data-at="0" x={bands[1].x + W / 2} y="140" text-anchor="middle">{L('micro')}</text>
+  <text class="ex-sub" data-at="1" x={bands[2].x + W / 2} y="124" text-anchor="middle">{L('infra')}</text>
+  <text class="ex-sub" data-at="1" x={bands[3].x + W / 2} y="140" text-anchor="middle">{L('visible')}</text>
+  <text class="ex-sub" data-at="2" x={bands[4].x + W / 2} y="124" text-anchor="middle">{L('ultra')}</text>
+  <text class="ex-sub" data-at="2" x={bands[5].x + W / 2} y="140" text-anchor="middle">{L('xray')}</text>
+  <text class="ex-sub" data-at="2" x={bands[6].x + W / 2} y="124" text-anchor="middle">{L('gamma')}</text>
+
+  <path class="ex-link" d={d}></path>
+
+  {/* 3: frequency and energy rise to the right */}
+  <path class="ex-flow" data-at="3" d="M28 256H514"></path>
+  <path class="ex-arrow-brand" data-at="3" d="M512 249l16 7l-16 7z"></path>
+  <text class="ex-sub" data-at="3" x="280" y="282" text-anchor="middle">{L('energy')}</text>
+
+  {/* 4: one kind of radiation throughout */}
+  <path class="ex-flow-2" data-at="4" d="M28 50V42H532V50"></path>
+  <text class="ex-sub" data-at="4" x="280" y="30" text-anchor="middle">{L('same')}</text>
+
+  {/* 5: the part used to carry data */}
+  {bands.slice(0, 3).map((b) => <rect class="ex-node-brand" data-at="5" x={b.x} y="64" width={W} height="40" rx="6"></rect>)}
+</svg>

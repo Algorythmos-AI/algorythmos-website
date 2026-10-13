@@ -287,6 +287,11 @@ belong on one axis.
       does not say or imply that Algorythmos has clients in this sector, names no operator as a customer
       and gives no measured result for the sector. A representative engagement, labelled as such, may be
       added; a real one replaces it when it exists.
+- [x] **Explainers.** Six step-through diagrams drawn for this report (`speech-loop`, `em-spectrum`,
+      `fibre-span`, `sat-links`, `orbital-node`, `fibre-free-route`), each captioned as a schematic. None
+      is reused from §3h. The orbital one is captioned as a single prototype and the route as a thought
+      experiment. The statement that fibre and satellite lasers use infrared light is general knowledge
+      and carries no figure.
 - [x] **Hero scene** is the ai-platform-engineering service's own (`platform-station`), chosen by the
       usual rule. No explicit scene entry.
 - [ ] **Sam to confirm** the wording of the call to action ("Running a network, a constellation or a

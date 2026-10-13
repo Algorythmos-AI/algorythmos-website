@@ -1,0 +1,49 @@
+---
+/** The speech loop: a voice becomes a voltage, then numbers, then a voice again at the far end. */
+import { asLocale, useTranslations } from '@/i18n';
+const t = useTranslations(asLocale(Astro.currentLocale));
+const L = (name: string) => t(`explainers.speech-loop.labels.${name}`);
+/** Voice, microphone, numbers, speaker, ear: centres, left to right. */
+const xs = [56, 168, 280, 392, 504];
+const Y = 150;
+/** Three pressure fronts leaving the node centred on `x`. */
+const fronts = (x: number) => [0, 12, 24].map((d) => `M${x + 36 + d} ${Y - 14}q10 14 0 28`);
+---
+
+<svg class="ex-art" viewBox="0 0 560 300" aria-hidden="true" focusable="false">
+  {xs.map((x) => <rect class="ex-node" x={x - 24} y={Y - 24} width="48" height="48" rx="10"></rect>)}
+  <text class="ex-sub" x={xs[0]} y="200" text-anchor="middle">{L('voice')}</text>
+  <text class="ex-sub" x={xs[1]} y="200" text-anchor="middle">{L('mic')}</text>
+  <text class="ex-sub" x={xs[2]} y="200" text-anchor="middle">{L('numbers')}</text>
+  <text class="ex-sub" x={xs[3]} y="200" text-anchor="middle">{L('speaker')}</text>
+  <text class="ex-sub" x={xs[4]} y="200" text-anchor="middle">{L('ear')}</text>
+  <circle class="ex-token" cx={xs[0]} cy={Y} r="7"></circle>
+  <circle class="ex-link" cx={xs[1]} cy={Y} r="9"></circle>
+  <circle class="ex-link" cx={xs[4]} cy={Y} r="9"></circle>
+
+  {/* 0: the voice sets up a pressure wave */}
+  {fronts(xs[0]).map((d) => <path class="ex-flow" data-at="0" d={d}></path>)}
+  <text class="ex-sub" data-at="0" x={(xs[0] + xs[1]) / 2} y="104" text-anchor="middle">{L('pressure')}</text>
+
+  {/* 1: the microphone turns it into a voltage */}
+  <rect class="ex-node-brand" data-at="1" x={xs[1] - 24} y={Y - 24} width="48" height="48" rx="10"></rect>
+  <path class="ex-flow-2" data-at="1" d={`M${xs[1] + 30} ${Y}q7 -16 14 0t14 0t14 0t14 0`}></path>
+  <text class="ex-sub" data-at="1" x={(xs[1] + xs[2]) / 2} y="104" text-anchor="middle">{L('voltage')}</text>
+
+  {/* 2: sampled into numbers */}
+  <rect class="ex-chip-done" data-at="2" x={xs[2] - 15} y={Y - 8} width="6" height="20" rx="2"></rect>
+  <rect class="ex-chip-done" data-at="2" x={xs[2] - 3} y={Y - 14} width="6" height="26" rx="2"></rect>
+  <rect class="ex-chip-done" data-at="2" x={xs[2] + 9} y={Y - 2} width="6" height="14" rx="2"></rect>
+
+  {/* 3: packets cross the network */}
+  <path class="ex-flow ex-dash" data-at="3" d={`M${xs[2] + 30} ${Y}H${xs[3] - 30}`}></path>
+  <circle class="ex-token ex-fly" data-at="3" data-until="4" cx={xs[3] - 34} cy={Y} r="6" style="--fx:-50px"></circle>
+
+  {/* 4: the coil moves the diaphragm */}
+  <rect class="ex-node-brand" data-at="4" x={xs[3] - 24} y={Y - 24} width="48" height="48" rx="10"></rect>
+  <circle class="ex-token-2" data-at="4" cx={xs[3]} cy={Y} r="9"></circle>
+
+  {/* 5: a new pressure wave reaches the ear */}
+  {fronts(xs[3]).map((d) => <path class="ex-flow" data-at="5" d={d}></path>)}
+  <circle class="ex-ok-fill" data-at="5" cx={xs[4]} cy={Y} r="7"></circle>
+</svg>

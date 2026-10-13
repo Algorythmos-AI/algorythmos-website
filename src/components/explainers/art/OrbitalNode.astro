@@ -1,0 +1,49 @@
+---
+/** A computer in orbit: sunlight in, work done next to the data, heat out by radiator, a small result down. */
+import { asLocale, useTranslations } from '@/i18n';
+const t = useTranslations(asLocale(Astro.currentLocale));
+const L = (name: string) => t(`explainers.orbital-node.labels.${name}`);
+/** Chips inside the body, in a 3 × 2 grid. */
+const chips = [0, 1, 2, 3, 4, 5].map((i) => ({ x: 248 + (i % 3) * 24, y: 122 + Math.floor(i / 3) * 24 }));
+---
+
+<svg class="ex-art" viewBox="0 0 560 300" aria-hidden="true" focusable="false">
+  {/* Earth, the satellite body, its solar panel and its radiator */}
+  <path class="ex-link" d="M0 290Q280 226 560 290"></path>
+  <rect class="ex-node" x="236" y="110" width="88" height="64" rx="8"></rect>
+  <rect class="ex-node" x="112" y="124" width="104" height="36" rx="4"></rect>
+  <path class="ex-grid" d="M138 124V160M164 124V160M190 124V160M216 142H236"></path>
+  <rect class="ex-node" x="344" y="124" width="104" height="36" rx="4"></rect>
+  <path class="ex-grid" d="M324 142H344"></path>
+  {chips.map((c) => <rect class="ex-chip" x={c.x} y={c.y} width="16" height="16" rx="3"></rect>)}
+  <circle class="ex-warn" cx="52" cy="52" r="20"></circle>
+  <text class="ex-sub" x="52" y="92" text-anchor="middle">{L('sun')}</text>
+  <text class="ex-sub" x="164" y="182" text-anchor="middle">{L('panel')}</text>
+  <text class="ex-sub" x="280" y="100" text-anchor="middle">{L('chips')}</text>
+  <text class="ex-sub" x="396" y="182" text-anchor="middle">{L('radiator')}</text>
+
+  {/* 0: sunlight reaches the panel */}
+  <path class="ex-flow ex-dash" data-at="0" d="M70 66L128 122M84 56L156 122"></path>
+
+  {/* 1: power runs the processors */}
+  <path class="ex-flow" data-at="1" d="M216 142H236"></path>
+  <rect class="ex-node-brand" data-at="1" x="236" y="110" width="88" height="64" rx="8"></rect>
+
+  {/* 2: data arrives from a sensor */}
+  <rect class="ex-node" data-at="2" x="270" y="196" width="20" height="14" rx="3"></rect>
+  <text class="ex-sub" data-at="2" x="338" y="208" text-anchor="middle">{L('sensor')}</text>
+  <path class="ex-flow-2" data-at="2" d="M280 196V176"></path>
+
+  {/* 3: the model runs on board */}
+  {chips.map((c) => <rect class="ex-chip-done" data-at="3" x={c.x} y={c.y} width="16" height="16" rx="3"></rect>)}
+
+  {/* 4: heat leaves through the radiator */}
+  <rect class="ex-warn" data-at="4" x="344" y="124" width="104" height="36" rx="4"></rect>
+  <path class="ex-flow-2 ex-dash" data-at="4" d="M366 118V96M396 118V96M426 118V96"></path>
+  <text class="ex-sub" data-at="4" x="396" y="84" text-anchor="middle">{L('heat')}</text>
+
+  {/* 5: only the result goes down */}
+  <path class="ex-flow ex-dash" data-at="5" d="M250 176L196 256"></path>
+  <circle class="ex-token ex-fly" data-at="5" cx="196" cy="256" r="6" style="--fx:54px;--fy:-80px"></circle>
+  <text class="ex-sub" data-at="5" x="128" y="236" text-anchor="middle">{L('result')}</text>
+</svg>

@@ -12,7 +12,19 @@
  */
 export const EXPLAINERS_ENABLED = true;
 
-export const EXPLAINER_IDS = ['agent-loop', 'fleet-path', 'launch-link', 'mine-block', 'whole-job'] as const;
+export const EXPLAINER_IDS = [
+  'agent-loop',
+  'fleet-path',
+  'launch-link',
+  'mine-block',
+  'whole-job',
+  'speech-loop',
+  'em-spectrum',
+  'fibre-span',
+  'sat-links',
+  'orbital-node',
+  'fibre-free-route',
+] as const;
 export type ExplainerId = (typeof EXPLAINER_IDS)[number];
 
 /** How many steps each explainer walks through (`explainers.<id>.steps.0…n-1`). */
@@ -22,6 +34,12 @@ export const EXPLAINER_STEPS: Record<ExplainerId, number> = {
   'launch-link': 6,
   'mine-block': 6,
   'whole-job': 6,
+  'speech-loop': 6,
+  'em-spectrum': 6,
+  'fibre-span': 6,
+  'sat-links': 6,
+  'orbital-node': 6,
+  'fibre-free-route': 6,
 };
 
 /** Which explainers a case study shows: one per pillar, in order, plus the orchestration one. */
@@ -29,5 +47,9 @@ export const caseStudyExplainers: Record<string, { pillars: ExplainerId[]; orche
   'ai-robotics-space-bitcoin-convergence': {
     pillars: ['agent-loop', 'fleet-path', 'launch-link', 'mine-block'],
     orchestration: 'whole-job',
+  },
+  'signals-fibre-satellites-orbital-compute': {
+    pillars: ['speech-loop', 'em-spectrum', 'fibre-span', 'sat-links', 'orbital-node'],
+    orchestration: 'fibre-free-route',
   },
 };

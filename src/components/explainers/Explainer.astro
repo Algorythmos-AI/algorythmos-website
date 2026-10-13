@@ -14,6 +14,12 @@ import FleetPath from './art/FleetPath.astro';
 import LaunchLink from './art/LaunchLink.astro';
 import MineBlock from './art/MineBlock.astro';
 import WholeJob from './art/WholeJob.astro';
+import SpeechLoop from './art/SpeechLoop.astro';
+import EmSpectrum from './art/EmSpectrum.astro';
+import FibreSpan from './art/FibreSpan.astro';
+import SatLinks from './art/SatLinks.astro';
+import OrbitalNode from './art/OrbitalNode.astro';
+import FibreFreeRoute from './art/FibreFreeRoute.astro';
 
 interface Props {
   id: ExplainerId;
@@ -27,6 +33,12 @@ const ART = {
   'launch-link': LaunchLink,
   'mine-block': MineBlock,
   'whole-job': WholeJob,
+  'speech-loop': SpeechLoop,
+  'em-spectrum': EmSpectrum,
+  'fibre-span': FibreSpan,
+  'sat-links': SatLinks,
+  'orbital-node': OrbitalNode,
+  'fibre-free-route': FibreFreeRoute,
 } satisfies Record<ExplainerId, unknown>;
 const Art = ART[id];
 
