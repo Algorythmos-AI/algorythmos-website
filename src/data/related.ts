@@ -74,6 +74,7 @@ export const serviceRelated: Record<string, RelatedRef[]> = {
 /** Blog post → the service it supports + sibling posts. */
 export const blogRelated: Record<string, RelatedRef[]> = {
   'mbsc-australia-partnership': [
+    { type: 'case-study', slug: 'ai-in-mining-mbsc' },
     { type: 'partner', slug: 'mbsc-australia-ai' },
     { type: 'partner', slug: 'mbsc-australia-announcement' },
     { type: 'service', slug: 'mlops-cicd' },
@@ -153,6 +154,13 @@ export const blogRelated: Record<string, RelatedRef[]> = {
 
 /** Case study → the service that delivered it + a sibling study. */
 export const caseStudyRelated: Record<string, RelatedRef[]> = {
+  'ai-in-mining-mbsc': [
+    { type: 'service', slug: 'model-monitoring' },
+    { type: 'service', slug: 'document-intelligence' },
+    { type: 'blog', slug: 'mbsc-australia-partnership' },
+    { type: 'partner', slug: 'mbsc-australia-ai' },
+    { type: 'case-study', slug: 'satellite-link-monitoring' },
+  ],
   'dram-4f2-cell-architecture': [
     { type: 'service', slug: 'ai-platform-engineering' },
     { type: 'blog', slug: 'why-memory-density-matters-for-ai' },

@@ -31,6 +31,7 @@ const URLS = [
   { label: 'evidence report (au-en)', path: '/au-en/case-studies/ai-robotics-space-bitcoin-convergence' },
   { label: 'signals report (au-en)', path: '/au-en/case-studies/signals-fibre-satellites-orbital-compute' },
   { label: 'dram report (au-en)', path: '/au-en/case-studies/dram-4f2-cell-architecture' },
+  { label: 'mining report (au-en)', path: '/au-en/case-studies/ai-in-mining-mbsc' },
   { label: 'services (au-en)', path: '/au-en/services' },
   { label: 'llmops (fr-fr)', path: '/fr-fr/services/llmops' },
 ];

@@ -35,6 +35,8 @@ const ART: Record<string, string> = {
   'ai-memory-map': 'AiMemoryMap',
   'footprint-vs-stack': 'FootprintVsStack',
   'qual-ladder': 'QualLadder',
+  'explore-flow': 'ExploreFlow',
+  'pilot-roadmap': 'PilotRoadmap',
 };
 const art = (id: string) =>
   readFileSync(fileURLToPath(new URL(`../components/explainers/art/${ART[id]}.astro`, import.meta.url)), 'utf-8');

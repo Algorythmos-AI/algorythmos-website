@@ -1,0 +1,34 @@
+---
+/** Four phases from AI pilot to operational value; a baseline is set at the pilot and every later phase is judged against it. */
+import { asLocale, useTranslations } from '@/i18n';
+const t = useTranslations(asLocale(Astro.currentLocale));
+const L = (name: string) => t(`explainers.pilot-roadmap.labels.${name}`);
+const W = 118;
+const H = 40;
+/** Each phase one step to the right and one step up. */
+const steps = [0, 1, 2, 3].map((i) => ({ i, x: 16 + i * 134, y: 214 - i * 50 }));
+const baselineY = 262;
+---
+
+<svg class="ex-art" viewBox="0 0 560 300" aria-hidden="true" focusable="false">
+  {steps.map((s) => <rect class="ex-node" x={s.x} y={s.y} width={W} height={H} rx="8"></rect>)}
+  {steps.slice(1).map((s) => <path class="ex-link ex-dash" d={`M${s.x - 16} ${s.y + H + 50 - H / 2}H${s.x + W / 2}V${s.y + H}`}></path>)}
+
+  {/* 0 to 3: one phase at a time */}
+  <rect class="ex-node-brand" data-at="0" x={steps[0].x} y={steps[0].y} width={W} height={H} rx="8"></rect>
+  <rect class="ex-node-brand" data-at="1" x={steps[1].x} y={steps[1].y} width={W} height={H} rx="8"></rect>
+  <rect class="ex-node-brand" data-at="2" x={steps[2].x} y={steps[2].y} width={W} height={H} rx="8"></rect>
+  <rect class="ex-node-brand" data-at="3" x={steps[3].x} y={steps[3].y} width={W} height={H} rx="8"></rect>
+  <text class="ex-label" x={steps[0].x + W / 2} y={steps[0].y + 25} text-anchor="middle">{L('assess')}</text>
+  <text class="ex-label" x={steps[1].x + W / 2} y={steps[1].y + 25} text-anchor="middle">{L('pilot')}</text>
+  <text class="ex-label" x={steps[2].x + W / 2} y={steps[2].y + 25} text-anchor="middle">{L('validate')}</text>
+  <text class="ex-label" x={steps[3].x + W / 2} y={steps[3].y + 25} text-anchor="middle">{L('expand')}</text>
+
+  {/* The baseline is fixed at the pilot and carried to the end */}
+  <path class="ex-flow-2 ex-dash" data-at="1" d={`M${steps[1].x} ${baselineY}H544`}></path>
+  <text class="ex-sub" data-at="1" x={steps[1].x} y={baselineY + 20}>{L('baseline')}</text>
+
+  {/* The marker shows how far the evidence reaches */}
+  {steps.slice(0, 3).map((s) => <circle class="ex-token ex-fly" data-at={s.i} data-until={s.i + 1} cx={s.x + W / 2} cy={s.y - 12} r="6" style="--fx:-134px;--fy:50px"></circle>)}
+  <circle class="ex-ok-fill ex-fly" data-at="3" cx={steps[3].x + W / 2} cy={steps[3].y - 12} r="7" style="--fx:-134px;--fy:50px"></circle>
+</svg>

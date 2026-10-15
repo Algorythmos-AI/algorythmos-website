@@ -1,0 +1,52 @@
+---
+/** Five stages of an AI-assisted exploration workflow, ending in a geologist's review. */
+import { asLocale, useTranslations } from '@/i18n';
+const t = useTranslations(asLocale(Astro.currentLocale));
+const L = (name: string) => t(`explainers.explore-flow.labels.${name}`);
+const W = 96;
+const H = 56;
+const Y = 96;
+/** Five boxes across the 560 width, 15 apart. */
+const xs = [8, 119, 230, 341, 452];
+const mid = (i: number) => xs[i] + W / 2;
+---
+
+<svg class="ex-art" viewBox="0 0 560 300" aria-hidden="true" focusable="false">
+  <defs>
+    <marker id="ex-explore-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path class="ex-arrow" d="M0 0 10 5 0 10z"></path>
+    </marker>
+  </defs>
+
+  {/* Scattered records feeding the first stage */}
+  {[0, 1, 2, 3].map((i) => <rect class="ex-chip" x={20 + i * 20} y={36 - (i % 2) * 10} width="14" height="18" rx="2"></rect>)}
+  <path class="ex-link ex-dash" d={`M${mid(0)} 60V${Y - 4}`} marker-end="url(#ex-explore-arrow)"></path>
+
+  {xs.map((x) => <rect class="ex-node" x={x} y={Y} width={W} height={H} rx="10"></rect>)}
+  {xs.slice(1).map((x) => <path class="ex-link" d={`M${x - 14} ${Y + H / 2}H${x - 2}`} marker-end="url(#ex-explore-arrow)"></path>)}
+
+  {/* 0 to 4: each stage lights in turn */}
+  <rect class="ex-node-brand" data-at="0" x={xs[0]} y={Y} width={W} height={H} rx="10"></rect>
+  <rect class="ex-node-brand" data-at="1" x={xs[1]} y={Y} width={W} height={H} rx="10"></rect>
+  <rect class="ex-node-brand" data-at="2" x={xs[2]} y={Y} width={W} height={H} rx="10"></rect>
+  <rect class="ex-node-brand" data-at="3" x={xs[3]} y={Y} width={W} height={H} rx="10"></rect>
+  <rect class="ex-node-brand" data-at="4" x={xs[4]} y={Y} width={W} height={H} rx="10"></rect>
+  <text class="ex-sub" x={mid(0)} y={Y + 32} text-anchor="middle">{L('consolidate')}</text>
+  <text class="ex-sub" x={mid(1)} y={Y + 32} text-anchor="middle">{L('clean')}</text>
+  <text class="ex-sub" x={mid(2)} y={Y + 32} text-anchor="middle">{L('analyse')}</text>
+  <text class="ex-sub" x={mid(3)} y={Y + 32} text-anchor="middle">{L('present')}</text>
+  <text class="ex-sub" x={mid(4)} y={Y + 32} text-anchor="middle">{L('validate')}</text>
+
+  {/* Flags raised while cleaning */}
+  <circle class="ex-warn" data-at="1" cx={mid(1) - 18} cy={Y + H + 24} r="7"></circle>
+  <circle class="ex-warn" data-at="1" cx={mid(1) + 18} cy={Y + H + 24} r="7"></circle>
+
+  {/* Uncertainty band on the findings */}
+  <rect class="ex-node-brand" data-at="3" x={mid(3) - 30} y={Y + H + 18} width="60" height="12" rx="6" opacity="0.6"></rect>
+
+  {/* A person signs off */}
+  <path class="ex-flow" data-at="4" d={`M${mid(4)} ${Y + H}V${Y + H + 54}`}></path>
+  <circle class="ex-ok-fill" data-at="4" cx={mid(4)} cy={Y + H + 70} r="14"></circle>
+  <path class="ex-ok" data-at="4" d={`M${mid(4) - 6} ${Y + H + 70}l4 4 8-8`} style="stroke: rgb(var(--surface-1))"></path>
+  <text class="ex-label" data-at="4" x={mid(4)} y={Y + H + 104} text-anchor="middle">{L('review')}</text>
+</svg>

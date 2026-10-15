@@ -33,6 +33,8 @@ export const EXPLAINER_IDS = [
   'ai-memory-map',
   'footprint-vs-stack',
   'qual-ladder',
+  'explore-flow',
+  'pilot-roadmap',
 ] as const;
 export type ExplainerId = (typeof EXPLAINER_IDS)[number];
 
@@ -58,10 +60,15 @@ export const EXPLAINER_STEPS: Record<ExplainerId, number> = {
   'ai-memory-map': 6,
   'footprint-vs-stack': 6,
   'qual-ladder': 6,
+  'explore-flow': 5,
+  'pilot-roadmap': 4,
 };
 
-/** Which explainers a case study shows: one per pillar, in order, plus the orchestration one. */
-export const caseStudyExplainers: Record<string, { pillars: ExplainerId[]; orchestration?: ExplainerId }> = {
+/**
+ * Which explainers a case study shows: one slot per pillar, in order, plus the orchestration one.
+ * `null` leaves a pillar without a diagram.
+ */
+export const caseStudyExplainers: Record<string, { pillars: (ExplainerId | null)[]; orchestration?: ExplainerId }> = {
   'ai-robotics-space-bitcoin-convergence': {
     pillars: ['agent-loop', 'fleet-path', 'launch-link', 'mine-block'],
     orchestration: 'whole-job',
@@ -73,5 +80,9 @@ export const caseStudyExplainers: Record<string, { pillars: ExplainerId[]; orche
   'dram-4f2-cell-architecture': {
     pillars: ['cell-read', 'array-access', 'cell-footprint', 'vertical-channel', 'pitch-multiply', 'capacitor-stack', 'ai-memory-map', 'footprint-vs-stack'],
     orchestration: 'qual-ladder',
+  },
+  'ai-in-mining-mbsc': {
+    pillars: [null, 'explore-flow', null, null, null, null],
+    orchestration: 'pilot-roadmap',
   },
 };

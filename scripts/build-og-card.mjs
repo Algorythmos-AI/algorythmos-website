@@ -107,6 +107,42 @@ const DRAM = {
   },
 };
 
+/** Copy for the mining report card. The figures count the report's own stages and phases; it claims no results. */
+const MINING = {
+  en: {
+    eyebrow: "INDUSTRY REPORT  ·  WITH MBSC AUSTRALIA",
+    h: ["Where can AI help", "Australian mining?"],
+    sub: [
+      "Exploration data, maintenance, robotics and",
+      "remote sites: where to start, and how to measure.",
+    ],
+    stats: [
+      ["5", "stages from records", "to a reviewed decision"],
+      ["4", "phases from pilot", "to measured value"],
+      ["0", "deployments or results", "claimed in this report"],
+    ],
+    holes: "drill holes",
+    link: "satellite link",
+    sensors: "sensors",
+  },
+  fr: {
+    eyebrow: "RAPPORT SECTORIEL  ·  AVEC MBSC AUSTRALIA",
+    h: ["Où l’IA peut-elle", "aider les mines ?"],
+    sub: [
+      "Exploration, maintenance, robotique et sites",
+      "isolés : par où commencer, et comment mesurer.",
+    ],
+    stats: [
+      ["5", "étapes, des dossiers", "à la décision examinée"],
+      ["4", "phases, du pilote", "à la valeur mesurée"],
+      ["0", "déploiement ou résultat", "revendiqué ici"],
+    ],
+    holes: "forages",
+    link: "liaison satellite",
+    sensors: "capteurs",
+  },
+};
+
 const W = 1200;
 const VIOLET = "#8b5cf6";
 const CYAN = "#22d3ee";
@@ -211,10 +247,35 @@ const dramDefs = `<linearGradient id="step" gradientUnits="userSpaceOnUse" x1="$
       <stop offset="0" stop-color="${VIOLET}"/><stop offset="1" stop-color="${CYAN}"/>
     </linearGradient>`;
 
+/** The mining picture: strata cut by drill holes, sensors on the surface, a satellite relaying to the site. */
+const GROUND = 300;
+const STRATA = [
+  [GROUND, 60, 0.16],
+  [GROUND + 60, 70, 0.1],
+  [GROUND + 130, 90, 0.06],
+];
+const HOLES = [770, 880, 990, 1100];
+const SAT_M = { x: 1090, y: 150 };
+const miningPicture = (T) => `${STRATA.map(([y, h, o], i) => `<rect x="700" y="${y}" width="470" height="${h}" fill="${i === 1 ? CYAN : VIOLET}" fill-opacity="${o}"/>`).join("")}
+    <path d="M700 ${GROUND}H1170" stroke="${INK}" stroke-opacity="0.5" stroke-width="2"/>
+    ${HOLES.map((x, i) => {
+      const depth = [150, 200, 120, 175][i];
+      const cores = [0, 1, 2, 3, 4].filter((k) => 26 + k * 34 < depth)
+        .map((k) => `<circle cx="${x}" cy="${GROUND + 26 + k * 34}" r="5" fill="${k === 2 && i === 1 ? CYAN : INK}" fill-opacity="${k === 2 && i === 1 ? 1 : 0.55}"/>`).join("");
+      return `<path d="M${x} ${GROUND}V${GROUND + depth}" stroke="${VIOLET}" stroke-width="3" stroke-linecap="round"/>${cores}`;
+    }).join("")}
+    ${[825, 935, 1045].map((x) => `<rect x="${x - 8}" y="${GROUND - 16}" width="16" height="16" rx="4" fill="#16132a" stroke="${CYAN}" stroke-width="2"/>`).join("")}
+    <path d="M${SAT_M.x - 10} ${SAT_M.y + 16}L935 ${GROUND - 20}" stroke="${CYAN}" stroke-width="2.5" stroke-dasharray="2 8" stroke-linecap="round"/>
+    ${sat(SAT_M, true)}
+    <text x="${SAT_M.x - 48}" y="${SAT_M.y + 6}" text-anchor="end" ${F} font-size="14" font-weight="600" fill="${CYAN}" letter-spacing="1.4">${esc(T.link.toUpperCase())}</text>
+    <text x="935" y="${GROUND - 34}" text-anchor="middle" ${F} font-size="13" font-weight="600" fill="${MUTED}" letter-spacing="1.2">${esc(T.sensors.toUpperCase())}</text>
+    <text x="935" y="${GROUND + 248}" text-anchor="middle" ${F} font-size="15" font-weight="600" fill="${MUTED}" letter-spacing="1.5">${esc(T.holes.toUpperCase())}</text>`;
+
 /** Every card this script draws. `node scripts/build-og-card.mjs dram` renders one. */
 const CARDS = {
   signals: { copy: SIGNALS, defs: signalsDefs, picture: signalsPicture },
   dram: { copy: DRAM, defs: dramDefs, picture: dramPicture },
+  mining: { copy: MINING, defs: "", picture: miningPicture },
 };
 
 /** One card as SVG. `H` is 630 for the site card, 675 for the 16:9 social copy. */

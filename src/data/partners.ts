@@ -19,6 +19,16 @@ const UTM = '?utm_source=algorythmos.com&utm_medium=referral&utm_campaign=partne
 
 export const partnerLinks: PartnerLink[] = [
   {
+    slug: 'mbsc-australia-home',
+    name: 'MBSC Australia',
+    labelKey: 'partners.mbsc.homeLabel',
+    href: {
+      en: `${MBSC}/${UTM}`,
+      'au-en': `${MBSC}/${UTM}`,
+      'fr-fr': `${MBSC}/${UTM}`,
+    },
+  },
+  {
     slug: 'mbsc-australia-ai',
     name: 'MBSC Australia',
     labelKey: 'partners.mbsc.aiLabel',
@@ -42,3 +52,9 @@ export const partnerLinks: PartnerLink[] = [
 
 export const partnerSlugs = partnerLinks.map((p) => p.slug);
 export const getPartnerLink = (slug: string) => partnerLinks.find((p) => p.slug === slug);
+
+/** The organisation's site without referral tags, for schema (`url` identifies, it does not track). */
+export const partnerSite = (slug: string): string | undefined => {
+  const href = getPartnerLink(slug)?.href.en;
+  return href ? href.split('?')[0] : undefined;
+};

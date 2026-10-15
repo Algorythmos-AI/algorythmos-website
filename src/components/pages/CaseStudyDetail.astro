@@ -13,6 +13,7 @@ import { bookingUrl } from '@/lib/links';
 import Breadcrumbs from '@/components/ui/Breadcrumbs.astro';
 import RelatedLinks from '@/components/ui/RelatedLinks.astro';
 import { caseStudyRelated } from '@/data/related';
+import { getPartnerLink, partnerSite } from '@/data/partners';
 import Explainer from '@/components/explainers/Explainer.astro';
 import { caseStudyExplainers } from '@/data/explainers';
 import DensityCalculator from '@/components/islands/DensityCalculator';
@@ -73,6 +74,17 @@ const facts = [
   { label: t('caseStudyDetail.labels.focus'), value: study.focus },
 ].filter((f) => f.value && f.value.length > 0);
 
+/**
+ * Co-authors (approved partners only, see CaseStudy.coAuthors). An unknown slug is a
+ * build error, not a silently missing byline.
+ */
+const coAuthors = (cs.coAuthors ?? []).map((s) => {
+  const p = getPartnerLink(s);
+  const url = partnerSite(s);
+  if (!p || !url) throw new Error(`Case study ${slug}: unknown co-author partner "${s}"`);
+  return { name: p.name, label: t(p.labelKey), href: p.href[locale], url };
+});
+
 const articleLd = {
   '@context': 'https://schema.org',
   '@type': 'Article',
@@ -81,7 +93,9 @@ const articleLd = {
   about: study.challenge,
   ...(study.industry ? { articleSection: study.industry } : {}),
   ...(study.keywords && study.keywords.length ? { keywords: study.keywords.join(', ') } : {}),
-  author: { '@id': ORG_ID },
+  author: coAuthors.length
+    ? [{ '@id': ORG_ID }, ...coAuthors.map((c) => ({ '@type': 'Organization', name: c.name, url: c.url }))]
+    : { '@id': ORG_ID },
   publisher: { '@id': ORG_ID },
   datePublished: isoDateTime(cs.date),
   dateModified: isoDateTime(cs.updatedAt ?? cs.date),
@@ -252,6 +266,20 @@ const contents = longForm
   <div class="reading-progress" aria-hidden="true"></div>
   <Breadcrumbs items={visibleCrumbs} />
   <PageHeader eyebrow={badge} title={study.title} lead={study.meta} scene={sceneFor('case-study', cs.slug)} />
+
+  {coAuthors.length > 0 && (
+    <section class="container-page pb-4">
+      <p data-byline class="text-sm text-ink-muted">
+        {t('caseStudyDetail.byline.lead')}{' '}
+        {coAuthors.map((c, i) => (
+          <>
+            {i > 0 && ', '}
+            <a href={c.href} target="_blank" rel="noopener" class="font-medium text-ink underline-offset-4 hover:underline">{c.label}</a>
+          </>
+        ))}
+      </p>
+    </section>
+  )}
 
   {facts.length > 0 && (
     <section class="container-page">

@@ -420,6 +420,38 @@ with no stated affiliation.
 - [ ] Re-verify all 39 sources by 13 Oct 2027, and sooner if CXMT publishes a specification or a
       4F² product ships.
 
+## 3k. Case study — AI in Mining, with MBSC Australia (`/case-studies/ai-in-mining-mbsc`) — industry report (15 Oct 2026)
+
+Labelled on-page as an industry report, co-written with MBSC Australia. The text is Sam Kalaliya's draft,
+written with MBSC Australia; the note states it analyses potential applications and describes no named
+deployment and no verified result.
+
+- [x] **Co-authorship approved.** MBSC Australia approved the text and being named as co-author (confirmed
+      by Sam Kalaliya, 15 Oct 2026). The byline and the second Article `author` come from
+      `coAuthors: ['mbsc-australia-home']` in `src/data/caseStudies.ts`. **If MBSC withdraws:** delete that
+      field and the badge's "with MBSC Australia"; the page renders with Algorythmos as sole author.
+- [x] **Rendered pages reviewed before merge.** MBSC Australia reviews the EN and FR preview URLs before
+      the PR is merged.
+- [x] **Claims audit.** Every sentence is a capability ("can", "may", "potential"), a sourced fact or a
+      disclosure. No outcome figures, no named deployments, no "proven" or "guaranteed". Improvements
+      are reported only once measured against an agreed baseline (stated in pillar 3 and the roadmap).
+- [x] **Sourced facts** (all opened 15 Oct 2026): Australia's lithium and rare-earth production
+      (Geoscience Australia [1]); the national Critical Minerals Strategy [2]; lithium in batteries,
+      copper in electrical infrastructure, rare earths in permanent magnets (USGS Mineral Commodity
+      Summaries 2025 [3–5]).
+- [x] **MBSC capabilities** checked against www.mbscaustralia.com.au on 15 Oct 2026: geotechnical
+      investigations, non-destructive testing, inspections, mining and geology services and technical
+      training are listed. "Engineering geophysics" from the draft is **not** listed there, so it is left
+      out until MBSC confirms it.
+- [x] **Bitcoin** (Sam Kalaliya, 15 Oct 2026): reduced to one sentence calling it a possible later
+      extension, not current work.
+- [x] **"What this report does not claim"** table: five rows, including that it describes no delivered
+      joint project.
+- [x] **French pages:** a full translation with the same hedging. The co-authors are the Australian
+      company and MBSC Australia; the EI publisher line in the footer is unchanged.
+- [x] **Announcement bar** promotes this report (`mining-report-2026-10`); `enabled: false` in
+      `src/data/announcement.ts` removes it.
+
 ## 4. Homepage, voice and positioning (`/`, footer, meta, contact, careers)
 
 Decisions (Sam Kalaliya, 26 Sep 2026):

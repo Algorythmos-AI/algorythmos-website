@@ -7,7 +7,7 @@
  *    (title, meta, industry, region, focus, challenge, approach.0-3, solution,
  *    results.0-4, cta, keywords — resolved in CaseStudyDetail.astro)
  *
- * Evidence/research studies (dram-4f2-cell-architecture,
+ * Evidence/research studies (ai-in-mining-mbsc, dram-4f2-cell-architecture,
  * signals-fibre-satellites-orbital-compute,
  * ai-robotics-space-bitcoin-convergence, port-botany-ai-ml, healthcare-burden,
  * admin-burden-evidence) carry a `badge`; client engagements (`kind: 'client'`)
@@ -41,6 +41,13 @@ export interface CaseStudy {
    * pages may show its headline stat in the "In practice" card.
    */
   kind?: 'client';
+  /**
+   * Organisations that co-wrote the study, as `src/data/partners.ts` slugs. Adds a
+   * byline and a second Article author. Only for a partner that has approved being
+   * named as co-author (docs/COPY_CLAIMS_SIGNOFF.md); remove it and the page renders
+   * with Algorythmos as sole author.
+   */
+  coAuthors?: string[];
 }
 
 /**
@@ -48,6 +55,7 @@ export interface CaseStudy {
  * matches the existing site.
  */
 export const caseStudies: CaseStudy[] = [
+  { slug: 'ai-in-mining-mbsc', i18nIndex: 15, category: 'research', date: '2026-10-15', coAuthors: ['mbsc-australia-home'] },
   { slug: 'dram-4f2-cell-architecture', i18nIndex: 14, category: 'research', date: '2026-10-13' },
   { slug: 'signals-fibre-satellites-orbital-compute', i18nIndex: 12, category: 'research', date: '2026-10-13' },
   { slug: 'ai-robotics-space-bitcoin-convergence', i18nIndex: 11, category: 'research', date: '2026-10-11' },

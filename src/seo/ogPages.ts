@@ -37,6 +37,10 @@ const CARD_FULL: Record<string, Record<string, string>> = {
     'au-en': './src/assets/og/card-dram-en.png',
     'fr-fr': './src/assets/og/card-dram-fr.png',
   },
+  'ai-in-mining-mbsc': {
+    'au-en': './src/assets/og/card-mining-en.png',
+    'fr-fr': './src/assets/og/card-mining-fr.png',
+  },
 };
 
 /** Brand pages: path + the i18n keys their <head> already uses. */
