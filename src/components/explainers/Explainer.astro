@@ -29,6 +29,8 @@ import CapacitorStack from './art/CapacitorStack.astro';
 import AiMemoryMap from './art/AiMemoryMap.astro';
 import FootprintVsStack from './art/FootprintVsStack.astro';
 import QualLadder from './art/QualLadder.astro';
+import ExploreFlow from './art/ExploreFlow.astro';
+import PilotRoadmap from './art/PilotRoadmap.astro';
 
 interface Props {
   id: ExplainerId;
@@ -57,6 +59,8 @@ const ART = {
   'ai-memory-map': AiMemoryMap,
   'footprint-vs-stack': FootprintVsStack,
   'qual-ladder': QualLadder,
+  'explore-flow': ExploreFlow,
+  'pilot-roadmap': PilotRoadmap,
 } satisfies Record<ExplainerId, unknown>;
 const Art = ART[id];
 

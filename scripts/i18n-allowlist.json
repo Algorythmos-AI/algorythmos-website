@@ -20,7 +20,8 @@
     "pricing.tooltip.algorythmos.label",
     "region.fr",
     "region.global",
-    "security.items.1.title"
+    "security.items.1.title",
+    "partners.mbsc.homeLabel"
   ],
   "sourceOk": {
     "src/components/ui/consoles/AiWebsitesConsole.astro": [
@@ -154,7 +155,9 @@
     "Vertex",
     "YouTube",
     "Zoho",
-    "Île-de-France"
+    "Île-de-France",
+    "Geoscience",
+    "Critical"
   ],
   "titleCasePhrasesOk": [
     "Core Web Vitals",

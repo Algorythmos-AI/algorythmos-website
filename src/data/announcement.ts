@@ -6,8 +6,8 @@
  * Set `enabled: false` to remove the bar site-wide without touching layout.
  */
 export const announcement = {
-  id: 'dram-report-2026-10',
+  id: 'mining-report-2026-10',
   enabled: true,
   /** Region-relative path, localized at render time via localizePath(). */
-  href: '/case-studies/dram-4f2-cell-architecture',
+  href: '/case-studies/ai-in-mining-mbsc',
 } as const;
