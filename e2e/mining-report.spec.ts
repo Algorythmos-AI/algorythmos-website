@@ -104,8 +104,8 @@ for (const locale of LOCALES) {
   });
 }
 
-test('the index lists the report first', async ({ page }) => {
+test('the index lists the report first among the research reports', async ({ page }) => {
   await page.goto('/au-en/case-studies');
-  const first = page.locator('main a[href^="/au-en/case-studies/"]').first();
+  const first = page.locator('section#research a[href^="/au-en/case-studies/"]').first();
   await expect(first).toHaveAttribute('href', `/au-en/case-studies/${SLUG}`);
 });

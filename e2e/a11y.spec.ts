@@ -33,6 +33,8 @@ const PAGES = [
   '/fr-fr/case-studies/dram-4f2-cell-architecture',
   '/au-en/case-studies/ai-in-mining-mbsc',
   '/fr-fr/case-studies/ai-in-mining-mbsc',
+  '/au-en/case-studies',
+  '/fr-fr/case-studies',
   '/au-en/pdf-algo-pro',
   '/fr-fr/pdf-algo-pro/privacy',
   '/au-en/pdf-algo-pro/support',

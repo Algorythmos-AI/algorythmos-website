@@ -193,8 +193,8 @@ test.describe('phone width', () => {
   }
 });
 
-test('the index lists the report among the newest, after the mining report', async ({ page }) => {
+test('the index lists the report among the research reports, after the mining report', async ({ page }) => {
   await page.goto('/au-en/case-studies');
-  const hrefs = await page.locator('main a[href^="/au-en/case-studies/"]').evaluateAll((as) => [...new Set(as.map((a) => a.getAttribute('href')))]);
+  const hrefs = await page.locator('section#research a[href^="/au-en/case-studies/"]').evaluateAll((as) => [...new Set(as.map((a) => a.getAttribute('href')))]);
   expect(hrefs.slice(0, 2)).toEqual(['/au-en/case-studies/ai-in-mining-mbsc', `/au-en/case-studies/${SLUG}`]);
 });

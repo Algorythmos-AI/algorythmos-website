@@ -26,6 +26,7 @@ const RUNS = Number(process.env.LH_RUNS || 2);
 const URLS = [
   { label: 'home (au-en)', path: '/au-en' },
   { label: 'service (fr-fr)', path: '/fr-fr/services/agentic-automation' },
+  { label: 'case studies index (au-en)', path: '/au-en/case-studies' },
   { label: 'case study (au-en)', path: '/au-en/case-studies/port-botany-ai-ml' },
   { label: 'evidence report (au-en)', path: '/au-en/case-studies/ai-robotics-space-bitcoin-convergence' },
   { label: 'signals report (au-en)', path: '/au-en/case-studies/signals-fibre-satellites-orbital-compute' },
