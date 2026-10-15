@@ -62,6 +62,15 @@ test.describe('consent & attribution', () => {
     await expect(tag).toHaveAttribute('src', UMAMI.src);
     await expect(tag).toHaveAttribute('data-website-id', UMAMI.websiteId);
     await expect(tag).toHaveAttribute('data-domains', UMAMI.domains);
+    await expect(tag).toHaveAttribute('data-performance', 'true');
+    /* A booking click reaches umami.track (the real tracker is blocked here, so stand in for it). */
+    await page.evaluate(() => {
+      (window as never as { __events: unknown[] }).__events = [];
+      (window as never as { umami: unknown }).umami = { track: (...a: unknown[]) => (window as never as { __events: unknown[] }).__events.push(a) };
+    });
+    await page.locator('a[href*="calendly.com"]').first().evaluate((a) => a.addEventListener('click', (e) => e.preventDefault()));
+    await page.locator('a[href*="calendly.com"]').first().click();
+    expect(await page.evaluate(() => (window as never as { __events: unknown[][] }).__events.map((e) => e[0]))).toContain('book-call');
     await expect.poll(() => umami.length).toBeGreaterThan(0);
   });
 
