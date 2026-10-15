@@ -422,6 +422,7 @@ const offices = [
             import('@vercel/analytics')
               .then((a) => a.track('contact_submit', { locale: document.documentElement.lang || '', utm_source: (utm.match(/utm_source=([^&]*)/) || [])[1] || '' }))
               .catch(() => {});
+            (window as any).umami?.track?.('contact-submit', { locale: document.documentElement.lang || '', utm_source: (utm.match(/utm_source=([^&]*)/) || [])[1] || '' });
           }
         })
         .catch(() => {

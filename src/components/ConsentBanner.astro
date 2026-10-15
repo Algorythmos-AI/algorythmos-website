@@ -35,8 +35,6 @@ const t = useTranslations(locale);
 </div>
 
 <script>
-  import { UMAMI } from '@/data/analytics';
-
   function getCookie(name: string): string | null {
     const m = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]+)'));
     return m ? m[1] : null;
@@ -49,15 +47,9 @@ const t = useTranslations(locale);
       a.inject();
       s.injectSpeedInsights();
     } catch {}
-    /* Umami: one deferred script. If it is blocked or the host is down, nothing else is affected. */
-    if (UMAMI.enabled && !document.querySelector('script[data-website-id]')) {
-      const tag = document.createElement('script');
-      tag.defer = true;
-      tag.src = UMAMI.src;
-      tag.dataset.websiteId = UMAMI.websiteId;
-      tag.dataset.domains = UMAMI.domains;
-      document.head.append(tag);
-    }
+    /* Umami (src/lib/umamiEvents.ts): its own chunk, fetched only after consent. If it or
+       the Umami host fails, nothing else is affected. */
+    import('@/lib/umamiEvents').then((m) => m.startUmami()).catch(() => {});
   }
   function setupConsent() {
     const el = document.getElementById('consent');
