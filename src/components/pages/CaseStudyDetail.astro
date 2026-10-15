@@ -12,6 +12,7 @@ import { breadcrumb, SITE, ORG_ID, ogImageUrl, isoDateTime } from '@/seo/schema'
 import { bookingUrl } from '@/lib/links';
 import Breadcrumbs from '@/components/ui/Breadcrumbs.astro';
 import RelatedLinks from '@/components/ui/RelatedLinks.astro';
+import MoreInCategory from '@/components/case-studies/MoreInCategory.astro';
 import { caseStudyRelated } from '@/data/related';
 import { getPartnerLink, partnerSite } from '@/data/partners';
 import Explainer from '@/components/explainers/Explainer.astro';
@@ -530,6 +531,7 @@ const contents = longForm
     </section>
   )}
 
+  <MoreInCategory slug={slug} />
   <RelatedLinks items={caseStudyRelated[slug] ?? []} />
 </BaseLayout>
 

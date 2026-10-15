@@ -100,3 +100,15 @@ export function groupedCaseStudies(list: CaseStudy[] = caseStudies): { category:
 /** The most recently published study — the listing page's spotlight. */
 export const latestCaseStudy = (list: CaseStudy[] = caseStudies): CaseStudy | undefined =>
   [...list].sort((a, b) => b.date.localeCompare(a.date) || list.indexOf(a) - list.indexOf(b))[0];
+
+/**
+ * Up to `n` other studies in the same category, starting just after `slug` in
+ * catalogue order and wrapping round, so each page points somewhere different.
+ */
+export function siblingCaseStudies(slug: string, n = 3, list: CaseStudy[] = caseStudies): CaseStudy[] {
+  const self = list.find((c) => c.slug === slug);
+  if (!self) return [];
+  const same = list.filter((c) => c.category === self.category);
+  const i = same.indexOf(self);
+  return [...same.slice(i + 1), ...same.slice(0, i)].slice(0, n);
+}

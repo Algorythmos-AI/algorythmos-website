@@ -144,3 +144,18 @@ test('hub, finder and cards fit a 375px phone', async ({ page }) => {
   );
   expect(tooWide).toEqual([]);
 });
+
+test('a study page links to more studies in its own category', async ({ page }) => {
+  await page.goto('/au-en/case-studies/clinical-document-ai');
+  const items = page.locator('[data-cs-more-item]');
+  await expect(items).toHaveCount(3);
+  for (const slug of await items.evaluateAll((as) => as.map((a) => (a as HTMLElement).dataset.csMoreItem!)))
+    expect(byCategory.get(slug), slug).toBe('client');
+  await expect(page.locator('[data-cs-more] a[href="/au-en/case-studies#client"]')).toHaveCount(1);
+});
+
+test('research cards read "Read the report"', async ({ page }) => {
+  await page.goto('/au-en/case-studies');
+  await expect(page.locator('section#research [data-cs-card]').first()).toContainText('Read the report');
+  await expect(page.locator('section#client [data-cs-card]').first()).toContainText('Read the case study');
+});

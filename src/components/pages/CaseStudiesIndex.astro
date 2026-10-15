@@ -78,6 +78,7 @@ const spotlight = latest && {
 const sectors = CASE_STUDY_SECTORS.filter((s) => cards.some((c) => c.sector === s)).map((s) => ({
   id: s,
   label: t(`caseStudies.filter.sector.${s}`),
+  count: cards.filter((c) => c.sector === s).length,
 }));
 /** Serialised for the filter script (kept out of the markup on purpose). */
 const finderCopy = JSON.stringify({
@@ -196,9 +197,15 @@ const crumbs = breadcrumb([
           />
         </label>
         <div role="group" aria-label={t('caseStudies.filter.sectors')} class="-mx-1 flex snap-x scroll-px-1 gap-2 overflow-x-auto px-1 pb-1 [scrollbar-width:none] lg:flex-wrap lg:overflow-visible lg:pb-0">
-          <button type="button" data-cs-sector="" aria-pressed="true" class="cs-chip-btn">{t('caseStudies.filter.all')}</button>
+          <button type="button" data-cs-sector="" aria-pressed="true" class="cs-chip-btn">
+            {t('caseStudies.filter.all')}
+            <span class="ml-1.5 tabular-nums text-ink-subtle">{cards.length}</span>
+          </button>
           {sectors.map((s) => (
-            <button type="button" data-cs-sector={s.id} aria-pressed="false" class="cs-chip-btn">{s.label}</button>
+            <button type="button" data-cs-sector={s.id} aria-pressed="false" class="cs-chip-btn">
+              {s.label}
+              <span class="ml-1.5 tabular-nums text-ink-subtle">{s.count}</span>
+            </button>
           ))}
         </div>
       </div>

@@ -41,16 +41,14 @@ const highlightResult = card.category === 'client';
   >
     <span class="cs-chip mb-3 text-xs font-semibold uppercase tracking-wide">{chip}</span>
     <h3 class="text-h3 font-semibold text-ink">{card.title}</h3>
+    <!-- Compact: the challenge (clamped) and the result. The full story is one click away;
+         the solution still feeds the search text. -->
     <dl class="mt-4 flex-1 space-y-3 text-sm leading-relaxed text-ink-muted">
       <div>
         <dt class="font-semibold text-brand">{t('caseStudies.labels.challenge')}</dt>
-        <dd class="mt-0.5">{card.challenge}</dd>
+        <dd class="mt-0.5 line-clamp-3">{card.challenge}</dd>
       </div>
-      <div>
-        <dt class="font-semibold text-brand">{t('caseStudies.labels.solution')}</dt>
-        <dd class="mt-0.5">{card.solution}</dd>
-      </div>
-      <div class:list={[highlightResult && 'cs-result -mx-2 rounded-lg px-2 py-2']}>
+      <div class:list={['cs-result -mx-2 rounded-lg px-2 py-2', !highlightResult && 'cs-result--plain']}>
         <dt class="font-semibold text-brand">{t('caseStudies.labels.result')}</dt>
         <dd class:list={['mt-0.5', highlightResult && 'font-medium text-ink']}>{card.result}</dd>
       </div>
@@ -61,7 +59,7 @@ const highlightResult = card.category === 'client';
         {card.partners.length > 0 && <span> · {t('caseStudies.card.with', { name: card.partners.join(', ') })}</span>}
       </span>
       <span class="inline-flex items-center gap-1.5 text-sm font-semibold text-brand">
-        {t('caseStudies.card.read')}
+        {t(card.category === 'research' ? 'caseStudies.card.readReport' : 'caseStudies.card.read')}
         <svg class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
       </span>
     </div>
@@ -74,6 +72,9 @@ const highlightResult = card.category === 'client';
   }
   .cs-result {
     background: color-mix(in srgb, var(--cs-tint) 9%, transparent);
+  }
+  .cs-result--plain {
+    background: rgb(var(--surface-2) / 0.5);
   }
   @media (hover: hover) and (pointer: fine) {
     .cs-card:hover {
