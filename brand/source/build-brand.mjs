@@ -168,8 +168,8 @@ function plan(m) {
 
   // Social and advertising canvases.
   const canvas = (path, W, H, o) => png(path, canvasSvg(m, { W, H, ...o }), W, H);
-  canvas('brand/social/algorythmos-avatar-1080.png', 1080, 1080, { bg: 'gradient', lockup: 'mark', way: 'white', fit: 0.5 });
-  canvas('brand/social/algorythmos-avatar-light-1080.png', 1080, 1080, { bg: PALETTE.paper, lockup: 'mark', way: 'color', fit: 0.5 });
+  canvas('brand/social/algorythmos-avatar-1080.png', 1080, 1080, { bg: 'gradient', lockup: 'mark', way: 'white', fit: 0.68 });
+  canvas('brand/social/algorythmos-avatar-light-1080.png', 1080, 1080, { bg: PALETTE.paper, lockup: 'mark', way: 'color', fit: 0.68 });
   canvas('brand/social/algorythmos-linkedin-company-1128x191.png', 1128, 191, { bg: 'gradient', lockup: 'horizontal', way: 'white', fit: 0.5 });
   canvas('brand/social/algorythmos-linkedin-profile-1584x396.png', 1584, 396, { bg: 'gradient', lockup: 'horizontal', way: 'white', fit: 0.45 });
   canvas('brand/social/algorythmos-x-header-1500x500.png', 1500, 500, { bg: 'gradient', lockup: 'horizontal', way: 'white', fit: 0.42 });
