@@ -25,10 +25,20 @@
 export const CASE_STUDY_CATEGORIES = ['client', 'industry', 'research'] as const;
 export type CaseStudyCategory = (typeof CASE_STUDY_CATEGORIES)[number];
 
+/**
+ * Coarse sector used by the listing-page filter chips. The free-text
+ * `caseStudyDetail.studies.<slug>.industry` labels vary ("Logistics" vs
+ * "Logistics & Ports"), so the filter keys off this fixed list instead.
+ */
+export const CASE_STUDY_SECTORS = ['healthcare', 'logistics', 'retail', 'finance', 'industrial', 'technology', 'professional'] as const;
+export type CaseStudySector = (typeof CASE_STUDY_SECTORS)[number];
+
 export interface CaseStudy {
   slug: string;
   /** Which listing section the study appears in. */
   category: CaseStudyCategory;
+  /** Sector for the listing-page filter. */
+  sector: CaseStudySector;
   /** index into `caseStudies.items.N` — card copy on the listing page */
   i18nIndex: number;
   /** ISO date first published (Article.datePublished + sitemap lastmod). */
@@ -55,22 +65,22 @@ export interface CaseStudy {
  * matches the existing site.
  */
 export const caseStudies: CaseStudy[] = [
-  { slug: 'ai-in-mining-mbsc', i18nIndex: 15, category: 'research', date: '2026-10-15', coAuthors: ['mbsc-australia-home'] },
-  { slug: 'dram-4f2-cell-architecture', i18nIndex: 14, category: 'research', date: '2026-10-13' },
-  { slug: 'signals-fibre-satellites-orbital-compute', i18nIndex: 12, category: 'research', date: '2026-10-13' },
-  { slug: 'ai-robotics-space-bitcoin-convergence', i18nIndex: 11, category: 'research', date: '2026-10-11' },
-  { slug: 'port-botany-ai-ml', i18nIndex: 6, category: 'research', date: '2026-09-25' },
-  { slug: 'admin-burden-evidence', i18nIndex: 5, category: 'research', date: '2026-08-11' },
-  { slug: 'healthcare-burden', i18nIndex: 4, category: 'research', date: '2026-05-31', updatedAt: '2026-08-11' },
-  { slug: 'clinical-document-ai', i18nIndex: 7, category: 'client', date: '2026-09-27', kind: 'client' },
-  { slug: 'ml-deployment-platform', i18nIndex: 8, category: 'client', date: '2026-09-27', kind: 'client' },
-  { slug: 'model-monitoring-logistics', i18nIndex: 9, category: 'client', date: '2026-09-27', kind: 'client' },
-  { slug: 'retail-data-foundation', i18nIndex: 10, category: 'client', date: '2026-09-27', kind: 'client' },
-  { slug: 'satellite-link-monitoring', i18nIndex: 13, category: 'industry', date: '2026-10-13' },
-  { slug: 'financial-compliance', i18nIndex: 0, category: 'industry', date: '2026-05-31', updatedAt: '2026-09-25' },
-  { slug: 'manufacturing-docs', i18nIndex: 1, category: 'industry', date: '2026-05-31', updatedAt: '2026-09-25' },
-  { slug: 'healthcare-mlops', i18nIndex: 2, category: 'industry', date: '2026-05-31', updatedAt: '2026-09-25' },
-  { slug: 'retail-sql', i18nIndex: 3, category: 'industry', date: '2026-05-31', updatedAt: '2026-09-25' },
+  { slug: 'ai-in-mining-mbsc', i18nIndex: 15, category: 'research', sector: 'industrial', date: '2026-10-15', coAuthors: ['mbsc-australia-home'] },
+  { slug: 'dram-4f2-cell-architecture', i18nIndex: 14, category: 'research', sector: 'technology', date: '2026-10-13' },
+  { slug: 'signals-fibre-satellites-orbital-compute', i18nIndex: 12, category: 'research', sector: 'technology', date: '2026-10-13' },
+  { slug: 'ai-robotics-space-bitcoin-convergence', i18nIndex: 11, category: 'research', sector: 'technology', date: '2026-10-11' },
+  { slug: 'port-botany-ai-ml', i18nIndex: 6, category: 'research', sector: 'logistics', date: '2026-09-25' },
+  { slug: 'admin-burden-evidence', i18nIndex: 5, category: 'research', sector: 'healthcare', date: '2026-08-11' },
+  { slug: 'healthcare-burden', i18nIndex: 4, category: 'research', sector: 'healthcare', date: '2026-05-31', updatedAt: '2026-08-11' },
+  { slug: 'clinical-document-ai', i18nIndex: 7, category: 'client', sector: 'healthcare', date: '2026-09-27', kind: 'client' },
+  { slug: 'ml-deployment-platform', i18nIndex: 8, category: 'client', sector: 'professional', date: '2026-09-27', kind: 'client' },
+  { slug: 'model-monitoring-logistics', i18nIndex: 9, category: 'client', sector: 'logistics', date: '2026-09-27', kind: 'client' },
+  { slug: 'retail-data-foundation', i18nIndex: 10, category: 'client', sector: 'retail', date: '2026-09-27', kind: 'client' },
+  { slug: 'satellite-link-monitoring', i18nIndex: 13, category: 'industry', sector: 'technology', date: '2026-10-13' },
+  { slug: 'financial-compliance', i18nIndex: 0, category: 'industry', sector: 'finance', date: '2026-05-31', updatedAt: '2026-09-25' },
+  { slug: 'manufacturing-docs', i18nIndex: 1, category: 'industry', sector: 'industrial', date: '2026-05-31', updatedAt: '2026-09-25' },
+  { slug: 'healthcare-mlops', i18nIndex: 2, category: 'industry', sector: 'healthcare', date: '2026-05-31', updatedAt: '2026-09-25' },
+  { slug: 'retail-sql', i18nIndex: 3, category: 'industry', sector: 'retail', date: '2026-05-31', updatedAt: '2026-09-25' },
 ];
 
 export const caseStudySlugs = caseStudies.map((c) => c.slug);
@@ -86,3 +96,7 @@ export function groupedCaseStudies(list: CaseStudy[] = caseStudies): { category:
     (g) => g.items.length > 0,
   );
 }
+
+/** The most recently published study — the listing page's spotlight. */
+export const latestCaseStudy = (list: CaseStudy[] = caseStudies): CaseStudy | undefined =>
+  [...list].sort((a, b) => b.date.localeCompare(a.date) || list.indexOf(a) - list.indexOf(b))[0];

@@ -1,0 +1,113 @@
+---
+/**
+ * Category hub: one card per category with its art, the real titles inside it,
+ * who it's for and a jump to its section. Static HTML; empty categories never
+ * reach here (groupedCaseStudies drops them).
+ */
+import BlueprintArt from '@/components/ui/BlueprintArt.astro';
+import CategoryBadge from './CategoryBadge.astro';
+import { categoryStyles } from '@/data/caseStudyCategories';
+import type { CaseStudyCategory } from '@/data/caseStudies';
+import { asLocale, useTranslations } from '@/i18n';
+
+export interface HubGroup {
+  id: CaseStudyCategory;
+  title: string;
+  description: string;
+  audience: string;
+  countLabel: string;
+  items: { slug: string; href: string; title: string }[];
+}
+interface Props {
+  groups: HubGroup[];
+}
+const { groups } = Astro.props;
+const t = useTranslations(asLocale(Astro.currentLocale));
+const SHOWN = 4;
+const cols = groups.length >= 3 ? 'lg:grid-cols-3' : groups.length === 2 ? 'lg:grid-cols-2' : '';
+---
+
+<section aria-labelledby="cs-hub-title" data-cs-hub class="container-page relative pt-14 sm:pt-16">
+  <h2 id="cs-hub-title" class="sr-only">{t('caseStudies.hub.label')}</h2>
+  <!-- On desktop each card spans five rows of a shared subgrid, so the art,
+       "Inside" and "For" blocks line up across cards whatever the copy length. -->
+  <div class:list={['grid gap-6 md:grid-cols-2 lg:gap-y-0', cols]}>
+    {groups.map((g, i) => (
+      <article
+        data-cs-hub-card={g.id}
+        data-reveal
+        aria-labelledby={`hub-${g.id}-title`}
+        style={`--reveal-delay: ${i * 90}ms; --cs-tint: ${categoryStyles[g.id].tint}`}
+        class="cs-hub-card ring-gradient relative flex flex-col overflow-hidden rounded-3xl border border-line glass lg:row-span-5 lg:grid lg:grid-rows-subgrid"
+      >
+        <div class="p-6 pb-0">
+          <div class="flex items-start gap-4">
+            <CategoryBadge category={g.id} size="lg" />
+            <div class="min-w-0">
+              <p class="cs-tint-text text-xs font-semibold uppercase tracking-widest">{g.countLabel}</p>
+              <h3 id={`hub-${g.id}-title`} class="mt-1 text-h3 font-semibold text-ink">{g.title}</h3>
+            </div>
+          </div>
+          <p class="mt-4 text-sm leading-relaxed text-ink-muted">{g.description}</p>
+        </div>
+
+        <div class="cs-hub-art mx-6 mt-5 aspect-[2/1] overflow-hidden rounded-2xl border border-line/80">
+          <BlueprintArt kind={categoryStyles[g.id].art} class="block h-full w-full p-2" />
+        </div>
+
+        <div class="mx-6 mt-5 flex-1 self-stretch rounded-2xl border border-line/80 bg-surface-2/40 p-5">
+          <p class="cs-tint-text text-xs font-semibold uppercase tracking-widest">{t('caseStudies.hub.inside')}</p>
+          <ul class="mt-3 space-y-1">
+            {g.items.slice(0, SHOWN).map((it) => (
+              <li>
+                <a href={it.href} class="group/link flex min-h-11 items-start gap-2 rounded-md py-1.5 text-sm text-ink transition-colors hover:text-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand">
+                  <svg class="cs-tint-text mt-0.5 h-4 w-4 shrink-0 transition-transform duration-200 group-hover/link:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg>
+                  <span>{it.title}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+          {g.items.length > SHOWN && <p class="mt-2 pl-6 text-xs text-ink-subtle">{t('caseStudies.hub.more', { n: g.items.length - SHOWN })}</p>}
+        </div>
+
+        <div class="mx-6 mt-4 flex items-start gap-3 rounded-2xl border border-line/80 bg-surface-2/40 p-4">
+          <svg class="cs-tint-text mt-0.5 h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="5" /><circle cx="12" cy="12" r="1" /></svg>
+          <div>
+            <p class="cs-tint-text text-xs font-semibold uppercase tracking-widest">{t('caseStudies.hub.for')}</p>
+            <p class="mt-1 text-sm leading-relaxed text-ink-muted">{g.audience}</p>
+          </div>
+        </div>
+
+        <a
+          href={`#${g.id}`}
+          class="m-6 mt-5 inline-flex min-h-11 self-end items-center justify-center gap-2 rounded-full border border-line px-5 text-sm font-semibold text-ink transition-colors hover:border-brand hover:text-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+        >
+          {t('caseStudies.hub.viewAll')} <span class="sr-only">{g.title}</span>
+          <span class="tabular-nums text-ink-subtle">({g.items.length})</span>
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6" /></svg>
+        </a>
+      </article>
+    ))}
+  </div>
+</section>
+
+<style>
+  .cs-hub-card {
+    background-image: linear-gradient(180deg, color-mix(in srgb, var(--cs-tint) 10%, transparent), transparent 45%);
+  }
+  /* Narrow cards: no mid-word breaks in French (global.css only covers links). */
+  .cs-hub-card :is(h3, p, span) {
+    hyphens: manual;
+  }
+  .cs-tint-text {
+    color: var(--cs-tint);
+  }
+  .cs-hub-art {
+    background: radial-gradient(120% 90% at 50% 100%, color-mix(in srgb, var(--cs-tint) 16%, transparent), transparent 70%), rgb(var(--surface-1) / 0.6);
+  }
+  @media print {
+    .cs-hub-art {
+      display: none;
+    }
+  }
+</style>

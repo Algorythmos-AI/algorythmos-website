@@ -1,0 +1,84 @@
+---
+/**
+ * One case study on the listing page. The data-* attributes feed the find-a-study
+ * filter; without that script the card is plain static HTML.
+ */
+import type { CaseStudyCategory } from '@/data/caseStudies';
+import { categoryStyles } from '@/data/caseStudyCategories';
+import { asLocale, useTranslations } from '@/i18n';
+
+export interface CardData {
+  slug: string;
+  href: string;
+  category: CaseStudyCategory;
+  sector: string;
+  title: string;
+  challenge: string;
+  solution: string;
+  result: string;
+  date: string;
+  dateLabel: string;
+  partners: string[];
+  /** Folded search text (title + summary). */
+  search: string;
+}
+interface Props {
+  card: CardData;
+  chip: string;
+  index: number;
+}
+const { card, chip, index } = Astro.props;
+const t = useTranslations(asLocale(Astro.currentLocale));
+const highlightResult = card.category === 'client';
+---
+
+<li data-cs-card data-slug={card.slug} data-sector={card.sector} data-search={card.search} class="flex">
+  <a
+    href={card.href}
+    data-reveal
+    style={`--reveal-delay: ${Math.min(index, 5) * 70}ms; --cs-tint: ${categoryStyles[card.category].tint}`}
+    class="cs-card group ring-gradient relative flex w-full flex-col rounded-2xl border border-line glass p-6 transition-[transform,box-shadow] duration-300 ease-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+  >
+    <span class="cs-chip mb-3 text-xs font-semibold uppercase tracking-wide">{chip}</span>
+    <h3 class="text-h3 font-semibold text-ink">{card.title}</h3>
+    <dl class="mt-4 flex-1 space-y-3 text-sm leading-relaxed text-ink-muted">
+      <div>
+        <dt class="font-semibold text-brand">{t('caseStudies.labels.challenge')}</dt>
+        <dd class="mt-0.5">{card.challenge}</dd>
+      </div>
+      <div>
+        <dt class="font-semibold text-brand">{t('caseStudies.labels.solution')}</dt>
+        <dd class="mt-0.5">{card.solution}</dd>
+      </div>
+      <div class:list={[highlightResult && 'cs-result -mx-2 rounded-lg px-2 py-2']}>
+        <dt class="font-semibold text-brand">{t('caseStudies.labels.result')}</dt>
+        <dd class:list={['mt-0.5', highlightResult && 'font-medium text-ink']}>{card.result}</dd>
+      </div>
+    </dl>
+    <div class="mt-5 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-t border-line/70 pt-4 text-xs text-ink-subtle">
+      <span>
+        <time datetime={card.date}>{card.dateLabel}</time>
+        {card.partners.length > 0 && <span> · {t('caseStudies.card.with', { name: card.partners.join(', ') })}</span>}
+      </span>
+      <span class="inline-flex items-center gap-1.5 text-sm font-semibold text-brand">
+        {t('caseStudies.card.read')}
+        <svg class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+      </span>
+    </div>
+  </a>
+</li>
+
+<style>
+  .cs-chip {
+    color: var(--cs-tint);
+  }
+  .cs-result {
+    background: color-mix(in srgb, var(--cs-tint) 9%, transparent);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .cs-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--glow);
+    }
+  }
+</style>
