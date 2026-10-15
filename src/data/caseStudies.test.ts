@@ -6,7 +6,7 @@
 import { describe, it, expect } from 'vitest';
 import en from '../i18n/ui/en.global.json';
 import fr from '../i18n/ui/fr.fr.json';
-import { caseStudies, caseStudySlugs, CASE_STUDY_CATEGORIES, CASE_STUDY_SECTORS, groupedCaseStudies, latestCaseStudy } from './caseStudies';
+import { caseStudies, caseStudySlugs, CASE_STUDY_CATEGORIES, CASE_STUDY_SECTORS, groupedCaseStudies, latestCaseStudy, siblingCaseStudies } from './caseStudies';
 import { categoryStyles } from './caseStudyCategories';
 import { readFileSync } from 'node:fs';
 
@@ -79,5 +79,27 @@ describe('case-study listing page', () => {
       expect(d[`caseStudies.${k}`], k).toBeTruthy();
     expect(d['caseStudies.hub.count.other']).toContain('{n}');
     expect(d['caseStudies.filter.results.other']).toContain('{n}');
+  });
+});
+
+describe('siblingCaseStudies', () => {
+  it('returns other studies in the same category only, never the study itself', () => {
+    for (const c of caseStudies) {
+      const sib = siblingCaseStudies(c.slug);
+      expect(sib.length).toBe(Math.min(3, caseStudies.filter((s) => s.category === c.category).length - 1));
+      for (const s of sib) {
+        expect(s.category).toBe(c.category);
+        expect(s.slug).not.toBe(c.slug);
+      }
+      expect(new Set(sib.map((s) => s.slug)).size).toBe(sib.length);
+    }
+  });
+  it('starts after the study and wraps round', () => {
+    const same = caseStudies.filter((c) => c.category === 'research');
+    const last = same.at(-1)!;
+    expect(siblingCaseStudies(last.slug, 1)[0]).toBe(same[0]);
+  });
+  it('is empty for an unknown slug', () => {
+    expect(siblingCaseStudies('nope')).toEqual([]);
   });
 });

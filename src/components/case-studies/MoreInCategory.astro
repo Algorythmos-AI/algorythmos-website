@@ -1,0 +1,55 @@
+---
+/**
+ * "More in this category" on a case-study page: up to three sibling studies and a
+ * link back to the category's section on the index. Static, zero JS; renders
+ * nothing for a category with only one study.
+ */
+import CategoryBadge from './CategoryBadge.astro';
+import { siblingCaseStudies, getCaseStudy } from '@/data/caseStudies';
+import { categoryStyles } from '@/data/caseStudyCategories';
+import { asLocale, useTranslations, localizePath } from '@/i18n';
+
+interface Props {
+  slug: string;
+}
+const { slug } = Astro.props;
+const locale = asLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const self = getCaseStudy(slug);
+const items = siblingCaseStudies(slug).map((c) => ({
+  slug: c.slug,
+  href: localizePath(locale, `/case-studies/${c.slug}`),
+  title: t(`caseStudies.items.${c.i18nIndex}.title`),
+  result: t(`caseStudies.items.${c.i18nIndex}.result`),
+}));
+const category = self?.category;
+---
+
+{category && items.length > 0 && (
+  <section aria-labelledby="cs-more-title" data-cs-more class="container-page pb-10 pt-16 print:hidden" style={`--cs-tint: ${categoryStyles[category].tint}`}>
+    <div class="mb-6 flex flex-wrap items-end justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <CategoryBadge category={category} />
+        <h2 id="cs-more-title" class="text-h3 font-semibold text-ink">{t('caseStudies.more.title', { category: t(`caseStudies.categories.${category}.title`) })}</h2>
+      </div>
+      <a href={localizePath(locale, `/case-studies#${category}`)} class="inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-brand underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand">
+        {t('caseStudies.more.all')}
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+      </a>
+    </div>
+    <ul class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {items.map((it) => (
+        <li class="flex">
+          <a href={it.href} data-cs-more-item={it.slug} class="group ring-gradient flex w-full flex-col rounded-2xl border border-line glass p-5 transition-[transform,box-shadow] duration-300 ease-smooth hover:-translate-y-1 hover:shadow-glow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand">
+            <span class="font-semibold text-ink">{it.title}</span>
+            <span class="mt-2 line-clamp-3 flex-1 text-sm leading-relaxed text-ink-muted">{it.result}</span>
+            <span class="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-brand">
+              {t(category === 'research' ? 'caseStudies.card.readReport' : 'caseStudies.card.read')}
+              <svg class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
