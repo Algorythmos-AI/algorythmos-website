@@ -283,6 +283,90 @@ const { kind, class: klass = 'mx-auto block h-full w-full max-w-[560px] p-8' } =
   )
 }
 
+{
+  kind === 'cs-client' && (
+    /* Client case studies — three live dashboards fed by one monitored pipeline */
+    <svg viewBox="0 0 480 240" fill="none" aria-hidden="true" class={klass}>
+      {[0, 1, 2].map((i) => (
+        <g>
+          <rect x={44 + i * 136} y={40 + (i === 1 ? -12 : 0)} width="120" height="96" rx="10" fill="rgb(var(--surface-2) / 0.9)" stroke={i === 1 ? 'rgb(var(--accent))' : 'rgb(var(--brand))'} stroke-width="1.5" />
+          <path d={`M${56 + i * 136} ${64 + (i === 1 ? -12 : 0)}h40`} stroke="rgb(var(--text-muted))" stroke-width="1.5" stroke-linecap="round" />
+        </g>
+      ))}
+      <path class="bp-draw" d="M56 120 C 76 116, 86 98, 104 100 S 136 86, 152 80" stroke="rgb(var(--accent))" stroke-width="2" stroke-linecap="round" />
+      <g fill="rgb(var(--brand) / 0.55)">
+        {[0, 1, 2, 3, 4].map((i) => <rect x={194 + i * 18} y={108 - [20, 34, 26, 46, 38][i]} width="10" height={[20, 34, 26, 46, 38][i]} rx="2" />)}
+      </g>
+      <circle cx="384" cy="88" r="26" stroke="rgb(var(--border-strong))" stroke-width="8" />
+      <path d="M384 62a26 26 0 0 1 24 36" stroke="rgb(var(--accent))" stroke-width="8" stroke-linecap="round" />
+      <g class="bp-flow" stroke="rgb(var(--accent))" stroke-width="1.5" stroke-dasharray="6 6">
+        <path d="M104 136v40h272v-40M240 124v52" />
+      </g>
+      <rect x="196" y="176" width="88" height="34" rx="8" fill="rgb(var(--surface-3) / 0.95)" stroke="rgb(var(--accent))" stroke-width="1.5" />
+      <circle class="bp-pulse" cx="214" cy="193" r="5" fill="rgb(var(--success))" />
+      <path d="M226 189h44M226 198h28" stroke="rgb(var(--text-muted))" stroke-width="1.5" stroke-linecap="round" />
+    </svg>
+  )
+}
+{
+  kind === 'cs-industry' && (
+    /* Industry case studies — an isometric site with plant, conveyor and sensors */
+    <svg viewBox="0 0 480 240" fill="none" aria-hidden="true" class={klass}>
+      <path d="M240 96 420 168 240 236 60 168Z" fill="rgb(var(--surface-2) / 0.85)" stroke="rgb(var(--brand))" stroke-width="1.5" />
+      <g stroke="rgb(var(--brand))" stroke-width="1.5">
+        <path d="M150 150v-56l40-16v56Z" fill="rgb(var(--surface-3) / 0.95)" />
+        <path d="M190 134V78l40 16v56Z" fill="rgb(var(--brand) / 0.12)" />
+        <path d="M150 94l40-16 40 16-40 16Z" fill="rgb(var(--brand) / 0.2)" />
+        <path d="M206 84V40h10v48" fill="rgb(var(--surface-3) / 0.95)" />
+      </g>
+      <g class="bp-flow" stroke="rgb(var(--accent))" stroke-width="2" stroke-dasharray="8 6">
+        <path d="M232 150l110 44" />
+      </g>
+      <g stroke="rgb(var(--accent))" stroke-width="1.5">
+        <path d="M300 150l40-16 40 16-40 16Z" fill="rgb(var(--accent) / 0.16)" />
+        <path d="M300 150v14l40 16v-14M380 150v14l-40 16" fill="rgb(var(--surface-3) / 0.9)" />
+      </g>
+      {[[110, 176], [260, 120], [360, 196], [404, 140]].map(([x, y], i) => (
+        <g>
+          <circle class="bp-pulse" cx={x} cy={y} r="5" fill="rgb(var(--accent))" style={`animation-delay: ${i * 0.5}s`} />
+          <circle cx={x} cy={y} r="12" stroke="rgb(var(--accent))" stroke-width="1" opacity="0.4" />
+        </g>
+      ))}
+      <g class="bp-float">
+        <rect x="320" y="28" width="120" height="44" rx="10" fill="rgb(var(--surface-3) / 0.95)" stroke="rgb(var(--brand))" stroke-width="1.5" />
+        <path d="M334 58 C 352 56, 360 40, 378 44 S 410 36, 426 40" stroke="rgb(var(--accent))" stroke-width="2" stroke-linecap="round" />
+      </g>
+      <path d="M380 72v54" stroke="rgb(var(--brand))" stroke-width="1" stroke-dasharray="3 4" />
+    </svg>
+  )
+}
+{
+  kind === 'cs-research' && (
+    /* Research & evidence — a die of memory cells under a scanning beam, with a source sheet */
+    <svg viewBox="0 0 480 240" fill="none" aria-hidden="true" class={klass}>
+      <rect x="40" y="32" width="270" height="176" rx="12" fill="rgb(var(--surface-2) / 0.9)" stroke="rgb(var(--brand))" stroke-width="1.5" />
+      <g>
+        {Array.from({ length: 48 }, (_, i) => {
+          const col = i % 8;
+          const row = Math.floor(i / 8);
+          const hot = [3, 10, 12, 21, 27, 30, 36, 44].includes(i);
+          return (
+            <rect x={58 + col * 30} y={48 + row * 26} width="22" height="18" rx="3" fill={hot ? 'rgb(var(--accent) / 0.55)' : 'rgb(var(--brand) / 0.18)'} stroke={hot ? 'rgb(var(--accent))' : 'rgb(var(--brand) / 0.5)'} />
+          );
+        })}
+      </g>
+      <rect class="bp-scan" x="48" y="112" width="254" height="3" rx="1.5" fill="rgb(var(--accent))" opacity="0.7" />
+      <g class="bp-float">
+        <rect x="326" y="52" width="118" height="140" rx="10" fill="rgb(var(--surface-3) / 0.95)" stroke="rgb(var(--brand))" stroke-width="1.5" />
+        <path d="M342 76h86M342 92h70M342 108h80M342 124h56" stroke="rgb(var(--text-muted))" stroke-width="1.5" stroke-linecap="round" />
+        <path d="M342 150h20M342 166h20M342 182h20" stroke="rgb(var(--accent))" stroke-width="2" stroke-linecap="round" />
+        <path d="M370 150h50M370 166h40M370 182h46" stroke="rgb(var(--border-strong))" stroke-width="1.5" stroke-linecap="round" />
+      </g>
+      <path class="bp-flow" d="M310 120h16" stroke="rgb(var(--accent))" stroke-width="1.5" stroke-dasharray="4 4" />
+    </svg>
+  )
+}
+
 <style is:global>
   @media (prefers-reduced-motion: no-preference) {
     .bp-flow { animation: bp-dash 1.6s linear infinite; }

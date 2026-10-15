@@ -1,19 +1,48 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHeader from '@/components/sections/PageHeader.astro';
+import Button from '@/components/ui/Button.astro';
+import Aurora from '@/components/ui/Aurora.astro';
+import BlueprintArt from '@/components/ui/BlueprintArt.astro';
+import CaseStudyHub, { type HubGroup } from '@/components/case-studies/CaseStudyHub.astro';
+import CaseStudyCard, { type CardData } from '@/components/case-studies/CaseStudyCard.astro';
+import CategoryBadge from '@/components/case-studies/CategoryBadge.astro';
 import { sceneFor } from '@/data/sceneMap';
-import { asLocale, useTranslations, localizePath } from '@/i18n';
-import { getCaseStudy, groupedCaseStudies } from '@/data/caseStudies';
+import { asLocale, useTranslations, localizePath, REGIONS } from '@/i18n';
+import { CASE_STUDY_SECTORS, groupedCaseStudies, latestCaseStudy, type CaseStudy } from '@/data/caseStudies';
+import { categoryStyles } from '@/data/caseStudyCategories';
+import { getPartnerLink } from '@/data/partners';
+import { fold } from '@/lib/filterStudies';
+import { bookingUrl } from '@/lib/links';
 import { breadcrumb, SITE } from '@/seo/schema';
 
 const locale = asLocale(Astro.currentLocale);
 const t = useTranslations(locale);
 const abs = (p: string) => SITE + localizePath(locale, p);
+const dateFmt = new Intl.DateTimeFormat(REGIONS[locale].lang, { month: 'short', year: 'numeric', timeZone: 'UTC' });
+const count = (n: number) => (n === 1 ? t('caseStudies.hub.count.one') : t('caseStudies.hub.count.other', { n }));
 
-/** Resolve a card's translatable field from its i18n index. */
-function field(slug: string, key: 'title' | 'challenge' | 'solution' | 'result'): string {
-  const cs = getCaseStudy(slug);
-  return cs ? t(`caseStudies.items.${cs.i18nIndex}.${key}`) : '';
+function toCard(c: CaseStudy): CardData {
+  const f = (key: 'title' | 'challenge' | 'solution' | 'result') => t(`caseStudies.items.${c.i18nIndex}.${key}`);
+  const partners = (c.coAuthors ?? []).map((s) => {
+    const p = getPartnerLink(s);
+    if (!p) throw new Error(`Case study ${c.slug}: unknown co-author partner "${s}"`);
+    return p.name;
+  });
+  return {
+    slug: c.slug,
+    href: localizePath(locale, `/case-studies/${c.slug}`),
+    category: c.category,
+    sector: c.sector,
+    title: f('title'),
+    challenge: f('challenge'),
+    solution: f('solution'),
+    result: f('result'),
+    date: c.date,
+    dateLabel: dateFmt.format(new Date(`${c.date}T00:00:00Z`)),
+    partners,
+    search: fold([f('title'), f('challenge'), f('solution'), f('result'), t(`caseStudies.filter.sector.${c.sector}`)].join(' ')),
+  };
 }
 
 /** Sections in display order; empty categories are already dropped. */
@@ -21,16 +50,41 @@ const groups = groupedCaseStudies().map((g) => ({
   id: g.category,
   title: t(`caseStudies.categories.${g.category}.title`),
   description: t(`caseStudies.categories.${g.category}.description`),
+  audience: t(`caseStudies.categories.${g.category}.audience`),
   chip: t(`caseStudies.categories.${g.category}.chip`),
-  cards: g.items.map((c) => ({
-    slug: c.slug,
-    title: field(c.slug, 'title'),
-    challenge: field(c.slug, 'challenge'),
-    solution: field(c.slug, 'solution'),
-    result: field(c.slug, 'result'),
-  })),
+  cards: g.items.map(toCard),
 }));
 const cards = groups.flatMap((g) => g.cards);
+const hubGroups: HubGroup[] = groups.map((g) => ({
+  id: g.id,
+  title: g.title,
+  description: g.description,
+  audience: g.audience,
+  countLabel: count(g.cards.length),
+  items: g.cards.map((c) => ({ slug: c.slug, href: c.href, title: c.title })),
+}));
+
+/** Newest study, featured above the hub. */
+const latest = latestCaseStudy();
+const spotlight = latest && {
+  card: toCard(latest),
+  meta: t(`caseStudyDetail.studies.${latest.slug}.meta`),
+  chip: t(`caseStudies.categories.${latest.category}.chip`),
+  art: categoryStyles[latest.category].art,
+  tint: categoryStyles[latest.category].tint,
+};
+
+/** Only sectors that have at least one study get a chip. */
+const sectors = CASE_STUDY_SECTORS.filter((s) => cards.some((c) => c.sector === s)).map((s) => ({
+  id: s,
+  label: t(`caseStudies.filter.sector.${s}`),
+}));
+/** Serialised for the filter script (kept out of the markup on purpose). */
+const finderCopy = JSON.stringify({
+  one: t('caseStudies.filter.results.one'),
+  other: t('caseStudies.filter.results.other'),
+});
+const sectorIds = JSON.stringify(sectors.map((s) => s.id));
 
 const collection = {
   '@context': 'https://schema.org',
@@ -62,71 +116,189 @@ const crumbs = breadcrumb([
 >
   <PageHeader eyebrow={t('nav.caseStudies')} title={t('caseStudies.hero.title')} lead={t('caseStudies.hero.subtitle')} scene={sceneFor('case-studies')} />
 
+  {spotlight && (
+    <section aria-labelledby="cs-spotlight-title" class="container-page pt-14 sm:pt-16">
+      <a
+        href={spotlight.card.href}
+        data-cs-spotlight
+        data-reveal
+        style={`--cs-tint: ${spotlight.tint}`}
+        class="cs-spotlight group ring-gradient relative grid overflow-hidden rounded-3xl border border-line glass focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand md:grid-cols-[1.25fr_1fr]"
+      >
+        <div class="p-6 sm:p-8">
+          <p class="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-widest">
+            <span class="cs-spot-pill rounded-full px-2.5 py-1">{t('caseStudies.spotlight.eyebrow')}</span>
+            <span class="cs-spot-text">{spotlight.chip}</span>
+          </p>
+          <h2 id="cs-spotlight-title" class="mt-4 text-h2 font-semibold text-ink">{spotlight.card.title}</h2>
+          <p class="mt-3 max-w-2xl text-ink-muted">{spotlight.meta}</p>
+          <p class="mt-4 text-xs text-ink-subtle">
+            <time datetime={spotlight.card.date}>{spotlight.card.dateLabel}</time>
+            {spotlight.card.partners.length > 0 && <span> · {t('caseStudies.card.with', { name: spotlight.card.partners.join(', ') })}</span>}
+          </p>
+          <span class="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-brand">
+            {t('caseStudies.spotlight.read')}
+            <svg class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+          </span>
+        </div>
+        <div class="cs-spot-art hidden aspect-[2/1] md:block md:aspect-auto">
+          <BlueprintArt kind={spotlight.art} class="block h-full w-full p-6" />
+        </div>
+      </a>
+    </section>
+  )}
+
+  <CaseStudyHub groups={hubGroups} />
+
   <nav
     aria-label={t('caseStudies.categories.nav')}
     data-cs-nav
-    class="sticky top-14 z-[var(--z-sticky)] border-b border-line/70 bg-bg/80 backdrop-blur-md"
+    class="sticky top-14 z-[var(--z-sticky)] mt-16 border-y border-line/70 bg-bg/80 backdrop-blur-md print:hidden"
   >
-    <ul class="container-page flex snap-x gap-2 overflow-x-auto py-3 [scrollbar-width:none]">
+    <ul class="container-page flex snap-x scroll-px-4 gap-2 overflow-x-auto py-3 [scrollbar-width:none] sm:scroll-px-6">
       {groups.map((g) => (
         <li class="shrink-0 snap-start">
           <a
             href={`#${g.id}`}
             data-cs-pill={g.id}
-            class="inline-flex min-h-11 items-center gap-2 rounded-full border border-line glass px-4 text-sm font-medium text-ink-muted transition-colors duration-200 hover:border-brand/60 hover:text-ink aria-[current=true]:border-brand aria-[current=true]:text-ink"
+            class="inline-flex min-h-11 items-center gap-2 rounded-full border border-line glass px-4 text-sm font-medium text-ink-muted transition-colors duration-200 hover:border-brand/60 hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand aria-[current=true]:border-brand aria-[current=true]:text-ink"
           >
             {g.title}
-            <span class="rounded-full bg-surface-2 px-2 py-0.5 text-xs tabular-nums text-ink-subtle">{g.cards.length}</span>
+            <span data-cs-pill-count={g.id} class="rounded-full bg-surface-2 px-2 py-0.5 text-xs tabular-nums text-ink-subtle">{g.cards.length}</span>
           </a>
         </li>
       ))}
     </ul>
   </nav>
 
-  <div class="container-page py-16 sm:py-20">
+  <div class="container-page py-12 sm:py-16">
+    <div
+      data-cs-finder
+      data-copy={finderCopy}
+      data-sectors={sectorIds}
+      hidden
+      role="search"
+      aria-label={t('caseStudies.filter.label')}
+      class="mb-10 rounded-2xl border border-line glass p-4 sm:p-5 print:hidden"
+    >
+      <div class="flex flex-col gap-4 lg:flex-row lg:items-center">
+        <label class="relative block lg:w-80 lg:shrink-0">
+          <span class="sr-only">{t('caseStudies.filter.search')}</span>
+          <svg class="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-subtle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>
+          <input
+            data-cs-q
+            type="search"
+            enterkeyhint="search"
+            autocomplete="off"
+            maxlength="100"
+            placeholder={t('caseStudies.filter.placeholder')}
+            class="min-h-11 w-full rounded-full border border-line bg-surface-2/60 pl-10 pr-4 text-sm text-ink placeholder:text-ink-subtle focus-visible:border-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40"
+          />
+        </label>
+        <div role="group" aria-label={t('caseStudies.filter.sectors')} class="-mx-1 flex snap-x scroll-px-1 gap-2 overflow-x-auto px-1 pb-1 [scrollbar-width:none] lg:flex-wrap lg:overflow-visible lg:pb-0">
+          <button type="button" data-cs-sector="" aria-pressed="true" class="cs-chip-btn">{t('caseStudies.filter.all')}</button>
+          {sectors.map((s) => (
+            <button type="button" data-cs-sector={s.id} aria-pressed="false" class="cs-chip-btn">{s.label}</button>
+          ))}
+        </div>
+      </div>
+      <div data-cs-statusrow hidden class="mt-3 flex min-h-6 flex-wrap items-center gap-x-4 gap-y-1 text-sm">
+        <p data-cs-status class="text-ink-subtle"></p>
+        <button type="button" data-cs-clear hidden class="font-semibold text-brand underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand">{t('caseStudies.filter.clear')}</button>
+      </div>
+    </div>
+
+    <p data-cs-live aria-live="polite" class="sr-only"></p>
     <p data-reveal class="max-w-3xl text-sm text-ink-subtle">{t('caseStudies.note')}</p>
+
+    <div data-cs-none hidden class="mt-10 rounded-2xl border border-dashed border-line p-10 text-center">
+      <p class="text-ink-muted">{t('caseStudies.filter.none')}</p>
+      <button type="button" data-cs-clear class="mt-4 inline-flex min-h-11 items-center rounded-full border border-line px-5 text-sm font-semibold text-ink hover:border-brand hover:text-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand">{t('caseStudies.filter.clear')}</button>
+    </div>
 
     {groups.map((g) => (
       <section id={g.id} aria-labelledby={`${g.id}-title`} data-cs-section class="mt-14 scroll-mt-36 first-of-type:mt-10">
-        <div data-reveal class="mb-6 max-w-3xl">
-          <h2 id={`${g.id}-title`} class="text-h2 font-semibold text-ink">{g.title}</h2>
-          <p class="mt-2 text-ink-muted">{g.description}</p>
+        <div data-reveal class="mb-6 flex max-w-3xl items-start gap-4">
+          <CategoryBadge category={g.id} />
+          <div>
+            <h2 id={`${g.id}-title`} class="text-h2 font-semibold text-ink">
+              {g.title} <span class="align-middle text-base font-medium tabular-nums text-ink-subtle">(<span data-cs-count>{g.cards.length}</span>)</span>
+            </h2>
+            <p class="mt-2 text-ink-muted">{g.description}</p>
+          </div>
         </div>
-        <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {g.cards.map((c, i) => (
-            <a
-              href={localizePath(locale, `/case-studies/${c.slug}`)}
-              data-reveal
-              style={`--reveal-delay: ${Math.min(i, 5) * 70}ms`}
-              class="group ring-gradient relative flex flex-col rounded-2xl border border-line glass p-6 transition-[transform,box-shadow] duration-300 ease-smooth hover:-translate-y-1 hover:shadow-glow"
-            >
-              <span class="mb-3 text-xs font-semibold uppercase tracking-wide text-brand">{g.chip}</span>
-              <h3 class="text-h3 font-semibold text-ink">{c.title}</h3>
-              <dl class="mt-4 flex-1 space-y-3 text-sm leading-relaxed text-ink-muted">
-                <div>
-                  <dt class="font-semibold text-brand">{t('caseStudies.labels.challenge')}</dt>
-                  <dd class="mt-0.5">{c.challenge}</dd>
-                </div>
-                <div>
-                  <dt class="font-semibold text-brand">{t('caseStudies.labels.solution')}</dt>
-                  <dd class="mt-0.5">{c.solution}</dd>
-                </div>
-                <div>
-                  <dt class="font-semibold text-brand">{t('caseStudies.labels.result')}</dt>
-                  <dd class="mt-0.5">{c.result}</dd>
-                </div>
-              </dl>
-              <span class="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-brand">
-                {t('caseStudyDetail.cta.button')}
-                <svg class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
-              </span>
-            </a>
-          ))}
-        </div>
+        <p data-cs-section-empty hidden class="rounded-xl border border-dashed border-line px-4 py-3 text-sm text-ink-subtle">{t('caseStudies.filter.sectionEmpty')}</p>
+        <ul class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {g.cards.map((c, i) => <CaseStudyCard card={c} chip={g.chip} index={i} />)}
+        </ul>
       </section>
     ))}
   </div>
+
+  <section class="container-page pb-24 print:hidden">
+    <div data-reveal class="relative overflow-hidden rounded-[2rem] border border-line glass px-6 py-16 text-center shadow-e2 sm:px-12">
+      <Aurora class="opacity-70" />
+      <h2 class="mx-auto max-w-3xl text-h2 font-extrabold tracking-tight text-ink">{t('caseStudies.cta.title')}</h2>
+      <p class="mx-auto mt-4 max-w-xl text-ink-muted">{t('caseStudies.cta.subtitle')}</p>
+      <div class="mt-8 flex flex-wrap justify-center gap-4">
+        <Button href={bookingUrl(locale)} target="_blank" rel="noopener" size="lg">{t('hero.cta.primary')}</Button>
+      </div>
+    </div>
+  </section>
 </BaseLayout>
+
+<style>
+  .cs-spotlight {
+    background-image: linear-gradient(110deg, color-mix(in srgb, var(--cs-tint) 12%, transparent), transparent 55%);
+  }
+  .cs-spot-text {
+    color: var(--cs-tint);
+  }
+  .cs-spot-pill {
+    color: rgb(var(--bg));
+    background: var(--cs-tint);
+  }
+  .cs-spot-art {
+    background: radial-gradient(90% 90% at 60% 60%, color-mix(in srgb, var(--cs-tint) 18%, transparent), transparent 70%);
+  }
+  :global(.cs-chip-btn) {
+    display: inline-flex;
+    flex-shrink: 0;
+    min-height: 2.75rem;
+    align-items: center;
+    scroll-snap-align: start;
+    border-radius: 9999px;
+    border: 1px solid rgb(var(--border));
+    padding: 0 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: rgb(var(--text-muted));
+    transition: color 0.2s, border-color 0.2s, background-color 0.2s;
+  }
+  :global(.cs-chip-btn:hover) {
+    color: rgb(var(--text));
+    border-color: rgb(var(--brand) / 0.6);
+  }
+  :global(.cs-chip-btn[aria-pressed='true']) {
+    color: rgb(var(--text));
+    border-color: rgb(var(--brand));
+    background: rgb(var(--brand) / 0.14);
+  }
+  :global(.cs-chip-btn:focus-visible) {
+    outline: 2px solid rgb(var(--brand));
+    outline-offset: 2px;
+  }
+  /* Utility classes set display (flex, inline-flex), which beats the UA's
+     [hidden] rule; the filter relies on `hidden` really hiding. */
+  :global(:is([data-cs-card], [data-cs-finder], [data-cs-none], [data-cs-section-empty], [data-cs-clear], [data-cs-statusrow])[hidden]) {
+    display: none !important;
+  }
+  @media print {
+    :global([data-cs-card][hidden]) {
+      display: flex !important;
+    }
+  }
+</style>
 
 <script>
   /* Scroll-spy for the category bar. Progressive enhancement only: without it
@@ -167,4 +339,111 @@ const crumbs = breadcrumb([
   document.addEventListener('astro:page-load', setupCaseStudyNav);
   /* Initialize immediately if astro:page-load already fired before this module ran */
   if (document.readyState !== 'loading') setupCaseStudyNav();
+</script>
+
+<script>
+  /* Find-a-study filter. Progressive enhancement: the toolbar ships `hidden` and
+     is revealed only here, so without JS (or if this throws) nobody sees a
+     control that does nothing and every card stays listed. Remove this block
+     to switch it off. Matching lives in src/lib/filterStudies.ts. */
+  import { filterStudies, cleanFilter, type FilterableStudy } from '@/lib/filterStudies';
+
+  function setupFinder() {
+    const root = document.querySelector<HTMLElement>('[data-cs-finder]');
+    if (!root || root.dataset.bound === 'true') return;
+    root.dataset.bound = 'true';
+    try {
+      const copy = JSON.parse(root.dataset.copy ?? '{}') as { one: string; other: string };
+      const sectors = JSON.parse(root.dataset.sectors ?? '[]') as string[];
+      const input = root.querySelector<HTMLInputElement>('[data-cs-q]');
+      const chips = [...root.querySelectorAll<HTMLButtonElement>('[data-cs-sector]')];
+      const status = root.querySelector<HTMLElement>('[data-cs-status]');
+      const statusRow = root.querySelector<HTMLElement>('[data-cs-statusrow]');
+      const live = document.querySelector<HTMLElement>('[data-cs-live]');
+      const clears = [...document.querySelectorAll<HTMLButtonElement>('[data-cs-clear]')];
+      const none = document.querySelector<HTMLElement>('[data-cs-none]');
+      const items = [...document.querySelectorAll<HTMLElement>('[data-cs-card]')];
+      const sections = [...document.querySelectorAll<HTMLElement>('[data-cs-section]')];
+      if (!input || !status || items.length === 0) return;
+
+      const list: FilterableStudy[] = items.map((el) => ({
+        slug: el.dataset.slug ?? '',
+        sector: el.dataset.sector ?? '',
+        text: el.dataset.search ?? '',
+      }));
+
+      const params = new URLSearchParams(location.search);
+      let state = cleanFilter({ q: params.get('q'), sector: params.get('sector') }, sectors);
+
+      const apply = (writeUrl: boolean) => {
+        const match = new Set(filterStudies(list, state, sectors));
+        items.forEach((el) => (el.hidden = !match.has(el.dataset.slug ?? '')));
+        for (const s of sections) {
+          const shown = s.querySelectorAll('[data-cs-card]:not([hidden])').length;
+          const n = s.querySelector('[data-cs-count]');
+          if (n) n.textContent = String(shown);
+          const pill = document.querySelector(`[data-cs-pill-count="${s.id}"]`);
+          if (pill) pill.textContent = String(shown);
+          const empty = s.querySelector<HTMLElement>('[data-cs-section-empty]');
+          if (empty) empty.hidden = shown > 0;
+        }
+        const active = Boolean(state.q || state.sector);
+        if (none) none.hidden = match.size > 0;
+        status.textContent = active ? (match.size === 1 ? copy.one : copy.other.replace('{n}', String(match.size))) : '';
+        if (live && writeUrl) live.textContent = match.size === 1 ? copy.one : copy.other.replace('{n}', String(match.size));
+        clears.forEach((b) => {
+          if (b.closest('[data-cs-finder]')) b.hidden = !active;
+        });
+        if (statusRow) statusRow.hidden = !active;
+        chips.forEach((c) => c.setAttribute('aria-pressed', String((c.dataset.csSector || null) === state.sector)));
+        if (input.value.trim() !== state.q) input.value = state.q;
+        if (writeUrl) {
+          const url = new URL(location.href);
+          state.q ? url.searchParams.set('q', state.q) : url.searchParams.delete('q');
+          state.sector ? url.searchParams.set('sector', state.sector) : url.searchParams.delete('sector');
+          history.replaceState(history.state, '', url);
+        }
+      };
+
+      let timer = 0;
+      input.addEventListener('input', () => {
+        window.clearTimeout(timer);
+        timer = window.setTimeout(() => {
+          state = cleanFilter({ q: input.value, sector: state.sector }, sectors);
+          apply(true);
+        }, 120);
+      });
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && input.value) {
+          e.preventDefault();
+          input.value = '';
+          state = cleanFilter({ q: '', sector: state.sector }, sectors);
+          apply(true);
+        }
+      });
+      chips.forEach((c) =>
+        c.addEventListener('click', () => {
+          state = cleanFilter({ q: state.q, sector: c.dataset.csSector || null }, sectors);
+          apply(true);
+        }),
+      );
+      clears.forEach((b) =>
+        b.addEventListener('click', () => {
+          state = { q: '', sector: null };
+          apply(true);
+          input.focus();
+        }),
+      );
+
+      root.hidden = false;
+      apply(false);
+    } catch {
+      /* leave every card visible and the toolbar hidden */
+      root.hidden = true;
+      document.querySelectorAll<HTMLElement>('[data-cs-card]').forEach((el) => (el.hidden = false));
+    }
+  }
+  document.addEventListener('astro:page-load', setupFinder);
+  /* Initialize immediately if astro:page-load already fired before this module ran */
+  if (document.readyState !== 'loading') setupFinder();
 </script>

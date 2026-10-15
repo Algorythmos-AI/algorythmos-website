@@ -19,7 +19,7 @@ const SCENE_SPECS = /(scene3d|scene3d-soak|csp)\.spec\.ts/;
 /* The same, on phone and tablet profiles. */
 const MOBILE_SCENE_SPECS = /scene3d-mobile\.spec\.ts/;
 /* What the phone and tablet projects run besides. */
-const MOBILE_SPECS = /(overlays|a11y|scene-debug|motion-mobile)\.spec\.ts/;
+const MOBILE_SPECS = /(overlays|a11y|scene-debug|motion-mobile|case-studies)\.spec\.ts/;
 const TABLET_SPECS = /motion-mobile\.spec\.ts/;
 
 export default defineConfig({
@@ -52,7 +52,7 @@ export default defineConfig({
          whether content below the fold is visible at all). */
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
-      testMatch: /(console|french-locale|a11y|responsive-header|overlays|motion|navigation-state|interactions|scene-debug)\.spec\.ts/,
+      testMatch: /(console|french-locale|a11y|responsive-header|overlays|motion|navigation-state|interactions|scene-debug|case-studies)\.spec\.ts/,
     },
     {
       name: 'webkit-scenes',
