@@ -3,7 +3,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHeader from '@/components/sections/PageHeader.astro';
 import { sceneFor } from '@/data/sceneMap';
 import { asLocale, useTranslations, localizePath } from '@/i18n';
-import { caseStudies, getCaseStudy } from '@/data/caseStudies';
+import { getCaseStudy, groupedCaseStudies } from '@/data/caseStudies';
 import { breadcrumb, SITE } from '@/seo/schema';
 
 const locale = asLocale(Astro.currentLocale);
@@ -16,13 +16,21 @@ function field(slug: string, key: 'title' | 'challenge' | 'solution' | 'result')
   return cs ? t(`caseStudies.items.${cs.i18nIndex}.${key}`) : '';
 }
 
-const cards = caseStudies.map((c) => ({
-  slug: c.slug,
-  title: field(c.slug, 'title'),
-  challenge: field(c.slug, 'challenge'),
-  solution: field(c.slug, 'solution'),
-  result: field(c.slug, 'result'),
+/** Sections in display order; empty categories are already dropped. */
+const groups = groupedCaseStudies().map((g) => ({
+  id: g.category,
+  title: t(`caseStudies.categories.${g.category}.title`),
+  description: t(`caseStudies.categories.${g.category}.description`),
+  chip: t(`caseStudies.categories.${g.category}.chip`),
+  cards: g.items.map((c) => ({
+    slug: c.slug,
+    title: field(c.slug, 'title'),
+    challenge: field(c.slug, 'challenge'),
+    solution: field(c.slug, 'solution'),
+    result: field(c.slug, 'result'),
+  })),
 }));
+const cards = groups.flatMap((g) => g.cards);
 
 const collection = {
   '@context': 'https://schema.org',
@@ -54,37 +62,109 @@ const crumbs = breadcrumb([
 >
   <PageHeader eyebrow={t('nav.caseStudies')} title={t('caseStudies.hero.title')} lead={t('caseStudies.hero.subtitle')} scene={sceneFor('case-studies')} />
 
-  <section class="container-page py-20">
-    <p data-reveal class="mb-8 max-w-3xl text-sm text-ink-subtle">{t('caseStudies.note')}</p>
-    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      {cards.map((c, i) => (
-        <a
-          href={localizePath(locale, `/case-studies/${c.slug}`)}
-          data-reveal
-          style={`--reveal-delay: ${i * 70}ms`}
-          class="group ring-gradient relative flex flex-col rounded-2xl border border-line glass p-6 transition-[transform,box-shadow] duration-300 ease-smooth hover:-translate-y-1 hover:shadow-glow"
-        >
-          <h2 class="text-h3 font-semibold text-ink">{c.title}</h2>
-          <dl class="mt-4 flex-1 space-y-3 text-sm leading-relaxed text-ink-muted">
-            <div>
-              <dt class="font-semibold text-brand">{t('caseStudies.labels.challenge')}</dt>
-              <dd class="mt-0.5">{c.challenge}</dd>
-            </div>
-            <div>
-              <dt class="font-semibold text-brand">{t('caseStudies.labels.solution')}</dt>
-              <dd class="mt-0.5">{c.solution}</dd>
-            </div>
-            <div>
-              <dt class="font-semibold text-brand">{t('caseStudies.labels.result')}</dt>
-              <dd class="mt-0.5">{c.result}</dd>
-            </div>
-          </dl>
-          <span class="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-brand">
-            {t('caseStudyDetail.cta.button')}
-            <svg class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
-          </span>
-        </a>
+  <nav
+    aria-label={t('caseStudies.categories.nav')}
+    data-cs-nav
+    class="sticky top-14 z-[var(--z-sticky)] border-b border-line/70 bg-bg/80 backdrop-blur-md"
+  >
+    <ul class="container-page flex snap-x gap-2 overflow-x-auto py-3 [scrollbar-width:none]">
+      {groups.map((g) => (
+        <li class="shrink-0 snap-start">
+          <a
+            href={`#${g.id}`}
+            data-cs-pill={g.id}
+            class="inline-flex min-h-11 items-center gap-2 rounded-full border border-line glass px-4 text-sm font-medium text-ink-muted transition-colors duration-200 hover:border-brand/60 hover:text-ink aria-[current=true]:border-brand aria-[current=true]:text-ink"
+          >
+            {g.title}
+            <span class="rounded-full bg-surface-2 px-2 py-0.5 text-xs tabular-nums text-ink-subtle">{g.cards.length}</span>
+          </a>
+        </li>
       ))}
-    </div>
-  </section>
+    </ul>
+  </nav>
+
+  <div class="container-page py-16 sm:py-20">
+    <p data-reveal class="max-w-3xl text-sm text-ink-subtle">{t('caseStudies.note')}</p>
+
+    {groups.map((g) => (
+      <section id={g.id} aria-labelledby={`${g.id}-title`} data-cs-section class="mt-14 scroll-mt-36 first-of-type:mt-10">
+        <div data-reveal class="mb-6 max-w-3xl">
+          <h2 id={`${g.id}-title`} class="text-h2 font-semibold text-ink">{g.title}</h2>
+          <p class="mt-2 text-ink-muted">{g.description}</p>
+        </div>
+        <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {g.cards.map((c, i) => (
+            <a
+              href={localizePath(locale, `/case-studies/${c.slug}`)}
+              data-reveal
+              style={`--reveal-delay: ${Math.min(i, 5) * 70}ms`}
+              class="group ring-gradient relative flex flex-col rounded-2xl border border-line glass p-6 transition-[transform,box-shadow] duration-300 ease-smooth hover:-translate-y-1 hover:shadow-glow"
+            >
+              <span class="mb-3 text-xs font-semibold uppercase tracking-wide text-brand">{g.chip}</span>
+              <h3 class="text-h3 font-semibold text-ink">{c.title}</h3>
+              <dl class="mt-4 flex-1 space-y-3 text-sm leading-relaxed text-ink-muted">
+                <div>
+                  <dt class="font-semibold text-brand">{t('caseStudies.labels.challenge')}</dt>
+                  <dd class="mt-0.5">{c.challenge}</dd>
+                </div>
+                <div>
+                  <dt class="font-semibold text-brand">{t('caseStudies.labels.solution')}</dt>
+                  <dd class="mt-0.5">{c.solution}</dd>
+                </div>
+                <div>
+                  <dt class="font-semibold text-brand">{t('caseStudies.labels.result')}</dt>
+                  <dd class="mt-0.5">{c.result}</dd>
+                </div>
+              </dl>
+              <span class="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-brand">
+                {t('caseStudyDetail.cta.button')}
+                <svg class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+              </span>
+            </a>
+          ))}
+        </div>
+      </section>
+    ))}
+  </div>
 </BaseLayout>
+
+<script>
+  /* Scroll-spy for the category bar. Progressive enhancement only: without it
+     (no JS, no IntersectionObserver, or an error) the pills are plain anchors and
+     the page works the same. Remove this block to switch it off. */
+  function setupCaseStudyNav() {
+    const nav = document.querySelector<HTMLElement>('[data-cs-nav]');
+    if (!nav || nav.dataset.bound === 'true' || !('IntersectionObserver' in window)) return;
+    nav.dataset.bound = 'true';
+    try {
+      const pills = new Map<string, HTMLAnchorElement>();
+      nav.querySelectorAll<HTMLAnchorElement>('[data-cs-pill]').forEach((a) => pills.set(a.dataset.csPill ?? '', a));
+      const visible = new Set<string>();
+      const sections = [...document.querySelectorAll<HTMLElement>('[data-cs-section]')];
+      const mark = () => {
+        const current = sections.find((s) => visible.has(s.id))?.id;
+        pills.forEach((a, id) => {
+          if (id === current) {
+            a.setAttribute('aria-current', 'true');
+            const list = a.closest('ul');
+            if (list && list.scrollWidth > list.clientWidth) list.scrollTo({ left: a.offsetLeft - 16 });
+          } else a.removeAttribute('aria-current');
+        });
+      };
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) e.isIntersecting ? visible.add(e.target.id) : visible.delete(e.target.id);
+          mark();
+        },
+        { rootMargin: '-140px 0px -45% 0px' },
+      );
+      sections.forEach((s) => io.observe(s));
+      document.addEventListener('astro:before-swap', () => io.disconnect(), { once: true });
+    } catch {
+      /* leave the plain anchors in place */
+    }
+  }
+  document.addEventListener('astro:page-load', setupCaseStudyNav);
+  /* Initialize immediately if astro:page-load already fired before this module ran */
+  if (document.readyState !== 'loading') setupCaseStudyNav();
+</script>

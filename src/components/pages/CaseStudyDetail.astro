@@ -95,6 +95,15 @@ const crumbItems = [
   { name: study.title, url: abs(path) },
 ];
 const crumbs = breadcrumb(crumbItems);
+/* The visible trail adds the listing section (an anchor on the index). It stays
+   out of the JSON-LD: crawlers drop URL fragments, so it would only repeat
+   /case-studies there. */
+const categoryLabel = t(`caseStudies.categories.${cs.category}.title`);
+const visibleCrumbs = [
+  ...crumbItems.slice(0, 2),
+  { name: categoryLabel, url: abs(`/case-studies#${cs.category}`) },
+  ...crumbItems.slice(2),
+];
 
 /** Charts exist only for the two data-heavy evidence studies; undefined → [] otherwise. */
 const charts = (caseStudyCharts[slug] ?? []).map((c) => localizeChart(t, c));
@@ -120,7 +129,7 @@ for (let i = 0; i < 4; i++) {
 const note = getDict(locale)[`caseStudyDetail.studies.${slug}.note`] ?? '';
 
 /** Optional eyebrow badge (e.g. "Evidence report · Industry analysis"); falls back to the section name. */
-const badge = getDict(locale)[`caseStudyDetail.studies.${slug}.badge`] ?? t('nav.caseStudies');
+const badge = getDict(locale)[`caseStudyDetail.studies.${slug}.badge`] ?? categoryLabel;
 
 /** Optional cited sources (`sources.N.label` + `sources.N.url`), read until the first gap. */
 /** Optional FAQ (`faqs.N.{question,answer}`), rendered visibly and emitted as FAQPage schema. */
@@ -241,7 +250,7 @@ const contents = longForm
 
 <BaseLayout title={getDict(locale)[`caseStudyDetail.studies.${slug}.seoTitle`] ?? study.title} description={getDict(locale)[`caseStudyDetail.studies.${slug}.seoDescription`] ?? study.meta} path={path} ogType="article" image={ogImg} jsonLd={[articleLd, crumbs, ...(faqLd ? [faqLd] : [])]}>
   <div class="reading-progress" aria-hidden="true"></div>
-  <Breadcrumbs items={crumbItems} />
+  <Breadcrumbs items={visibleCrumbs} />
   <PageHeader eyebrow={badge} title={study.title} lead={study.meta} scene={sceneFor('case-study', cs.slug)} />
 
   {facts.length > 0 && (
