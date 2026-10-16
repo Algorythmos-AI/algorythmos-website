@@ -24,6 +24,7 @@ export const serviceRelated: Record<string, RelatedRef[]> = {
     { type: 'blog', slug: 'port-botany-document-flows' },
     { type: 'case-study', slug: 'port-botany-ai-ml' },
     { type: 'case-study', slug: 'manufacturing-docs' },
+    { type: 'case-study', slug: 'ai-in-mining-mbsc' },
   ],
   'sql-dashboards': [
     { type: 'case-study', slug: 'retail-sql' },
@@ -56,6 +57,7 @@ export const serviceRelated: Record<string, RelatedRef[]> = {
   'model-monitoring': [
     { type: 'blog', slug: 'model-monitoring-drift' },
     { type: 'case-study', slug: 'model-monitoring-logistics' },
+    { type: 'case-study', slug: 'ai-in-mining-mbsc' },
     { type: 'service', slug: 'mlops-cicd' },
     { type: 'service', slug: 'llmops' },
   ],
@@ -64,6 +66,7 @@ export const serviceRelated: Record<string, RelatedRef[]> = {
     { type: 'case-study', slug: 'retail-data-foundation' },
     { type: 'service', slug: 'sql-dashboards' },
     { type: 'service', slug: 'model-monitoring' },
+    { type: 'case-study', slug: 'ai-in-mining-mbsc' },
   ],
   'ai-websites': [
     { type: 'blog', slug: 'ai-consultancy-australia' },
