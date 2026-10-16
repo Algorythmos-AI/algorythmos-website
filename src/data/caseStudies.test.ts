@@ -62,6 +62,7 @@ describe('case-study listing page', () => {
     for (const cat of CASE_STUDY_CATEGORIES) {
       const s = categoryStyles[cat];
       expect(s.icon, cat).toMatch(/^M/);
+      expect(s.rgb, cat).toMatch(/^var\(--[a-z-]+\)$/);
       expect(art).toContain(`kind === '${s.art}'`);
     }
   });
@@ -101,5 +102,18 @@ describe('siblingCaseStudies', () => {
   });
   it('is empty for an unknown slug', () => {
     expect(siblingCaseStudies('nope')).toEqual([]);
+  });
+});
+
+describe('case-study styling', () => {
+  // iOS Safari painted color-mix() tints as solid fills on the hub cards
+  // (Oct 2026). Tints must be rgb(var(--cs-rgb) / alpha) instead.
+  it.each(['CategoryBadge', 'CaseStudyCard', 'CaseStudyHub', 'MoreInCategory'])('%s uses no color-mix()', (name) => {
+    const src = readFileSync(new URL(`../components/case-studies/${name}.astro`, import.meta.url), 'utf-8');
+    expect(src).not.toContain('color-mix(');
+  });
+  it('the index page uses no color-mix()', () => {
+    const src = readFileSync(new URL('../components/pages/CaseStudiesIndex.astro', import.meta.url), 'utf-8');
+    expect(src).not.toContain('color-mix(');
   });
 });
