@@ -71,7 +71,7 @@ const spotlight = latest && {
   meta: t(`caseStudyDetail.studies.${latest.slug}.meta`),
   chip: t(`caseStudies.categories.${latest.category}.chip`),
   art: categoryStyles[latest.category].art,
-  tint: categoryStyles[latest.category].tint,
+  rgb: categoryStyles[latest.category].rgb,
 };
 
 /** Only sectors that have at least one study get a chip. */
@@ -123,7 +123,7 @@ const crumbs = breadcrumb([
         href={spotlight.card.href}
         data-cs-spotlight
         data-reveal
-        style={`--cs-tint: ${spotlight.tint}`}
+        style={`--cs-rgb: ${spotlight.rgb}`}
         class="cs-spotlight group ring-gradient relative grid overflow-hidden rounded-3xl border border-line glass focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand md:grid-cols-[1.25fr_1fr]"
       >
         <div class="p-6 sm:p-8">
@@ -256,17 +256,17 @@ const crumbs = breadcrumb([
 
 <style>
   .cs-spotlight {
-    background-image: linear-gradient(110deg, color-mix(in srgb, var(--cs-tint) 12%, transparent), transparent 55%);
+    background-image: linear-gradient(110deg, rgb(var(--cs-rgb) / 0.12), transparent 55%);
   }
   .cs-spot-text {
-    color: var(--cs-tint);
+    color: rgb(var(--cs-rgb));
   }
   .cs-spot-pill {
     color: rgb(var(--bg));
-    background: var(--cs-tint);
+    background: rgb(var(--cs-rgb));
   }
   .cs-spot-art {
-    background: radial-gradient(90% 90% at 60% 60%, color-mix(in srgb, var(--cs-tint) 18%, transparent), transparent 70%);
+    background: radial-gradient(90% 90% at 60% 60%, rgb(var(--cs-rgb) / 0.18), transparent 70%);
   }
   :global(.cs-chip-btn) {
     display: inline-flex;

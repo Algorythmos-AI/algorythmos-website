@@ -26,7 +26,7 @@ const category = self?.category;
 ---
 
 {category && items.length > 0 && (
-  <section aria-labelledby="cs-more-title" data-cs-more class="container-page pb-10 pt-16 print:hidden" style={`--cs-tint: ${categoryStyles[category].tint}`}>
+  <section aria-labelledby="cs-more-title" data-cs-more class="container-page pb-10 pt-16 print:hidden" style={`--cs-rgb: ${categoryStyles[category].rgb}`}>
     <div class="mb-6 flex flex-wrap items-end justify-between gap-4">
       <div class="flex items-center gap-3">
         <CategoryBadge category={category} />

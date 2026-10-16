@@ -14,17 +14,30 @@ const s = categoryStyles[category];
 <span
   aria-hidden="true"
   class:list={['cs-badge inline-grid shrink-0 place-items-center rounded-full border', size === 'lg' ? 'h-14 w-14' : 'h-11 w-11']}
-  style={`--cs-tint: ${s.tint}`}
+  style={`--cs-rgb: ${s.rgb}`}
 >
   <svg class={size === 'lg' ? 'h-6 w-6' : 'h-5 w-5'} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
     <path d={s.icon} />
   </svg>
 </span>
 
+<style is:global>
+  /* Research tint, per theme. Kept here rather than in themes.css (the 3D scene
+     stills are fingerprinted from that file). Every case-study surface that
+     uses it renders a CategoryBadge, so this always ships with it. */
+  :root,
+  :root[data-theme='dark'] {
+    --cs-research: 96 165 250;
+  }
+  :root[data-theme='light'] {
+    --cs-research: 37 99 235;
+  }
+</style>
+
 <style>
   .cs-badge {
-    color: var(--cs-tint);
-    border-color: color-mix(in srgb, var(--cs-tint) 45%, transparent);
-    background: color-mix(in srgb, var(--cs-tint) 14%, transparent);
+    color: rgb(var(--cs-rgb));
+    border-color: rgb(var(--cs-rgb) / 0.45);
+    background: rgb(var(--cs-rgb) / 0.14);
   }
 </style>
