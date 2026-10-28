@@ -112,7 +112,10 @@ export const PDF_ALGO_PRO = {
       'changes',
       'contact',
     ],
-    versions: [{ version: '1.0', date: '2026-10-06', key: 'v1_0' }],
+    versions: [
+      { version: '1.1', date: '2026-10-28', key: 'v1_1' },
+      { version: '1.0', date: '2026-10-06', key: 'v1_0' },
+    ],
     links: {
       licence: [{ labelKey: 'pdfAlgoPro.terms.links.eula', href: APPLE_EULA }],
       documents: [{ labelKey: 'pdfAlgoPro.nav.privacy', href: '/pdf-algo-pro/privacy' }],
