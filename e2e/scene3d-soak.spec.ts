@@ -22,6 +22,19 @@ async function leaveForScenelessPage(page: Page) {
   await page.waitForURL(/\/privacy$/);
   await expect(page.locator(MOUNT)).toHaveCount(0);
 }
+/**
+ * Come back home through the browser's back button. The router restores the scroll
+ * position instantly (Astro 7.4.3+), which is the footer link we left by, so the hero
+ * scene is out of view and rightly waits. Scroll up to it, as a visitor would.
+ * The URL changes at `popstate`, before the swap restores the scroll, so wait for the
+ * new page's mount to initialise first, or the router scrolls back down after us.
+ */
+async function backHome(page: Page) {
+  await page.goBack();
+  await page.waitForURL(/\/au-en$/);
+  await expect(mount(page)).toHaveAttribute('data-scene-init', '1');
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+}
 const goLive = async (page: Page, path = HOME) => {
   await page.goto(path);
   await expect(mount(page)).toHaveAttribute('data-scene-state', 'live', { timeout: LIVE_TIMEOUT });
@@ -192,8 +205,7 @@ test.describe('timing races', () => {
     await page.waitForTimeout(4500);
     await expect(page.locator(STAGE)).toHaveCount(0);
     // …and the engine it left behind still serves the next page that wants it.
-    await page.goBack();
-    await page.waitForURL(/\/au-en$/);
+    await backHome(page);
     await expect(mount(page)).toHaveAttribute('data-scene-state', 'live', { timeout: LIVE_TIMEOUT });
     await expect(page.locator(STAGE)).toHaveCount(1);
     expect(errors).toEqual([]);
@@ -209,8 +221,7 @@ test.describe('timing races', () => {
       await leaveForScenelessPage(page);
       await expect(page.locator(STAGE)).toHaveCount(0);
       expect((await stats(page))!.geometries, 'the scene was freed on leaving').toBe(0);
-      await page.goBack();
-      await page.waitForURL(/\/au-en$/);
+      await backHome(page);
       await expect(mount(page)).toHaveAttribute('data-scene-state', 'live', { timeout: LIVE_TIMEOUT });
       await expect(page.locator(STAGE)).toHaveCount(1);
     }
@@ -259,8 +270,7 @@ test.describe('timing races', () => {
     await page.waitForTimeout(5000);
     await expect(page.locator(STAGE)).toHaveCount(0);
     expect((await stats(page))!.geometries, 'the abandoned scene was freed').toBe(0);
-    await page.goBack();
-    await page.waitForURL(/\/au-en$/);
+    await backHome(page);
     await expect(mount(page)).toHaveAttribute('data-scene-state', 'live', { timeout: LIVE_TIMEOUT });
     await expect(page.locator(STAGE)).toHaveCount(1);
     expect(errors).toEqual([]);
@@ -284,15 +294,12 @@ test.describe('timing races', () => {
       canvas.getContext('webgl2')?.getExtension('WEBGL_lose_context')?.loseContext();
     });
     await page.waitForTimeout(500);
-    await page.goBack();
-    await page.waitForURL(/\/au-en$/);
+    await backHome(page);
     await expect(mount(page)).toHaveAttribute('data-scene-state', 'live', { timeout: LIVE_TIMEOUT });
     const fresh = await page.evaluate(
       () => document.querySelector('canvas.scene3d-stage') !== (window as unknown as { __parked: Element }).__parked,
     );
     expect(fresh, 'a new canvas and context, not the dead one').toBe(true);
-    // Going back restores the scroll position at the footer link, where the loop rightly rests.
-    await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
     const before = (await stats(page))!.frames;
     await expect.poll(async () => (await stats(page))!.frames, { timeout: 10_000 }).toBeGreaterThan(before);
     expect(pageErrors).toEqual([]);
