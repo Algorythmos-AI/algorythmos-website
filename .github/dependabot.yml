@@ -48,6 +48,11 @@ updates:
         update-types: ["version-update:semver-major"]
       # Peer-pinned by @astrojs/react; moves only when that integration does.
       - dependency-name: "oxc-transform-react"
+      # Every 7.1.x release (to 7.1.4, 5 Nov 2026) peer-pins oxc-transform-react
+      # ^0.145 while its own @vitejs/plugin-react 6.1.2 needs ^0.152, so npm ci
+      # cannot resolve it (#99). Stay on 7.0.1; 7.2+ is offered and tested as usual.
+      - dependency-name: "@astrojs/react"
+        versions: ["7.1.x"]
   - package-ecosystem: github-actions
     directory: /
     schedule:
