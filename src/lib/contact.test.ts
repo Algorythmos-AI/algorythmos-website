@@ -139,15 +139,39 @@ describe('delivery', () => {
     expect(sendMail.mock.calls[0][0].replyTo).toEqual({ name: 'Ada "The Countess" Lovelace', address: 'ada@example.com' });
   });
 
-  it('escapes quotes inside the HTML email attributes', async () => {
-    await call(mockReq({ body: { ...valid, email: 'a"onmouseover="x@example.com' } }));
-    const html: string = sendMail.mock.calls[0][0].html;
-    expect(html).not.toContain('"onmouseover="');
-    expect(html).toContain('&quot;onmouseover=&quot;');
+  it('escapes quotes for the HTML email attributes', () => {
+    // A quoted email is now refused before it reaches the template (see refusals),
+    // so the escaping that guards the mailto: attribute is pinned directly.
+    expect(esc('a"onmouseover="x@example.com')).toBe('a&quot;onmouseover=&quot;x@example.com');
+  });
+
+  it('still accepts ordinary addresses, plus-tags and subdomains included', async () => {
+    for (const email of ['ada@example.com', 'ada.lovelace+web@mail.example.co.uk', "o'brien@example.ie"]) {
+      sendMail.mockClear();
+      const res = await call(mockReq({ body: { ...valid, email } }));
+      expect(res.statusCode, email).toBe(200);
+      expect(sendMail, email).toHaveBeenCalledTimes(1);
+    }
   });
 });
 
 describe('refusals', () => {
+  it.each([
+    ['a quoted local part', '"a@b"@evil.example'],
+    ['a quote in the local part', 'a"onmouseover="x@example.com'],
+    ['a comment', 'x(y)@example.com'],
+    ['an angle-addr', 'a<b@evil.example>'],
+    ['a comma list', 'a,b@evil.example'],
+    ['a semicolon list', 'a;b@evil.example'],
+    ['a group colon', 'list:b@evil.example'],
+    ['a domain literal', 'a@[127.0.0.1]'],
+    ['two addresses', 'a@example.com,b@evil.example'],
+  ])('refuses an email with %s, and sends nothing', async (_label, email) => {
+    const res = await call(mockReq({ body: { ...valid, email } }));
+    expect(res.statusCode).toBe(400);
+    expect(sendMail).not.toHaveBeenCalled();
+  });
+
   it('refuses a cross-site Origin', async () => {
     const res = await call(mockReq({ body: valid, headers: { origin: 'https://evil.example' } }));
     expect(res.statusCode).toBe(403);
