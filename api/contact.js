@@ -65,7 +65,11 @@ function rateLimited(ip) {
   return recent.length > RATE_MAX;
 }
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+// One plain address only. Quotes, comments, angle brackets and list separators are
+// refused: they are what mail address parsers mis-split into extra recipients
+// (nodemailer addressparser advisories, 2026), and a browser's type="email"
+// check refuses them too, so no real visitor is turned away.
+const EMAIL_RE = /^[^\s@"(),:;<>[\]\\]+@[^\s@"(),:;<>[\]\\]+\.[^\s@"(),:;<>[\]\\]+$/;
 const ESCAPES = { '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;' };
 /** HTML-escape for text and attribute contexts. */
 export const esc = (s) => String(s).replace(/[<>&"']/g, (c) => ESCAPES[c]);

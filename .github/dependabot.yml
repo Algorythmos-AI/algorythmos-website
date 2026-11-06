@@ -9,6 +9,12 @@ updates:
       timezone: Australia/Sydney
     open-pull-requests-limit: 5
     groups:
+      # Advisories often land in a cluster. One PR per package means each one still
+      # fails `npm audit` on the others (Nov 2026: undici, vite, zod and nodemailer
+      # blocked seven PRs at once), so security fixes arrive together.
+      security:
+        applies-to: security-updates
+        patterns: ["*"]
       astro:
         patterns: ["astro", "@astrojs/*"]
       tooling:
