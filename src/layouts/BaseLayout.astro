@@ -12,6 +12,7 @@ import JsonLd from '@/components/seo/JsonLd.astro';
 import { orgGraph } from '@/seo/schema';
 import RegionBanner from '@/components/RegionBanner.astro';
 import ConsentBanner from '@/components/ConsentBanner.astro';
+import Analytics from '@vercel/analytics/astro';
 
 interface Props {
   title?: string;
@@ -138,6 +139,7 @@ const t = useTranslations(locale);
     <Footer />
     <RegionBanner />
     <ConsentBanner />
+    <Analytics />
     {/* Re-assert theme + motion after View-Transition swaps. The client router replaces
         every attribute on <html> with the incoming document's, so this mirrors the
         no-flash script in <head> exactly — including the OS fallback, or a light-mode
