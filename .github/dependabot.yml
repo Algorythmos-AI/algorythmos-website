@@ -22,6 +22,13 @@ updates:
       # The 3D engine and its types must move together; three ships breaking minors.
       three:
         patterns: ["three", "@types/three"]
+      # Every other minor and patch bump arrives in one weekly PR, not one per package
+      # (Nov 2026: eleven PRs had piled up, each needing its own 45-minute CI run).
+      # Kept last: a dependency joins the first group it matches. Majors still come
+      # one PR each, since they need a deliberate look.
+      routine:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
     # Majors that need a deliberate migration (React 19, the next vitest major —
     # vitest 5 is current and green — ESLint 10 flat-config changes, TypeScript 7).
     # Security updates are never filtered by `ignore`.
@@ -48,6 +55,11 @@ updates:
         update-types: ["version-update:semver-major"]
       # Peer-pinned by @astrojs/react; moves only when that integration does.
       - dependency-name: "oxc-transform-react"
+      # Every 7.1.x release (to 7.1.4, 5 Nov 2026) peer-pins oxc-transform-react
+      # ^0.145 while its own @vitejs/plugin-react 6.1.2 needs ^0.152, so npm ci
+      # cannot resolve it (#99). Stay on 7.0.1; 7.2+ is offered and tested as usual.
+      - dependency-name: "@astrojs/react"
+        versions: ["7.1.x"]
   - package-ecosystem: github-actions
     directory: /
     schedule:
